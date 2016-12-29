@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Carteira</string>
+
+    <!-- Item Navigational Drawer -->
+    <string name="carteira_completa">Carteira Completa</string>
+    <string name="renda_fixa">Renda Fixa</string>
+    <string name="fii">Fundos Imobiliarios</string>
+    <string name="acoes">Ações</string>
+    <string name="moedas">Moedas</string>
+    <string name="estatisticas">Estatisticas</string>
+
+    <string name="nav_drawer_username">Ricardo Lecheta</string>
+    <string name="nav_drawer_email">rlecheta@gmail.com</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_carteira_fragment">Hello carteira fragment</string>
+    <string name="hello_acoes_fragment">Hello ações fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
