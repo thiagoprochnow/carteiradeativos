@@ -7,6 +7,10 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
 
+    <!-- FAB -->
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Navigation Drawer -->
     <dimen name="navDrawerBackground_layout_height">164dp</dimen>
 
     <dimen name="navDrawerPhoto_layout_width">64dp</dimen>
