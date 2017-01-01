@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Acao implements Serializable{
     public long id;
     public String ticker;
-    public String companyName;
+    public int quantity;
     public double boughtValue;
     public double currentValue;
 }

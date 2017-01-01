@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"/>
         <TextView
-            android:id="@+id/companyName"
+            android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"/>

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import br.com.carteira.R;
 import br.com.carteira.domain.Acao;
@@ -46,7 +47,9 @@ public class AcaoAdapter extends RecyclerView.Adapter<AcaoAdapter.AcoesViewHolde
         // Atualiza a view
         Acao acao = acoes.get(position);
         holder.ticker.setText(acao.ticker);
-        holder.companyName.setText(acao.companyName);
+        holder.quantity.setText(String.valueOf(acao.quantity));
+        holder.currentValue.setText(String.valueOf(acao.currentValue));
+        holder.boughtValue.setText(String.valueOf(acao.boughtValue));
         // Click on the CardView of the stock
         if(acaoOnClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -63,12 +66,12 @@ public class AcaoAdapter extends RecyclerView.Adapter<AcaoAdapter.AcoesViewHolde
     }
 
     public static class AcoesViewHolder extends RecyclerView.ViewHolder {
-        public TextView ticker,companyName, boughtValue, currentValue;
+        public TextView ticker,quantity, boughtValue, currentValue;
         public AcoesViewHolder(View view){
             super(view);
-            // Cria as views para salvar no ViewHolder
+            // Create the view to save on the ViewHolder
             ticker = (TextView) view.findViewById(R.id.ticker);
-            companyName = (TextView) view.findViewById(R.id.companyName);
+            quantity = (TextView) view.findViewById(R.id.quantity);
             boughtValue = (TextView) view.findViewById(R.id.boughtValue);
             currentValue = (TextView) view.findViewById(R.id.currentValue);
         }

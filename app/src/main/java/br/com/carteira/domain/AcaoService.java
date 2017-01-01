@@ -18,7 +18,7 @@ public class AcaoService {
         for (int i = 0; i < 1; i++){
             Acao acao = new Acao();
             acao.ticker = "PETR4";
-            acao.companyName = "Petrobras";
+            acao.quantity = 100;
             acao.boughtValue = 3.14;
             acao.currentValue = 3.15;
             acoes.add(acao);

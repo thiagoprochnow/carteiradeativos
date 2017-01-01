@@ -47,7 +47,7 @@ public class AcoesMainFragment extends BaseFragment {
             public void onClick(View v){
                 Acao acao = new Acao();
                 acao.ticker = "PETR4";
-                acao.companyName = "Petrobras";
+                acao.quantity = 100;
                 acao.boughtValue = 3.14;
                 acao.currentValue = 3.15;
                 acoes.add(acao);
