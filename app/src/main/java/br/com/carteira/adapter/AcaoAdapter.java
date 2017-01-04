@@ -47,9 +47,11 @@ public class AcaoAdapter extends RecyclerView.Adapter<AcaoAdapter.AcoesViewHolde
         // Atualiza a view
         Acao acao = acoes.get(position);
         holder.ticker.setText(acao.ticker);
-        holder.quantity.setText(String.valueOf(acao.quantity));
+        holder.acoesQuantity.setText(String.valueOf(acao.acoesQuantity));
         holder.currentValue.setText(String.valueOf(acao.currentValue));
-        holder.boughtValue.setText(String.valueOf(acao.boughtValue));
+        holder.objectiveValue.setText(String.valueOf(acao.objectiveValue));
+        holder.percentualValue.setText(String.valueOf(acao.percentualValue));
+        holder.totalValue.setText(String.valueOf(acao.totalValue));
         // Click on the CardView of the stock
         if(acaoOnClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -66,14 +68,16 @@ public class AcaoAdapter extends RecyclerView.Adapter<AcaoAdapter.AcoesViewHolde
     }
 
     public static class AcoesViewHolder extends RecyclerView.ViewHolder {
-        public TextView ticker,quantity, boughtValue, currentValue;
+        public TextView ticker,acoesQuantity, totalValue, percentualValue, currentValue, objectiveValue;
         public AcoesViewHolder(View view){
             super(view);
             // Create the view to save on the ViewHolder
             ticker = (TextView) view.findViewById(R.id.ticker);
-            quantity = (TextView) view.findViewById(R.id.quantity);
-            boughtValue = (TextView) view.findViewById(R.id.boughtValue);
+            acoesQuantity = (TextView) view.findViewById(R.id.acoesQuantity);
             currentValue = (TextView) view.findViewById(R.id.currentValue);
+            objectiveValue = (TextView) view.findViewById(R.id.objectiveValue);
+            percentualValue = (TextView) view.findViewById(R.id.percentualValue);
+            totalValue = (TextView) view.findViewById(R.id.totalValue);
         }
     }
 

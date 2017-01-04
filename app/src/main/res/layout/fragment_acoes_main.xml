@@ -23,5 +23,5 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"
         android:tint="#ffffff"
-        app:backgroundTint="#2B69AF" />
+        app:backgroundTint="#67a6ed" />
 </FrameLayout>

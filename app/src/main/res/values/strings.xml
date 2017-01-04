@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Ações Adapter -->
+    <string name="cotacaoLabel">Cotação:</string>
+
     <!-- Item Navigational Drawer -->
     <string name="carteira_completa">Carteira Completa</string>
     <string name="renda_fixa">Renda Fixa</string>
