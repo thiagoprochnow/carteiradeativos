@@ -16,13 +16,19 @@ public class AcaoService {
         // Por vinte vezes ele cria uma ação hipotetica para compor a tabela
         // É adicionado o nome, ticker, preço de compra e preço atual da ação
         for (int i = 0; i < 1; i++){
+            // For more information on each acao variable, check the Acao.java class
             Acao acao = new Acao();
             acao.ticker = "PETR4";
-            acao.acoesQuantity = 100;
-            acao.currentValue = 3.15;
-            acao.objectiveValue = 20.00;
-            acao.percentualValue = 15.36;
-            acao.totalValue = 315.00;
+            acao.stockQuantity = 100;
+            acao.boughtPrice = 32.45;
+            acao.boughtTotal = acao.stockQuantity * acao.boughtPrice;
+            acao.currentPrice = 35.50;
+            acao.currentTotal = acao.stockQuantity * acao.currentPrice;
+            acao.stockAppreciation = acao.currentTotal - acao.boughtTotal;
+            acao.targetPercent = 10.00;
+            acao.currentPercent = 20.00;
+            acao.totalIncome = 150.00;
+            acao.totalGain = acao.stockAppreciation + acao.totalIncome;
             acoes.add(acao);
         }
         return acoes;

@@ -2,7 +2,8 @@
     <string name="app_name">Carteira</string>
 
     <!-- Ações Adapter -->
-    <string name="cotacaoLabel">Cotação:</string>
+    <string name="currentPercentLabel">Percent:</string>
+    <string name="targetPercentLabel">Target:</string>
 
     <!-- Item Navigational Drawer -->
     <string name="carteira_completa">Carteira Completa</string>

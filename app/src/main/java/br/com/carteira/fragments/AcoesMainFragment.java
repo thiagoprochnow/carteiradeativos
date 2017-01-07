@@ -45,13 +45,19 @@ public class AcoesMainFragment extends BaseFragment {
         view.findViewById(R.id.fabAcoes).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                // For more information on each acao variable, check the Acao.java class
                 Acao acao = new Acao();
                 acao.ticker = "PETR4";
-                acao.acoesQuantity = 100;
-                acao.currentValue = 3.15;
-                acao.objectiveValue = 20.00;
-                acao.percentualValue = 15.37;
-                acao.totalValue = 315.00;
+                acao.stockQuantity = 100;
+                acao.boughtPrice = 23.45;
+                acao.boughtTotal = acao.stockQuantity * acao.boughtPrice;
+                acao.currentPrice = 35.50;
+                acao.currentTotal = acao.stockQuantity * acao.currentPrice;
+                acao.stockAppreciation = acao.currentTotal - acao.boughtTotal;
+                acao.targetPercent = 10.00;
+                acao.currentPercent = 20.00;
+                acao.totalIncome = 150.00;
+                acao.totalGain = acao.stockAppreciation + acao.totalIncome;
                 acoes.add(acao);
                 taskAcoes();
             }
