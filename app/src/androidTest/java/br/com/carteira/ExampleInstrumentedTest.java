@@ -21,6 +21,7 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
+        // First check
         assertEquals("br.com.carteira", appContext.getPackageName());
     }
 }
