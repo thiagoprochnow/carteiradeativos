@@ -17,6 +17,9 @@
     <string name="quantidade">Quantidade</string>
     <string name="preco_compra">Preço de compra</string>
     <string name="objetivo_percentual">Objetivo do papel na carteira (EX: 20%)</string>
+    <string name="buy_date">Data da compra</string>
+    <string name="buy_date_hint">dd/mm/aaaa</string>
+    <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
 
     <!-- Item Navigational Drawer -->
     <string name="carteira_completa">Carteira Completa</string>
