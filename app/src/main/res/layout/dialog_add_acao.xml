@@ -3,10 +3,7 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingTop="16dp"
-    android:paddingLeft="4dp"
-    android:paddingRight="4dp"
-    android:paddingBottom="4dp">
+    android:padding="20dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,5 +40,15 @@
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buy_date"/>
+    <EditText
+        android:id="@+id/inputBuyDate"
+        android:inputType="date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/buy_date_hint"/>
     <!-- Missin date of the buy -->
 </LinearLayout>
