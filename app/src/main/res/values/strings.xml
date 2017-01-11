@@ -1,6 +1,23 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Ações Main Fragment -->
+    <string name="add_acao_success">Ação adicionado com sucesso</string>
+    <string name="add_acao_fail">Falha ao adicionar ação</string>
+
+    <!-- Ações Adapter -->
+    <string name="currentPercentLabel">Percent:</string>
+    <string name="targetPercentLabel">Target:</string>
+
+    <!-- Add ação Dialog Fragment -->
+    <string name="add_acao_title">Compra de Ação</string>
+    <string name="buy_acao_button">Comprar</string>
+    <string name="cancel_acao_button">Cancelar</string>
+    <string name="codigo_acao">Código da Ação</string>
+    <string name="quantidade">Quantidade</string>
+    <string name="preco_compra">Preço de compra</string>
+    <string name="objetivo_percentual">Objetivo do papel na carteira (EX: 20%)</string>
+
     <!-- Item Navigational Drawer -->
     <string name="carteira_completa">Carteira Completa</string>
     <string name="renda_fixa">Renda Fixa</string>
@@ -18,4 +35,5 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_acao_adapter">AcaoAdapter</string>
 </resources>
