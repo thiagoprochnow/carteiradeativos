@@ -12,10 +12,10 @@ import br.com.carteira.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RendaFixaMainFragment extends Fragment {
+public class FixedIncomeMainFragment extends Fragment {
 
 
-    public RendaFixaMainFragment() {
+    public FixedIncomeMainFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class RendaFixaMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_renda_fixa_main, container, false);
+        return inflater.inflate(R.layout.fragment_fixed_income_main, container, false);
     }
 
 }

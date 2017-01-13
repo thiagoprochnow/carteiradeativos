@@ -18,8 +18,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".adapter.AcaoAdapter"
-            android:label="@string/title_activity_acao_adapter"
+            android:name=".adapter.StockAdapter"
+            android:label="@string/title_activity_stock_adapter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

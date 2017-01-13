@@ -12,10 +12,10 @@ import br.com.carteira.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MoedasMainFragment extends Fragment {
+public class CurrencyMainFragment extends Fragment {
 
 
-    public MoedasMainFragment() {
+    public CurrencyMainFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class MoedasMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_moedas_main, container, false);
+        return inflater.inflate(R.layout.fragment_currency_main, container, false);
     }
 
 }

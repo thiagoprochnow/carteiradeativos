@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <!-- Item Menu Carteira Completa -->
+        <!-- Complete Portfolio Item Menu -->
         <item
-            android:id="@+id/nav_item_carteira_completa"
-            android:title="@string/carteira_completa"
+            android:id="@+id/nav_item_complete_portfolio"
+            android:title="@string/complete_portfolio"
             android:checked="true" />
 
-        <!-- Item Menu Renda Fixa -->
+        <!-- Fixed Income Item Menu -->
         <item
-            android:id="@+id/nav_item_renda_fixa"
-            android:title="@string/renda_fixa"
+            android:id="@+id/nav_item_fixed_income"
+            android:title="@string/fixed_income"
             android:checked="true" />
 
-        <!-- Item Menu Ações -->
+        <!-- Stocks Item Menu -->
         <item
-            android:id="@+id/nav_item_acoes"
-            android:title="@string/acoes"
+            android:id="@+id/nav_item_stocks"
+            android:title="@string/stocks"
             android:checked="true" />
 
-        <!-- Item Menu Fundos Imobiliarios -->
+        <!-- Fii Item Menu -->
         <item
             android:id="@+id/nav_item_fii"
             android:title="@string/fii"
             android:checked="true" />
 
-        <!-- Item Menu Moedas -->
+        <!-- Currency Item Menu -->
         <item
-            android:id="@+id/moedas"
-            android:title="@string/moedas"
+            android:id="@+id/currency"
+            android:title="@string/currency"
             android:checked="true" />
 
-        <!-- Item Menu Estatisticas -->
+        <!-- Statistic Item Menu -->
         <item
-            android:id="@+id/nav_item_estatistica"
-            android:title="@string/estatisticas"
+            android:id="@+id/nav_item_statistic"
+            android:title="@string/statistic"
             android:checked="true" />
     </group>
 </menu>

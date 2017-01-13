@@ -2,41 +2,41 @@
     <string name="app_name">Carteira</string>
 
     <!-- Ações Main Fragment -->
-    <string name="add_acao_success">Ação adicionado com sucesso</string>
-    <string name="add_acao_fail">Falha ao adicionar ação</string>
+    <string name="add_stock_success">Ação adicionado com sucesso</string>
+    <string name="add_stock_fail">Falha ao adicionar ação</string>
 
     <!-- Ações Adapter -->
     <string name="currentPercentLabel">Percent:</string>
     <string name="targetPercentLabel">Target:</string>
 
     <!-- Add ação Dialog Fragment -->
-    <string name="add_acao_title">Compra de Ação</string>
-    <string name="buy_acao_button">Comprar</string>
-    <string name="cancel_acao_button">Cancelar</string>
-    <string name="codigo_acao">Código da Ação</string>
-    <string name="quantidade">Quantidade</string>
-    <string name="preco_compra">Preço de compra</string>
-    <string name="objetivo_percentual">Objetivo do papel na carteira (EX: 20%)</string>
+    <string name="add_stock_title">Compra de Ação</string>
+    <string name="buy_stock_button">Comprar</string>
+    <string name="cancel_stock_button">Cancelar</string>
+    <string name="stock_ticker">Código da Ação</string>
+    <string name="quantity">Quantidade</string>
+    <string name="buy_price">Preço de compra</string>
+    <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
     <string name="buy_date_hint">dd/mm/aaaa</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
 
     <!-- Item Navigational Drawer -->
-    <string name="carteira_completa">Carteira Completa</string>
-    <string name="renda_fixa">Renda Fixa</string>
+    <string name="complete_portfolio">Carteira Completa</string>
+    <string name="fixed_income">Renda Fixa</string>
     <string name="fii">Fundos Imobiliarios</string>
-    <string name="acoes">Ações</string>
-    <string name="moedas">Moedas</string>
-    <string name="estatisticas">Estatisticas</string>
+    <string name="stocks">Ações</string>
+    <string name="currency">Moedas</string>
+    <string name="statistic">Estatisticas</string>
 
     <string name="nav_drawer_username">Ricardo Lecheta</string>
     <string name="nav_drawer_email">rlecheta@gmail.com</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_carteira_fragment">Hello carteira fragment</string>
-    <string name="hello_acoes_fragment">Hello ações fragment</string>
+    <string name="hello_portfolio_fragment">Hello carteira fragment</string>
+    <string name="hello_stocks_fragment">Hello ações fragment</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_acao_adapter">AcaoAdapter</string>
+    <string name="title_activity_stock_adapter">AcaoAdapter</string>
 </resources>

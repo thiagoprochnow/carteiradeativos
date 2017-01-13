@@ -1,10 +1,9 @@
 package br.com.carteira.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import br.com.carteira.R;
-import br.com.carteira.fragments.CarteiraMainFragment;
+import br.com.carteira.fragments.PortfolioMainFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -15,6 +14,6 @@ public class MainActivity extends BaseActivity {
         setUpToolbar();
         setupNavDrawer();
         // Inicializa o aplicativo com a Fragment da carteira geral
-        replaceFragment(new CarteiraMainFragment());
+        replaceFragment(new PortfolioMainFragment());
     }
 }

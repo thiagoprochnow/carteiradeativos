@@ -5,18 +5,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import br.com.carteira.R;
-import br.com.carteira.fragments.AcoesMainFragment;
-import br.com.carteira.fragments.CarteiraMainFragment;
-import br.com.carteira.fragments.EstatisticasMainFragment;
+import br.com.carteira.fragments.StockMainFragment;
+import br.com.carteira.fragments.PortfolioMainFragment;
+import br.com.carteira.fragments.StatisticMainFragment;
 import br.com.carteira.fragments.FiiMainFragment;
-import br.com.carteira.fragments.MoedasMainFragment;
-import br.com.carteira.fragments.RendaFixaMainFragment;
+import br.com.carteira.fragments.CurrencyMainFragment;
+import br.com.carteira.fragments.FixedIncomeMainFragment;
 import livroandroid.lib.utils.NavDrawerUtil;
 
 /**
@@ -67,23 +65,23 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
     // Trata o evento do menu lateral
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.nav_item_carteira_completa:
-                replaceFragment(new CarteiraMainFragment());
+            case R.id.nav_item_complete_portfolio:
+                replaceFragment(new PortfolioMainFragment());
                 break;
-            case R.id.nav_item_renda_fixa:
-                replaceFragment(new RendaFixaMainFragment());
+            case R.id.nav_item_fixed_income:
+                replaceFragment(new FixedIncomeMainFragment());
                 break;
-            case R.id.nav_item_acoes:
-                replaceFragment(new AcoesMainFragment());
+            case R.id.nav_item_stocks:
+                replaceFragment(new StockMainFragment());
                 break;
             case R.id.nav_item_fii:
                 replaceFragment(new FiiMainFragment());
                 break;
-            case R.id.moedas:
-                replaceFragment(new MoedasMainFragment());
+            case R.id.currency:
+                replaceFragment(new CurrencyMainFragment());
                 break;
-            case R.id.nav_item_estatistica:
-                replaceFragment(new EstatisticasMainFragment());
+            case R.id.nav_item_statistic:
+                replaceFragment(new StatisticMainFragment());
                 break;
         }
     }
