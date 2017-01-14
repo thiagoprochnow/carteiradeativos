@@ -18,7 +18,7 @@ public class StockService {
         for (int i = 0; i < 1; i++){
             // For more information on each stock variable, check the Stock.java class
             Stock stock = new Stock();
-            stock.setTicker("PETR4");
+            stock.setSymbol("PETR4");
             stock.setStockQuantity(100);
             stock.setBoughtPrice(32.45);
             stock.setBoughtTotal(stock.getStockQuantity() * stock.getBoughtPrice());
