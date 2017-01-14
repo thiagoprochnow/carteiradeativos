@@ -59,12 +59,12 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/currentPercentLabel"
+                <ImageView
+                    android:id="@+id/currentPercentImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/currentPercentLabel"
-                    android:textSize="@dimen/stock_price" />
+                    android:src="@drawable/current_small"
+                    android:layout_marginRight="@dimen/percentage_image_margin" />
 
                 <TextView
                     android:id="@+id/currentPercent"
@@ -80,15 +80,15 @@
                 android:layout_marginTop="14dp"
                 android:gravity="center">
 
-                <TextView
-                    android:id="@+id/targetPercentLabel"
+                <ImageView
+                    android:id="@+id/objectivePercentImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/targetPercentLabel"
-                    android:textSize="@dimen/stock_price" />
+                    android:src="@drawable/objective_small"
+                    android:layout_marginRight="@dimen/percentage_image_margin" />
 
                 <TextView
-                    android:id="@+id/targetPercent"
+                    android:id="@+id/objectivePercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10.00%"

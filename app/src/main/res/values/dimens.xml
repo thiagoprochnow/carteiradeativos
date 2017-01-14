@@ -4,6 +4,7 @@
     <dimen name="stock_ticker">21sp</dimen>
     <dimen name="stock_text">16sp</dimen>
     <dimen name="stock_price">14sp</dimen>
+    <dimen name="percentage_image_margin">20px</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

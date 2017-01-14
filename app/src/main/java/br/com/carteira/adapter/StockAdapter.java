@@ -47,8 +47,8 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.StocksViewHo
         holder.boughtTotal.setText(String.format("R$%.2f", stock.getBoughtTotal()));
         holder.currentTotal.setText(Html.fromHtml("<u>"+String.format("R$%.2f", stock.getCurrentTotal())+"</u>"));
         holder.stockAppreciation.setText(String.format("R$%.2f", stock.getStockAppreciation()));
-        holder.currentPercent.setText(String.valueOf(stock.getCurrentPercent()));
-        holder.targetPercent.setText(String.valueOf(stock.getObjectivePercent()));
+        holder.currentPercent.setText(String.valueOf(stock.getCurrentPercent())+"%");
+        holder.objectivePercent.setText(String.valueOf(stock.getObjectivePercent())+"%");
         holder.totalIncome.setText(String.format("R$%.2f", stock.getTotalIncome()));
         holder.totalGain.setText(String.format("R$%.2f", stock.getTotalGain()));
         // Click on the CardView of the stock
@@ -67,7 +67,7 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.StocksViewHo
     }
 
     public static class StocksViewHolder extends RecyclerView.ViewHolder {
-        public TextView ticker,stockQuantity, boughtTotal, currentTotal, stockAppreciation, currentPercent, targetPercent, totalIncome, totalGain;
+        public TextView ticker,stockQuantity, boughtTotal, currentTotal, stockAppreciation, currentPercent, objectivePercent, totalIncome, totalGain;
         public StocksViewHolder(View view){
             super(view);
             // Create the view to save on the ViewHolder
@@ -77,7 +77,7 @@ public class StockAdapter extends RecyclerView.Adapter<StockAdapter.StocksViewHo
             currentTotal = (TextView) view.findViewById(R.id.currentTotal);
             stockAppreciation = (TextView) view.findViewById(R.id.stockAppreciation);
             currentPercent = (TextView) view.findViewById(R.id.currentPercent);
-            targetPercent = (TextView) view.findViewById(R.id.targetPercent);
+            objectivePercent = (TextView) view.findViewById(R.id.objectivePercent);
             totalIncome = (TextView) view.findViewById(R.id.totalIncome);
             totalGain = (TextView) view.findViewById(R.id.totalGain);
         }

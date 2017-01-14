@@ -24,15 +24,11 @@ import br.com.carteira.domain.StockService;
 
 /**
  * A simple {@link Fragment} subclass.
+ * Main fragment screen of Stocks of portfolio, accessed by selecting "Ações" in navigation menu.
  */
 public class StockMainFragment extends BaseFragment{
     List<Stock> stocks = new ArrayList<Stock>();
     protected RecyclerView recyclerView;
-
-    public StockMainFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

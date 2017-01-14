@@ -17,7 +17,7 @@ import br.com.carteira.R;
 /**
  * Dialog fragment to add a new or already owned stock in the portfolio.
  */
-public class AddStockDialogFragment extends DialogFragment {
+public class AddStockDialogFragment extends BaseDialogFragment {
 
     public String username;
 
@@ -62,7 +62,7 @@ public class AddStockDialogFragment extends DialogFragment {
                 EditText inputBuyDate = (EditText) dialogView.findViewById(R.id.inputBuyDate);
 
                 // Validate for each inputted value
-                Boolean validateTicker = validateTicker(inputTicker);
+                Boolean validateTicker = validateStockTicker(inputTicker);
                 Boolean validateQuantity = validateNotEmpty(inputQuantity);
                 Boolean validateBuyPrice = validateNotEmpty(inputBuyPrice);
                 Boolean validateObjective = validateNotEmpty(inputObjective);
@@ -87,37 +87,5 @@ public class AddStockDialogFragment extends DialogFragment {
             }
         });
         return dialog;
-    }
-
-    // Sends the information back to the Fragment that called the Dialog and is expecting a result
-    private void sendResult(int REQUEST_CODE, Intent intent) {
-        getTargetFragment().onActivityResult(
-                getTargetRequestCode(), REQUEST_CODE, intent);
-    }
-
-    // Function that validate the inputted value on the stock ticker field
-    private Boolean validateTicker(EditText ticker){
-        // To Do by REGEX
-        if(ticker.getText().toString().length() > 0)
-            return true;
-        else
-            return false;
-    }
-
-    // Function that validate the field is not empty on confirm button pressed
-    private Boolean validateNotEmpty(EditText text){
-        if(text.getText().toString().length() > 0)
-            return true;
-        else
-            return false;
-    }
-
-    // Function that validate the date field if the value was inputted correctly
-    private Boolean validateBuyDate(EditText buyDate){
-        // To Do by REGEX
-        if(buyDate.getText().toString().length() > 0)
-            return true;
-        else
-            return false;
     }
 }

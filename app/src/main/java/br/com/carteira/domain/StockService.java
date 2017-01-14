@@ -24,7 +24,7 @@ public class StockService {
             stock.setBoughtTotal(stock.getStockQuantity() * stock.getBoughtPrice());
             stock.setCurrentPrice(35.50);
             stock.setCurrentTotal(stock.getStockQuantity() * stock.getCurrentPrice());
-            stock.setStockAppreciation(stock.getCurrentTotal() - stock.getBoughtPrice());
+            stock.setStockAppreciation(stock.getCurrentTotal() - stock.getBoughtTotal());
             stock.setObjectivePercent(10.00);
             stock.setCurrentPercent(20.00);
             stock.setTotalIncome(150.00);
