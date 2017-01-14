@@ -20,6 +20,10 @@
         <activity
             android:name=".adapter.StockAdapter"
             android:label="@string/title_activity_stock_adapter"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".adapter.FiiAdapter"
+            android:label="@string/title_activity_fii_adapter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

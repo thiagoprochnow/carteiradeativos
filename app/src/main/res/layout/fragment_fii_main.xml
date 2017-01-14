@@ -1,13 +1,27 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="br.com.carteira.fragments.FiiMainFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Main view of ações content -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fiiRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:listSelector="@android:color/transparent"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical">
 
+    </android.support.v7.widget.RecyclerView>
+    <!-- Floating Action Button to add a new fii to the portfolio -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabFiis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="#ffffff"
+        app:backgroundTint="#67a6ed" />
 </FrameLayout>

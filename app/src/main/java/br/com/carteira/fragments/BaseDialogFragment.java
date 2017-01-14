@@ -26,6 +26,15 @@ public class BaseDialogFragment extends DialogFragment {
             return false;
     }
 
+    // Function that validate the inputted value on the fii ticker field
+    protected Boolean validateFiiTicker(EditText ticker){
+        // To Do by REGEX
+        if(ticker.getText().toString().length() > 0)
+            return true;
+        else
+            return false;
+    }
+
     // Function that validate the field is not empty on confirm button pressed
     protected Boolean validateNotEmpty(EditText text){
         if(text.getText().toString().length() > 0)

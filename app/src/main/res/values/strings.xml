@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Dialog Fragment -->
+    <string name="quantity">Quantidade</string>
+    <string name="buy_price">Preço de compra</string>
+    <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
+    <string name="buy_date">Data da compra</string>
+    <string name="buy_date_hint">dd/mm/aaaa</string>
+    <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
+
     <!-- Ações Main Fragment -->
     <string name="add_stock_success">Ação adicionado com sucesso</string>
     <string name="add_stock_fail">Falha ao adicionar ação</string>
@@ -14,12 +22,18 @@
     <string name="buy_stock_button">Comprar</string>
     <string name="cancel_stock_button">Cancelar</string>
     <string name="stock_ticker">Código da Ação</string>
-    <string name="quantity">Quantidade</string>
-    <string name="buy_price">Preço de compra</string>
-    <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
-    <string name="buy_date">Data da compra</string>
-    <string name="buy_date_hint">dd/mm/aaaa</string>
-    <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
+    <string name="stock_ticker_hint">Ex: PETR4</string>
+
+    <!-- Fii Main Fragment -->
+    <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
+    <string name="add_fii_fail">Falha ao adicionar fundo imobiliario</string>
+
+    <!-- Add fii Dialog Fragment -->
+    <string name="add_fii_title">Compra de Fundo Imobiliario</string>
+    <string name="buy_fii_button">Comprar</string>
+    <string name="cancel_fii_button">Cancelar</string>
+    <string name="fii_ticker">Código do Fundo Imobiliario</string>
+    <string name="fii_ticker_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
     <string name="complete_portfolio">Carteira Completa</string>
@@ -39,4 +53,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_stock_adapter">AcaoAdapter</string>
+    <string name="title_activity_fii_adapter">FiiAdapter</string>
 </resources>

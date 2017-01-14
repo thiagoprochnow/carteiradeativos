@@ -7,12 +7,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stock_ticker"/>
+        android:text="@string/fii_ticker"/>
     <EditText
         android:id="@+id/inputTicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/stock_ticker_hint" />
+        android:hint="@string/fii_ticker_hint" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
