@@ -1,4 +1,4 @@
-package br.com.carteira.fragments;
+package br.com.carteira.fragment;
 
 
 import android.content.Intent;
@@ -16,11 +16,9 @@ import br.com.carteira.api.service.StockIntentService;
  */
 public class FixedIncomeMainFragment extends Fragment {
 
-
     public FixedIncomeMainFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

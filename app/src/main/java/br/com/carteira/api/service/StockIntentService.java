@@ -2,7 +2,6 @@ package br.com.carteira.api.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.TaskParams;
@@ -14,7 +13,7 @@ import com.google.android.gms.gcm.TaskParams;
 public class StockIntentService extends IntentService {
 
     // Log variable
-    private String LOG_TAG = StockIntentService.class.getSimpleName();
+    private static final String LOG_TAG = StockIntentService.class.getSimpleName();
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
@@ -34,7 +33,7 @@ public class StockIntentService extends IntentService {
         StockTaskService stockTaskService = new StockTaskService();
 
         // Only calls the service if the symbol is present
-        if (intent.hasExtra(ADD_SYMBOL)){
+        if (intent.hasExtra(ADD_SYMBOL)) {
             stockTaskService.onRunTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
         }
     }

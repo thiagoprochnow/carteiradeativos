@@ -2,11 +2,11 @@ package br.com.carteira.api.service;
 
 import android.util.Log;
 
-import java.io.IOException;
-
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
+
+import java.io.IOException;
 
 import br.com.carteira.api.domain.ResponseStock;
 import retrofit2.Call;
@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class StockTaskService extends GcmTaskService {
 
     // Log variable
-    private String LOG_TAG = StockTaskService.class.getSimpleName();
+    private static final String LOG_TAG = StockTaskService.class.getSimpleName();
 
     @Override
     public int onRunTask(TaskParams params) {

@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-
+/* Content Provider for all wallet items */
 public class WalletProvider extends ContentProvider {
 
     static final int STOCK_QUOTE = 100;
@@ -20,6 +20,9 @@ public class WalletProvider extends ContentProvider {
 
     private DbHelper dbHelper;
 
+    /* This is the UriMatcher that is responsible to determine (based on the path used)
+    which wallet item (table) is going to be modified (add, delete, update, etc)
+     */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(WalletContract.AUTHORITY, WalletContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
@@ -34,6 +37,7 @@ public class WalletProvider extends ContentProvider {
         return true;
     }
 
+    /* Query the content provider and returns a Cursor with the objects found */
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
@@ -81,6 +85,7 @@ public class WalletProvider extends ContentProvider {
         return null;
     }
 
+    /* Insert a new item to the table */
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
@@ -105,6 +110,7 @@ public class WalletProvider extends ContentProvider {
         return returnUri;
     }
 
+    /* Delete one or several items from a table. It returns the number of rows (items) deleted. */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -139,6 +145,7 @@ public class WalletProvider extends ContentProvider {
         return rowsDeleted;
     }
 
+    /* It updated one or several items in the provider */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -160,7 +167,7 @@ public class WalletProvider extends ContentProvider {
 
     }
 
-
+    /* Add several items at once (it's like insert being called several times */
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
 

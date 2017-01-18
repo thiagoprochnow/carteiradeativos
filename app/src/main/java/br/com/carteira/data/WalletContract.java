@@ -3,7 +3,7 @@ package br.com.carteira.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-
+/* Contract class with helper methods and constants for the provier */
 public class WalletContract {
 
     // TODO: We'll need to update this AUTHOROT with the final package name of the app
@@ -14,6 +14,7 @@ public class WalletContract {
     public static final String PATH_STOCK_QUOTE = "quote";
     public static final String PATH_STOCK_QUOTE_WITH_SYMBOL = "quote/*";
 
+    /* This is the methods and constants used for Stocks table */
     public static final class StockQuote implements BaseColumns {
 
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_QUOTE).build();

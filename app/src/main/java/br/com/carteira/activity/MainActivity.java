@@ -3,7 +3,7 @@ package br.com.carteira.activity;
 import android.os.Bundle;
 
 import br.com.carteira.R;
-import br.com.carteira.fragments.PortfolioMainFragment;
+import br.com.carteira.fragment.PortfolioMainFragment;
 
 public class MainActivity extends BaseActivity {
 
