@@ -1,4 +1,4 @@
-package br.com.carteira.fragments;
+package br.com.carteira.fragment;
 
 import android.support.v4.app.Fragment;
 

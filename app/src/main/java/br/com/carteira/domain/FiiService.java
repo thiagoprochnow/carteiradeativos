@@ -5,17 +5,14 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by thipr on 12/30/2016.
- */
-
 public class FiiService {
+    // TODO: Translate comments here
     // Função inicial que retorna uma lista virtual de ações da petrobras para preencher a tabela
-    public static List<Fii> getFiis(Context context){
+    public static List<Fii> getFiis(Context context) {
         List<Fii> fiis = new ArrayList<Fii>();
         // Por vinte vezes ele cria uma ação hipotetica para compor a tabela
         // É adicionado o nome, ticker, preço de compra e preço atual da ação
-        for (int i = 0; i < 1; i++){
+        for (int i = 0; i < 1; i++) {
             // For more information on each stock variable, check the Stock.java class
             Fii fii = new Fii();
             fii.setTicker("HTMX11B");

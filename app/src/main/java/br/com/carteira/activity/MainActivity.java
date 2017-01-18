@@ -3,7 +3,7 @@ package br.com.carteira.activity;
 import android.os.Bundle;
 
 import br.com.carteira.R;
-import br.com.carteira.fragments.PortfolioMainFragment;
+import br.com.carteira.fragment.PortfolioMainFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -13,7 +13,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupNavDrawer();
-        // Inicializa o aplicativo com a Fragment da carteira geral
         replaceFragment(new PortfolioMainFragment());
     }
 }

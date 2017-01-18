@@ -4,11 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/* DbHelper class that creates all tables and perform the db upgrade logic */
 
 public class DbHelper extends SQLiteOpenHelper {
 
 
-    static final String NAME = "StockHawk.db";
+    // TODO: Need to change db name to the final app name or to anything meaningful
+    static final String NAME = "Wallet.db";
     private static final int VERSION = 1;
 
 
@@ -37,6 +39,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+
+    // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(" DROP TABLE IF EXISTS " + WalletContract.StockQuote.TABLE_NAME);

@@ -9,21 +9,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import br.com.carteira.R;
-import br.com.carteira.fragments.StockMainFragment;
-import br.com.carteira.fragments.PortfolioMainFragment;
-import br.com.carteira.fragments.StatisticMainFragment;
-import br.com.carteira.fragments.FiiMainFragment;
-import br.com.carteira.fragments.CurrencyMainFragment;
-import br.com.carteira.fragments.FixedIncomeMainFragment;
+import br.com.carteira.fragment.CurrencyMainFragment;
+import br.com.carteira.fragment.FiiMainFragment;
+import br.com.carteira.fragment.FixedIncomeMainFragment;
+import br.com.carteira.fragment.PortfolioMainFragment;
+import br.com.carteira.fragment.StatisticMainFragment;
+import br.com.carteira.fragment.StockMainFragment;
 import livroandroid.lib.utils.NavDrawerUtil;
-
-/**
- * Created by thipr on 11/9/2016.
- */
 
 // Class basica da qual todos ou a maioria das activities vão herdar varias funções
 public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
-    protected DrawerLayout drawerLayout;
+    protected DrawerLayout mDrawerLayout;
 
     // Configura a Toolbar
     protected void setUpToolbar() {
@@ -40,11 +36,13 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         // Ícone do menu do nav drawer
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null && drawerLayout != null) {
+        if (navigationView != null && mDrawerLayout != null) {
             // Atualiza a imagem e textos do header
-            NavDrawerUtil.setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader, R.drawable.nav_drawer_header, R.drawable.ic_logo_user, R.string.nav_drawer_username, R.string.nav_drawer_email);
+            NavDrawerUtil.setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
+                    R.drawable.nav_drawer_header, R.drawable.ic_logo_user, R.string
+                            .nav_drawer_username, R.string.nav_drawer_email);
             // Trata o evento de clique no menu.
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -53,7 +51,7 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
                             // Seleciona a linha
                             menuItem.setChecked(true);
                             // Fecha o menu
-                            drawerLayout.closeDrawers();
+                            mDrawerLayout.closeDrawers();
                             // Trata o evento do menu
                             onNavDrawerItemSelected(menuItem);
                             return true;
@@ -91,7 +89,7 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Trata o clique no botão que abre o menu.
-                if (drawerLayout != null) {
+                if (mDrawerLayout != null) {
                     openDrawer();
                     return true;
                 }
@@ -101,20 +99,21 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
 
     // Adiciona o fragment no centro da tela
     protected void replaceFragment(Fragment frag) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,frag, "TAG").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, frag,
+                "TAG").commit();
     }
 
     // Abre o menu lateral
     protected void openDrawer() {
-        if (drawerLayout != null) {
-            drawerLayout.openDrawer(GravityCompat.START);
+        if (mDrawerLayout != null) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
         }
     }
 
     // Fecha o menu lateral
     protected void closeDrawer() {
-        if (drawerLayout != null) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 }

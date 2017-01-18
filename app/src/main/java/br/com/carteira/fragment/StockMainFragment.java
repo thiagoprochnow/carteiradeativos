@@ -1,4 +1,4 @@
-package br.com.carteira.fragments;
+package br.com.carteira.fragment;
 
 
 import android.content.ContentValues;
@@ -31,7 +31,7 @@ import br.com.carteira.data.WalletContract;
 public class StockMainFragment extends BaseFragment implements
         StockQuoteAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
-    protected RecyclerView recyclerView;
+    protected RecyclerView mRecyclerView;
     private Context mContext;
     private StockQuoteAdapter mStockQuoteAdapter;
 
@@ -42,10 +42,10 @@ public class StockMainFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stocks_main, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.stockRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.stockRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
         view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
@@ -55,7 +55,7 @@ public class StockMainFragment extends BaseFragment implements
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
-        recyclerView.setAdapter(mStockQuoteAdapter);
+        mRecyclerView.setAdapter(mStockQuoteAdapter);
         getActivity().getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
         // Inflate the layout for this fragment

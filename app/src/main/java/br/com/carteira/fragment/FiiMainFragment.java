@@ -1,4 +1,4 @@
-package br.com.carteira.fragments;
+package br.com.carteira.fragment;
 
 
 import android.content.Intent;
@@ -26,23 +26,23 @@ import br.com.carteira.domain.FiiService;
  * A simple {@link Fragment} subclass.
  * Main fragment screen of Fiis of portfolio, accessed by selecting "Ações" in navigation menu.
  */
-public class FiiMainFragment extends BaseFragment{
-    List<Fii> fiis = new ArrayList<Fii>();
-    protected RecyclerView recyclerView;
+public class FiiMainFragment extends BaseFragment {
+    List<Fii> mFiis = new ArrayList<Fii>();
+    protected RecyclerView mRecyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fii_main, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fiiRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.fiiRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
-        view.findViewById(R.id.fabFiis).setOnClickListener(new View.OnClickListener(){
+        view.findViewById(R.id.fabFiis).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 showAddFiiDialog();
             }
         });
@@ -50,27 +50,29 @@ public class FiiMainFragment extends BaseFragment{
         // Inflate the layout for this fragment
         return view;
     }
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         taskFii();
     }
 
-    private void taskFii(){
+    private void taskFii() {
         // Search for the fii list List<Fii>
-        // If fiis list is empty, it will load from FiiService, else it will add when clicked on FAB button
-        if(fiis.size() == 0) {
-            this.fiis = FiiService.getFiis(getContext());
+        // If fiis list is empty, it will load from FiiService, else it will add when clicked on
+        // FAB button
+        if (mFiis.size() == 0) {
+            this.mFiis = FiiService.getFiis(getContext());
         }
-        recyclerView.setAdapter(new FiiAdapter(getContext(), fiis, onClickFii()));
+        mRecyclerView.setAdapter(new FiiAdapter(getContext(), mFiis, onClickFii()));
     }
 
-    private FiiAdapter.FiiOnClickListener onClickFii(){
-        return new FiiAdapter.FiiOnClickListener(){
+    private FiiAdapter.FiiOnClickListener onClickFii() {
+        return new FiiAdapter.FiiOnClickListener() {
             // Implement the onClickFii function from the interface of FiiAdapter onClickListener
             @Override
-            public void onClickFii(View view, int idx){
-                Fii fii = fiis.get(idx);
+            public void onClickFii(View view, int idx) {
+                Fii fii = mFiis.get(idx);
                 Toast.makeText(getContext(), "Fii: " + fii.getTicker(), Toast.LENGTH_SHORT).show();
             }
         };
@@ -88,10 +90,11 @@ public class FiiMainFragment extends BaseFragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        // Request code 0 is the return of the Dialog Fragment after filling the EditText field and pressing positive buttons
-        if(requestCode == 0){
+        // Request code 0 is the return of the Dialog Fragment after filling the EditText field
+        // and pressing positive buttons
+        if (requestCode == 0) {
             // Add as a new fii to the portfolio or sums to already existing one.
-            if(addFii(intent)){
+            if (addFii(intent)) {
                 Toast.makeText(getContext(), R.string.add_fii_success, Toast.LENGTH_SHORT);
             } else {
                 Toast.makeText(getContext(), R.string.add_fii_fail, Toast.LENGTH_SHORT);
@@ -119,7 +122,7 @@ public class FiiMainFragment extends BaseFragment{
         fii.setCurrentPercent(20.00);
         fii.setTotalIncome(150.00);
         fii.setTotalGain(fii.getFiiAppreciation() + fii.getTotalIncome());
-        fiis.add(fii);
+        mFiis.add(fii);
         taskFii();
         return true;
     }

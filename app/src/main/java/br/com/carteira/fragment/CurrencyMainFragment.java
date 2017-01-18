@@ -1,4 +1,4 @@
-package br.com.carteira.fragments;
+package br.com.carteira.fragment;
 
 
 import android.os.Bundle;
@@ -12,19 +12,17 @@ import br.com.carteira.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StatisticMainFragment extends Fragment {
+public class CurrencyMainFragment extends Fragment {
 
-
-    public StatisticMainFragment() {
+    public CurrencyMainFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_statistic_main, container, false);
+        return inflater.inflate(R.layout.fragment_currency_main, container, false);
     }
 
 }

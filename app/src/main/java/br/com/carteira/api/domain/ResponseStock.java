@@ -16,19 +16,21 @@ public class ResponseStock {
 
     /**
      * Get list of Stocks
+     *
      * @return - List of Stocks
      */
     public List<Stock> getStockQuotes() {
-        // TODO make this method able to return more than one quote if the params have more than one symbol
+        // TODO make this method able to return more than one quote if the params have more than
+        // one symbol
         List<Stock> result = new ArrayList<>();
         if (mResult != null && mResult.getQuote() != null) {
-                result.add(mResult.getQuote().getStockQuote());
+            result.add(mResult.getQuote().getStockQuote());
         }
         return result;
     }
 
     /**
-     *  Inner class - Result response mapping
+     * Inner class - Result response mapping
      */
     private class Result {
 

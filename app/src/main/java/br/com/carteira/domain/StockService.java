@@ -5,17 +5,14 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by thipr on 12/30/2016.
- */
-
 public class StockService {
+    // TODO: Translate the comments here
     // Função inicial que retorna uma lista virtual de ações da petrobras para preencher a tabela
-    public static List<Stock> getStocks(Context context){
+    public static List<Stock> getStocks(Context context) {
         List<Stock> stocks = new ArrayList<Stock>();
         // Por vinte vezes ele cria uma ação hipotetica para compor a tabela
         // É adicionado o nome, ticker, preço de compra e preço atual da ação
-        for (int i = 0; i < 1; i++){
+        for (int i = 0; i < 1; i++) {
             // For more information on each stock variable, check the Stock.java class
             Stock stock = new Stock();
             stock.setSymbol("PETR4");
