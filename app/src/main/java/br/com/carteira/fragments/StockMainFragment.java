@@ -106,6 +106,7 @@ public class StockMainFragment extends BaseFragment implements
         String inputTicker = intent.getStringExtra("inputTicker");
         int inputQuantity = Integer.parseInt(intent.getStringExtra("inputQuantity"));
         double inputBuyPrice = Double.parseDouble(intent.getStringExtra("inputBuyPrice"));
+        double boughtTotal = inputBuyPrice*inputQuantity;
         double inputObjective = Double.parseDouble(intent.getStringExtra("inputObjective"));
 
         // For more information on each stock variable, check the Stock.java class
@@ -120,7 +121,7 @@ public class StockMainFragment extends BaseFragment implements
         ContentValues stockCV = new ContentValues();
         stockCV.put(WalletContract.StockQuote.COLUMN_SYMBOL, inputTicker);
         stockCV.put(WalletContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-        stockCV.put(WalletContract.StockQuote.COLUMN_BOUGHT_TOTAL, inputBuyPrice);
+        stockCV.put(WalletContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
         stockCV.put(WalletContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
         Uri insertedUri = mContext.getContentResolver().insert(WalletContract.StockQuote.URI,
                 stockCV);

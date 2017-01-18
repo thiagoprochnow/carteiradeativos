@@ -1,5 +1,6 @@
 package br.com.carteira.activity;
 
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +25,11 @@ import livroandroid.lib.utils.NavDrawerUtil;
 // Class basica da qual todos ou a maioria das activities vão herdar varias funções
 public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
     protected DrawerLayout drawerLayout;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+    }
 
     // Configura a Toolbar
     protected void setUpToolbar() {

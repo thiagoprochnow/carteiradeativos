@@ -8,12 +8,16 @@ import br.com.carteira.fragments.PortfolioMainFragment;
 public class MainActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupNavDrawer();
-        // Inicializa o aplicativo com a Fragment da carteira geral
-        replaceFragment(new PortfolioMainFragment());
+        // Checks if savedInstanceState is null so it will not load portfolio fragment on screen rotation
+        // and fisical keyboard opening
+        if (savedInstanceState == null) {
+            // Inicializa o aplicativo com a Fragment da carteira geral
+            replaceFragment(new PortfolioMainFragment());
+        }
     }
 }
