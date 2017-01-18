@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /* Contract class with helper methods and constants for the provier */
-public class WalletContract {
+public class PortfolioContract {
 
     // TODO: We'll need to update this AUTHOROT with the final package name of the app
     public static final String AUTHORITY = "br.com.carteira";

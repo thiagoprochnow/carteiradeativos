@@ -10,7 +10,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     // TODO: Need to change db name to the final app name or to anything meaningful
-    static final String NAME = "Wallet.db";
+    static final String NAME = "Portfolio.db";
     private static final int VERSION = 1;
 
 
@@ -23,18 +23,18 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // This is the Stock table skeleton.
         // We'll need to add/remove columns here to reflect the actual data we'll store in db.
-        String builder = "CREATE TABLE " + WalletContract.StockQuote.TABLE_NAME + " (" +
-                WalletContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                WalletContract.StockQuote.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                WalletContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
-                WalletContract.StockQuote.COLUMN_BOUGHT_TOTAL + " REAL, " +
-                WalletContract.StockQuote.COLUMN_CURRENT_TOTAL + " REAL, " +
-                WalletContract.StockQuote.COLUMN_APPRECIATION + " REAL, " +
-                WalletContract.StockQuote.COLUMN_CURRENT_PERCENT + " REAL, " +
-                WalletContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
-                WalletContract.StockQuote.COLUMN_TOTAL_INCOME + " REAL, " +
-                WalletContract.StockQuote.COLUMN_TOTAL_GAIN + " REAL, " +
-                "UNIQUE (" + WalletContract.StockQuote.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+        String builder = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
+                PortfolioContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.StockQuote.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_APPRECIATION + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_TOTAL_INCOME + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_TOTAL_GAIN + " REAL, " +
+                "UNIQUE (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
         db.execSQL(builder);
 
     }
@@ -43,7 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + WalletContract.StockQuote.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockQuote.TABLE_NAME);
         onCreate(db);
     }
 }

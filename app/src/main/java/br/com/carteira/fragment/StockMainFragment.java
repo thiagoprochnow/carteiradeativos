@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.adapter.StockQuoteAdapter;
-import br.com.carteira.data.WalletContract;
+import br.com.carteira.data.PortfolioContract;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -119,11 +119,11 @@ public class StockMainFragment extends BaseFragment implements
 
 
         ContentValues stockCV = new ContentValues();
-        stockCV.put(WalletContract.StockQuote.COLUMN_SYMBOL, inputTicker);
-        stockCV.put(WalletContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-        stockCV.put(WalletContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
-        stockCV.put(WalletContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
-        Uri insertedUri = mContext.getContentResolver().insert(WalletContract.StockQuote.URI,
+        stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputTicker);
+        stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
+        stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
+        stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
+        Uri insertedUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
                 stockCV);
 
         /*
@@ -150,9 +150,9 @@ public class StockMainFragment extends BaseFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(mContext,
-                WalletContract.StockQuote.URI,
-                WalletContract.StockQuote.STOCK_QUOTE_COLUMNS,
-                null, null, WalletContract.StockQuote.COLUMN_SYMBOL);
+                PortfolioContract.StockQuote.URI,
+                PortfolioContract.StockQuote.STOCK_QUOTE_COLUMNS,
+                null, null, PortfolioContract.StockQuote.COLUMN_SYMBOL);
     }
 
     @Override

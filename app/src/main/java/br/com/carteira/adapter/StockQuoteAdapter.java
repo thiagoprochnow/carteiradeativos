@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.data.WalletContract;
+import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,7 +34,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
 
     String getSymbolAtPosition(int position) {
         mCursor.moveToPosition(position);
-        return mCursor.getString(mCursor.getColumnIndex(WalletContract.StockQuote.COLUMN_SYMBOL));
+        return mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_SYMBOL));
     }
 
     @Override
@@ -46,26 +46,26 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
     @Override
     public void onBindViewHolder(StockQuoteViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(WalletContract.StockQuote.
+        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockQuote.
                 COLUMN_SYMBOL)));
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_QUANTITY))));
+                (PortfolioContract.StockQuote.COLUMN_QUANTITY))));
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
         holder.boughtTotal.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_BOUGHT_TOTAL))));
+                (PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL))));
         holder.currentTotal.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_CURRENT_TOTAL))));
+                (PortfolioContract.StockQuote.COLUMN_CURRENT_TOTAL))));
         holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_OBJECTIVE_PERCENT))));
+                (PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT))));
         holder.stockAppreciation.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_APPRECIATION))));
+                (PortfolioContract.StockQuote.COLUMN_APPRECIATION))));
         holder.currentPercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_CURRENT_PERCENT))));
+                (PortfolioContract.StockQuote.COLUMN_CURRENT_PERCENT))));
         holder.totalIncome.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_TOTAL_INCOME))));
+                (PortfolioContract.StockQuote.COLUMN_TOTAL_INCOME))));
         holder.totalGain.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (WalletContract.StockQuote.COLUMN_TOTAL_GAIN))));
+                (PortfolioContract.StockQuote.COLUMN_TOTAL_GAIN))));
     }
 
     @Override
@@ -122,7 +122,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            int symbolColumn = mCursor.getColumnIndex(WalletContract.StockQuote.COLUMN_SYMBOL);
+            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_SYMBOL);
             mClickHandler.onClick(mCursor.getString(symbolColumn));
         }
     }

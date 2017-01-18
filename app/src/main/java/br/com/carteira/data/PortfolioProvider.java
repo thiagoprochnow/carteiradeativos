@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/* Content Provider for all wallet items */
-public class WalletProvider extends ContentProvider {
+/* Content Provider for all portfolio items */
+public class PortfolioProvider extends ContentProvider {
 
     static final int STOCK_QUOTE = 100;
     static final int STOCK_QUOTE_FOR_SYMBOL = 101;
@@ -21,12 +21,12 @@ public class WalletProvider extends ContentProvider {
     private DbHelper dbHelper;
 
     /* This is the UriMatcher that is responsible to determine (based on the path used)
-    which wallet item (table) is going to be modified (add, delete, update, etc)
+    which portfolio item (table) is going to be modified (add, delete, update, etc)
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(WalletContract.AUTHORITY, WalletContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
-        matcher.addURI(WalletContract.AUTHORITY, WalletContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
                 STOCK_QUOTE_FOR_SYMBOL);
         return matcher;
     }
@@ -48,7 +48,7 @@ public class WalletProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case STOCK_QUOTE:
                 returnCursor = db.query(
-                        WalletContract.StockQuote.TABLE_NAME,
+                        PortfolioContract.StockQuote.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -60,10 +60,10 @@ public class WalletProvider extends ContentProvider {
 
             case STOCK_QUOTE_FOR_SYMBOL:
                 returnCursor = db.query(
-                        WalletContract.StockQuote.TABLE_NAME,
+                        PortfolioContract.StockQuote.TABLE_NAME,
                         projection,
-                        WalletContract.StockQuote.COLUMN_SYMBOL + " = ?",
-                        new String[]{WalletContract.StockQuote.getStockQuoteFromUri(uri)},
+                        PortfolioContract.StockQuote.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.StockQuote.getStockQuoteFromUri(uri)},
                         null,
                         null,
                         sortOrder
@@ -95,11 +95,11 @@ public class WalletProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case STOCK_QUOTE:
                 db.insert(
-                        WalletContract.StockQuote.TABLE_NAME,
+                        PortfolioContract.StockQuote.TABLE_NAME,
                         null,
                         values
                 );
-                returnUri = WalletContract.StockQuote.URI;
+                returnUri = PortfolioContract.StockQuote.URI;
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
@@ -120,7 +120,7 @@ public class WalletProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case STOCK_QUOTE:
                 rowsDeleted = db.delete(
-                        WalletContract.StockQuote.TABLE_NAME,
+                        PortfolioContract.StockQuote.TABLE_NAME,
                         selection,
                         selectionArgs
                 );
@@ -128,10 +128,10 @@ public class WalletProvider extends ContentProvider {
                 break;
 
             case STOCK_QUOTE_FOR_SYMBOL:
-                String symbol = WalletContract.StockQuote.getStockQuoteFromUri(uri);
+                String symbol = PortfolioContract.StockQuote.getStockQuoteFromUri(uri);
                 rowsDeleted = db.delete(
-                        WalletContract.StockQuote.TABLE_NAME,
-                        '"' + symbol + '"' + " =" + WalletContract.StockQuote.COLUMN_SYMBOL,
+                        PortfolioContract.StockQuote.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.StockQuote.COLUMN_SYMBOL,
                         selectionArgs
                 );
                 break;
@@ -152,7 +152,7 @@ public class WalletProvider extends ContentProvider {
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
             case STOCK_QUOTE:
-                rowsUpdated = db.update(WalletContract.StockQuote.TABLE_NAME, values,
+                rowsUpdated = db.update(PortfolioContract.StockQuote.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
@@ -180,7 +180,7 @@ public class WalletProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         db.insert(
-                                WalletContract.StockQuote.TABLE_NAME,
+                                PortfolioContract.StockQuote.TABLE_NAME,
                                 null,
                                 value
                         );
