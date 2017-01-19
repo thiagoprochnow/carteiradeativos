@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import br.com.carteira.R;
 import br.com.carteira.fragment.CurrencyMainFragment;
@@ -16,10 +19,9 @@ import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.StatisticMainFragment;
 import br.com.carteira.fragment.StockMainFragment;
-import livroandroid.lib.utils.NavDrawerUtil;
 
-// Class basica da qual todos ou a maioria das activities vão herdar varias funções
-public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
+// Base class with function and navigation drawer that other activities will extend from
+public class BaseActivity extends AppCompatActivity {
     protected DrawerLayout mDrawerLayout;
 
     @Override
@@ -27,7 +29,7 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         super.onCreate(savedInstanceState);
     }
 
-    // Configura a Toolbar
+    // Configure the toolbar
     protected void setUpToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -35,30 +37,30 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         }
     }
 
-    // Configura o Nav Drawer
+    // Configure and set the Drawer when called in the main activity
     protected void setupNavDrawer() {
-        // Drawer Layout
         final ActionBar actionBar = getSupportActionBar();
-        // Ícone do menu do nav drawer
+        // Icon to call upon the Drawer to come out
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        // Drawer layout view of the activity layout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // Navigation view of the activity layout
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null && mDrawerLayout != null) {
-            // Atualiza a imagem e textos do header
-            NavDrawerUtil.setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
-                    R.drawable.nav_drawer_header, R.drawable.ic_logo_user, R.string
-                            .nav_drawer_username, R.string.nav_drawer_email);
-            // Trata o evento de clique no menu.
+            // Sets the image of the header of the navigation view
+            setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
+                    R.drawable.nav_drawer_header);
+            // Configures the event when a item is selected from the menu
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
-                            // Seleciona a linha
+                            // Sets that clicked item as selected
                             menuItem.setChecked(true);
-                            // Fecha o menu
+                            // Closes the menu to show back the content
                             mDrawerLayout.closeDrawers();
-                            // Trata o evento do menu
+                            // Calls upon the function that will treat the selected item.
                             onNavDrawerItemSelected(menuItem);
                             return true;
                         }
@@ -66,7 +68,7 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         }
     }
 
-    // Trata o evento do menu lateral
+    // Will treat the selected item and attach the correct fragment.
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_item_complete_portfolio:
@@ -94,7 +96,6 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                // Trata o clique no botão que abre o menu.
                 if (mDrawerLayout != null) {
                     openDrawer();
                     return true;
@@ -103,23 +104,35 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Adiciona o fragment no centro da tela
+    // Sets the fragment on the container according to the selected item in menu
     protected void replaceFragment(Fragment frag) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, frag,
                 "TAG").commit();
     }
 
-    // Abre o menu lateral
+    // Open the Drawer
     protected void openDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
     }
 
-    // Fecha o menu lateral
+    // Closes the Drawer
     protected void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    // Set Drawer header values and images
+    public static void setHeaderValues(View navDrawerView, int listViewContainerId, int imgNavDrawerHeaderId) {
+        View view = navDrawerView.findViewById(listViewContainerId);
+        if(view != null) {
+            view.setVisibility(View.VISIBLE);
+            ImageView imgUserBackground = (ImageView)view.findViewById(R.id.imgUserBackground);
+            if(imgUserBackground != null) {
+                imgUserBackground.setImageResource(imgNavDrawerHeaderId);
+            }
         }
     }
 }

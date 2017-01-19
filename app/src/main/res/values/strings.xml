@@ -43,9 +43,6 @@
     <string name="currency">Moedas</string>
     <string name="statistic">Estatisticas</string>
 
-    <string name="nav_drawer_username">Ricardo Lecheta</string>
-    <string name="nav_drawer_email">rlecheta@gmail.com</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_portfolio_fragment">Hello carteira fragment</string>
     <string name="hello_stocks_fragment">Hello ações fragment</string>
