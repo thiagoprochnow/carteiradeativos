@@ -9,7 +9,7 @@ import android.widget.EditText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseDialogFragment extends DialogFragment {
+public class BaseAddFormFragment extends Fragment {
     // Function that validate the inputted value on the stock ticker field
     protected Boolean validateStockTicker(EditText ticker) {
         // To Do by REGEX

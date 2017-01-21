@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import br.com.carteira.R;
+import br.com.carteira.activity.AddStockForm;
 import br.com.carteira.adapter.StockQuoteAdapter;
 import br.com.carteira.data.PortfolioContract;
 
@@ -51,7 +52,9 @@ public class StockMainFragment extends BaseFragment implements
         view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddStockDialog();
+                // On click FAB, requests the new stock form with result of inputed values
+                Intent intent = new Intent(getContext(),AddStockForm.class);
+                startActivity(intent);
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
@@ -66,80 +69,7 @@ public class StockMainFragment extends BaseFragment implements
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        /*if (context instanceof OnStockListFragmentListener) {
-            mOnStockListFragmentListener = (OnStockListFragmentListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnStockListFragmentListener");
-        }*/
-
         mContext = context;
-    }
-
-    // Function to show the add stock dialog fragment
-    public void showAddStockDialog() {
-        // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = new AddStockDialogFragment();
-        // Asks the new DialogFragment for a result with a Request_code = 0
-        dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "AddStockDialogFragment");
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        // Request code 0 is the return of the Dialog Fragment after filling the EditText field
-        // and pressing positive buttons
-        if (requestCode == 0) {
-            // Add as a new stock to the portfolio or sums to already existing one.
-            if (addStock(intent)) {
-                Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT);
-            } else {
-                Toast.makeText(mContext, R.string.add_stock_fail, Toast.LENGTH_SHORT);
-            }
-        }
-    }
-
-    public boolean addStock(Intent intent) {
-
-        // Parse the information of the intent sent from the DialogFragment to add the stock
-        String inputTicker = intent.getStringExtra("inputTicker");
-        int inputQuantity = Integer.parseInt(intent.getStringExtra("inputQuantity"));
-        double inputBuyPrice = Double.parseDouble(intent.getStringExtra("inputBuyPrice"));
-        double boughtTotal = inputBuyPrice*inputQuantity;
-        double inputObjective = Double.parseDouble(intent.getStringExtra("inputObjective"));
-
-        // For more information on each stock variable, check the Stock.java class
-        /*Stock stock = new Stock();
-        stock.setTicker(inputTicker);
-        stock.setStockQuantity(inputQuantity);
-        stock.setBoughtPrice(inputBuyPrice);
-        stock.setBoughtTotal(stock.getStockQuantity() * stock.getBoughtPrice());
-        stock.setObjectivePercent(inputObjective);*/
-
-
-        ContentValues stockCV = new ContentValues();
-        stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputTicker);
-        stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-        stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
-        stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
-        Uri insertedUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
-                stockCV);
-
-        /*
-        stock.setCurrentPrice(35.50);
-        stock.setCurrentTotal(stock.getStockQuantity() * stock.getCurrentPrice());
-        stock.setStockAppreciation(stock.getCurrentTotal() - stock.getBoughtTotal());
-
-        stock.setCurrentPercent(20.00);
-        stock.setTotalGain(stock.getStockAppreciation() + stock.getTotalIncome());*/
-
-        if (insertedUri != null) {
-            return true;
-        } else {
-            return false;
-        }
-
     }
 
     @Override

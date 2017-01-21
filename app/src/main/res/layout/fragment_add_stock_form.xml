@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:layout_gravity="center">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,11 +45,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buy_date"/>
+    <!-- Missin date of the buy -->
     <EditText
         android:id="@+id/inputBuyDate"
         android:inputType="date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/buy_date_hint"/>
-    <!-- Missin date of the buy -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_stock_button" />
+        <Button
+            android:id="@+id/buyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/buy_stock_button" />
+    </LinearLayout>
 </LinearLayout>

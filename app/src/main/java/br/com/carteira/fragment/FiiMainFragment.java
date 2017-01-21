@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.carteira.R;
+import br.com.carteira.activity.AddFiiForm;
+import br.com.carteira.activity.AddStockForm;
 import br.com.carteira.adapter.FiiAdapter;
 import br.com.carteira.domain.Fii;
 import br.com.carteira.domain.FiiService;
@@ -43,28 +45,14 @@ public class FiiMainFragment extends BaseFragment {
         view.findViewById(R.id.fabFiis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAddFiiDialog();
+                // On click FAB, requests the new fii form with result of inputed values
+                Intent intent = new Intent(getContext(),AddFiiForm.class);
+                startActivity(intent);
             }
         });
 
         // Inflate the layout for this fragment
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        taskFii();
-    }
-
-    private void taskFii() {
-        // Search for the fii list List<Fii>
-        // If fiis list is empty, it will load from FiiService, else it will add when clicked on
-        // FAB button
-        if (mFiis.size() == 0) {
-            this.mFiis = FiiService.getFiis(getContext());
-        }
-        mRecyclerView.setAdapter(new FiiAdapter(getContext(), mFiis, onClickFii()));
     }
 
     private FiiAdapter.FiiOnClickListener onClickFii() {
@@ -76,54 +64,5 @@ public class FiiMainFragment extends BaseFragment {
                 Toast.makeText(getContext(), "Fii: " + fii.getTicker(), Toast.LENGTH_SHORT).show();
             }
         };
-    }
-
-    // Function to show the add fii dialog fragment
-    public void showAddFiiDialog() {
-        // Create an instance of the dialog fragment and show it
-        DialogFragment dialog = new AddFiiDialogFragment();
-        // Asks the new DialogFragment for a result with a Request_code = 0
-        dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), "AddFiiDialogFragment");
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        // Request code 0 is the return of the Dialog Fragment after filling the EditText field
-        // and pressing positive buttons
-        if (requestCode == 0) {
-            // Add as a new fii to the portfolio or sums to already existing one.
-            if (addFii(intent)) {
-                Toast.makeText(getContext(), R.string.add_fii_success, Toast.LENGTH_SHORT);
-            } else {
-                Toast.makeText(getContext(), R.string.add_fii_fail, Toast.LENGTH_SHORT);
-            }
-        }
-    }
-
-    public boolean addFii(Intent intent) {
-        // Parse the information of the intent sent from the DialogFragment to add the fii
-        String inputTicker = intent.getStringExtra("inputTicker");
-        int inputQuantity = Integer.parseInt(intent.getStringExtra("inputQuantity"));
-        double inputBuyPrice = Double.parseDouble(intent.getStringExtra("inputBuyPrice"));
-        double inputObjective = Double.parseDouble(intent.getStringExtra("inputObjective"));
-
-        // For more information on each fii variable, check the Fii.java class
-        Fii fii = new Fii();
-        fii.setTicker(inputTicker);
-        fii.setFiiQuantity(inputQuantity);
-        fii.setBoughtPrice(inputBuyPrice);
-        fii.setBoughtTotal(fii.getFiiQuantity() * fii.getBoughtPrice());
-        fii.setCurrentPrice(35.50);
-        fii.setCurrentTotal(fii.getFiiQuantity() * fii.getCurrentPrice());
-        fii.setFiiAppreciation(fii.getCurrentTotal() - fii.getBoughtTotal());
-        fii.setObjectivePercent(inputObjective);
-        fii.setCurrentPercent(20.00);
-        fii.setTotalIncome(150.00);
-        fii.setTotalGain(fii.getFiiAppreciation() + fii.getTotalIncome());
-        mFiis.add(fii);
-        taskFii();
-        return true;
     }
 }
