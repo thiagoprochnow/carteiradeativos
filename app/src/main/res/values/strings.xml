@@ -21,8 +21,8 @@
     <string name="add_stock_title">Compra de Ação</string>
     <string name="buy_stock_button">Comprar</string>
     <string name="cancel_stock_button">Cancelar</string>
-    <string name="stock_ticker">Código da Ação</string>
-    <string name="stock_ticker_hint">Ex: PETR4</string>
+    <string name="stock_symbol">Código da Ação</string>
+    <string name="stock_symbol_hint">Ex: PETR4</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>

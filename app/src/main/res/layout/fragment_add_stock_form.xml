@@ -1,46 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="20dp"
-    android:layout_gravity="center">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:orientation="vertical"
+              android:padding="20dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stock_ticker"/>
+        android:text="@string/stock_symbol"/>
+
     <EditText
-        android:id="@+id/inputTicker"
+        android:id="@+id/inputSymbol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/stock_ticker_hint" />
+        android:digits="0,1,2,3,4,5,6,7,8,9,qwertzuiopasdfghjklyxcvbnm,QWERTZUIOPASDFGHJKLYXCVBNM"
+        android:hint="@string/stock_symbol_hint"
+        android:inputType="textCapCharacters"
+        android:maxLength="6"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/quantity"/>
+
     <EditText
         android:id="@+id/inputQuantity"
-        android:inputType="number"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="number"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buy_price"/>
+
     <EditText
         android:id="@+id/inputBuyPrice"
-        android:inputType="numberDecimal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/percentual_objective"/>
+
     <EditText
         android:id="@+id/inputObjective"
-        android:inputType="numberDecimal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,24 +59,27 @@
     <!-- Missin date of the buy -->
     <EditText
         android:id="@+id/inputBuyDate"
-        android:inputType="date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/buy_date_hint"/>
+        android:hint="@string/buy_date_hint"
+        android:inputType="date"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_stock_button" />
+            android:text="@string/cancel_stock_button"/>
+
         <Button
             android:id="@+id/buyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/buy_stock_button" />
+            android:text="@string/buy_stock_button"/>
     </LinearLayout>
 </LinearLayout>
