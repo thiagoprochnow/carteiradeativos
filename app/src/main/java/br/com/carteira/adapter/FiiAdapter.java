@@ -44,7 +44,7 @@ public class FiiAdapter extends RecyclerView.Adapter<FiiAdapter.FiisViewHolder> 
         // Updates the view with the values of the elements on CardView
         Fii fii = mFiis.get(position);
         // To know more of each fii variable, check Fii.java for coments
-        holder.ticker.setText(fii.getTicker());
+        holder.symbol.setText(fii.getSymbol());
         holder.fiiQuantity.setText(String.valueOf(fii.getFiiQuantity()));
         holder.boughtTotal.setText(String.format("R$%.2f", fii.getBoughtTotal()));
         holder.currentTotal.setText(Html.fromHtml("<u>" + String.format("R$%.2f", fii
@@ -70,13 +70,13 @@ public class FiiAdapter extends RecyclerView.Adapter<FiiAdapter.FiisViewHolder> 
     }
 
     public static class FiisViewHolder extends RecyclerView.ViewHolder {
-        public TextView ticker, fiiQuantity, boughtTotal, currentTotal, fiiAppreciation,
+        public TextView symbol, fiiQuantity, boughtTotal, currentTotal, fiiAppreciation,
                 currentPercent, objectivePercent, totalIncome, totalGain;
 
         public FiisViewHolder(View view) {
             super(view);
             // Create the view to save on the ViewHolder
-            ticker = (TextView) view.findViewById(R.id.ticker);
+            symbol = (TextView) view.findViewById(R.id.symbol);
             fiiQuantity = (TextView) view.findViewById(R.id.fiiQuantity);
             boughtTotal = (TextView) view.findViewById(R.id.boughtTotal);
             currentTotal = (TextView) view.findViewById(R.id.currentTotal);

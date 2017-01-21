@@ -11,7 +11,7 @@ public class StockService {
     public static List<Stock> getStocks(Context context) {
         List<Stock> stocks = new ArrayList<Stock>();
         // Por vinte vezes ele cria uma ação hipotetica para compor a tabela
-        // É adicionado o nome, ticker, preço de compra e preço atual da ação
+        // É adicionado o nome, symbol, preço de compra e preço atual da ação
         for (int i = 0; i < 1; i++) {
             // For more information on each stock variable, check the Stock.java class
             Stock stock = new Stock();

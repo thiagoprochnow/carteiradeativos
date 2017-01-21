@@ -32,8 +32,8 @@
     <string name="add_fii_title">Compra de Fundo Imobiliario</string>
     <string name="buy_fii_button">Comprar</string>
     <string name="cancel_fii_button">Cancelar</string>
-    <string name="fii_ticker">Código do Fundo Imobiliario</string>
-    <string name="fii_ticker_hint">Ex: HTMX11B</string>
+    <string name="fii_symbol">Código do Fundo Imobiliario</string>
+    <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
     <string name="complete_portfolio">Carteira Completa</string>

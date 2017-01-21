@@ -3,8 +3,6 @@ package br.com.carteira.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +17,8 @@ import java.util.List;
 
 import br.com.carteira.R;
 import br.com.carteira.activity.AddFiiForm;
-import br.com.carteira.activity.AddStockForm;
 import br.com.carteira.adapter.FiiAdapter;
 import br.com.carteira.domain.Fii;
-import br.com.carteira.domain.FiiService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +57,7 @@ public class FiiMainFragment extends BaseFragment {
             @Override
             public void onClickFii(View view, int idx) {
                 Fii fii = mFiis.get(idx);
-                Toast.makeText(getContext(), "Fii: " + fii.getTicker(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Fii: " + fii.getSymbol(), Toast.LENGTH_SHORT).show();
             }
         };
     }

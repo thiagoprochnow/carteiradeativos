@@ -6,13 +6,13 @@ import java.io.Serializable;
 public class Fii implements Serializable {
 
     //TODO: Lets use java beans standard in this class by adding a 'm' before
-    // instance class variables. For example: mId, mTicker, mFiiQuantity, etc.
+    // instance class variables. For example: mId, mSymbol, mFiiQuantity, etc.
 
     // Unique id of each Object created
     private long id;
 
-    // Owned fii Ticker (Ex: KNRI11)
-    private String ticker;
+    // Owned fii Symbol (Ex: KNRI11)
+    private String symbol;
 
     // Quantity of fii of that company that is owned by user. User sets this value when
     // adding a new fii or buying more of already owned fii (Ex: 40 fii)
@@ -73,12 +73,12 @@ public class Fii implements Serializable {
         this.id = id;
     }
 
-    public String getTicker() {
-        return ticker;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public int getFiiQuantity() {

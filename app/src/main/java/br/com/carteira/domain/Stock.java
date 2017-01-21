@@ -11,7 +11,7 @@ public class Stock implements Serializable {
     // Unique id of each Object created
     private long id;
 
-    // Owned stock Ticker (Ex: PETR4)
+    // Owned stock Symbol (Ex: PETR4)
     private String symbol;
 
     // Quantity of Stocks of that company that is owned by user. User sets this value when

@@ -1,14 +1,14 @@
 <resources>
     <!-- Ações Adapter -->
     <dimen name="stock_quantity">21sp</dimen>
-    <dimen name="stock_ticker">21sp</dimen>
+    <dimen name="stock_symbol">21sp</dimen>
     <dimen name="stock_text">16sp</dimen>
     <dimen name="stock_price">14sp</dimen>
     <dimen name="stock_percentage_image_margin">20px</dimen>
 
     <!-- Fii Adapter -->
     <dimen name="fii_quantity">21sp</dimen>
-    <dimen name="fii_ticker">21sp</dimen>
+    <dimen name="fii_symbol">21sp</dimen>
     <dimen name="fii_text">16sp</dimen>
     <dimen name="fii_price">14sp</dimen>
     <dimen name="fii_percentage_image_margin">20px</dimen>

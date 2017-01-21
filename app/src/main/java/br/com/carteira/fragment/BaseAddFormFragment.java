@@ -2,7 +2,6 @@ package br.com.carteira.fragment;
 
 
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.widget.EditText;
 
@@ -10,19 +9,19 @@ import android.widget.EditText;
  * A simple {@link Fragment} subclass.
  */
 public class BaseAddFormFragment extends Fragment {
-    // Function that validate the inputted value on the stock ticker field
-    protected Boolean validateStockTicker(EditText ticker) {
+    // Function that validate the inputted value on the stock symbol field
+    protected Boolean validateStockSymbol(EditText symbol) {
         // To Do by REGEX
-        if (ticker.getText().toString().length() > 0)
+        if (symbol.getText().toString().length() > 0)
             return true;
         else
             return false;
     }
 
-    // Function that validate the inputted value on the fii ticker field
-    protected Boolean validateFiiTicker(EditText ticker) {
+    // Function that validate the inputted value on the fii symbol field
+    protected Boolean validateFiiSymbol(EditText symbol) {
         // To Do by REGEX
-        if (ticker.getText().toString().length() > 0)
+        if (symbol.getText().toString().length() > 0)
             return true;
         else
             return false;

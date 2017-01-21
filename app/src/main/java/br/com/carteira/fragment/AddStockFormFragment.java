@@ -20,20 +20,20 @@ import br.com.carteira.data.PortfolioContract;
  */
 public class AddStockFormFragment extends BaseAddFormFragment {
     private Context mContext;
-    private View view;
+    private View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
-        View buyButton = view.findViewById(R.id.buyButton);
-        View cancelButton = view.findViewById(R.id.cancelButton);
+        mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
+        View buyButton = mView.findViewById(R.id.buyButton);
+        View cancelButton = mView.findViewById(R.id.cancelButton);
 
         // Sets the action when clicking on the Buy Stock button
         buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(addStock()){
+                if (addStock()) {
                     getActivity().finish();
                 }
             }
@@ -46,33 +46,33 @@ public class AddStockFormFragment extends BaseAddFormFragment {
                 getActivity().finish();
             }
         });
-        return view;
+        return mView;
     }
 
     // Function to validate inputted values and add the stock to the portfolio
-    private boolean addStock(){
+    private boolean addStock() {
         // Parse the information inputted to add the stock
-        EditText inputTickerView = (EditText) view.findViewById(R.id.inputTicker);
-        EditText inputQuantityView = (EditText) view.findViewById(R.id.inputQuantity);
-        EditText inputBuyPriceView = (EditText) view.findViewById(R.id.inputBuyPrice);
-        EditText inputObjectiveView = (EditText) view.findViewById(R.id.inputObjective);
+        EditText inputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
+        EditText inputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
+        EditText inputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
+        EditText inputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
 
         // Validate for each inputted value
-        Boolean validateTicker = validateStockTicker(inputTickerView);
+        Boolean validateSymbol = validateStockSymbol(inputSymbolView);
         Boolean validateQuantity = validateNotEmpty(inputQuantityView);
         Boolean validateBuyPrice = validateNotEmpty(inputBuyPriceView);
         Boolean validateObjective = validateNotEmpty(inputObjectiveView);
 
         // If all validations pass, try to add the stock to the portfolio database
-        if (validateTicker && validateQuantity && validateBuyPrice && validateObjective) {
-            String inputTicker = inputTickerView.getText().toString();
+        if (validateSymbol && validateQuantity && validateBuyPrice && validateObjective) {
+            String inputSymbol = inputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(inputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(inputBuyPriceView.getText().toString());
             double boughtTotal = inputQuantity * buyPrice;
             double inputObjective = Double.parseDouble(inputObjectiveView.getText().toString());
 
             ContentValues stockCV = new ContentValues();
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputTicker);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);

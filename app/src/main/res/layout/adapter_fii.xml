@@ -43,13 +43,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="|"
-                    android:textSize="@dimen/fii_ticker"/>
+                    android:textSize="@dimen/fii_symbol"/>
                 <TextView
-                    android:id="@+id/ticker"
+                    android:id="@+id/symbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DUMY4"
-                    android:textSize="@dimen/fii_ticker"/>
+                    android:textSize="@dimen/fii_symbol"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
