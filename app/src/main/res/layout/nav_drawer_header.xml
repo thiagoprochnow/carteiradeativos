@@ -6,7 +6,7 @@
     android:layout_gravity="start"
     android:background="#ff0000"
     tools:ignore="MissingPrefix">
-    <!-- Img fundo -->
+    <!-- Background image -->
     <ImageView
         android:id="@+id/imgUserBackground"
         android:layout_width="match_parent"

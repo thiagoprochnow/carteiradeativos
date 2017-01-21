@@ -2,17 +2,13 @@ package br.com.carteira.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.carteira.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class CurrencyMainFragment extends Fragment {
+public class CurrencyMainFragment extends BaseFragment {
 
     public CurrencyMainFragment() {
         // Required empty public constructor
@@ -24,5 +20,4 @@ public class CurrencyMainFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_currency_main, container, false);
     }
-
 }

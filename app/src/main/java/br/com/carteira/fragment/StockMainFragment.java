@@ -2,10 +2,8 @@ package br.com.carteira.fragment;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,23 +16,34 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import br.com.carteira.R;
-import br.com.carteira.activity.AddStockForm;
 import br.com.carteira.adapter.StockQuoteAdapter;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.listener.AddProductListener;
 
 /**
- * A simple {@link Fragment} subclass.
- * Main fragment screen of Stocks of portfolio, accessed by selecting "Ações" in navigation menu.
+ * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
 public class StockMainFragment extends BaseFragment implements
         StockQuoteAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
-    protected RecyclerView mRecyclerView;
-    private Context mContext;
+
+    private RecyclerView mRecyclerView;
     private StockQuoteAdapter mStockQuoteAdapter;
+    private AddProductListener mAddProductListener;
 
     // Loader IDs
     private static final int STOCK_LOADER = 0;
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof AddProductListener) {
+            mAddProductListener = (AddProductListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements AddProductListener");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,9 +58,8 @@ public class StockMainFragment extends BaseFragment implements
         view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // On click FAB, requests the new stock form with result of inputed values
-                Intent intent = new Intent(getContext(),AddStockForm.class);
-                startActivity(intent);
+                // This will call the AddFormActivity with the correct form fragment
+                mAddProductListener.onAddProduct(Constants.ProductType.STOCK);
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
@@ -60,13 +68,6 @@ public class StockMainFragment extends BaseFragment implements
 
         // Inflate the layout for this fragment
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        mContext = context;
     }
 
     @Override

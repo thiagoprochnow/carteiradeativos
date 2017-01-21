@@ -7,10 +7,15 @@ each groups of similar/related constants.
 
 public final class Constants {
 
-    //TODO: Just an example. Remove me!
+    // Constants used to pass extras to Intents
     public static class Extra {
-        public static final String EXTRA_STOCK_SYMBOL = "extra_stock_symbol";
-        public static final String EXTRA_STOCK_HISTORY = "extra_stock_history";
+        public static final String EXTRA_PRODUCT_TYPE = "extra_product_type";
     }
 
+    // This should contains all product types in the portfolio
+    public static class ProductType {
+        public static final int INVALID = -1;
+        public static final int STOCK = 0;
+        public static final int FII = 1;
+    }
 }

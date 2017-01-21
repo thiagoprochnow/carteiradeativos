@@ -52,4 +52,5 @@
     <string name="title_activity_stock_adapter">AcaoAdapter</string>
     <string name="title_activity_fii_adapter">FiiAdapter</string>
     <string name="title_activity_add_new_stock_form">AddNewStockForm</string>
+    <string name="done">Concluir</string>
 </resources>

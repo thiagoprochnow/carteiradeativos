@@ -2,11 +2,10 @@ package br.com.carteira.fragment;
 
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -15,37 +14,27 @@ import android.widget.Toast;
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class AddStockFormFragment extends BaseAddFormFragment {
-    private Context mContext;
     private View mView;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_done:
+                if (addStock()) {
+                    getActivity().finish();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
-        View buyButton = mView.findViewById(R.id.buyButton);
-        View cancelButton = mView.findViewById(R.id.cancelButton);
-
-        // Sets the action when clicking on the Buy Stock button
-        buyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addStock()) {
-                    getActivity().finish();
-                }
-            }
-        });
-
-        // Sets the action when clickin on the Cancell button
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
         return mView;
     }
 
@@ -58,13 +47,15 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         EditText inputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
 
         // Validate for each inputted value
-        Boolean validateSymbol = validateStockSymbol(inputSymbolView);
-        Boolean validateQuantity = validateNotEmpty(inputQuantityView);
-        Boolean validateBuyPrice = validateNotEmpty(inputBuyPriceView);
-        Boolean validateObjective = validateNotEmpty(inputObjectiveView);
+        /* TODO: For now, we are only validating if this is empty or not.
+         We should create more robust methods to validate it.*/
+        boolean isValidSymbol = !isEditTextEmpty(inputSymbolView);
+        boolean isValidQuantity = !isEditTextEmpty(inputQuantityView);
+        boolean isValidBuyPrice = !isEditTextEmpty(inputBuyPriceView);
+        boolean isValidObjective = !isEditTextEmpty(inputObjectiveView);
 
         // If all validations pass, try to add the stock to the portfolio database
-        if (validateSymbol && validateQuantity && validateBuyPrice && validateObjective) {
+        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective) {
             String inputSymbol = inputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(inputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(inputBuyPriceView.getText().toString());
@@ -93,9 +84,5 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         return false;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-    }
+
 }

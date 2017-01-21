@@ -3,7 +3,6 @@ package br.com.carteira.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +10,8 @@ import android.view.ViewGroup;
 import br.com.carteira.R;
 import br.com.carteira.api.service.StockIntentService;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class FixedIncomeMainFragment extends Fragment {
+
+public class FixedIncomeMainFragment extends BaseFragment {
 
     public FixedIncomeMainFragment() {
         // Required empty public constructor

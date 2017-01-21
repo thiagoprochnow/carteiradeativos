@@ -2,7 +2,6 @@ package br.com.carteira.fragment;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,6 @@ import android.view.ViewGroup;
 
 import br.com.carteira.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class PortfolioMainFragment extends BaseFragment {
     private static final String LOG_TAG = PortfolioMainFragment.class.getSimpleName();
 

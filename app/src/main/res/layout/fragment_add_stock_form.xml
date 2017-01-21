@@ -56,30 +56,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buy_date"/>
-    <!-- Missin date of the buy -->
+    <!-- Missing date of the buy -->
     <EditText
         android:id="@+id/inputBuyDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/buy_date_hint"
         android:inputType="date"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel_stock_button"/>
-
-        <Button
-            android:id="@+id/buyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/buy_stock_button"/>
-    </LinearLayout>
 </LinearLayout>
