@@ -1,6 +1,7 @@
 package br.com.carteira.fragment;
 
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,8 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
@@ -35,6 +41,9 @@ public class AddStockFormFragment extends BaseAddFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
+        // Configure to show Spinner when clicked on the Date EditText field
+        EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        inputDateView.setOnClickListener(setDatePicker(inputDateView));
         return mView;
     }
 
@@ -83,6 +92,4 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         }
         return false;
     }
-
-
 }

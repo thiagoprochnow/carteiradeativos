@@ -11,10 +11,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Keep the fragment alive on screen rotation or other changes
-        //TODO: Is this really needed?
-        setRetainInstance(true);
     }
 
     @Override

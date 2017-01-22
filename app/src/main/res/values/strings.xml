@@ -6,7 +6,6 @@
     <string name="buy_price">Preço de compra</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
-    <string name="buy_date_hint">dd/mm/aaaa</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
 
     <!-- Ações Main Fragment -->

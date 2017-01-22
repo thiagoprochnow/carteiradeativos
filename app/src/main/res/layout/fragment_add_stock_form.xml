@@ -61,6 +61,6 @@
         android:id="@+id/inputBuyDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/buy_date_hint"
-        android:inputType="date"/>
+        android:inputType="date"
+        android:focusable="false"/>
 </LinearLayout>
