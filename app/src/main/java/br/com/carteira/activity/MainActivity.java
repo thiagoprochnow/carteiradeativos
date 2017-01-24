@@ -41,8 +41,15 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
+            Log.d(LOG_TAG, "Loaded Portfolio Fragment onCreate");
             replaceFragment(new PortfolioMainFragment());
         }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(LOG_TAG, "MainActivity onDestroy()");
     }
 
     // Configure the toolbar
@@ -88,21 +95,27 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_item_complete_portfolio:
+                Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
                 break;
             case R.id.nav_item_fixed_income:
+                Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
                 replaceFragment(new FixedIncomeMainFragment());
                 break;
             case R.id.nav_item_stocks:
+                Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
                 replaceFragment(new StockMainFragment());
                 break;
             case R.id.nav_item_fii:
+                Log.d(LOG_TAG, "Loaded FII Fragment from menu");
                 replaceFragment(new FiiMainFragment());
                 break;
             case R.id.currency:
+                Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
                 replaceFragment(new CurrencyMainFragment());
                 break;
             case R.id.nav_item_statistic:
+                Log.d(LOG_TAG, "Loaded Statistic Fragment from menu");
                 replaceFragment(new StatisticMainFragment());
                 break;
         }
