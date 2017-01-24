@@ -1,17 +1,17 @@
 <resources>
-    <!-- Ações Adapter -->
+    <!-- Stock Adapter -->
     <dimen name="stock_quantity">21sp</dimen>
     <dimen name="stock_symbol">21sp</dimen>
     <dimen name="stock_text">16sp</dimen>
     <dimen name="stock_price">14sp</dimen>
-    <dimen name="stock_percentage_image_margin">20px</dimen>
+    <dimen name="stock_percentage_image_margin">20dp</dimen>
 
     <!-- Fii Adapter -->
     <dimen name="fii_quantity">21sp</dimen>
     <dimen name="fii_symbol">21sp</dimen>
     <dimen name="fii_text">16sp</dimen>
     <dimen name="fii_price">14sp</dimen>
-    <dimen name="fii_percentage_image_margin">20px</dimen>
+    <dimen name="fii_percentage_image_margin">20dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -35,4 +35,6 @@
     <dimen name="navDrawerData_layout_height">56dp</dimen>
     <dimen name="navDrawerData_layout_marginBottom">8dp</dimen>
 
+    <dimen name="fragment_add_stock_margin">40dp</dimen>
+    <dimen name="fragment_add_stock_margin_top_subhead">7dp</dimen>
 </resources>
