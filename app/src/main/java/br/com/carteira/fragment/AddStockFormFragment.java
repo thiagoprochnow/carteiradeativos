@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import br.com.carteira.R;
@@ -41,8 +42,11 @@ public class AddStockFormFragment extends BaseAddFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
-        // Configure to show Spinner when clicked on the Date EditText field
         EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        // Adding current date to Buy Date field
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
+        inputDateView.setText(simpleDateFormat.format(new Date()));
+        // Configure to show Spinner when clicked on the Date EditText field
         inputDateView.setOnClickListener(setDatePicker(inputDateView));
         return mView;
     }
