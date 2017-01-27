@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
@@ -80,9 +81,10 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
 
     public interface StockAdapterOnClickHandler {
         void onClick(String symbol);
+        void onLongClick(String symbol);
     }
 
-    class StockQuoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class StockQuoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
 
         @BindView(R.id.symbol)
         TextView symbol;
@@ -116,6 +118,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
@@ -124,6 +127,15 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
             mCursor.moveToPosition(adapterPosition);
             int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_SYMBOL);
             mClickHandler.onClick(mCursor.getString(symbolColumn));
+        }
+
+        @Override
+        public boolean onLongClick(View v){
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_SYMBOL);
+            mClickHandler.onLongClick(mCursor.getString(symbolColumn));
+            return true;
         }
     }
 }

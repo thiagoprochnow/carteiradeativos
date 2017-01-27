@@ -2,11 +2,13 @@ package br.com.carteira.fragment;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,6 +75,33 @@ public class StockMainFragment extends BaseFragment implements
     @Override
     public void onClick(String symbol) {
         Toast.makeText(mContext, "Stock: " + symbol, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLongClick(final String symbol){
+        // Show Dialog for user confirmation to delete Stock from database
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(R.string.delete_stock_title);
+        builder.setMessage(R.string.delete_stock_dialog)
+                .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id) {
+                        removeStock(symbol);
+                    }
+                })
+                .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    // Delete stock and all its information from database
+    // This is different then selling a stock, that will maintain some informations
+    private boolean removeStock(String symbol){
+        /* TODO: Make function that will delete stock from database */
+        Toast.makeText(mContext, "Stock: " + symbol + " removida", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
     @Override

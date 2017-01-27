@@ -51,7 +51,7 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         return mView;
     }
 
-    // Function to validate inputted values and add the stock to the portfolio
+    // Validate inputted values and add the stock to the portfolio
     private boolean addStock() {
         // Parse the information inputted to add the stock
         EditText inputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
@@ -61,8 +61,6 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
         // Validate for each inputted value
-        /* TODO: For now, we are only validating if this is empty or not.
-         We should create more robust methods to validate it.*/
         boolean isValidSymbol = isValidStockSymbol(inputSymbolView);
         boolean isValidQuantity = isValidInt(inputQuantityView);
         boolean isValidBuyPrice = isValidDouble(inputBuyPriceView);

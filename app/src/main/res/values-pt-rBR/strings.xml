@@ -11,6 +11,10 @@
     <!-- Ações Main Fragment -->
     <string name="add_stock_success">Ação adicionado com sucesso</string>
     <string name="add_stock_fail">Falha ao adicionar ação</string>
+    <string name="delete_stock_title">Deletar ação da sua carteira?</string>
+    <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar a ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
+    <string name="delete_stock_confirm">Deletar</string>
+    <string name="delete_stock_cancel">Cancelar</string>
 
     <!-- Ações Adapter -->
     <string name="currentPercentLabel">Percent:</string>

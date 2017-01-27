@@ -11,6 +11,10 @@
     <!-- Stock Main Fragment -->
     <string name="add_stock_success">Stock added successfully</string>
     <string name="add_stock_fail">Error adding stock</string>
+    <string name="delete_stock_title">Delete stock from your portfolio?</string>
+    <string name="delete_stock_dialog">If you sold the stock, select "Sell" from the option menu. Deleting the stock will remove all its data, including all income received.</string>
+    <string name="delete_stock_confirm">Delete</string>
+    <string name="delete_stock_cancel">Cancel</string>
 
     <!-- Stock Adapter -->
     <string name="currentPercentLabel">Percent:</string>
