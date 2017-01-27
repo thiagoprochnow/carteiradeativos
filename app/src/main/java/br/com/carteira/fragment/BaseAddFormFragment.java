@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import br.com.carteira.R;
 
@@ -34,9 +35,57 @@ public abstract class BaseAddFormFragment extends BaseFragment {
     }
 
     // Validate if an EditText field is empty
-    protected boolean isEditTextEmpty(EditText symbol) {
-        Editable editable = symbol.getText();
+    protected boolean isEditTextEmpty(EditText text) {
+        Editable editable = text.getText();
         if (editable != null && TextUtils.isEmpty(editable.toString())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was inputed with valid Stock Symbol
+    protected boolean isValidStockSymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
+        Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        if (editable != null && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was inputed with valid int
+    protected boolean isValidInt(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Check if it is digit only
+        boolean isDigitOnly = TextUtils.isDigitsOnly(editable.toString());
+        if (editable != null && isDigitOnly && !isEditTextEmpty(symbol)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was inputed with valid double value
+    protected boolean isValidDouble(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Check if it is double input
+        Pattern pattern = Pattern.compile("^[0-9]+\\.?[0-9]*$");
+        if (editable != null && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was inputed with valid date value
+    protected boolean isValidDate(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Check if it is date input
+        Pattern pattern = Pattern.compile("^[0-9][0-9]\\/[0-9][0-9]\\/[0-9][0-9][0-9][0-9]$");
+        if (editable != null && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;

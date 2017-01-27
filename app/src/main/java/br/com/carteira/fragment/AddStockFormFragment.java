@@ -58,17 +58,19 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         EditText inputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         EditText inputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
         EditText inputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
+        EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
         // Validate for each inputted value
         /* TODO: For now, we are only validating if this is empty or not.
          We should create more robust methods to validate it.*/
-        boolean isValidSymbol = !isEditTextEmpty(inputSymbolView);
-        boolean isValidQuantity = !isEditTextEmpty(inputQuantityView);
-        boolean isValidBuyPrice = !isEditTextEmpty(inputBuyPriceView);
-        boolean isValidObjective = !isEditTextEmpty(inputObjectiveView);
+        boolean isValidSymbol = isValidStockSymbol(inputSymbolView);
+        boolean isValidQuantity = isValidInt(inputQuantityView);
+        boolean isValidBuyPrice = isValidDouble(inputBuyPriceView);
+        boolean isValidObjective = isValidDouble(inputObjectiveView);
+        boolean isValidDate = isValidDate(inputDateView);
 
         // If all validations pass, try to add the stock to the portfolio database
-        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective) {
+        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate) {
             String inputSymbol = inputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(inputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(inputBuyPriceView.getText().toString());
