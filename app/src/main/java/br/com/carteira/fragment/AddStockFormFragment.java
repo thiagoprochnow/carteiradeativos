@@ -66,7 +66,7 @@ public class AddStockFormFragment extends BaseAddFormFragment {
         boolean isValidSymbol = isValidStockSymbol(inputSymbolView);
         boolean isValidQuantity = isValidInt(inputQuantityView);
         boolean isValidBuyPrice = isValidDouble(inputBuyPriceView);
-        boolean isValidObjective = isValidDouble(inputObjectiveView);
+        boolean isValidObjective = isValidPercent(inputObjectiveView);
         boolean isValidDate = isValidDate(inputDateView);
 
         // If all validations pass, try to add the stock to the portfolio database

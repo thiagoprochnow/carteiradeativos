@@ -80,6 +80,20 @@ public abstract class BaseAddFormFragment extends BaseFragment {
         }
     }
 
+    // Validate if an EditText was inputed with valid double value
+    protected boolean isValidPercent(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Check if it is percent input
+        Pattern pattern = Pattern.compile("^[0-9]+\\.?[0-9]*$");
+        // Check inputted value is lower or equal to 100%, no sense being bigger
+        boolean isPercent = (Double.parseDouble(editable.toString())<=100);
+        if (editable != null && pattern.matcher(editable.toString()).matches() && isPercent) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was inputed with valid date value
     protected boolean isValidDate(EditText symbol) {
         Editable editable = symbol.getText();

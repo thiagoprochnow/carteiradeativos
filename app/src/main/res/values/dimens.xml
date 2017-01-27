@@ -4,7 +4,8 @@
     <dimen name="stock_symbol">21sp</dimen>
     <dimen name="stock_text">16sp</dimen>
     <dimen name="stock_price">14sp</dimen>
-    <dimen name="stock_percentage_image_margin">20dp</dimen>
+    <dimen name="stock_percentage_image_margin">5dp</dimen>
+    <dimen name="stock_percentage_text_size">35dp</dimen>
 
     <!-- Fii Adapter -->
     <dimen name="fii_quantity">21sp</dimen>
