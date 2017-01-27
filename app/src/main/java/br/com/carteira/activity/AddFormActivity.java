@@ -21,7 +21,7 @@ public class AddFormActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_stock_form);
+        setContentView(R.layout.activity_add_form);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(Constants.Extra.EXTRA_PRODUCT_TYPE)) {
