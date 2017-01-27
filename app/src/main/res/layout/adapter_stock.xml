@@ -26,7 +26,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/stock_symbol_info_size"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
