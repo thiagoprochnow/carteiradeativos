@@ -1,51 +1,60 @@
 package br.com.carteira.domain;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * This is a Class that contain the information of each stock(Stock)
  * The objects created from this class will be the stocks the user has on his portfolio
  */
 
-public class Stock implements Serializable {
+public class Stock {
     // Unique id of each Object created
     private long id;
 
-    // Owned stock Symbol (Ex: PETR4)
-    private String symbol;
+    // Owned stock Ticker (Ex: PETR4)
+    @SerializedName("symbol")
+    private String mSymbol;
+
+    // Full Name of the stock ticker
+    @SerializedName("Name")
+    private String mName;
+
+    // Last value of the quotation of the day
+    @SerializedName("LastTradePriceOnly")
+    private String mLastTradePriceOnly;
 
     // Quantity of Stocks of that company that is owned by user. User sets this value when
     // adding a new stock or buying more of already owned stock (Ex: 100 stocks)
-    private int stockQuantity;
+    private int mStockQuantity;
 
     // Price paid for each stock quantity (Ex: R$32,45/Stock)
-    private double boughtPrice;
+    private double mBoughtPrice;
 
     // (Compra) Total paid for buying the current owned Stock. The same as
     // stocksQuantity*boughtValue. (EX:R$3245,00)
-    private double boughtTotal;
+    private double mBoughtTotal;
 
     // Current price of the stock, provided by the webservice to check the stock price of the
     // time checked.
     // (Ex: R$35,50/Stock)
-    private double currentPrice;
+    private double mCurrentPrice;
 
     // (Atual) Total money value of the user stock portfolio. If user has 100 stocks of PETR4 at
     // currentPrice of R$35,50,
     // he has a currentTotal of R$3550,00.
-    private double currentTotal;
+    private double mCurrentTotal;
 
     // (Valorização) It is the total gained from the stock difference of buy total and current
     // total. It can be negative if
     // the stock current price lost value compared to its bought price.
-    private double stockAppreciation;
+    private double mStockAppreciation;
 
     // (Set by system according to current stock price) The percentual value owned by the user of
     // that stock compared to his whole stock portfolio
     // If the user has a total of R$10.000 in stocks, and R$2000,00 of PETR4, on PETR4 card view
     // will show this as 20% (R$2000/R$10000)
     // Note that this values changes in time depending on the currentPrice of the stock.
-    private double currentPercent;
+    private double mCurrentPercent;
 
     // [Set by user] The objective percentual value that the user wants to have of this stock
     // compared to his whole stock portfolio
@@ -54,15 +63,15 @@ public class Stock implements Serializable {
     // It will show that he has 15% of the currentPercentValue, but his objectivePercent is 10%,
     // so the user need to rebalance his portfolio by buyin another that is
     // below the objectivePercent
-    private double objectivePercent;
+    private double mObjectivePercent;
 
     // (Rendimentos) Total income from the current stock, dividends and other incomes. (Ex: R$1,
     // 00/Stock paid on 01/12/2016 per stock of PETR4)
-    private double totalIncome;
+    private double mTotalIncome;
 
     // (Ganho) Total gain or lost from investing in that stock. The total gain is the sum of the
     // stock appreciation and total income of that stock.
-    private double totalGain;
+    private double mTotalGain;
 
     // Getters and Setters
     public long getId() {
@@ -74,90 +83,106 @@ public class Stock implements Serializable {
     }
 
     public String getSymbol() {
-        return symbol;
+        return mSymbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setSymbol(String mSymbol) {
+        this.mSymbol = mSymbol;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getLastTradePriceOnly() {
+        return mLastTradePriceOnly;
+    }
+
+    public void setLastTradePriceOnly(String mLastTradePriceOnly) {
+        this.mLastTradePriceOnly = mLastTradePriceOnly;
     }
 
     public int getStockQuantity() {
-        return stockQuantity;
+        return mStockQuantity;
     }
 
     public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
+        this.mStockQuantity = stockQuantity;
     }
 
     public double getBoughtPrice() {
-        return boughtPrice;
+        return mBoughtPrice;
     }
 
     public void setBoughtPrice(double boughtPrice) {
-        this.boughtPrice = boughtPrice;
+        this.mBoughtPrice = boughtPrice;
     }
 
     public double getBoughtTotal() {
-        return boughtTotal;
+        return mBoughtTotal;
     }
 
     public void setBoughtTotal(double boughtTotal) {
-        this.boughtTotal = boughtTotal;
+        this.mBoughtTotal = boughtTotal;
     }
 
     public double getCurrentPrice() {
-        return currentPrice;
+        return mCurrentPrice;
     }
 
     public void setCurrentPrice(double currentPrice) {
-        this.currentPrice = currentPrice;
+        this.mCurrentPrice = currentPrice;
     }
 
     public double getCurrentTotal() {
-        return currentTotal;
+        return mCurrentTotal;
     }
 
     public void setCurrentTotal(double currentTotal) {
-        this.currentTotal = currentTotal;
+        this.mCurrentTotal = currentTotal;
     }
 
     public double getStockAppreciation() {
-        return stockAppreciation;
+        return mStockAppreciation;
     }
 
     public void setStockAppreciation(double stockAppreciation) {
-        this.stockAppreciation = stockAppreciation;
+        this.mStockAppreciation = stockAppreciation;
     }
 
     public double getCurrentPercent() {
-        return currentPercent;
+        return mCurrentPercent;
     }
 
     public void setCurrentPercent(double currentPercent) {
-        this.currentPercent = currentPercent;
+        this.mCurrentPercent = currentPercent;
     }
 
     public double getObjectivePercent() {
-        return objectivePercent;
+        return mObjectivePercent;
     }
 
     public void setObjectivePercent(double objectivePercent) {
-        this.objectivePercent = objectivePercent;
+        this.mObjectivePercent = objectivePercent;
     }
 
     public double getTotalIncome() {
-        return totalIncome;
+        return mTotalIncome;
     }
 
     public void setTotalIncome(double totalIncome) {
-        this.totalIncome = totalIncome;
+        this.mTotalIncome = totalIncome;
     }
 
     public double getTotalGain() {
-        return totalGain;
+        return mTotalGain;
     }
 
     public void setTotalGain(double totalGain) {
-        this.totalGain = totalGain;
+        this.mTotalGain = totalGain;
     }
 }

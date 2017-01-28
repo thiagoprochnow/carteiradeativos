@@ -9,6 +9,7 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 
 import br.com.carteira.api.domain.ResponseStock;
+import br.com.carteira.api.domain.ResponseStocks;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -35,35 +36,46 @@ public class StockTaskService extends GcmTaskService {
                 .build();
 
         try {
-
             // Validate if Symbol was added
-            if (params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
+            if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.quotes where symbol in (\""
-                    + params.getExtras().getString(StockIntentService.ADD_SYMBOL) + "\")";
-
-
             // Make the request and parse the result
             StockService service = retrofit.create(StockService.class);
-            Call<ResponseStock> call = service.getStock(query);
-            Response<ResponseStock> response = call.execute();
-            ResponseStock responseGetStock = response.body();
 
-            // Debug test log - the return will be changed for multiple symbols
-            if(responseGetStock.getStockQuotes() != null) {
-                Log.d(LOG_TAG, "Response log test:" +
-                        "\nquery: " + query +
-                        "\nsymbol: " + responseGetStock.getStockQuotes().get(0).getSymbol() +
-                        "\nname: " + responseGetStock.getStockQuotes().get(0).getName() +
-                        "\nbid: " + responseGetStock.getStockQuotes().get(0).getBid() +
-                        "\nchange: " + responseGetStock.getStockQuotes().get(0).getChange() +
-                        "\nchange in percent: " + responseGetStock.getStockQuotes().get(0).getChangeInPercent() +
-                        "\nday low: " + responseGetStock.getStockQuotes().get(0).getDaysLow() +
-                        "\nday high: " + responseGetStock.getStockQuotes().get(0).getDaysHigh() +
-                        "");
+            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
+
+            // Prepare the query to be added in YQL (Yahoo API)
+            String query = "select * from yahoo.finance.quotes where symbol in ("
+                    + buildQuery(symbols) + ")";
+            Log.d(LOG_TAG, "Response log test:" +
+                    "\nquery: " + query );
+            if(symbols.length == 1) {
+                Call<ResponseStock> call = service.getStock(query);
+                Response<ResponseStock> response = call.execute();
+                ResponseStock responseGetStock = response.body();
+
+                if(responseGetStock.getStockQuotes() != null) {
+                    Log.d(LOG_TAG, "Response log test:" +
+                            "\nquery: " + query +
+                            "\nsymbol: " + responseGetStock.getStockQuotes().get(0).getSymbol() +
+                            "\nname: " + responseGetStock.getStockQuotes().get(0).getName() +
+                            "\nlastPrice: " + responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() +
+                            "");
+                }
+            }else{
+                Call<ResponseStocks> call = service.getStocks(query);
+                Response<ResponseStocks> response = call.execute();
+                ResponseStocks responseGetStocks = response.body();
+                if(responseGetStocks.getStockQuotes() != null) {
+                    Log.d(LOG_TAG, "Response log test:" +
+                            "\nquery: " + query +
+                            "\nsymbol: " + responseGetStocks.getStockQuotes().get(1).getSymbol() +
+                            "\nname: " + responseGetStocks.getStockQuotes().get(1).getName() +
+                            "\nlastPrice: " + responseGetStocks.getStockQuotes().get(1).getLastTradePriceOnly() +
+                            "");
+                }
             }
 
             // Success request
@@ -73,6 +85,24 @@ public class StockTaskService extends GcmTaskService {
             e.printStackTrace();
         }
         return resultStatus;
+    }
+
+    private String buildQuery(String[] symbols) {
+        String resultQuery = "";
+        if (symbols.length == 1) {
+            resultQuery = "\"" + symbols[0] + "\"";
+        } else {
+            for (String symbol : symbols) {
+                if (resultQuery.isEmpty()) {
+                    resultQuery = "\"" + symbol + "\"";
+                } else {
+                    resultQuery += ",\"" + symbol + "\"";
+                }
+            }
+
+        }
+
+        return resultQuery;
     }
 
 }
