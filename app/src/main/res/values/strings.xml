@@ -39,13 +39,13 @@
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
-    <string name="expenses_control">Expenses Control</string>
-    <string name="complete_portfolio">Complete Portfolio</string>
-    <string name="fixed_income">Fixed Income</string>
-    <string name="fii">Real State Fund</string>
-    <string name="stocks">Stocks</string>
-    <string name="currency">Currencies</string>
-    <string name="statistic">Statistics</string>
+    <string name="title_expenses_control">Expenses Control</string>
+    <string name="title_complete_portfolio">Complete Portfolio</string>
+    <string name="title_fixed_income">Fixed Income</string>
+    <string name="title_fii">Real State Fund</string>
+    <string name="title_stocks">Stocks</string>
+    <string name="title_currency">Currencies</string>
+    <string name="title_statistic">Statistics</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

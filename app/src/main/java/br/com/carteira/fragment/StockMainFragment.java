@@ -57,6 +57,13 @@ public class StockMainFragment extends BaseFragment implements
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Set fragment title
+        getActivity().setTitle(R.string.title_stocks);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stocks_main, container, false);

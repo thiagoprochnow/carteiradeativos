@@ -13,6 +13,13 @@ public class PortfolioMainFragment extends BaseFragment {
     private static final String LOG_TAG = PortfolioMainFragment.class.getSimpleName();
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Set fragment title
+        getActivity().setTitle(R.string.title_complete_portfolio);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

@@ -18,6 +18,13 @@ public class FixedIncomeMainFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Set fragment title
+        getActivity().setTitle(R.string.title_fixed_income);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Run the initialize task service so that some stocks appear upon an empty database

@@ -13,6 +13,13 @@ public class ExpensesControlMainFragment extends BaseFragment {
     private static final String LOG_TAG = ExpensesControlMainFragment.class.getSimpleName();
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Set fragment title
+        getActivity().setTitle(R.string.title_expenses_control);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment

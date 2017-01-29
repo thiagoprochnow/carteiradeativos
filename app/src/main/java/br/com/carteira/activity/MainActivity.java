@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "Loaded Portfolio Fragment onCreate");
-            replaceFragment(new PortfolioMainFragment());
+            Log.d(LOG_TAG, "Loaded ExpensesControlMainFragment onCreate");
+            replaceFragment(new ExpensesControlMainFragment());
         }
     }
 
