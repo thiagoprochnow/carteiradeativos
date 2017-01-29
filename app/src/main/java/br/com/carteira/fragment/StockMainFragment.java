@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import br.com.carteira.R;
@@ -22,6 +23,8 @@ import br.com.carteira.adapter.StockQuoteAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.listener.AddProductListener;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
@@ -30,7 +33,13 @@ public class StockMainFragment extends BaseFragment implements
         StockQuoteAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.stockRecyclerView)
+    protected RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_list_text)
+    protected TextView mEmptyListTextView;
+
     private StockQuoteAdapter mStockQuoteAdapter;
     private AddProductListener mAddProductListener;
 
@@ -51,7 +60,9 @@ public class StockMainFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stocks_main, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.stockRecyclerView);
+
+        ButterKnife.bind(this, view);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
@@ -125,6 +136,15 @@ public class StockMainFragment extends BaseFragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        if (data != null && mEmptyListTextView != null) {
+            if (data.getCount() != 0) {
+                mEmptyListTextView.setVisibility(View.GONE);
+            } else {
+                mEmptyListTextView.setVisibility(View.VISIBLE);
+            }
+        }
+
         mStockQuoteAdapter.setCursor(data);
     }
 
