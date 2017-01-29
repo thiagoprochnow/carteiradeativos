@@ -78,18 +78,20 @@ public class StockMainFragment extends BaseFragment implements
     }
 
     @Override
-    public void onLongClick(final String symbol){
+    public void onLongClick(final String symbol) {
         // Show Dialog for user confirmation to delete Stock from database
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.delete_stock_title);
         builder.setMessage(R.string.delete_stock_dialog)
-                .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface.OnClickListener(){
+                .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface
+                        .OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         removeStock(symbol);
                     }
                 })
-                .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface.OnClickListener(){
-                    public void onClick(DialogInterface dialog, int id){
+                .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface
+                        .OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                     }
                 });
@@ -98,16 +100,19 @@ public class StockMainFragment extends BaseFragment implements
 
     // Delete stock and all its information from database
     // This is different then selling a stock, that will maintain some information
-    private boolean removeStock(String symbol){
+    private boolean removeStock(String symbol) {
         int deletedValues = getActivity().getContentResolver().delete(PortfolioContract.StockQuote
                 .makeUriForStockQuote(symbol), null, null);
         if (deletedValues > 0) {
-            Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(mContext, getString(R.string.toast_stock_not_removed, symbol), Toast.LENGTH_SHORT).show();
-        }
 
-        return true;
+            Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_stock_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     @Override
