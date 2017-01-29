@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.CurrencyMainFragment;
+import br.com.carteira.fragment.ExpensesControlMainFragment;
 import br.com.carteira.fragment.FiiMainFragment;
 import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         Log.d(LOG_TAG, "MainActivity onDestroy()");
     }
@@ -94,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     // Will treat the selected item and attach the correct fragment.
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.nav_item_expenses_control:
+                Log.d(LOG_TAG, "Loaded Expenses Control from menu");
+                replaceFragment(new ExpensesControlMainFragment());
+                break;
             case R.id.nav_item_complete_portfolio:
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
