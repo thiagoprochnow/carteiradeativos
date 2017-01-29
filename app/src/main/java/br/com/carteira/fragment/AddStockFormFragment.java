@@ -1,7 +1,6 @@
 package br.com.carteira.fragment;
 
 
-import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
@@ -92,7 +88,23 @@ public class AddStockFormFragment extends BaseAddFormFragment {
             }
         } else {
             // If validation fails, show validation error message
-            Toast.makeText(getContext(), R.string.wrong_inputs, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), R.string.wrong_inputs +  ""+ isValidSymbol  + isValidQuantity  + isValidBuyPrice  + isValidObjective  + isValidDate , Toast.LENGTH_LONG).show();
+            if(!isValidSymbol){
+                inputSymbolView.setError(this.getString(R.string.wrong_stock_code));
+            }
+            if(!isValidQuantity){
+                inputQuantityView.setError(this.getString(R.string.wrong_quantity));
+            }
+            if(!isValidBuyPrice){
+                inputBuyPriceView.setError(this.getString(R.string.wrong_buy_price));
+            }
+            if(!isValidObjective){
+                inputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
+            }
+            if(!isValidDate){
+                inputDateView.setError(this.getString(R.string.wrong_buy_date));
+            }
+
         }
         return false;
     }

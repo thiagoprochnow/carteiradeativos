@@ -6,6 +6,11 @@
     <string name="buy_price">Buy Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="buy_date">Buy Date</string>
+    <string name="wrong_stock_code">Invalid stock code</string>
+    <string name="wrong_quantity">Quantity should be a number</string>
+    <string name="wrong_buy_price">Price should be a number</string>
+    <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
+    <string name="wrong_buy_date">Invalid date</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
 
     <!-- Stock Main Fragment -->
