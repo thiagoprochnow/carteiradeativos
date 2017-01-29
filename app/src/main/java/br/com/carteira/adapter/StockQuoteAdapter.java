@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
@@ -33,7 +32,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         notifyDataSetChanged();
     }
 
-    String getSymbolAtPosition(int position) {
+    public String getSymbolAtPosition(int position) {
         mCursor.moveToPosition(position);
         return mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_SYMBOL));
     }

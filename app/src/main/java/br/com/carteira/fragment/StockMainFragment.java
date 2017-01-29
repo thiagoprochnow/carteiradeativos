@@ -97,10 +97,11 @@ public class StockMainFragment extends BaseFragment implements
     }
 
     // Delete stock and all its information from database
-    // This is different then selling a stock, that will maintain some informations
+    // This is different then selling a stock, that will maintain some information
     private boolean removeStock(String symbol){
-        /* TODO: Make function that will delete stock from database */
-        Toast.makeText(mContext, "Stock: " + symbol + " removida", Toast.LENGTH_SHORT).show();
+        getActivity().getContentResolver().delete(PortfolioContract.StockQuote
+                .makeUriForStockQuote(symbol), null, null);
+        Toast.makeText(mContext, getString(R.string.toast_stock_removed, symbol), Toast.LENGTH_SHORT).show();
         return true;
     }
 
