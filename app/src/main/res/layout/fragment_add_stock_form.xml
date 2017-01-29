@@ -62,6 +62,7 @@
             android:id="@+id/inputObjective"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="3"
             android:inputType="numberDecimal"/>
 
         <TextView
