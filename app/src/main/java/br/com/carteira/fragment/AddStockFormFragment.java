@@ -81,14 +81,14 @@ public class AddStockFormFragment extends BaseAddFormFragment {
                     stockCV);
             // If error occurs to add, shows error message
             if (insertedUri != null) {
-                Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT);
+                Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT).show();
                 return true;
             } else {
-                Toast.makeText(mContext, R.string.add_stock_fail, Toast.LENGTH_SHORT);
+                Toast.makeText(mContext, R.string.add_stock_fail, Toast.LENGTH_SHORT).show();
             }
         } else {
             // If validation fails, show validation error message
-            Toast.makeText(getContext(), R.string.wrong_inputs +  ""+ isValidSymbol  + isValidQuantity  + isValidBuyPrice  + isValidObjective  + isValidDate , Toast.LENGTH_LONG).show();
+            
             if(!isValidSymbol){
                 inputSymbolView.setError(this.getString(R.string.wrong_stock_code));
             }
