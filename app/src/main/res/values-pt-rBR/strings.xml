@@ -57,5 +57,6 @@
     <string name="title_activity_add_new_stock_form">AddNewStockForm</string>
     <string name="done">Concluir</string>
 
-    <string name="toast_stock_removed">"Ação %s removida com sucesso"</string>
+    <string name="toast_stock_successfully_removed">"Ação %s removida com sucesso"</string>
+    <string name="toast_stock_not_removed">"Não foi possível remover a ação %s"</string>
 </resources>
