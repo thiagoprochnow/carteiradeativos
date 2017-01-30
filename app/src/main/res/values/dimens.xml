@@ -1,18 +1,24 @@
 <resources>
-    <!-- Stock Adapter -->
-    <dimen name="stock_quantity">21sp</dimen>
-    <dimen name="stock_symbol">21sp</dimen>
-    <dimen name="stock_text">16sp</dimen>
-    <dimen name="stock_price">14sp</dimen>
-    <dimen name="stock_percentage_image_margin">5dp</dimen>
+    <!-- Stock/Fii Adapter -->
+    <dimen name="stock_quantity">16dp</dimen>
+    <dimen name="stock_symbol">21dp</dimen>
+    <dimen name="stock_text">16dp</dimen>
+    <dimen name="stock_price">14dp</dimen>
+    <dimen name="stock_percentage_image_margin">0dp</dimen>
+    <dimen name="stock_percentage_text_margin">10dp</dimen>
+    <dimen name="letters_text_width">8dp</dimen>
+    <dimen name="letters_text_margin">10dp</dimen>
     <dimen name="stock_percentage_text_size">35dp</dimen>
+    <dimen name="stock_value_percentage_width">50dp</dimen>
+    <dimen name="stock_values_margin">20dp</dimen>
+    <dimen name="stock_values_width">90dp</dimen>
     <dimen name="stock_symbol_info_size">130dp</dimen>
 
     <!-- Fii Adapter -->
-    <dimen name="fii_quantity">21sp</dimen>
-    <dimen name="fii_symbol">21sp</dimen>
-    <dimen name="fii_text">16sp</dimen>
-    <dimen name="fii_price">14sp</dimen>
+    <dimen name="fii_quantity">21dp</dimen>
+    <dimen name="fii_symbol">21dp</dimen>
+    <dimen name="fii_text">16dp</dimen>
+    <dimen name="fii_price">14dp</dimen>
     <dimen name="fii_percentage_image_margin">20dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
