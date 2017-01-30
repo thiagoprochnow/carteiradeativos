@@ -52,19 +52,19 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
                 (PortfolioContract.StockQuote.COLUMN_QUANTITY))));
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
-        holder.boughtTotal.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
+        holder.boughtTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL))));
-        holder.currentTotal.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
+        holder.currentTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_CURRENT_TOTAL))));
         holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT))));
-        holder.stockAppreciation.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
+        holder.stockAppreciation.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_APPRECIATION))));
         holder.currentPercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_CURRENT_PERCENT))));
-        holder.totalIncome.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
+        holder.totalIncome.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_TOTAL_INCOME))));
-        holder.totalGain.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
+        holder.totalGain.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockQuote.COLUMN_TOTAL_GAIN))));
     }
 
