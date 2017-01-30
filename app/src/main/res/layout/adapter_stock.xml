@@ -132,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:text="R$23450000,62"
+                android:text="R$2345,62"
                 android:ellipsize="end"
                 android:maxLines="1"/>
             <TextView
