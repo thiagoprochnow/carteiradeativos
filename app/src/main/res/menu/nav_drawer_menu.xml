@@ -4,43 +4,37 @@
         <!-- Expenses Control Item Menu -->
         <item
             android:id="@+id/nav_item_expenses_control"
-            android:title="@string/title_expenses_control"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_expenses_control"/>
 
         <!-- Complete Portfolio Item Menu -->
         <item
             android:id="@+id/nav_item_complete_portfolio"
-            android:title="@string/title_complete_portfolio"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_complete_portfolio"/>
 
         <!-- Fixed Income Item Menu -->
         <item
             android:id="@+id/nav_item_fixed_income"
-            android:title="@string/title_fixed_income"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_fixed_income"/>
 
         <!-- Stocks Item Menu -->
         <item
             android:id="@+id/nav_item_stocks"
-            android:title="@string/title_stocks"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_stocks"/>
 
         <!-- Fii Item Menu -->
         <item
             android:id="@+id/nav_item_fii"
-            android:title="@string/title_fii"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_fii"/>
 
         <!-- Currency Item Menu -->
         <item
             android:id="@+id/currency"
-            android:title="@string/title_currency"
-            android:checked="true" />
-
-        <!-- Statistic Item Menu -->
-        <item
-            android:id="@+id/nav_item_statistic"
-            android:title="@string/title_statistic"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_currency"/>
     </group>
 </menu>

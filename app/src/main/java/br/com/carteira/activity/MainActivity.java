@@ -21,7 +21,6 @@ import br.com.carteira.fragment.ExpensesControlMainFragment;
 import br.com.carteira.fragment.FiiMainFragment;
 import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
-import br.com.carteira.fragment.StatisticMainFragment;
 import br.com.carteira.fragment.StockMainFragment;
 import br.com.carteira.listener.AddProductListener;
 
@@ -118,10 +117,6 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
             case R.id.currency:
                 Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
                 replaceFragment(new CurrencyMainFragment());
-                break;
-            case R.id.nav_item_statistic:
-                Log.d(LOG_TAG, "Loaded Statistic Fragment from menu");
-                replaceFragment(new StatisticMainFragment());
                 break;
         }
     }
