@@ -6,6 +6,11 @@
     <string name="buy_price">Preço de compra</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
+    <string name="wrong_stock_code">Código da ação inválida</string>
+    <string name="wrong_quantity">Quantidade deve ser um número</string>
+    <string name="wrong_buy_price">Preço deve ser um número</string>
+    <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
+    <string name="wrong_buy_date">Data inválida</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
 
     <!-- Ações Main Fragment -->
