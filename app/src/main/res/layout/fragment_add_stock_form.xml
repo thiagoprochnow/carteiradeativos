@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/fragment_add_stock_margin"
+        android:layout_margin="@dimen/fragment_form_margin"
         android:orientation="vertical">
 
         <TextView
@@ -20,7 +20,7 @@
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="0,1,2,3,4,5,6,7,8,9,qwertzuiopasdfghjklyxcvbnm,QWERTZUIOPASDFGHJKLYXCVBNM"
+            android:digits="0,1,2,3,4,5,6,7,8,9,QWERTZUIOPASDFGHJKLYXCVBNM"
             android:hint="@string/stock_symbol_hint"
             android:inputType="textCapCharacters"
             android:maxLength="6"/>
@@ -29,7 +29,7 @@
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_add_stock_margin_top_subhead"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/quantity"/>
 
         <EditText
@@ -42,7 +42,7 @@
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_add_stock_margin_top_subhead"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/buy_price"/>
 
         <EditText
@@ -55,7 +55,7 @@
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_add_stock_margin_top_subhead"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/percentual_objective"/>
 
         <EditText
@@ -69,10 +69,9 @@
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_add_stock_margin_top_subhead"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/buy_date"/>
 
-        <!-- Missing date of the buy -->
         <EditText
             android:id="@+id/inputBuyDate"
             android:layout_width="match_parent"

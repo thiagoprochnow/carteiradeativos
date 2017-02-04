@@ -43,6 +43,6 @@
     <dimen name="navDrawerData_layout_height">56dp</dimen>
     <dimen name="navDrawerData_layout_marginBottom">8dp</dimen>
 
-    <dimen name="fragment_add_stock_margin">40dp</dimen>
-    <dimen name="fragment_add_stock_margin_top_subhead">7dp</dimen>
+    <dimen name="fragment_form_margin">40dp</dimen>
+    <dimen name="fragment_form_margin_top_subhead">7dp</dimen>
 </resources>

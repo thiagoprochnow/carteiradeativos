@@ -20,9 +20,9 @@ import java.util.regex.Pattern;
 
 import br.com.carteira.R;
 
-public abstract class BaseAddFormFragment extends BaseFragment {
+public abstract class BaseFormFragment extends BaseFragment {
 
-    private static final String LOG_TAG = BaseAddFormFragment.class.getSimpleName();
+    private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

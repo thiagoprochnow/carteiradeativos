@@ -18,7 +18,7 @@ import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
 
 
-public class AddStockFormFragment extends BaseAddFormFragment {
+public class AddStockFormFragment extends BaseFormFragment {
     private View mView;
 
     @Override

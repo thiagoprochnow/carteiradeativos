@@ -6,12 +6,18 @@
     <string name="buy_price">Buy Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="buy_date">Buy Date</string>
+    <string name="receive_date">Receive Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_buy_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_buy_date">Invalid date</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
+    <string name="menu_done">Done</string>
+
+    <!-- Details Fragment -->
+    <string name="menu_item_dividends">Dividends</string>
+    <string name="menu_item_jcp">Interest on Capital</string>
 
     <!-- Stock Main Fragment -->
     <string name="add_stock_success">Stock added successfully</string>
@@ -31,6 +37,9 @@
     <string name="cancel_stock_button">Cancel</string>
     <string name="stock_symbol">Stock Code</string>
     <string name="stock_symbol_hint">Ex: PETR4</string>
+
+    <!-- Dividend Form Fragment -->
+    <string name="receive_value">Received Value per Stock</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Real Estate Fund added successfully</string>
@@ -55,8 +64,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_stock_adapter">AcaoAdapter</string>
     <string name="title_activity_fii_adapter">FiiAdapter</string>
-    <string name="title_activity_add_new_stock_form">AddNewStockForm</string>
-    <string name="done">Done</string>
+    <string name="title_activity_add_new_stock_form">Add Stock</string>
 
     <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>

@@ -6,12 +6,19 @@
     <string name="buy_price">Preço de compra</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
+    <string name="receive_date">Data de Recebimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_buy_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_buy_date">Data inválida</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
+    <string name="menu_done">Concluir</string>
+
+
+    <!-- Details Fragment -->
+    <string name="menu_item_dividends">Dividendos</string>
+    <string name="menu_item_jcp">Juros sobre Capital</string>
 
     <!-- Ações Main Fragment -->
     <string name="add_stock_success">Ação adicionado com sucesso</string>
@@ -31,6 +38,9 @@
     <string name="cancel_stock_button">Cancelar</string>
     <string name="stock_symbol">Código da Ação</string>
     <string name="stock_symbol_hint">Ex: PETR4</string>
+
+    <!-- Dividend Form Fragment -->
+    <string name="receive_value">Valor Recebido por Ação</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
@@ -55,8 +65,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_stock_adapter">AcaoAdapter</string>
     <string name="title_activity_fii_adapter">FiiAdapter</string>
-    <string name="title_activity_add_new_stock_form">AddNewStockForm</string>
-    <string name="done">Concluir</string>
+    <string name="title_activity_add_new_stock_form">Adicionar Ação</string>
 
     <string name="toast_stock_successfully_removed">Ação %s removida com sucesso</string>
     <string name="toast_stock_not_removed">Não foi possível remover a ação %s</string>

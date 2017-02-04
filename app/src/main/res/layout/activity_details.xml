@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/addFormScroll"
+<ScrollView android:id="@+id/details_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:id="@+id/add_stock_form_container"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent">
+        android:id="@+id/details_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     </FrameLayout>
 
 </ScrollView>
