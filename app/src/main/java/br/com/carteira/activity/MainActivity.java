@@ -23,9 +23,10 @@ import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.StockMainFragment;
 import br.com.carteira.listener.AddProductListener;
+import br.com.carteira.listener.DetailsProductListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements AddProductListener {
+public class MainActivity extends AppCompatActivity implements AddProductListener, DetailsProductListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -168,14 +169,30 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
 
     @Override
     public void onAddProduct(int productType) {
+        Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
-                Intent intent = new Intent(this, AddFormActivity.class);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the AddFormActivity.");
+                Log.d(LOG_TAG, "(onAddProduct) Could not launch the FormActivity.");
+                break;
+        }
+    }
+
+    @Override
+    public void onDetailsProduct(int productType, String itemId){
+        Intent intent = new Intent(this, DetailsActivity.class);
+        switch (productType) {
+            case Constants.ProductType.STOCK:
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "Could not launch the DetailsActivity.");
                 break;
         }
     }

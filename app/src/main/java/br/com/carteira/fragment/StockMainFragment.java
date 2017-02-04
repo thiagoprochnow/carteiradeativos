@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import br.com.carteira.adapter.StockQuoteAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.listener.AddProductListener;
+import br.com.carteira.listener.DetailsProductListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -33,6 +35,7 @@ public class StockMainFragment extends BaseFragment implements
         StockQuoteAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
+    private static final String LOG_TAG = StockMainFragment.class.getSimpleName();
 
     @BindView(R.id.stockRecyclerView)
     protected RecyclerView mRecyclerView;
@@ -41,18 +44,28 @@ public class StockMainFragment extends BaseFragment implements
     protected TextView mEmptyListTextView;
 
     private StockQuoteAdapter mStockQuoteAdapter;
-    private AddProductListener mAddProductListener;
+    private AddProductListener mFormProductListener;
+    private DetailsProductListener mDetailsProductListener;
 
     // Loader IDs
     private static final int STOCK_LOADER = 0;
 
+    // TODO: Precisamos ver uma maneira de otimizar o onAttach. Não vamos colocar em todos XMainFragment
+    // Tem que ter um jeito de ficar apenas no BaseFragment
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof AddProductListener) {
-            mAddProductListener = (AddProductListener) context;
+            mFormProductListener = (AddProductListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " Parent Activity must implements AddProductListener");
+        }
+
+        if (context instanceof DetailsProductListener) {
+            mDetailsProductListener = (DetailsProductListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements DetailsProductListener");
         }
     }
 
@@ -78,8 +91,8 @@ public class StockMainFragment extends BaseFragment implements
         view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // This will call the AddFormActivity with the correct form fragment
-                mAddProductListener.onAddProduct(Constants.ProductType.STOCK);
+                // This will call the FormActivity with the correct form fragment
+                mFormProductListener.onAddProduct(Constants.ProductType.STOCK);
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
@@ -92,7 +105,9 @@ public class StockMainFragment extends BaseFragment implements
 
     @Override
     public void onClick(String symbol) {
-        Toast.makeText(mContext, "Stock: " + symbol, Toast.LENGTH_SHORT).show();
+        // Launch details activity for clicked stock
+        Log.d(LOG_TAG, ": "+symbol);
+        mDetailsProductListener.onDetailsProduct(Constants.ProductType.STOCK, symbol);
     }
 
     @Override
