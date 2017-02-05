@@ -4,6 +4,7 @@ package br.com.carteira.fragment;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +17,18 @@ import java.util.Date;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.util.InputFilterDecimal;
+import br.com.carteira.util.InputFilterPercentage;
 
 
 public class AddStockFormFragment extends BaseFormFragment {
     private View mView;
+
+    private EditText mInputSymbolView;
+    private EditText mInputQuantityView;
+    private EditText mInputBuyPriceView;
+    private EditText mInputObjectiveView;
+    private EditText mInputDateView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -38,38 +47,43 @@ public class AddStockFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
-        EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
-        // Adding current date to Buy Date field
+
+        mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
+        mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
+        mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
+        mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
+        mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+
+        // Adding current date to Buy Date field and set Listener to the Spinner
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
-        inputDateView.setText(simpleDateFormat.format(new Date()));
-        // Configure to show Spinner when clicked on the Date EditText field
-        inputDateView.setOnClickListener(setDatePicker(inputDateView));
+        mInputDateView.setText(simpleDateFormat.format(new Date()));
+        mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
+
+        // Adding input filters
+        mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterPercentage("0", "100")});
+        mInputBuyPriceView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
     // Validate inputted values and add the stock to the portfolio
     private boolean addStock() {
-        // Parse the information inputted to add the stock
-        EditText inputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
-        EditText inputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
-        EditText inputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
-        EditText inputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
-        EditText inputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
         // Validate for each inputted value
-        boolean isValidSymbol = isValidStockSymbol(inputSymbolView);
-        boolean isValidQuantity = isValidInt(inputQuantityView);
-        boolean isValidBuyPrice = isValidDouble(inputBuyPriceView);
-        boolean isValidObjective = isValidPercent(inputObjectiveView);
-        boolean isValidDate = isValidDate(inputDateView);
+        boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
+        boolean isValidQuantity = isValidInt(mInputQuantityView);
+        boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
+        boolean isValidObjective = isValidPercent(mInputObjectiveView);
+        boolean isValidDate = isValidDate(mInputDateView);
+
+
 
         // If all validations pass, try to add the stock to the portfolio database
         if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate) {
-            String inputSymbol = inputSymbolView.getText().toString();
-            int inputQuantity = Integer.parseInt(inputQuantityView.getText().toString());
-            double buyPrice = Double.parseDouble(inputBuyPriceView.getText().toString());
+            String inputSymbol = mInputSymbolView.getText().toString();
+            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
             double boughtTotal = inputQuantity * buyPrice;
-            double inputObjective = Double.parseDouble(inputObjectiveView.getText().toString());
+            double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
 
             ContentValues stockCV = new ContentValues();
             stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
@@ -88,21 +102,20 @@ public class AddStockFormFragment extends BaseFormFragment {
             }
         } else {
             // If validation fails, show validation error message
-            
             if(!isValidSymbol){
-                inputSymbolView.setError(this.getString(R.string.wrong_stock_code));
+                mInputSymbolView.setError(this.getString(R.string.wrong_stock_code));
             }
             if(!isValidQuantity){
-                inputQuantityView.setError(this.getString(R.string.wrong_quantity));
+                mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
             }
             if(!isValidBuyPrice){
-                inputBuyPriceView.setError(this.getString(R.string.wrong_buy_price));
+                mInputBuyPriceView.setError(this.getString(R.string.wrong_buy_price));
             }
             if(!isValidObjective){
-                inputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
+                mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
             if(!isValidDate){
-                inputDateView.setError(this.getString(R.string.wrong_buy_date));
+                mInputDateView.setError(this.getString(R.string.wrong_buy_date));
             }
 
         }
