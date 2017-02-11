@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <!-- Item Menu Carteira Completa -->
+        <!-- Expenses Control Item Menu -->
         <item
-            android:id="@+id/nav_item_carteira_completa"
-            android:title="@string/carteira_completa"
-            android:checked="true" />
+            android:id="@+id/nav_item_expenses_control"
+            android:checked="true"
+            android:title="@string/title_expenses_control"/>
 
-        <!-- Item Menu Renda Fixa -->
+        <!-- Complete Portfolio Item Menu -->
         <item
-            android:id="@+id/nav_item_renda_fixa"
-            android:title="@string/renda_fixa"
-            android:checked="true" />
+            android:id="@+id/nav_item_complete_portfolio"
+            android:checked="true"
+            android:title="@string/title_complete_portfolio"/>
 
-        <!-- Item Menu Ações -->
+        <!-- Fixed Income Item Menu -->
         <item
-            android:id="@+id/nav_item_acoes"
-            android:title="@string/acoes"
-            android:checked="true" />
+            android:id="@+id/nav_item_fixed_income"
+            android:checked="true"
+            android:title="@string/title_fixed_income"/>
 
-        <!-- Item Menu Fundos Imobiliarios -->
+        <!-- Stocks Item Menu -->
+        <item
+            android:id="@+id/nav_item_stocks"
+            android:checked="true"
+            android:title="@string/title_stocks"/>
+
+        <!-- Fii Item Menu -->
         <item
             android:id="@+id/nav_item_fii"
-            android:title="@string/fii"
-            android:checked="true" />
+            android:checked="true"
+            android:title="@string/title_fii"/>
 
-        <!-- Item Menu Moedas -->
+        <!-- Currency Item Menu -->
         <item
-            android:id="@+id/moedas"
-            android:title="@string/moedas"
-            android:checked="true" />
-
-        <!-- Item Menu Estatisticas -->
-        <item
-            android:id="@+id/nav_item_estatistica"
-            android:title="@string/estatisticas"
-            android:checked="true" />
+            android:id="@+id/currency"
+            android:checked="true"
+            android:title="@string/title_currency"/>
     </group>
 </menu>

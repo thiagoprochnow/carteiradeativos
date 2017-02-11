@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/stock_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    app:contentPadding="10dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="3dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="false"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="0dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/transparent"
+    android:textSize="@dimen/stock_text">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="@dimen/stock_income_width"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/incomeType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Juros s/ Capital"
+                android:textSize="@dimen/stock_income_type"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+            <TextView
+                android:id="@+id/incomeDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="02/01/2016"
+                android:textSize="@dimen/stock_income_date"
+                android:ellipsize="end"
+                android:maxLines="1" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="right">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="("
+                android:textSize="@dimen/stock_income_percent"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:gravity="right" />
+            <TextView
+                android:id="@+id/incomePercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5,32%"
+                android:textSize="@dimen/stock_income_percent"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:gravity="right" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"
+                android:textSize="@dimen/stock_income_percent"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:gravity="right" />
+            <TextView
+                android:id="@+id/incomeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R$100,00"
+                android:textSize="@dimen/stock_income_value"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginLeft="@dimen/stock_income_value_marginLeft"
+                android:gravity="right" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

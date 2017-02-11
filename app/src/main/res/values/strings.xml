@@ -1,42 +1,78 @@
 <resources>
     <string name="app_name">Carteira</string>
 
-    <!-- Ações Main Fragment -->
-    <string name="add_acao_success">Ação adicionado com sucesso</string>
-    <string name="add_acao_fail">Falha ao adicionar ação</string>
+    <!-- Form Fragment -->
+    <string name="quantity">Quantity</string>
+    <string name="buy_price">Buy Price</string>
+    <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
+    <string name="buy_date">Buy Date</string>
+    <string name="receive_date">Receive Date</string>
+    <string name="wrong_stock_code">Invalid stock code</string>
+    <string name="wrong_quantity">Quantity should be a number</string>
+    <string name="wrong_buy_price">Price should be a number</string>
+    <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
+    <string name="wrong_date">Invalid date</string>
+    <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
+    <string name="wrong_income_per_stock">Wrong value received per stock</string>
+    <string name="menu_done">Done</string>
 
-    <!-- Ações Adapter -->
+    <!-- Details Fragment -->
+    <string name="menu_item_dividends">Dividends</string>
+    <string name="menu_item_jcp">Interest on Capital</string>
+
+    <!-- Stock Main Fragment -->
+    <string name="add_stock_success">Stock added successfully</string>
+    <string name="add_stock_fail">Error adding stock</string>
+    <string name="delete_stock_title">Delete stock from your portfolio?</string>
+    <string name="delete_stock_dialog">If you sold the stock, select "Sell" from the option menu. Deleting the stock will remove all its data, including all income received.</string>
+    <string name="delete_stock_confirm">Delete</string>
+    <string name="delete_stock_cancel">Cancel</string>
+
+    <!-- Stock Adapter -->
     <string name="currentPercentLabel">Percent:</string>
     <string name="targetPercentLabel">Target:</string>
 
-    <!-- Add ação Dialog Fragment -->
-    <string name="add_acao_title">Compra de Ação</string>
-    <string name="buy_acao_button">Comprar</string>
-    <string name="cancel_acao_button">Cancelar</string>
-    <string name="codigo_acao">Código da Ação</string>
-    <string name="quantidade">Quantidade</string>
-    <string name="preco_compra">Preço de compra</string>
-    <string name="objetivo_percentual">Objetivo do papel na carteira (EX: 20%)</string>
-    <string name="buy_date">Data da compra</string>
-    <string name="buy_date_hint">dd/mm/aaaa</string>
-    <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
+    <!-- Stock Incomes Fragment -->
+    <string name="title_incomes">Incomes</string>
+
+    <!-- Add Stock Form Fragment -->
+    <string name="add_stock_title">Buy Stock</string>
+    <string name="buy_stock_button">Buy</string>
+    <string name="cancel_stock_button">Cancel</string>
+    <string name="stock_symbol">Stock Code</string>
+    <string name="stock_symbol_hint">Ex: PETR4</string>
+
+    <!-- Dividend Form Fragment -->
+    <string name="receive_value">Received Value per Stock</string>
+    <string name="add_dividend_success">Dividend added successfully</string>
+    <string name="add_dividend_fail">Error adding dividend</string>
+
+    <!-- Fii Main Fragment -->
+    <string name="add_fii_success">Real Estate Fund added successfully</string>
+    <string name="add_fii_fail">Error adding real estate fund </string>
+
+    <!-- Add fii Form Fragment -->
+    <string name="add_fii_title">Buy Real Estate Fund</string>
+    <string name="buy_fii_button">Buy</string>
+    <string name="cancel_fii_button">Cancel</string>
+    <string name="fii_symbol">Real State Fund Code</string>
+    <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
-    <string name="carteira_completa">Carteira Completa</string>
-    <string name="renda_fixa">Renda Fixa</string>
-    <string name="fii">Fundos Imobiliarios</string>
-    <string name="acoes">Ações</string>
-    <string name="moedas">Moedas</string>
-    <string name="estatisticas">Estatisticas</string>
-
-    <string name="nav_drawer_username">Ricardo Lecheta</string>
-    <string name="nav_drawer_email">rlecheta@gmail.com</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_carteira_fragment">Hello carteira fragment</string>
-    <string name="hello_acoes_fragment">Hello ações fragment</string>
+    <string name="title_expenses_control">Expenses Control</string>
+    <string name="title_complete_portfolio">Complete Portfolio</string>
+    <string name="title_fixed_income">Fixed Income</string>
+    <string name="title_fii">Real State Fund</string>
+    <string name="title_stocks">Stocks</string>
+    <string name="title_currency">Currencies</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_acao_adapter">AcaoAdapter</string>
+    <string name="title_activity_stock_adapter">AcaoAdapter</string>
+    <string name="title_activity_fii_adapter">FiiAdapter</string>
+    <string name="title_activity_add_new_stock_form">Add Stock</string>
+
+    <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
+    <string name="toast_stock_not_removed">Unable to remove stock %s</string>
+    <string name="no_items_to_display">No items to display</string>
 </resources>

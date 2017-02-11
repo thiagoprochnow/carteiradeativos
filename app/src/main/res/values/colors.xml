@@ -5,6 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="full_black">#000000</color>
     <color name="fab_background">#67a6ed</color>
-    <color name="acoes_summary">#e4effc</color>
+    <color name="stocks_summary">#e4effc</color>
     <color name="activity_main_background">#E9E9E9</color>
 </resources>
