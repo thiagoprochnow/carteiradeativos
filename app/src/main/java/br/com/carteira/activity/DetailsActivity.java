@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.StockDetailsFragment;
+import br.com.carteira.fragment.StockIncomesFragment;
 import br.com.carteira.listener.AddProductListener;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -32,10 +33,11 @@ public class DetailsActivity extends AppCompatActivity {
                     Constants.ProductType.INVALID);
             switch (productType) {
                 case Constants.ProductType.STOCK:
-                    replaceFragment(new StockDetailsFragment());
+                    // TODO: Make tabs to switch between incomes and details.
+                    replaceFragment(new StockIncomesFragment());
                     break;
                 case Constants.ProductType.FII:
-                    // TODO: replaceFragment(new AddFiiFormFragment());
+                    // TODO: replaceFragment(new FiiIncomesFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
