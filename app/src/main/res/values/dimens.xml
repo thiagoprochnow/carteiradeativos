@@ -21,6 +21,14 @@
     <dimen name="fii_price">14dp</dimen>
     <dimen name="fii_percentage_image_margin">20dp</dimen>
 
+    <!-- Stock Incomes Adapter -->
+    <dimen name="stock_income_type">21dp</dimen>
+    <dimen name="stock_income_width">150dp</dimen>
+    <dimen name="stock_income_date">18dp</dimen>
+    <dimen name="stock_income_value">19dp</dimen>
+    <dimen name="stock_income_value_marginLeft">5dp</dimen>
+    <dimen name="stock_income_percent">19dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

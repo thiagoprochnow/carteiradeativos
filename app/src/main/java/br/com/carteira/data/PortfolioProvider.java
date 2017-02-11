@@ -1,6 +1,5 @@
 package br.com.carteira.data;
 
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -16,6 +15,9 @@ public class PortfolioProvider extends ContentProvider {
     static final int STOCK_QUOTE = 100;
     static final int STOCK_QUOTE_FOR_SYMBOL = 101;
 
+    static final int STOCK_INCOME = 200;
+    static final int STOCK_INCOME_FOR_SYMBOL = 201;
+
     static UriMatcher uriMatcher = buildUriMatcher();
 
     private DbHelper dbHelper;
@@ -28,6 +30,9 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
                 STOCK_QUOTE_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME, STOCK_INCOME);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME_WITH_SYMBOL,
+                STOCK_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -68,8 +73,32 @@ public class PortfolioProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
-
                 break;
+
+            case STOCK_INCOME:
+                returnCursor = db.query(
+                        PortfolioContract.StockIncome.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case STOCK_INCOME_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.StockIncome.TABLE_NAME,
+                        projection,
+                        PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.StockIncome.getStockIncomeFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -101,6 +130,14 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 returnUri = PortfolioContract.StockQuote.URI;
                 break;
+            case STOCK_INCOME:
+                db.insert(
+                        PortfolioContract.StockIncome.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.StockIncome.URI;
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -115,6 +152,7 @@ public class PortfolioProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsDeleted;
+        String symbol;
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
@@ -128,13 +166,32 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
             case STOCK_QUOTE_FOR_SYMBOL:
-                String symbol = PortfolioContract.StockQuote.getStockQuoteFromUri(uri);
+                symbol = PortfolioContract.StockQuote.getStockQuoteFromUri(uri);
                 rowsDeleted = db.delete(
                         PortfolioContract.StockQuote.TABLE_NAME,
                         '"' + symbol + '"' + " =" + PortfolioContract.StockQuote.COLUMN_SYMBOL,
                         selectionArgs
                 );
                 break;
+
+            case STOCK_INCOME:
+                rowsDeleted = db.delete(
+                        PortfolioContract.StockIncome.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case STOCK_INCOME_FOR_SYMBOL:
+                // TODO: Needs to change, otherwise it will always delete all incomes of that stock symbol
+                symbol = PortfolioContract.StockIncome.getStockIncomeFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.StockIncome.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.StockIncome.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -153,6 +210,11 @@ public class PortfolioProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case STOCK_QUOTE:
                 rowsUpdated = db.update(PortfolioContract.StockQuote.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+            case STOCK_INCOME:
+                rowsUpdated = db.update(PortfolioContract.StockIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;

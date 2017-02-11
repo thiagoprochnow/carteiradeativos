@@ -115,7 +115,7 @@ public class AddStockFormFragment extends BaseFormFragment {
                 mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
             if(!isValidDate){
-                mInputDateView.setError(this.getString(R.string.wrong_buy_date));
+                mInputDateView.setError(this.getString(R.string.wrong_date));
             }
 
         }

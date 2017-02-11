@@ -11,8 +11,9 @@
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_buy_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
-    <string name="wrong_buy_date">Data inválida</string>
+    <string name="wrong_date">Data inválida</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
+    <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
     <string name="menu_done">Concluir</string>
 
 
@@ -20,7 +21,7 @@
     <string name="menu_item_dividends">Dividendos</string>
     <string name="menu_item_jcp">Juros sobre Capital</string>
 
-    <!-- Ações Main Fragment -->
+    <!-- Stock Main Fragment -->
     <string name="add_stock_success">Ação adicionado com sucesso</string>
     <string name="add_stock_fail">Falha ao adicionar ação</string>
     <string name="delete_stock_title">Deletar ação da sua carteira?</string>
@@ -28,11 +29,14 @@
     <string name="delete_stock_confirm">Deletar</string>
     <string name="delete_stock_cancel">Cancelar</string>
 
-    <!-- Ações Adapter -->
+    <!-- Stock Adapter -->
     <string name="currentPercentLabel">Percent:</string>
     <string name="targetPercentLabel">Target:</string>
 
-    <!-- Add ação Dialog Fragment -->
+    <!-- Stock Incomes Fragment -->
+    <string name="title_incomes">Recebimentos</string>
+
+    <!-- Add Stock Form Fragment -->
     <string name="add_stock_title">Compra de Ação</string>
     <string name="buy_stock_button">Comprar</string>
     <string name="cancel_stock_button">Cancelar</string>
@@ -41,6 +45,8 @@
 
     <!-- Dividend Form Fragment -->
     <string name="receive_value">Valor Recebido por Ação</string>
+    <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
+    <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>

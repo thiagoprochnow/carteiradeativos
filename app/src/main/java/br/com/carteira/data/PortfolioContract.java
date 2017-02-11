@@ -14,6 +14,9 @@ public class PortfolioContract {
     public static final String PATH_STOCK_QUOTE = "quote";
     public static final String PATH_STOCK_QUOTE_WITH_SYMBOL = "quote/*";
 
+    public static final String PATH_STOCK_INCOME = "income";
+    public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "income/*";
+
     /* This is the methods and constants used for Stocks table */
     public static final class StockQuote implements BaseColumns {
 
@@ -50,6 +53,33 @@ public class PortfolioContract {
         }
 
         public static String getStockQuoteFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    public static final class StockIncome implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_INCOME).build();
+
+        public static final String TABLE_NAME = "stock_incomes";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TYPE = "income_type";
+        public static final String COLUMN_PER_STOCK = "per_stock";
+        public static final String COLUMN_PERCENT = "current_percent";
+
+        public static final String[] STOCK_INCOME_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TYPE,
+                COLUMN_PER_STOCK,
+                COLUMN_PERCENT,
+        };
+
+        public static Uri makeUriForStockIncome(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getStockIncomeFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

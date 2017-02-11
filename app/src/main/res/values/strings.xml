@@ -11,8 +11,9 @@
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_buy_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
-    <string name="wrong_buy_date">Invalid date</string>
+    <string name="wrong_date">Invalid date</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
+    <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="menu_done">Done</string>
 
     <!-- Details Fragment -->
@@ -31,6 +32,9 @@
     <string name="currentPercentLabel">Percent:</string>
     <string name="targetPercentLabel">Target:</string>
 
+    <!-- Stock Incomes Fragment -->
+    <string name="title_incomes">Incomes</string>
+
     <!-- Add Stock Form Fragment -->
     <string name="add_stock_title">Buy Stock</string>
     <string name="buy_stock_button">Buy</string>
@@ -40,6 +44,8 @@
 
     <!-- Dividend Form Fragment -->
     <string name="receive_value">Received Value per Stock</string>
+    <string name="add_dividend_success">Dividend added successfully</string>
+    <string name="add_dividend_fail">Error adding dividend</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Real Estate Fund added successfully</string>

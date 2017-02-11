@@ -23,7 +23,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // This is the Stock table skeleton.
         // We'll need to add/remove columns here to reflect the actual data we'll store in db.
-        String builder = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
+        String builder_stock_quote = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
                 PortfolioContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.StockQuote.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
@@ -34,8 +34,19 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockQuote.COLUMN_TOTAL_INCOME + " REAL, " +
                 PortfolioContract.StockQuote.COLUMN_TOTAL_GAIN + " REAL, " +
+                // TODO: This needs to change, COLUM_SYMBOL cannot be unique, as for user can buy same stock more then once
                 "UNIQUE (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
-        db.execSQL(builder);
+
+        String builder_stock_income = "CREATE TABLE " + PortfolioContract.StockIncome.TABLE_NAME + " (" +
+                PortfolioContract.StockIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.StockIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.StockIncome.COLUMN_TYPE + " TEXT NOT NULL, " +
+                PortfolioContract.StockIncome.COLUMN_PER_STOCK + " REAL, " +
+                PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL, " +
+                "UNIQUE (" + PortfolioContract.StockQuote._ID + ") ON CONFLICT REPLACE);";
+
+        db.execSQL(builder_stock_quote);
+        db.execSQL(builder_stock_income);
 
     }
 
@@ -44,6 +55,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockQuote.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockIncome.TABLE_NAME);
         onCreate(db);
     }
 }

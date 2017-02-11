@@ -22,7 +22,7 @@ import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 
 
-public class StockDetailsFragment extends BaseDetailsFragment {
+public class StockDetailsFragment extends BaseFragment {
     private View mView;
 
     @Override
