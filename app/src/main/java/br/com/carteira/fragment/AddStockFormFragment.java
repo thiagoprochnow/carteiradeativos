@@ -82,19 +82,23 @@ public class AddStockFormFragment extends BaseFormFragment {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
-            double boughtTotal = inputQuantity * buyPrice;
             double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
 
             ContentValues stockCV = new ContentValues();
+            ContentValues stockSymbolCV = new ContentValues();
+            // Insert symbol on both StockQuote and StockSymbol tables
             stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
+            stockSymbolCV.put(PortfolioContract.StockSymbol.COLUMN_SYMBOL, inputSymbol);
+
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_TOTAL, boughtTotal);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE, buyPrice);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
             // Adds to the database
-            Uri insertedUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
+            Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
                     stockCV);
+            Uri insertedStockSymbolUri = mContext.getContentResolver().insert(PortfolioContract.StockSymbol.URI, stockSymbolCV);
             // If error occurs to add, shows error message
-            if (insertedUri != null) {
+            if (insertedStockQuoteUri != null && insertedStockSymbolUri != null) {
                 Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT).show();
                 return true;
             } else {

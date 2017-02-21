@@ -134,9 +134,13 @@ public class StockMainFragment extends BaseFragment implements
     // Delete stock and all its information from database
     // This is different then selling a stock, that will maintain some information
     private boolean removeStock(String symbol) {
-        int deletedValues = getActivity().getContentResolver().delete(PortfolioContract.StockQuote
+        int deletedQuote = getActivity().getContentResolver().delete(PortfolioContract.StockQuote
                 .makeUriForStockQuote(symbol), null, null);
-        if (deletedValues > 0) {
+        int deletedSymbol = getActivity().getContentResolver().delete(PortfolioContract.StockSymbol
+                .makeUriForStockSymbol(symbol), null, null);
+        int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
+                .makeUriForStockIncome(symbol), null, null);
+        if (deletedQuote > 0 && deletedSymbol > 0 && deletedIncome > 0) {
 
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -150,10 +154,11 @@ public class StockMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Will use the table of stock symbols as cursor. StockQuote values will be handled at StockQuoteAdapter.
         return new CursorLoader(mContext,
-                PortfolioContract.StockQuote.URI,
-                PortfolioContract.StockQuote.STOCK_QUOTE_COLUMNS,
-                null, null, PortfolioContract.StockQuote.COLUMN_SYMBOL);
+                PortfolioContract.StockSymbol.URI,
+                PortfolioContract.StockSymbol.STOCK_QUOTE_COLUMNS,
+                null, null, PortfolioContract.StockSymbol.COLUMN_SYMBOL);
     }
 
     @Override

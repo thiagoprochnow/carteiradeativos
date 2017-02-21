@@ -12,11 +12,13 @@ import android.support.annotation.Nullable;
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
 
-    static final int STOCK_QUOTE = 100;
-    static final int STOCK_QUOTE_FOR_SYMBOL = 101;
+    static final int STOCK_SYMBOL = 100;
 
-    static final int STOCK_INCOME = 200;
-    static final int STOCK_INCOME_FOR_SYMBOL = 201;
+    static final int STOCK_QUOTE = 200;
+    static final int STOCK_QUOTE_FOR_SYMBOL = 201;
+
+    static final int STOCK_INCOME = 300;
+    static final int STOCK_INCOME_FOR_SYMBOL = 301;
 
     static UriMatcher uriMatcher = buildUriMatcher();
 
@@ -27,6 +29,7 @@ public class PortfolioProvider extends ContentProvider {
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS, STOCK_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
                 STOCK_QUOTE_FOR_SYMBOL);
@@ -51,6 +54,19 @@ public class PortfolioProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         switch (uriMatcher.match(uri)) {
+            // Returns all stock symbols possessed by user
+            case STOCK_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all stocks information possessed by user
             case STOCK_QUOTE:
                 returnCursor = db.query(
                         PortfolioContract.StockQuote.TABLE_NAME,
@@ -62,7 +78,7 @@ public class PortfolioProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-
+            // Returns all stock information possessed by user for a specific stock symbol
             case STOCK_QUOTE_FOR_SYMBOL:
                 returnCursor = db.query(
                         PortfolioContract.StockQuote.TABLE_NAME,
@@ -122,6 +138,14 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
 
         switch (uriMatcher.match(uri)) {
+            case STOCK_SYMBOL:
+                db.insert(
+                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.StockSymbol.URI;
+                break;
             case STOCK_QUOTE:
                 db.insert(
                         PortfolioContract.StockQuote.TABLE_NAME,
@@ -156,6 +180,15 @@ public class PortfolioProvider extends ContentProvider {
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
+            case STOCK_SYMBOL:
+                symbol = PortfolioContract.StockSymbol.getStockSymbolFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.StockQuote.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             case STOCK_QUOTE:
                 rowsDeleted = db.delete(
                         PortfolioContract.StockQuote.TABLE_NAME,
@@ -208,6 +241,11 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
+            case STOCK_SYMBOL:
+                rowsUpdated = db.update(PortfolioContract.StockSymbol.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
             case STOCK_QUOTE:
                 rowsUpdated = db.update(PortfolioContract.StockQuote.TABLE_NAME, values,
                         selection,
