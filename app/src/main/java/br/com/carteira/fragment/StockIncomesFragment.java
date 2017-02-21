@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.adapter.StockDividendAdapter;
@@ -53,6 +54,11 @@ public class StockIncomesFragment extends BaseFragment implements
 
         ButterKnife.bind(this, view);
 
+        // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
+        Intent mainActivityIntent = getActivity().getIntent();
+        String symbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -62,7 +68,7 @@ public class StockIncomesFragment extends BaseFragment implements
         // Probably change to StockIncomeAdapter
         mStockDividendAdapter = new StockDividendAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockDividendAdapter);
-        getActivity().getSupportLoaderManager().initLoader(INCOME_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(INCOME_LOADER, bundle, this);
 
         return view;
     }
@@ -79,10 +85,15 @@ public class StockIncomesFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(mContext,
-                PortfolioContract.StockIncome.URI,
+        // Receives symbol to make query of incomes for specific symbol
+        String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        // TODO Change sortOrder from COLUMN_SYMBOL to Date. The Order of incomes will be shown from oldest to most recent income.
+        CursorLoader Loader = new CursorLoader(mContext,
+                PortfolioContract.StockIncome
+                        .makeUriForStockIncome(symbol),
                 PortfolioContract.StockIncome.STOCK_INCOME_COLUMNS,
                 null, null, PortfolioContract.StockIncome.COLUMN_SYMBOL);
+        return Loader;
     }
 
     @Override

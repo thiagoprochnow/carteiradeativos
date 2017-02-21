@@ -186,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         Intent intent = new Intent(this, DetailsActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
+                // Sends symbol of clicked stock to details acitivity
                 Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
