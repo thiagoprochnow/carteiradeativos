@@ -31,10 +31,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String builder_stock_quote = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
                 PortfolioContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.StockQuote.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.StockQuote.COLUMN_SYMBOL + " INTEGER NOT NULL, " +
                 PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
                 PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE + " REAL, " +
-                PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL);";
+                PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                " FOREIGN KEY (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.StockSymbol.TABLE_NAME + " (" + PortfolioContract.StockSymbol._ID + "));";
 
         String builder_stock_income = "CREATE TABLE " + PortfolioContract.StockIncome.TABLE_NAME + " (" +
                 PortfolioContract.StockIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

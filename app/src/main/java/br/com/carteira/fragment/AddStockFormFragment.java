@@ -1,7 +1,9 @@
 package br.com.carteira.fragment;
 
 
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -85,20 +87,18 @@ public class AddStockFormFragment extends BaseFormFragment {
             double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
 
             ContentValues stockCV = new ContentValues();
-            ContentValues stockSymbolCV = new ContentValues();
-            // Insert symbol on both StockQuote and StockSymbol tables
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
-            stockSymbolCV.put(PortfolioContract.StockSymbol.COLUMN_SYMBOL, inputSymbol);
 
+            long symbolId = addSymbol(inputSymbol);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE, buyPrice);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
             // Adds to the database
             Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
                     stockCV);
-            Uri insertedStockSymbolUri = mContext.getContentResolver().insert(PortfolioContract.StockSymbol.URI, stockSymbolCV);
+
             // If error occurs to add, shows error message
-            if (insertedStockQuoteUri != null && insertedStockSymbolUri != null) {
+            if (insertedStockQuoteUri != null) {
                 Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT).show();
                 return true;
             } else {
@@ -124,5 +124,41 @@ public class AddStockFormFragment extends BaseFormFragment {
 
         }
         return false;
+    }
+
+    /**
+     * Add the symbol if it not exists otherwise just return the ID of the symbol
+     * @param symbol
+     * @return - Id of the register
+     */
+    long addSymbol(String symbol) {
+        long symbolId;
+
+        // Check if the symbol exists in the db
+        Cursor symbolCursor = getContext().getContentResolver().query(
+                PortfolioContract.StockSymbol.URI,
+                new String[]{PortfolioContract.StockSymbol._ID},
+                PortfolioContract.StockSymbol.COLUMN_SYMBOL + " = ?",
+                new String[]{symbol},
+                null);
+
+        if (symbolCursor.moveToFirst()) {
+            int symbolIdIndex = symbolCursor.getColumnIndex(PortfolioContract.StockSymbol._ID);
+            symbolId = symbolCursor.getLong(symbolIdIndex);
+        } else {
+            // Prepare the symbol values to be inserted
+            ContentValues symbolValues = new ContentValues();
+            symbolValues.put(PortfolioContract.StockSymbol.COLUMN_SYMBOL, symbol);
+
+            // Insert into database.
+            Uri insertedStockSymbolUri = getContext().getContentResolver()
+                    .insert(PortfolioContract.StockSymbol.URI, symbolValues);
+
+            // Extract the symbolId from the Uri.
+            symbolId = ContentUris.parseId(insertedStockSymbolUri);
+        }
+
+        symbolCursor.close();
+        return symbolId;
     }
 }

@@ -1,5 +1,6 @@
 package br.com.carteira.data;
 
+import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -36,6 +37,10 @@ public class PortfolioContract {
             return URI.buildUpon().appendPath(symbol).build();
         }
 
+        public static Uri buildSymbolUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
         public static String getStockSymbolFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
@@ -61,6 +66,9 @@ public class PortfolioContract {
                 COLUMN_OBJECTIVE_PERCENT
         };
 
+        public static Uri buildQuoteUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
 
         public static Uri makeUriForStockQuote(String symbol) {
             return URI.buildUpon().appendPath(symbol).build();

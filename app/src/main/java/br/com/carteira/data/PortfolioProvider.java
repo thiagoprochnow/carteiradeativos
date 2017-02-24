@@ -5,7 +5,9 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -52,7 +54,6 @@ public class PortfolioProvider extends ContentProvider {
                         String sortOrder) {
         Cursor returnCursor;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         switch (uriMatcher.match(uri)) {
             // Returns all stock symbols possessed by user
             case STOCK_SYMBOL:
@@ -136,23 +137,32 @@ public class PortfolioProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Uri returnUri;
-
+        long _id;
         switch (uriMatcher.match(uri)) {
             case STOCK_SYMBOL:
-                db.insert(
+                _id = db.insert(
                         PortfolioContract.StockSymbol.TABLE_NAME,
                         null,
                         values
                 );
-                returnUri = PortfolioContract.StockSymbol.URI;
+                if(_id > 0) {
+                    returnUri = PortfolioContract.StockSymbol.buildSymbolUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
                 break;
             case STOCK_QUOTE:
-                db.insert(
+                _id = db.insert(
                         PortfolioContract.StockQuote.TABLE_NAME,
                         null,
                         values
                 );
-                returnUri = PortfolioContract.StockQuote.URI;
+                if(_id > 0) {
+                    returnUri = PortfolioContract.StockQuote.buildQuoteUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.StockSymbol.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
                 break;
             case STOCK_INCOME:
                 db.insert(
@@ -167,7 +177,6 @@ public class PortfolioProvider extends ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(uri, null);
-
         return returnUri;
     }
 
@@ -263,6 +272,7 @@ public class PortfolioProvider extends ContentProvider {
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+
         return rowsUpdated;
 
     }
@@ -289,10 +299,14 @@ public class PortfolioProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
+
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);
         }
     }
+
+
+
 }
