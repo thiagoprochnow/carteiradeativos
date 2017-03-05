@@ -151,7 +151,6 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         // New bundle to return calculated values to insert in adapter
         Bundle bundle = new Bundle();
         // Insert symbol in URI to make query for specific symbol
-        PortfolioContract.StockQuote.makeUriForStockQuote(symbol);
         Cursor StockQuotesCursor = mContext.getContentResolver().query(PortfolioContract.StockQuote.makeUriForStockQuote(symbol), null, null, null, null);
         if (StockQuotesCursor != null) {
             StockQuotesCursor.moveToFirst();

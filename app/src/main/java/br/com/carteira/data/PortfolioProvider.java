@@ -14,7 +14,8 @@ import android.support.annotation.Nullable;
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
 
-    static final int STOCK_SYMBOL = 100;
+    static final int STOCK_SYMBOLS = 100;
+    static final int STOCK_SYMBOLS_WITH_SYMBOL = 101;
 
     static final int STOCK_QUOTE = 200;
     static final int STOCK_QUOTE_FOR_SYMBOL = 201;
@@ -31,7 +32,8 @@ public class PortfolioProvider extends ContentProvider {
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS, STOCK_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS, STOCK_SYMBOLS);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS_WITH_SYMBOL, STOCK_SYMBOLS_WITH_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
                 STOCK_QUOTE_FOR_SYMBOL);
@@ -56,7 +58,7 @@ public class PortfolioProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         switch (uriMatcher.match(uri)) {
             // Returns all stock symbols possessed by user
-            case STOCK_SYMBOL:
+            case STOCK_SYMBOLS:
                 returnCursor = db.query(
                         PortfolioContract.StockSymbol.TABLE_NAME,
                         projection,
@@ -139,7 +141,7 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
         long _id;
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOL:
+            case STOCK_SYMBOLS:
                 _id = db.insert(
                         PortfolioContract.StockSymbol.TABLE_NAME,
                         null,
@@ -189,7 +191,7 @@ public class PortfolioProvider extends ContentProvider {
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOL:
+            case STOCK_SYMBOLS_WITH_SYMBOL:
                 symbol = PortfolioContract.StockSymbol.getStockSymbolFromUri(uri);
                 rowsDeleted = db.delete(
                         PortfolioContract.StockSymbol.TABLE_NAME,
@@ -250,7 +252,7 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOL:
+            case STOCK_SYMBOLS:
                 rowsUpdated = db.update(PortfolioContract.StockSymbol.TABLE_NAME, values,
                         selection,
                         selectionArgs);

@@ -89,6 +89,7 @@ public class AddStockFormFragment extends BaseFormFragment {
             ContentValues stockCV = new ContentValues();
 
             long symbolId = addSymbol(inputSymbol);
+            // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE, buyPrice);

@@ -13,6 +13,7 @@ public class PortfolioContract {
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final String PATH_STOCK_SYMBOLS = "symbols";
+    public static final String PATH_STOCK_SYMBOLS_WITH_SYMBOL = "symbols/*";
 
     public static final String PATH_STOCK_QUOTE = "quote";
     public static final String PATH_STOCK_QUOTE_WITH_SYMBOL = "quote/*";

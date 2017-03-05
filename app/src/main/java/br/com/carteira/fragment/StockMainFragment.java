@@ -138,9 +138,12 @@ public class StockMainFragment extends BaseFragment implements
                 .makeUriForStockQuote(symbol), null, null);
         int deletedSymbol = getActivity().getContentResolver().delete(PortfolioContract.StockSymbol
                 .makeUriForStockSymbol(symbol), null, null);
+        // Cannot check if deletedIncome > 0, because stock may not have any income to delete
+        // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
-        if (deletedQuote > 0 && deletedSymbol > 0 && deletedIncome > 0) {
+        Log.d(LOG_TAG, "DeletedQuote: " + deletedQuote + " DeletedSymbol: " + deletedSymbol + " DeletedIncome: " + deletedIncome);
+        if (deletedQuote > 0 && deletedSymbol > 0) {
 
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
