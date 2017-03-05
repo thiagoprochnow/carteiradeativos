@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,14 @@ import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFormFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         .StockQuoteViewHolder> {
-
+    private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
@@ -148,6 +150,8 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         double bougthTotal=0;
         // Last imputted objective percent
         double objectivePercent=0;
+        // Timestamp of stock buy
+        long timestamp=0;
         // New bundle to return calculated values to insert in adapter
         Bundle bundle = new Bundle();
         // Insert symbol in URI to make query for specific symbol
@@ -159,6 +163,9 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
                 int quantity = StockQuotesCursor.getInt(StockQuotesCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_QUANTITY));
                 double boughtPrice = StockQuotesCursor.getInt(StockQuotesCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE));
                 objectivePercent = StockQuotesCursor.getInt(StockQuotesCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT));
+                timestamp = StockQuotesCursor.getLong(StockQuotesCursor.getColumnIndex(PortfolioContract.StockQuote.COLUMN_TIMESTAMP));
+                // For now, timestamp is only logged. Will be used later for checking buy dates
+                Log.d(LOG_TAG, "Timestamp from DB: " + timestamp);
                 bougthTotal += quantity*boughtPrice;
                 totalQuantity += quantity;
             } while (StockQuotesCursor.moveToNext());

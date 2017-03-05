@@ -58,13 +58,15 @@ public class PortfolioContract {
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_BOUGHT_PRICE = "bought_price";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
 
         public static final String[] STOCK_QUOTE_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY,
                 COLUMN_BOUGHT_PRICE,
-                COLUMN_OBJECTIVE_PERCENT
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_TIMESTAMP
         };
 
         public static Uri buildQuoteUri(long id) {
@@ -95,7 +97,7 @@ public class PortfolioContract {
                 COLUMN_SYMBOL,
                 COLUMN_TYPE,
                 COLUMN_PER_STOCK,
-                COLUMN_PERCENT,
+                COLUMN_PERCENT
         };
 
         public static Uri makeUriForStockIncome(String symbol) {

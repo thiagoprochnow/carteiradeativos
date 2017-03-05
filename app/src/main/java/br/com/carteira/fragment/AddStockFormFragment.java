@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,6 +27,7 @@ import br.com.carteira.util.InputFilterPercentage;
 
 
 public class AddStockFormFragment extends BaseFormFragment {
+    private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
     private View mView;
 
     private EditText mInputSymbolView;
@@ -77,14 +81,25 @@ public class AddStockFormFragment extends BaseFormFragment {
         boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
 
-
-
         // If all validations pass, try to add the stock to the portfolio database
         if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
             double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
+            // Get and handle inserted date value
+            String inputDate = mInputDateView.getText().toString();
+            Log.d(LOG_TAG, "InputDate String: " + inputDate);
+            DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
+            Date date = new Date();
+            try{
+                date = (Date) dateFormat.parse(inputDate);
+            } catch (ParseException e){
+                e.printStackTrace();
+            }
+            // Timestamp to be saved on SQLite database
+            Long timestamp = date.getTime();
+            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues stockCV = new ContentValues();
 
@@ -94,6 +109,7 @@ public class AddStockFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE, buyPrice);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_TIMESTAMP, timestamp);
             // Adds to the database
             Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
                     stockCV);

@@ -35,6 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
                 PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE + " REAL, " +
                 PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_TIMESTAMP + " LONG, " +
                 " FOREIGN KEY (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockSymbol.TABLE_NAME + " (" + PortfolioContract.StockSymbol._ID + "));";
 

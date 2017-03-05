@@ -107,11 +107,11 @@ public abstract class BaseFormFragment extends BaseFragment {
     }
 
     // Validate if an EditText was set with valid date value
-    protected boolean isValidDate(EditText symbol) {
-        Editable editable = symbol.getText();
+    protected boolean isValidDate(EditText date) {
+        Editable editable = date.getText();
         // Check if it is date input
         Pattern pattern = Pattern.compile("^[0-9][0-9]\\/[0-9][0-9]\\/[0-9][0-9][0-9][0-9]$");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isEditTextEmpty(date) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;
