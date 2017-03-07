@@ -6,7 +6,7 @@
     <string name="buy_price">Preço de compra</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
-    <string name="receive_date">Data de Recebimento</string>
+    <string name="ex_date">Data Ex Dividendo</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_buy_price">Preço deve ser um número</string>

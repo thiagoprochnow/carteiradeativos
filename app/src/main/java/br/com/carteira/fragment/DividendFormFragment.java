@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,10 +27,11 @@ import br.com.carteira.data.PortfolioContract;
  * A simple {@link Fragment} subclass.
  */
 public class DividendFormFragment extends BaseFormFragment {
+    private static final String LOG_TAG = DividendFormFragment.class.getSimpleName();
     private View mView;
 
     private EditText mInputPerStockView;
-    private EditText mInputIncomeDateView;
+    private EditText mInputExDateView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -49,14 +53,14 @@ public class DividendFormFragment extends BaseFormFragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_dividend_form, container, false);
         mInputPerStockView = (EditText) mView.findViewById(R.id.inputReceivedPerStock);
-        mInputIncomeDateView = (EditText) mView.findViewById(R.id.inputDividendReceiveDate);
+        mInputExDateView = (EditText) mView.findViewById(R.id.inputDividendExDate);
 
         // Adding current date to Buy Date field
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
-        mInputIncomeDateView.setText(simpleDateFormat.format(new Date()));
+        mInputExDateView.setText(simpleDateFormat.format(new Date()));
 
         // Configure to show Spinner when clicked on the Date EditText field
-        mInputIncomeDateView.setOnClickListener(setDatePicker(mInputIncomeDateView));
+        mInputExDateView.setOnClickListener(setDatePicker(mInputExDateView));
         return mView;
     }
 
@@ -64,9 +68,9 @@ public class DividendFormFragment extends BaseFormFragment {
     private boolean addDividend() {
 
         boolean isValidPerStock = isValidDouble(mInputPerStockView);
-        boolean isValidReceiveDate = isValidDate(mInputIncomeDateView);
+        boolean isValidExDate = isValidDate(mInputExDateView);
 
-        if (isValidReceiveDate && isValidPerStock){
+        if (isValidExDate && isValidPerStock){
             Intent intent = getActivity().getIntent();
             String symbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
             // TODO: Needs to get real stock quantity that will receive the income. This will be done by matching the receive ex date with the bought stock date
@@ -74,12 +78,18 @@ public class DividendFormFragment extends BaseFormFragment {
             double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
             double totalReceiveValue = stockQuantity * perStock;
 
+            // Get and handle inserted date value
+            String inputDate = mInputExDateView.getText().toString();
+            // Timestamp to be saved on SQLite database
+            Long timestamp = DateToTimestamp(inputDate);
+
             ContentValues stockCV = new ContentValues();
             stockCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
             // TODO: Type is hardcoded
             String dividend = "Dividend";
             stockCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, dividend);
             stockCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
+            stockCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, timestamp);
             // TODO: Calculate the percent based on total stocks value that received the income
             stockCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
             // Adds to the database
@@ -95,8 +105,8 @@ public class DividendFormFragment extends BaseFormFragment {
 
         } else{
             // If validation fails, show validation error message
-            if(!isValidReceiveDate){
-                mInputIncomeDateView.setError(this.getString(R.string.wrong_date));
+            if(!isValidExDate){
+                mInputExDateView.setError(this.getString(R.string.wrong_date));
             }
             if(!isValidPerStock){
                 mInputPerStockView.setError(this.getString(R.string.wrong_income_per_stock));
@@ -104,5 +114,4 @@ public class DividendFormFragment extends BaseFormFragment {
         }
         return false;
     }
-
 }

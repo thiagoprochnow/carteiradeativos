@@ -27,7 +27,7 @@ import br.com.carteira.util.InputFilterPercentage;
 
 
 public class AddStockFormFragment extends BaseFormFragment {
-    private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
+    private static final String LOG_TAG = AddStockFormFragment.class.getSimpleName();
     private View mView;
 
     private EditText mInputSymbolView;
@@ -89,16 +89,7 @@ public class AddStockFormFragment extends BaseFormFragment {
             double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
-            Log.d(LOG_TAG, "InputDate String: " + inputDate);
-            DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
-            Date date = new Date();
-            try{
-                date = (Date) dateFormat.parse(inputDate);
-            } catch (ParseException e){
-                e.printStackTrace();
-            }
-            // Timestamp to be saved on SQLite database
-            Long timestamp = date.getTime();
+            Long timestamp = DateToTimestamp(inputDate);
             Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues stockCV = new ContentValues();

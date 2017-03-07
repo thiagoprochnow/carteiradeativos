@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -160,5 +161,19 @@ public abstract class BaseFormFragment extends BaseFragment {
             }
         };
         return onClickListener;
+    }
+
+    // Transform a date value of dd/MM/yyyy into a timestamp value
+    public Long DateToTimestamp(String inputDate){
+        Log.d(LOG_TAG, "InputDate String: " + inputDate);
+        DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
+        Date date = new Date();
+        try{
+            date = (Date) dateFormat.parse(inputDate);
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return date.getTime();
     }
 }

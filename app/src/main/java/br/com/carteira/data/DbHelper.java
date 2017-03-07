@@ -44,6 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.StockIncome.COLUMN_TYPE + " TEXT NOT NULL, " +
                 PortfolioContract.StockIncome.COLUMN_PER_STOCK + " REAL, " +
+                PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL);";
 
         db.execSQL(builder_stock_symbols);
