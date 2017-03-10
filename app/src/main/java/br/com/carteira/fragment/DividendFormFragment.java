@@ -3,6 +3,7 @@ package br.com.carteira.fragment;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -73,15 +74,17 @@ public class DividendFormFragment extends BaseFormFragment {
         if (isValidExDate && isValidPerStock){
             Intent intent = getActivity().getIntent();
             String symbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-            // TODO: Needs to get real stock quantity that will receive the income. This will be done by matching the receive ex date with the bought stock date
-            int stockQuantity = 100;
-            double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
-            double totalReceiveValue = stockQuantity * perStock;
 
             // Get and handle inserted date value
             String inputDate = mInputExDateView.getText().toString();
             // Timestamp to be saved on SQLite database
             Long timestamp = DateToTimestamp(inputDate);
+
+            // Get the stock quantity bought before the dividend ex dividend
+            // Will be used to calculate the total R$ received of dividend
+            int stockQuantity = getStockQuantity(symbol, timestamp);
+            double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
+            double totalReceiveValue = stockQuantity * perStock;
 
             ContentValues stockCV = new ContentValues();
             stockCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
@@ -90,6 +93,8 @@ public class DividendFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, dividend);
             stockCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
             stockCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, timestamp);
+            stockCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, stockQuantity);
+            stockCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, totalReceiveValue);
             // TODO: Calculate the percent based on total stocks value that received the income
             stockCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
             // Adds to the database
@@ -114,4 +119,5 @@ public class DividendFormFragment extends BaseFormFragment {
         }
         return false;
     }
+
 }

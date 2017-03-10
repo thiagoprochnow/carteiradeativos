@@ -1,6 +1,7 @@
 package br.com.carteira.fragment;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,6 +22,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.carteira.R;
+import br.com.carteira.data.PortfolioContract;
 
 public abstract class BaseFormFragment extends BaseFragment {
 
@@ -175,5 +178,25 @@ public abstract class BaseFormFragment extends BaseFragment {
         }
 
         return date.getTime();
+    }
+
+    // Get stock quantity that will receive the dividend per stock
+    // symbol is to query by specific symbol only
+    // timestamp is to query only the quantity of stocks bought before the timestamp
+    public int getStockQuantity(String symbol, Long timestamp){
+        // Return column should be only quantity of stock
+        String[] affectedColumn = {"sum("+PortfolioContract.StockQuote.COLUMN_QUANTITY+")"};
+        String selection = PortfolioContract.StockQuote.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockQuote.COLUMN_TIMESTAMP + " < ?";
+        String[] selectionArguments = {symbol,String.valueOf(timestamp)};
+
+        // Check if the symbol exists in the db
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockQuote.URI,
+                affectedColumn, selection, selectionArguments, null);
+        if(queryCursor.moveToFirst()) {
+            return queryCursor.getInt(0);
+        } else{
+            return 0;
+        }
     }
 }

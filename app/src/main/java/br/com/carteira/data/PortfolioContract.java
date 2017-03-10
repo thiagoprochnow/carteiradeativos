@@ -92,6 +92,8 @@ public class PortfolioContract {
         public static final String COLUMN_PER_STOCK = "per_stock";
         public static final String COLUMN_PERCENT = "current_percent";
         public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
+        public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
+        public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
 
         public static final String[] STOCK_INCOME_COLUMNS = {
                 _ID,
@@ -99,7 +101,9 @@ public class PortfolioContract {
                 COLUMN_TYPE,
                 COLUMN_PER_STOCK,
                 COLUMN_PERCENT,
-                COLUMN_EXDIVIDEND_TIMESTAMP
+                COLUMN_EXDIVIDEND_TIMESTAMP,
+                COLUMN_RECEIVE_TOTAL,
+                COLUMN_AFFECTED_QUANTITY
         };
 
         public static Uri makeUriForStockIncome(String symbol) {

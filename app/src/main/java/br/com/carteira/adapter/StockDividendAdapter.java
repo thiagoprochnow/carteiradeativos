@@ -49,11 +49,10 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
         Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-        Log.d(LOG_TAG, "Holder timestamp: " + timestamp);
         String date = TimestampToDate(timestamp);
         holder.incomeType.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
         holder.incomeValue.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockIncome.COLUMN_PER_STOCK))));
+                (PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL))));
         holder.incomeDate.setText(date);
     }
 
