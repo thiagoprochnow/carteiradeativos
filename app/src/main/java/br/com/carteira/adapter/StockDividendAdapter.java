@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.security.Timestamp;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFormFragment;
 import butterknife.BindView;
@@ -49,8 +50,9 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
         Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+        String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
         String date = TimestampToDate(timestamp);
-        holder.incomeType.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
+        holder.incomeType.setText(incomeType);
         holder.incomeValue.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL))));
         holder.incomeDate.setText(date);
@@ -108,5 +110,22 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
     public String TimestampToDate(Long timestamp){
         String date = DateFormat.format("dd/MM/yyyy", timestamp).toString();
         return date;
+    }
+
+    public String getIncomeType(int incomeTypeId){
+        switch (incomeTypeId){
+            case Constants.IncomeType.INVALID:
+                Log.d(LOG_TAG, "Invalid IncomeType");
+                return "invalid";
+            case Constants.IncomeType.DIVIDEND:
+                Log.d(LOG_TAG, "Dividend IncomeType");
+                return mContext.getResources().getString(R.string.dividendIncomeType);
+            case Constants.IncomeType.JCP:
+                Log.d(LOG_TAG, "JCP IncomeType");
+                return mContext.getResources().getString(R.string.jcpIncomeType);
+            default:
+                Log.d(LOG_TAG, "Default IncomeType");
+                return mContext.getResources().getString(R.string.dividendIncomeType);
+        }
     }
 }

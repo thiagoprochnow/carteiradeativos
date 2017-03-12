@@ -42,7 +42,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_stock_income = "CREATE TABLE " + PortfolioContract.StockIncome.TABLE_NAME + " (" +
                 PortfolioContract.StockIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.StockIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.StockIncome.COLUMN_TYPE + " TEXT NOT NULL, " +
+                PortfolioContract.StockIncome.COLUMN_TYPE + " INTEGER NOT NULL, " +
                 PortfolioContract.StockIncome.COLUMN_PER_STOCK + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +

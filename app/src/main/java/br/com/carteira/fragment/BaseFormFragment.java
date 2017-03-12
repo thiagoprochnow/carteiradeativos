@@ -1,6 +1,7 @@
 package br.com.carteira.fragment;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
@@ -193,10 +194,59 @@ public abstract class BaseFormFragment extends BaseFragment {
         Cursor queryCursor = mContext.getContentResolver().query(
                 PortfolioContract.StockQuote.URI,
                 affectedColumn, selection, selectionArguments, null);
-        if(queryCursor.moveToFirst()) {
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
             return queryCursor.getInt(0);
         } else{
             return 0;
+        }
+    }
+
+    // By using the timestamp of bought/sold stock, function will check if any added income
+    // is affected by this buy/sell stock.
+    // If any income is affected, it will update income line with new value by using
+    // getStockQuantity function for each affected line
+    public boolean rescanStockIncomesTables(String symbol, long timestamp){
+        // Prepare query for checking affected incomes
+        String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
+        String[] selectionArguments = {symbol, String.valueOf(timestamp)};
+
+        // Check if any income is affected by stock buy/sell
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            do{
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome._ID)));
+                long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int quantity = getStockQuantity(symbol, incomeTimestamp);
+                double perStock = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK)));
+                double receiveTotal = quantity * perStock;
+
+                // Prepare query to update stock quantity applied for that dividend
+                // and the total income received
+                String updateSelection = PortfolioContract.StockIncome._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+                ContentValues incomeCV = new ContentValues();
+                incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, quantity);
+                incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
+
+                // Update value on incomes table
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.StockIncome.URI,
+                        incomeCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "rescanStockIncomesTables successfully updated");
+                } else {
+                    Log.d(LOG_TAG, "rescanStockIncomesTables failed update");
+                }
+            } while (queryCursor.moveToNext());
+            return true;
+        } else {
+            Log.d(LOG_TAG, "No incomes affected by buy/sell stock");
+            return false;
         }
     }
 }

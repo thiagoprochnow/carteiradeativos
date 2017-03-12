@@ -107,6 +107,8 @@ public class AddStockFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedStockQuoteUri != null) {
+                // Rescan incomes tables to check if added stock changed their receive values.
+                rescanStockIncomesTables(inputSymbol, timestamp);
                 Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT).show();
                 return true;
             } else {

@@ -32,6 +32,10 @@
     <string name="currentPercentLabel">Percent:</string>
     <string name="targetPercentLabel">Target:</string>
 
+    <!-- Dividend Adapter -->
+    <string name="dividendIncomeType">Dividend</string>
+    <string name="jcpIncomeType">Interest on Capital</string>
+
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Incomes</string>
 

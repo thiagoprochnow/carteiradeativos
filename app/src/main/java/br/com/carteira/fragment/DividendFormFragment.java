@@ -86,20 +86,20 @@ public class DividendFormFragment extends BaseFormFragment {
             double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
             double totalReceiveValue = stockQuantity * perStock;
 
-            ContentValues stockCV = new ContentValues();
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
+            ContentValues incomeCV = new ContentValues();
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
             // TODO: Type is hardcoded
-            String dividend = "Dividend";
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, dividend);
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, stockQuantity);
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, totalReceiveValue);
+            int dividend = Constants.IncomeType.DIVIDEND;
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, dividend);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, timestamp);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, stockQuantity);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, totalReceiveValue);
             // TODO: Calculate the percent based on total stocks value that received the income
-            stockCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
             // Adds to the database
             Uri insertedUri = mContext.getContentResolver().insert(PortfolioContract.StockIncome.URI,
-                    stockCV);
+                    incomeCV);
             // If error occurs to add, shows error message
             if (insertedUri != null) {
                 Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_SHORT).show();
