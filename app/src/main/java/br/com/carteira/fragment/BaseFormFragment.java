@@ -67,12 +67,38 @@ public abstract class BaseFormFragment extends BaseFragment {
     }
 
     // Validate if an EditText was set with valid int and that there is enough quantity of stock
-    protected boolean isValidSellQuantity(EditText symbol) {
+    protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol) {
         // TODO
-        Editable editable = symbol.getText();
+        Editable editableQuantity = editQuantity.getText();
+        int quantity = Integer.parseInt(editableQuantity.toString());
+        String symbol = editSymbol.getText().toString();
+
         // Check if it is digit only
-        boolean isDigitOnly = TextUtils.isDigitsOnly(editable.toString());
-        if (!isEditTextEmpty(symbol) && isDigitOnly) {
+        boolean isDigitOnly = TextUtils.isDigitsOnly(editableQuantity.toString());
+        boolean isQuantityEnough = false;
+
+        // Prepare query for stock portfolio
+        String selection = PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockPortfolio.URI,
+                null, selection, selectionArguments, null);
+        // Gets portfolio quantity to see if bought quantity is enough
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL));
+            if(boughtQuantity >= quantity){
+                // Bought quantity is bigger then quantity trying to sell
+                isQuantityEnough = true;
+            } else{
+                return false;
+            }
+        } else{
+            return false;
+        }
+
+        if (!isEditTextEmpty(editQuantity) && isDigitOnly && isQuantityEnough) {
             return true;
         } else {
             return false;
@@ -289,25 +315,31 @@ public abstract class BaseFormFragment extends BaseFragment {
             int quantityTotal;
             double valueTotal;
             double receiveIncome;
+            double mediumPrice;
 
             String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
             // Check if buying or selling stock
             if(status == Constants.Status.BUY) {
                 quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) + quantity;
                 valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))) + value;
+                mediumPrice = valueTotal/quantityTotal;
                 receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) + sumReceiveIncome;
             // Sell
             } else {
                 quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) - quantity;
-                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))) - value;
+                mediumPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE));
+                valueTotal = quantityTotal*mediumPrice;
                 receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) - sumReceiveIncome;
             }
 
             ContentValues updatePortfolioCV = new ContentValues();
             updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL, quantityTotal);
             updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, valueTotal);
-            if (objective > 0){
+            if (status == Constants.Status.BUY){
                 updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if (status == Constants.Status.BUY){
+                updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE, mediumPrice);
             }
             updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, receiveIncome);
 

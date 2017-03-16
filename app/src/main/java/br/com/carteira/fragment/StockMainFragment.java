@@ -167,7 +167,7 @@ public class StockMainFragment extends BaseFragment implements
         // Will use the table of stock symbols as cursor. StockQuote values will be handled at StockQuoteAdapter.
         return new CursorLoader(mContext,
                 PortfolioContract.StockPortfolio.URI,
-                PortfolioContract.StockPortfolio.STOCK_QUOTE_COLUMNS,
+                PortfolioContract.StockPortfolio.STOCK_PORTFOLIO_COLUMNS,
                 null, null, PortfolioContract.StockPortfolio.COLUMN_SYMBOL);
     }
 

@@ -33,6 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockPortfolio.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_stock_quote = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +

@@ -34,8 +34,9 @@ public class PortfolioContract {
         public static final String COLUMN_VALUE_GAIN = "value_gain";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_MEDIUM_PRICE = "medium_price";
 
-        public static final String[] STOCK_QUOTE_COLUMNS = {
+        public static final String[] STOCK_PORTFOLIO_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY_TOTAL,
@@ -43,7 +44,8 @@ public class PortfolioContract {
                 COLUMN_INCOME_TOTAL,
                 COLUMN_VALUE_GAIN,
                 COLUMN_OBJECTIVE_PERCENT,
-                COLUMN_CURRENT_PERCENT
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_MEDIUM_PRICE
         };
 
         public static Uri makeUriForStockPortfolio(String symbol) {

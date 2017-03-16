@@ -78,7 +78,7 @@ public class SellStockFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView);
+        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
 
