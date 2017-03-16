@@ -3,6 +3,7 @@ package br.com.carteira.fragment;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 
 public abstract class BaseFormFragment extends BaseFragment {
@@ -58,6 +60,19 @@ public abstract class BaseFormFragment extends BaseFragment {
         // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
         Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
         if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid int and that there is enough quantity of stock
+    protected boolean isValidSellQuantity(EditText symbol) {
+        // TODO
+        Editable editable = symbol.getText();
+        // Check if it is digit only
+        boolean isDigitOnly = TextUtils.isDigitsOnly(editable.toString());
+        if (!isEditTextEmpty(symbol) && isDigitOnly) {
             return true;
         } else {
             return false;
@@ -206,7 +221,7 @@ public abstract class BaseFormFragment extends BaseFragment {
     // is affected by this buy/sell stock.
     // If any income is affected, it will update income line with new value by using
     // getStockQuantity function for each affected line
-    public boolean rescanStockIncomesTables(String symbol, long timestamp){
+    public double updateStockIncomes(String symbol, long timestamp){
         // Prepare query for checking affected incomes
         String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
         String[] selectionArguments = {symbol, String.valueOf(timestamp)};
@@ -217,6 +232,8 @@ public abstract class BaseFormFragment extends BaseFragment {
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
+            // Sum that will be returned and updated on StockPortfolio table by updateStockPortfolio()
+            double sumReceiveTotal = 0;
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome._ID)));
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
@@ -232,21 +249,108 @@ public abstract class BaseFormFragment extends BaseFragment {
                 incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, quantity);
                 incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
 
+                sumReceiveTotal += receiveTotal;
+
                 // Update value on incomes table
                 int updatedRows = mContext.getContentResolver().update(
                         PortfolioContract.StockIncome.URI,
                         incomeCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0){
-                    Log.d(LOG_TAG, "rescanStockIncomesTables successfully updated");
+                    Log.d(LOG_TAG, "updateStockIncomes successfully updated");
                 } else {
-                    Log.d(LOG_TAG, "rescanStockIncomesTables failed update");
+                    Log.d(LOG_TAG, "updateStockIncomes failed update");
                 }
             } while (queryCursor.moveToNext());
-            return true;
+            return sumReceiveTotal;
         } else {
             Log.d(LOG_TAG, "No incomes affected by buy/sell stock");
-            return false;
+            return 0;
         }
+    }
+
+    public boolean updateStockPortfolio(String symbol, int quantity, double buyPrice, double objective, double sumReceiveIncome, int status){
+        // Prepare query for stock portfolio
+        String selection = PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockPortfolio.URI,
+                null, selection, selectionArguments, null);
+
+        double value = quantity*buyPrice;
+
+        // Check if there already is a portfolio for this stock to update
+        // If not, will create one new
+        if(queryCursor.getCount() > 0 ){
+            queryCursor.moveToFirst();
+            Log.d(LOG_TAG, "Updating portfolio for " + symbol);
+
+            int quantityTotal;
+            double valueTotal;
+            double receiveIncome;
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
+            // Check if buying or selling stock
+            if(status == Constants.Status.BUY) {
+                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) + quantity;
+                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))) + value;
+                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) + sumReceiveIncome;
+            // Sell
+            } else {
+                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) - quantity;
+                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))) - value;
+                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) - sumReceiveIncome;
+            }
+
+            ContentValues updatePortfolioCV = new ContentValues();
+            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, valueTotal);
+            if (objective > 0){
+                updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, receiveIncome);
+
+            // Prepare query to update stock portfolio
+            String updateSelection = PortfolioContract.StockPortfolio._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on stock portfolio
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.StockPortfolio.URI,
+                    updatePortfolioCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateStockPortfolio successfully updated");
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateStockPortfolio failed update");
+                return false;
+            }
+
+        } else {
+            Log.d(LOG_TAG, "No portfolio created for " + symbol + ". Creating new one");
+            // Only way to create is if status = "Buy", so quantity here will always be positive
+
+            ContentValues newPortfolioCV = new ContentValues();
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_SYMBOL, symbol);
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL, quantity);
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, value);
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, sumReceiveIncome);
+
+            // Adds portfolio to the database
+            Uri insertedStockPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
+                    newPortfolioCV);
+
+            // If error occurs to add, shows error message
+            if (insertedStockPortfolioUri != null) {
+                Log.d(LOG_TAG, "Added stock portfolio");
+                return true;
+            } else {
+                Log.d(LOG_TAG, "Error adding stock portfolio");
+            }
+        }
+        return false;
     }
 }

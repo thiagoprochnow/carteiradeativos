@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -14,8 +13,8 @@ import android.support.annotation.Nullable;
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
 
-    static final int STOCK_SYMBOLS = 100;
-    static final int STOCK_SYMBOLS_WITH_SYMBOL = 101;
+    static final int STOCK_PORTFOLIO = 100;
+    static final int STOCK_PORTFOLIO_WITH_SYMBOL = 101;
 
     static final int STOCK_QUOTE = 200;
     static final int STOCK_QUOTE_FOR_SYMBOL = 201;
@@ -32,8 +31,8 @@ public class PortfolioProvider extends ContentProvider {
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS, STOCK_SYMBOLS);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_SYMBOLS_WITH_SYMBOL, STOCK_SYMBOLS_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, STOCK_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO_WITH_SYMBOL, STOCK_PORTFOLIO_WITH_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE, STOCK_QUOTE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_QUOTE_WITH_SYMBOL,
                 STOCK_QUOTE_FOR_SYMBOL);
@@ -58,9 +57,9 @@ public class PortfolioProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         switch (uriMatcher.match(uri)) {
             // Returns all stock symbols possessed by user
-            case STOCK_SYMBOLS:
+            case STOCK_PORTFOLIO:
                 returnCursor = db.query(
-                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        PortfolioContract.StockPortfolio.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -141,14 +140,14 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
         long _id;
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOLS:
+            case STOCK_PORTFOLIO:
                 _id = db.insert(
-                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        PortfolioContract.StockPortfolio.TABLE_NAME,
                         null,
                         values
                 );
                 if(_id > 0) {
-                    returnUri = PortfolioContract.StockSymbol.buildSymbolUri(_id);
+                    returnUri = PortfolioContract.StockPortfolio.buildPortfolioUri(_id);
                 }else{
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
@@ -161,7 +160,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 if(_id > 0) {
                     returnUri = PortfolioContract.StockQuote.buildQuoteUri(_id);
-                    getContext().getContentResolver().notifyChange(PortfolioContract.StockSymbol.URI, null);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.StockPortfolio.URI, null);
                 }else{
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
@@ -191,10 +190,10 @@ public class PortfolioProvider extends ContentProvider {
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOLS_WITH_SYMBOL:
-                symbol = PortfolioContract.StockSymbol.getStockSymbolFromUri(uri);
+            case STOCK_PORTFOLIO_WITH_SYMBOL:
+                symbol = PortfolioContract.StockPortfolio.getStockPortfolioFromUri(uri);
                 rowsDeleted = db.delete(
-                        PortfolioContract.StockSymbol.TABLE_NAME,
+                        PortfolioContract.StockPortfolio.TABLE_NAME,
                         '"' + symbol + '"' + " =" + PortfolioContract.StockQuote.COLUMN_SYMBOL,
                         selectionArgs
                 );
@@ -252,8 +251,8 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
-            case STOCK_SYMBOLS:
-                rowsUpdated = db.update(PortfolioContract.StockSymbol.TABLE_NAME, values,
+            case STOCK_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.StockPortfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;

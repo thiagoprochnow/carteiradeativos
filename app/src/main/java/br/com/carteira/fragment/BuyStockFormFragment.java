@@ -15,19 +15,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.util.InputFilterDecimal;
 import br.com.carteira.util.InputFilterPercentage;
 
 
-public class AddStockFormFragment extends BaseFormFragment {
-    private static final String LOG_TAG = AddStockFormFragment.class.getSimpleName();
+public class BuyStockFormFragment extends BaseFormFragment {
+    private static final String LOG_TAG = BuyStockFormFragment.class.getSimpleName();
     private View mView;
 
     private EditText mInputSymbolView;
@@ -52,7 +51,7 @@ public class AddStockFormFragment extends BaseFormFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_add_stock_form, container, false);
+        mView = inflater.inflate(R.layout.fragment_buy_stock_form, container, false);
 
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
@@ -94,25 +93,30 @@ public class AddStockFormFragment extends BaseFormFragment {
 
             ContentValues stockCV = new ContentValues();
 
-            long symbolId = addSymbol(inputSymbol);
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE, buyPrice);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT, inputObjective);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_PRICE, buyPrice);
             stockCV.put(PortfolioContract.StockQuote.COLUMN_TIMESTAMP, timestamp);
+            stockCV.put(PortfolioContract.StockQuote.COLUMN_STATUS, Constants.Status.BUY);
             // Adds to the database
             Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
                     stockCV);
 
             // If error occurs to add, shows error message
             if (insertedStockQuoteUri != null) {
+                Log.d(LOG_TAG, "Added stock quote " + inputSymbol);
                 // Rescan incomes tables to check if added stock changed their receive values.
-                rescanStockIncomesTables(inputSymbol, timestamp);
-                Toast.makeText(mContext, R.string.add_stock_success, Toast.LENGTH_SHORT).show();
-                return true;
+                double sumReceiveIncome = updateStockIncomes(inputSymbol, timestamp);
+                boolean updateStockPortfolio = updateStockPortfolio(inputSymbol, inputQuantity, buyPrice, inputObjective, sumReceiveIncome, Constants.Status.BUY);
+                if (updateStockPortfolio){
+                    Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_SHORT).show();
+                    return true;
+                } else {
+                    Toast.makeText(mContext, R.string.buy_stock_fail, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(mContext, R.string.add_stock_fail, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.buy_stock_fail, Toast.LENGTH_SHORT).show();
             }
         } else {
             // If validation fails, show validation error message
@@ -123,7 +127,7 @@ public class AddStockFormFragment extends BaseFormFragment {
                 mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
             }
             if(!isValidBuyPrice){
-                mInputBuyPriceView.setError(this.getString(R.string.wrong_buy_price));
+                mInputBuyPriceView.setError(this.getString(R.string.wrong_price));
             }
             if(!isValidObjective){
                 mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
@@ -134,41 +138,5 @@ public class AddStockFormFragment extends BaseFormFragment {
 
         }
         return false;
-    }
-
-    /**
-     * Add the symbol if it not exists otherwise just return the ID of the symbol
-     * @param symbol
-     * @return - Id of the register
-     */
-    long addSymbol(String symbol) {
-        long symbolId;
-
-        // Check if the symbol exists in the db
-        Cursor symbolCursor = getContext().getContentResolver().query(
-                PortfolioContract.StockSymbol.URI,
-                new String[]{PortfolioContract.StockSymbol._ID},
-                PortfolioContract.StockSymbol.COLUMN_SYMBOL + " = ?",
-                new String[]{symbol},
-                null);
-
-        if (symbolCursor.moveToFirst()) {
-            int symbolIdIndex = symbolCursor.getColumnIndex(PortfolioContract.StockSymbol._ID);
-            symbolId = symbolCursor.getLong(symbolIdIndex);
-        } else {
-            // Prepare the symbol values to be inserted
-            ContentValues symbolValues = new ContentValues();
-            symbolValues.put(PortfolioContract.StockSymbol.COLUMN_SYMBOL, symbol);
-
-            // Insert into database.
-            Uri insertedStockSymbolUri = getContext().getContentResolver()
-                    .insert(PortfolioContract.StockSymbol.URI, symbolValues);
-
-            // Extract the symbolId from the Uri.
-            symbolId = ContentUris.parseId(insertedStockSymbolUri);
-        }
-
-        symbolCursor.close();
-        return symbolId;
     }
 }

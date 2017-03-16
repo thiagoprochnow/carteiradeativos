@@ -13,11 +13,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.adapter.StockQuoteAdapter;
@@ -46,6 +48,8 @@ public class StockMainFragment extends BaseFragment implements
     private StockQuoteAdapter mStockQuoteAdapter;
     private AddProductListener mFormProductListener;
     private DetailsProductListener mDetailsProductListener;
+
+    private String symbol;
 
     // Loader IDs
     private static final int STOCK_LOADER = 0;
@@ -92,11 +96,12 @@ public class StockMainFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onAddProduct(Constants.ProductType.STOCK);
+                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK);
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockQuoteAdapter);
+        registerForContextMenu(mRecyclerView);
         getActivity().getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
         // Inflate the layout for this fragment
@@ -111,57 +116,59 @@ public class StockMainFragment extends BaseFragment implements
     }
 
     @Override
-    public void onLongClick(final String symbol) {
-        // Show Dialog for user confirmation to delete Stock from database
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(R.string.delete_stock_title);
-        builder.setMessage(R.string.delete_stock_dialog)
-                .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface
-                        .OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        removeStock(symbol);
-                    }
-                })
-                .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface
-                        .OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.create().show();
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                             ContextMenu.ContextMenuInfo menuInfo, String symbol){
+        MenuInflater inflater = getActivity().getMenuInflater();
+        this.symbol = symbol;
+        inflater.inflate(R.menu.stock_item_menu, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 
-    // Delete stock and all its information from database
-    // This is different then selling a stock, that will maintain some information
-    private boolean removeStock(String symbol) {
-        int deletedQuote = getActivity().getContentResolver().delete(PortfolioContract.StockQuote
-                .makeUriForStockQuote(symbol), null, null);
-        int deletedSymbol = getActivity().getContentResolver().delete(PortfolioContract.StockSymbol
-                .makeUriForStockSymbol(symbol), null, null);
-        // Cannot check if deletedIncome > 0, because stock may not have any income to delete
-        // Which is not an error
-        int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
-                .makeUriForStockIncome(symbol), null, null);
-        Log.d(LOG_TAG, "DeletedQuote: " + deletedQuote + " DeletedSymbol: " + deletedSymbol + " DeletedIncome: " + deletedIncome);
-        if (deletedQuote > 0 && deletedSymbol > 0) {
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
 
-            Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
-                    , Toast.LENGTH_SHORT).show();
-            return true;
-        } else {
-            Toast.makeText(mContext, getString(R.string.toast_stock_not_removed, symbol), Toast
-                    .LENGTH_SHORT).show();
-            return false;
+            case R.id.menu_item_buy:
+                // This will call the FormActivity with the correct form fragment
+                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK);
+                break;
+
+            case R.id.menu_item_sell:
+                // This will call the FormActivity with the correct form fragment
+                mFormProductListener.onSellProduct(Constants.ProductType.STOCK, symbol);
+                break;
+
+            case R.id.menu_item_delete:
+                // Show Dialog for user confirmation to delete Stock from database
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(R.string.delete_stock_title);
+
+                builder.setMessage(R.string.delete_stock_dialog)
+                        .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                removeStock(symbol);
+                            }
+                        })
+                        .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+                break;
         }
+        return super.onContextItemSelected(item);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Will use the table of stock symbols as cursor. StockQuote values will be handled at StockQuoteAdapter.
         return new CursorLoader(mContext,
-                PortfolioContract.StockSymbol.URI,
-                PortfolioContract.StockSymbol.STOCK_QUOTE_COLUMNS,
-                null, null, PortfolioContract.StockSymbol.COLUMN_SYMBOL);
+                PortfolioContract.StockPortfolio.URI,
+                PortfolioContract.StockPortfolio.STOCK_QUOTE_COLUMNS,
+                null, null, PortfolioContract.StockPortfolio.COLUMN_SYMBOL);
     }
 
     @Override

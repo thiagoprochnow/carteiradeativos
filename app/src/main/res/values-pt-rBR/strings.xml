@@ -4,12 +4,14 @@
     <!-- Dialog Fragment -->
     <string name="quantity">Quantidade</string>
     <string name="buy_price">Preço de compra</string>
+    <string name="sell_price">Preço de venda</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
-    <string name="buy_date">Data da compra</string>
+    <string name="sell_date">Data da venda</string>
     <string name="ex_date">Data Ex Dividendo</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
-    <string name="wrong_buy_price">Preço deve ser um número</string>
+    <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
+    <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_date">Data inválida</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
@@ -22,12 +24,18 @@
     <string name="menu_item_jcp">Juros sobre Capital</string>
 
     <!-- Stock Main Fragment -->
-    <string name="add_stock_success">Ação adicionado com sucesso</string>
-    <string name="add_stock_fail">Falha ao adicionar ação</string>
+    <string name="buy_stock_success">Ação adicionado com sucesso</string>
+    <string name="buy_stock_fail">Falha ao adicionar ação</string>
+    <string name="sell_stock_success">Ação vendida com sucesso</string>
+    <string name="sell_stock_fail">Falha ao vender ação</string>
     <string name="delete_stock_title">Deletar ação da sua carteira?</string>
     <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar a ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
     <string name="delete_stock_confirm">Deletar</string>
     <string name="delete_stock_cancel">Cancelar</string>
+    <string name="menu_buy">Comprar</string>
+    <string name="menu_edit">Editar</string>
+    <string name="menu_sell">Vender</string>
+    <string name="menu_delete">Deletar</string>
 
     <!-- Stock Adapter -->
     <string name="currentPercentLabel">Percent:</string>
@@ -40,7 +48,7 @@
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
 
-    <!-- Add Stock Form Fragment -->
+    <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Compra de Ação</string>
     <string name="buy_stock_button">Comprar</string>
     <string name="cancel_stock_button">Cancelar</string>

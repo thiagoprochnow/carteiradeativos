@@ -12,8 +12,8 @@ public class PortfolioContract {
 
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
-    public static final String PATH_STOCK_SYMBOLS = "symbols";
-    public static final String PATH_STOCK_SYMBOLS_WITH_SYMBOL = "symbols/*";
+    public static final String PATH_STOCK_PORTFOLIO = "portfolio";
+    public static final String PATH_STOCK_PORTFOLIO_WITH_SYMBOL = "portfolio/*";
 
     public static final String PATH_STOCK_QUOTE = "quote";
     public static final String PATH_STOCK_QUOTE_WITH_SYMBOL = "quote/*";
@@ -21,28 +21,40 @@ public class PortfolioContract {
     public static final String PATH_STOCK_INCOME = "income";
     public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "income/*";
 
-    public static final class StockSymbol implements BaseColumns {
+    public static final class StockPortfolio implements BaseColumns {
 
-        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_SYMBOLS).build();
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_PORTFOLIO).build();
 
-        public static final String TABLE_NAME = "stock_symbols";
+        public static final String TABLE_NAME = "stock_portfolio";
 
         public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
 
         public static final String[] STOCK_QUOTE_COLUMNS = {
                 _ID,
-                COLUMN_SYMBOL
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_VALUE_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_VALUE_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT
         };
 
-        public static Uri makeUriForStockSymbol(String symbol) {
+        public static Uri makeUriForStockPortfolio(String symbol) {
             return URI.buildUpon().appendPath(symbol).build();
         }
 
-        public static Uri buildSymbolUri(long id) {
+        public static Uri buildPortfolioUri(long id) {
             return ContentUris.withAppendedId(URI, id);
         }
 
-        public static String getStockSymbolFromUri(Uri uri) {
+        public static String getStockPortfolioFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }
@@ -56,17 +68,17 @@ public class PortfolioContract {
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY = "quantity";
-        public static final String COLUMN_BOUGHT_PRICE = "bought_price";
-        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PRICE = "bought_price";
         public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_STATUS = "status";
 
         public static final String[] STOCK_QUOTE_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY,
-                COLUMN_BOUGHT_PRICE,
-                COLUMN_OBJECTIVE_PERCENT,
-                COLUMN_TIMESTAMP
+                COLUMN_PRICE,
+                COLUMN_TIMESTAMP,
+                COLUMN_STATUS
         };
 
         public static Uri buildQuoteUri(long id) {

@@ -24,20 +24,26 @@ public class DbHelper extends SQLiteOpenHelper {
         // This is the Stock table skeleton.
         // We'll need to add/remove columns here to reflect the actual data we'll store in db.
 
-        String builder_stock_symbols = "CREATE TABLE " + PortfolioContract.StockSymbol.TABLE_NAME + " (" +
-                PortfolioContract.StockSymbol._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.StockSymbol.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                "UNIQUE (" + PortfolioContract.StockSymbol.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+        String builder_stock_symbols = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
+                PortfolioContract.StockPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_CURRENT_PERCENT + " REAL, " +
+                "UNIQUE (" + PortfolioContract.StockPortfolio.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_stock_quote = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
                 PortfolioContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.StockQuote.COLUMN_SYMBOL + " INTEGER NOT NULL, " +
                 PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
-                PortfolioContract.StockQuote.COLUMN_BOUGHT_PRICE + " REAL, " +
-                PortfolioContract.StockQuote.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.StockQuote.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.StockQuote.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.StockQuote.COLUMN_STATUS + " INTEGER, " +
                 " FOREIGN KEY (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") REFERENCES "
-                + PortfolioContract.StockSymbol.TABLE_NAME + " (" + PortfolioContract.StockSymbol._ID + "));";
+                + PortfolioContract.StockPortfolio.TABLE_NAME + " (" + PortfolioContract.StockPortfolio._ID + "));";
 
         String builder_stock_income = "CREATE TABLE " + PortfolioContract.StockIncome.TABLE_NAME + " (" +
                 PortfolioContract.StockIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -47,7 +53,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
-                PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL);";
+                PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL, " +
+                " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.StockPortfolio.TABLE_NAME + " (" + PortfolioContract.StockPortfolio._ID + "));";
 
         db.execSQL(builder_stock_symbols);
         db.execSQL(builder_stock_quote);
@@ -59,7 +67,7 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockSymbol.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockPortfolio.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockQuote.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockIncome.TABLE_NAME);
         onCreate(db);

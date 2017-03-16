@@ -1,5 +1,6 @@
 package br.com.carteira.listener;
 
 public interface AddProductListener {
-    void onAddProduct(int productType);
+    void onBuyProduct(int productType);
+    void onSellProduct(int productType, String symbol);
 }

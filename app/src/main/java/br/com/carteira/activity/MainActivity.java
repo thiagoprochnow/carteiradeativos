@@ -168,15 +168,32 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     }
 
     @Override
-    public void onAddProduct(int productType) {
+    public void onBuyProduct(int productType) {
         Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Status.BUY);
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "(onAddProduct) Could not launch the FormActivity.");
+                Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
+                break;
+        }
+    }
+
+    @Override
+    public void onSellProduct(int productType, String symbol) {
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (productType) {
+            case Constants.ProductType.STOCK:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Status.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "(onSellProduct) Could not launch the FormActivity.");
                 break;
         }
     }
