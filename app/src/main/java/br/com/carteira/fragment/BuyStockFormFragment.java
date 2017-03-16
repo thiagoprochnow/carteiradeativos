@@ -3,6 +3,7 @@ package br.com.carteira.fragment;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -58,6 +59,14 @@ public class BuyStockFormFragment extends BaseFormFragment {
         mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
         mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+
+        // Gets symbol received from selected CardView on intent
+        Intent intent = getActivity().getIntent();
+        String intentSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        // Place selling stock symbol on field
+        if(intentSymbol != null && !intentSymbol.isEmpty()){
+            mInputSymbolView.setText(intentSymbol);
+        }
 
         // Adding current date to Buy Date field and set Listener to the Spinner
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );

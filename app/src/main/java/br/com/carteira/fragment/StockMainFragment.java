@@ -96,7 +96,7 @@ public class StockMainFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK);
+                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
             }
         });
         mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
@@ -130,7 +130,7 @@ public class StockMainFragment extends BaseFragment implements
 
             case R.id.menu_item_buy:
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK);
+                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, symbol);
                 break;
 
             case R.id.menu_item_sell:

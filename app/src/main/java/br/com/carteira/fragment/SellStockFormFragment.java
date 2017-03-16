@@ -59,7 +59,7 @@ public class SellStockFormFragment extends BaseFormFragment {
         Intent intent = getActivity().getIntent();
         String intentSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         // Place selling stock symbol on field
-        if(!intentSymbol.isEmpty()){
+        if(intentSymbol != null && !intentSymbol.isEmpty()){
             mInputSymbolView.setText(intentSymbol);
         }
 

@@ -72,7 +72,6 @@
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
-    <string name="title_expenses_control">Controle de Gastos</string>
     <string name="title_complete_portfolio">Carteira Completa</string>
     <string name="title_fixed_income">Renda Fixa</string>
     <string name="title_fii">Fundos Imobiliarios</string>

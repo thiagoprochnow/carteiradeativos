@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.CurrencyMainFragment;
-import br.com.carteira.fragment.ExpensesControlMainFragment;
 import br.com.carteira.fragment.FiiMainFragment;
 import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "Loaded ExpensesControlMainFragment onCreate");
-            replaceFragment(new ExpensesControlMainFragment());
+            Log.d(LOG_TAG, "Loaded PortfolioMainFragment onCreate");
+            replaceFragment(new PortfolioMainFragment());
         }
     }
 
@@ -95,10 +94,6 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     // Will treat the selected item and attach the correct fragment.
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.nav_item_expenses_control:
-                Log.d(LOG_TAG, "Loaded Expenses Control from menu");
-                replaceFragment(new ExpensesControlMainFragment());
-                break;
             case R.id.nav_item_complete_portfolio:
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
@@ -168,12 +163,15 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     }
 
     @Override
-    public void onBuyProduct(int productType) {
+    public void onBuyProduct(int productType, String symbol) {
         Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Status.BUY);
+                if(!symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
                 startActivity(intent);
                 break;
             default:
