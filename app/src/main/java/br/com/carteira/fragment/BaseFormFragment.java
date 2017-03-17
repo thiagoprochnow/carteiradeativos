@@ -370,6 +370,7 @@ public abstract class BaseFormFragment extends BaseFragment {
             newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, value);
             newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
             newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, sumReceiveIncome);
+            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE, buyPrice);
 
             // Adds portfolio to the database
             Uri insertedStockPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
