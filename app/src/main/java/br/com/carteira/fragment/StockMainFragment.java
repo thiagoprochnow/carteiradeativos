@@ -26,7 +26,7 @@ import br.com.carteira.adapter.StockQuoteAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.listener.AddProductListener;
-import br.com.carteira.listener.DetailsProductListener;
+import br.com.carteira.listener.ProductDetailsListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,7 +47,7 @@ public class StockMainFragment extends BaseFragment implements
 
     private StockQuoteAdapter mStockQuoteAdapter;
     private AddProductListener mFormProductListener;
-    private DetailsProductListener mDetailsProductListener;
+    private ProductDetailsListener mProductDetailsListener;
 
     private String symbol;
 
@@ -65,11 +65,11 @@ public class StockMainFragment extends BaseFragment implements
                     + " Parent Activity must implements AddProductListener");
         }
 
-        if (context instanceof DetailsProductListener) {
-            mDetailsProductListener = (DetailsProductListener) context;
+        if (context instanceof ProductDetailsListener) {
+            mProductDetailsListener = (ProductDetailsListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " Parent Activity must implements DetailsProductListener");
+                    + " Parent Activity must implements ProductDetailsListener");
         }
     }
 
@@ -112,7 +112,7 @@ public class StockMainFragment extends BaseFragment implements
     public void onClick(String symbol) {
         // Launch details activity for clicked stock
         Log.d(LOG_TAG, ": "+symbol);
-        mDetailsProductListener.onDetailsProduct(Constants.ProductType.STOCK, symbol);
+        mProductDetailsListener.onProductDetails(Constants.ProductType.STOCK, symbol);
     }
 
     @Override

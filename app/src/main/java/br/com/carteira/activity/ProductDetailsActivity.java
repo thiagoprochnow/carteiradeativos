@@ -7,13 +7,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.StockIncomesFragment;
 import br.com.carteira.listener.AddProductListener;
+import br.com.carteira.listener.IncomeDetailsListener;
 
-public class ProductDetailsActivity extends AppCompatActivity {
+public class ProductDetailsActivity extends AppCompatActivity implements IncomeDetailsListener {
 
     private AddProductListener mFormProductListener;
 
@@ -83,4 +85,22 @@ public class ProductDetailsActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public void onIncomeDetails(int incomeType, String id){
+        Intent intent = new Intent(this, IncomeDetailsActivity.class);
+        Log.d(LOG_TAG, "ID: " + id);
+        switch (incomeType) {
+            case Constants.IncomeType.DIVIDEND:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
+                break;
+        }
+    }
+
 }

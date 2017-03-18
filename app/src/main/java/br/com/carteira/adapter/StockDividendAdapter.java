@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,10 +71,11 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
 
     public interface StockAdapterOnClickHandler {
         void onClick(String symbol);
-        void onLongClick(String symbol);
+        void onCreateContextMenu(ContextMenu menu, View v,
+                                 ContextMenu.ContextMenuInfo menuInfo, String id);
     }
 
-    class StockDividendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener {
+    class StockDividendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
 
         @BindView(R.id.incomeType)
         TextView incomeType;
@@ -92,18 +94,24 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // TODO: Need to figure it we will make a detailed income activity to show taxess
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
+            mClickHandler.onClick(mCursor.getString(idColumn));
         }
 
         @Override
-        public boolean onLongClick(View v){
-            // TODO: Make option to delete or edit the income values.
-            return true;
+        public void onCreateContextMenu(ContextMenu menu, View v,
+                                           ContextMenu.ContextMenuInfo menuInfo){
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
+            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn));
         }
     }
 

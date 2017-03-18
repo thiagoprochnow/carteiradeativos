@@ -1,16 +1,23 @@
 package br.com.carteira.fragment;
 
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,6 +27,7 @@ import br.com.carteira.R;
 import br.com.carteira.adapter.StockDividendAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.listener.IncomeDetailsListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,6 +35,10 @@ import butterknife.ButterKnife;
 public class StockIncomesFragment extends BaseFragment implements
         StockDividendAdapter.StockAdapterOnClickHandler, LoaderManager.
         LoaderCallbacks<Cursor>{
+
+    private static final String LOG_TAG = StockIncomesFragment.class.getSimpleName();
+
+    private IncomeDetailsListener mIncomeDetailsListener;
 
     @BindView(R.id.incomesRecyclerView)
     protected RecyclerView mRecyclerView;
@@ -36,8 +48,20 @@ public class StockIncomesFragment extends BaseFragment implements
 
     private StockDividendAdapter mStockDividendAdapter;
 
+    private String id;
     // Loader IDs
     private static final int INCOME_LOADER = 1;
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof IncomeDetailsListener) {
+            mIncomeDetailsListener = (IncomeDetailsListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements IncomeDetailsListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,13 +98,25 @@ public class StockIncomesFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(String symbol) {
-
+    public void onClick(String id) {
+        Log.d(LOG_TAG, "ID: " + id);
+        mIncomeDetailsListener.onIncomeDetails(Constants.IncomeType.DIVIDEND, id);
     }
 
     @Override
-    public void onLongClick(final String symbol) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id) {
+        MenuInflater inflater = getActivity().getMenuInflater();
+        this.id = id;
+        inflater.inflate(R.menu.income_item_menu, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override

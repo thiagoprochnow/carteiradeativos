@@ -22,10 +22,10 @@ import br.com.carteira.fragment.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.StockMainFragment;
 import br.com.carteira.listener.AddProductListener;
-import br.com.carteira.listener.DetailsProductListener;
+import br.com.carteira.listener.ProductDetailsListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements AddProductListener, DetailsProductListener {
+public class MainActivity extends AppCompatActivity implements AddProductListener, ProductDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     }
 
     @Override
-    public void onDetailsProduct(int productType, String itemId){
+    public void onProductDetails(int productType, String itemId){
         Intent intent = new Intent(this, ProductDetailsActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
