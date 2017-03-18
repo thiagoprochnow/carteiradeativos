@@ -53,6 +53,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_PER_STOCK + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
+                PortfolioContract.StockIncome.COLUMN_TAX + " REAL, " +
+                PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
                 PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "

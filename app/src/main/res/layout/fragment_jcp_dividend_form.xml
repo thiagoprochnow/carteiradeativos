@@ -18,7 +18,7 @@
             android:text="@string/ex_date"/>
 
         <EditText
-            android:id="@+id/inputDividendExDate"
+            android:id="@+id/inputJCPDividendExDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"

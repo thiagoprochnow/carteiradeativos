@@ -54,7 +54,7 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
         String date = TimestampToDate(timestamp);
         holder.incomeType.setText(incomeType);
         holder.incomeValue.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL))));
+                (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
         holder.incomeDate.setText(date);
     }
 

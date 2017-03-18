@@ -59,6 +59,8 @@
     <string name="receive_value">Valor Recebido por Ação</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
+    <string name="add_jcp_success">Juros sobre capital adicionado com sucesso</string>
+    <string name="add_jcp_fail">Falha ao adicionar juros sobre capital</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>

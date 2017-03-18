@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
 
     @Override
     public void onDetailsProduct(int productType, String itemId){
-        Intent intent = new Intent(this, DetailsActivity.class);
+        Intent intent = new Intent(this, ProductDetailsActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
                 // Sends symbol of clicked stock to details acitivity
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the DetailsActivity.");
+                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
         }
     }

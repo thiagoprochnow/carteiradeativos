@@ -45,7 +45,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.DetailsActivity"
+            android:name=".activity.ProductDetailsActivity"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

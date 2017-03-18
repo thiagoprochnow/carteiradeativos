@@ -3,11 +3,9 @@ package br.com.carteira.fragment;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -27,8 +23,8 @@ import br.com.carteira.data.PortfolioContract;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DividendFormFragment extends BaseFormFragment {
-    private static final String LOG_TAG = DividendFormFragment.class.getSimpleName();
+public class JCPDividendFormFragment extends BaseFormFragment {
+    private static final String LOG_TAG = JCPDividendFormFragment.class.getSimpleName();
     private View mView;
 
     private EditText mInputPerStockView;
@@ -38,7 +34,7 @@ public class DividendFormFragment extends BaseFormFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_done:
-                if (addDividend()) {
+                if (addJCPDividend()) {
                     getActivity().finish();
                 }
                 return true;
@@ -52,9 +48,9 @@ public class DividendFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView = inflater.inflate(R.layout.fragment_dividend_form, container, false);
+        mView = inflater.inflate(R.layout.fragment_jcp_dividend_form, container, false);
         mInputPerStockView = (EditText) mView.findViewById(R.id.inputReceivedPerStock);
-        mInputExDateView = (EditText) mView.findViewById(R.id.inputDividendExDate);
+        mInputExDateView = (EditText) mView.findViewById(R.id.inputJCPDividendExDate);
 
         // Adding current date to Buy Date field
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
@@ -65,8 +61,8 @@ public class DividendFormFragment extends BaseFormFragment {
         return mView;
     }
 
-    // Validate inputted values and add the dividend to the stock portfolio
-    private boolean addDividend() {
+    // Validate inputted values and add the jcp or dividend to the income table
+    private boolean addJCPDividend() {
 
         boolean isValidPerStock = isValidDouble(mInputPerStockView);
         boolean isValidExDate = isValidDate(mInputExDateView);
@@ -74,27 +70,37 @@ public class DividendFormFragment extends BaseFormFragment {
         if (isValidExDate && isValidPerStock){
             Intent intent = getActivity().getIntent();
             String symbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+            int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.INVALID);
+            double tax = 0;
 
             // Get and handle inserted date value
             String inputDate = mInputExDateView.getText().toString();
             // Timestamp to be saved on SQLite database
             Long timestamp = DateToTimestamp(inputDate);
 
-            // Get the stock quantity bought before the dividend ex dividend
-            // Will be used to calculate the total R$ received of dividend
+            // Get the stock quantity bought before the jcp/dividend is ex
+            // Will be used to calculate the total R$ received of jcp/dividend
             int stockQuantity = getStockQuantity(symbol, timestamp);
             double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
-            double totalReceiveValue = stockQuantity * perStock;
+            double receiveValue = stockQuantity * perStock;
+            double liquidValue = receiveValue;
+
+            // If it is JCP, needs to calculate the tax and liquid value to be received
+            if(incomeType == Constants.IncomeType.JCP){
+                tax = calculateTax(receiveValue);
+                liquidValue = receiveValue - tax;
+            }
 
             ContentValues incomeCV = new ContentValues();
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
             // TODO: Type is hardcoded
-            int dividend = Constants.IncomeType.DIVIDEND;
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, dividend);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, incomeType);
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, timestamp);
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, stockQuantity);
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, totalReceiveValue);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
             // TODO: Calculate the percent based on total stocks value that received the income
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
             // Adds to the database
@@ -102,10 +108,18 @@ public class DividendFormFragment extends BaseFormFragment {
                     incomeCV);
             // If error occurs to add, shows error message
             if (insertedUri != null) {
-                Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_SHORT).show();
+                if(incomeType == Constants.IncomeType.DIVIDEND) {
+                    Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, R.string.add_jcp_success, Toast.LENGTH_LONG).show();
+                }
                 return true;
             } else {
-                Toast.makeText(mContext, R.string.add_dividend_fail, Toast.LENGTH_SHORT).show();
+                if (incomeType == Constants.IncomeType.JCP) {
+                    Toast.makeText(mContext, R.string.add_dividend_fail, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, R.string.add_jcp_fail, Toast.LENGTH_LONG).show();
+                }
             }
 
         } else{
@@ -120,4 +134,8 @@ public class DividendFormFragment extends BaseFormFragment {
         return false;
     }
 
+    private double calculateTax(double receiveValue){
+        // Tax for JCP is of 15% of total receive value
+        return receiveValue*0.15;
+    }
 }

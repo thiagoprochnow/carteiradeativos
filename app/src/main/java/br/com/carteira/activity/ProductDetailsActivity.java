@@ -10,22 +10,21 @@ import android.view.MenuItem;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.StockDetailsFragment;
 import br.com.carteira.fragment.StockIncomesFragment;
 import br.com.carteira.listener.AddProductListener;
 
-public class DetailsActivity extends AppCompatActivity {
+public class ProductDetailsActivity extends AppCompatActivity {
 
     private AddProductListener mFormProductListener;
 
-    private static final String LOG_TAG = DetailsActivity.class.getSimpleName();
+    private static final String LOG_TAG = ProductDetailsActivity.class.getSimpleName();
 
     Intent comingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        setContentView(R.layout.activity_product_details);
         comingIntent = getIntent();
         if (comingIntent != null && comingIntent.hasExtra(Constants.Extra.EXTRA_PRODUCT_TYPE)) {
 
@@ -44,6 +43,8 @@ public class DetailsActivity extends AppCompatActivity {
                     finish();
                     break;
             }
+        } else {
+            Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
         }
     }
 
@@ -71,10 +72,15 @@ public class DetailsActivity extends AppCompatActivity {
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
+                break;
             case R.id.menu_item_jcp:
-                return true;
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 }
