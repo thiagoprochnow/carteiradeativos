@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.IncomeDetailsFragment;
 import br.com.carteira.fragment.StockIncomesFragment;
 import br.com.carteira.listener.AddProductListener;
 
@@ -31,12 +32,10 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                     Constants.ProductType.INVALID);
             switch (productType) {
                 case Constants.IncomeType.DIVIDEND:
-                    // TODO: Make tabs to switch between incomes and details.
-                    Toast.makeText(this, "Dividend", Toast.LENGTH_LONG).show();
+                    replaceFragment(new IncomeDetailsFragment());
                     break;
                 case Constants.IncomeType.JCP:
-                    // TODO: replaceFragment(new FiiIncomesFragment());
-                    Toast.makeText(this, "JCP", Toast.LENGTH_LONG).show();
+                    replaceFragment(new IncomeDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");

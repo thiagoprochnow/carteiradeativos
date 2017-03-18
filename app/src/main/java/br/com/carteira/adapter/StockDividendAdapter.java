@@ -70,9 +70,9 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
 
 
     public interface StockAdapterOnClickHandler {
-        void onClick(String symbol);
+        void onClick(String symbol, int type);
         void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String id);
+                                 ContextMenu.ContextMenuInfo menuInfo, String id, int type);
     }
 
     class StockDividendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
@@ -102,7 +102,8 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
-            mClickHandler.onClick(mCursor.getString(idColumn));
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+            mClickHandler.onClick(mCursor.getString(idColumn), type);
         }
 
         @Override
@@ -111,7 +112,8 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn));
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 

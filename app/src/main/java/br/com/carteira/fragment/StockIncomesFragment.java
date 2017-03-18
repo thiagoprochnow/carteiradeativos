@@ -98,13 +98,13 @@ public class StockIncomesFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(String id) {
+    public void onClick(String id, int type) {
         Log.d(LOG_TAG, "ID: " + id);
-        mIncomeDetailsListener.onIncomeDetails(Constants.IncomeType.DIVIDEND, id);
+        mIncomeDetailsListener.onIncomeDetails(type, id);
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id, int type) {
         MenuInflater inflater = getActivity().getMenuInflater();
         this.id = id;
         inflater.inflate(R.menu.income_item_menu, menu);

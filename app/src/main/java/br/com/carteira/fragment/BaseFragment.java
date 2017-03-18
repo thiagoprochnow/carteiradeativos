@@ -6,6 +6,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
 
@@ -48,5 +53,25 @@ public abstract class BaseFragment extends Fragment {
                     .LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    // Transform a date value of dd/MM/yyyy into a timestamp value
+    public Long DateToTimestamp(String inputDate){
+        Log.d(LOG_TAG, "InputDate String: " + inputDate);
+        DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
+        Date date = new Date();
+        try{
+            date = (Date) dateFormat.parse(inputDate);
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        return date.getTime();
+    }
+
+    // Transforms a timestamp into a string Date
+    public String TimestampToDate(long timestamp){
+        String date = android.text.format.DateFormat.format("dd/MM/yyyy", timestamp).toString();
+        return date;
     }
 }

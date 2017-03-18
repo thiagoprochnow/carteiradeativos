@@ -208,20 +208,6 @@ public abstract class BaseFormFragment extends BaseFragment {
         return onClickListener;
     }
 
-    // Transform a date value of dd/MM/yyyy into a timestamp value
-    public Long DateToTimestamp(String inputDate){
-        Log.d(LOG_TAG, "InputDate String: " + inputDate);
-        DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
-        Date date = new Date();
-        try{
-            date = (Date) dateFormat.parse(inputDate);
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-
-        return date.getTime();
-    }
-
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
     // timestamp is to query only the quantity of stocks bought before the timestamp

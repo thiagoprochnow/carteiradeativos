@@ -97,6 +97,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;
+            case Constants.IncomeType.JCP:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
