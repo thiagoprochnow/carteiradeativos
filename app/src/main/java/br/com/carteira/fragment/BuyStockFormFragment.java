@@ -1,10 +1,8 @@
 package br.com.carteira.fragment;
 
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -89,7 +87,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
         boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
 
-        // If all validations pass, try to add the stock to the portfolio database
+        // If all validations pass, try to add the stock
         if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
@@ -103,22 +101,23 @@ public class BuyStockFormFragment extends BaseFormFragment {
             ContentValues stockCV = new ContentValues();
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_PRICE, buyPrice);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_STATUS, Constants.Status.BUY);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_SYMBOL, inputSymbol);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, buyPrice);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_STATUS, Constants.Status.BUY);
             // Adds to the database
-            Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
+            Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
+                    .StockTransaction.URI,
                     stockCV);
 
             // If error occurs to add, shows error message
-            if (insertedStockQuoteUri != null) {
-                Log.d(LOG_TAG, "Added stock quote " + inputSymbol);
+            if (insertedStockTransactionUri != null) {
+                Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
                 // Rescan incomes tables to check if added stock changed their receive values.
                 double sumReceiveIncome = updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockPortfolio = updateStockPortfolio(inputSymbol, inputQuantity, buyPrice, inputObjective, sumReceiveIncome, Constants.Status.BUY);
-                if (updateStockPortfolio){
+                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, inputObjective, sumReceiveIncome, Constants.Status.BUY);
+                if (updateStockData){
                     Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_SHORT).show();
                     return true;
                 } else {

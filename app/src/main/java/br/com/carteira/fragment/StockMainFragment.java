@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.StockQuoteAdapter;
+import br.com.carteira.adapter.StockPortfolioAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.listener.AddProductListener;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
 public class StockMainFragment extends BaseFragment implements
-        StockQuoteAdapter.StockAdapterOnClickHandler, LoaderManager
+        StockPortfolioAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = StockMainFragment.class.getSimpleName();
@@ -45,7 +45,7 @@ public class StockMainFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private StockQuoteAdapter mStockQuoteAdapter;
+    private StockPortfolioAdapter mStockPortfolioAdapter;
     private AddProductListener mFormProductListener;
     private ProductDetailsListener mProductDetailsListener;
 
@@ -99,8 +99,8 @@ public class StockMainFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
             }
         });
-        mStockQuoteAdapter = new StockQuoteAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockQuoteAdapter);
+        mStockPortfolioAdapter = new StockPortfolioAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockPortfolioAdapter);
         registerForContextMenu(mRecyclerView);
         getActivity().getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
@@ -164,11 +164,11 @@ public class StockMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Will use the table of stock symbols as cursor. StockQuote values will be handled at StockQuoteAdapter.
+        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockPortfolioAdapter.
         return new CursorLoader(mContext,
-                PortfolioContract.StockPortfolio.URI,
-                PortfolioContract.StockPortfolio.STOCK_PORTFOLIO_COLUMNS,
-                null, null, PortfolioContract.StockPortfolio.COLUMN_SYMBOL);
+                PortfolioContract.StockData.URI,
+                PortfolioContract.StockData.STOCK_DATA_COLUMNS,
+                null, null, PortfolioContract.StockData.COLUMN_SYMBOL);
     }
 
     @Override
@@ -182,11 +182,11 @@ public class StockMainFragment extends BaseFragment implements
             }
         }
 
-        mStockQuoteAdapter.setCursor(data);
+        mStockPortfolioAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockQuoteAdapter.setCursor(null);
+        mStockPortfolioAdapter.setCursor(null);
     }
 }

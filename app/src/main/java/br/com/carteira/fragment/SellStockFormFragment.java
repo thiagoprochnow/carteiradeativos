@@ -82,7 +82,7 @@ public class SellStockFormFragment extends BaseFormFragment {
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
 
-        // If all validations pass, try to sell the stock to the portfolio database
+        // If all validations pass, try to sell the stock
         if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
@@ -95,22 +95,23 @@ public class SellStockFormFragment extends BaseFormFragment {
             ContentValues stockCV = new ContentValues();
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_SYMBOL, inputSymbol);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_QUANTITY, inputQuantity);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_PRICE, buyPrice);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockQuote.COLUMN_STATUS, Constants.Status.SELL);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_SYMBOL, inputSymbol);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, buyPrice);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_STATUS, Constants.Status.SELL);
             // Adds to the database
-            Uri insertedStockQuoteUri = mContext.getContentResolver().insert(PortfolioContract.StockQuote.URI,
+            Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
+                    .StockTransaction.URI,
                     stockCV);
 
             // If error occurs to add, shows error message
-            if (insertedStockQuoteUri != null) {
+            if (insertedStockTransactionUri != null) {
                 // Rescan incomes tables to check if added stock changed their receive values.
                 double sumReceiveIncome = updateStockIncomes(inputSymbol, timestamp);
                 Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_SHORT).show();
-                boolean updateStockPortfolio = updateStockPortfolio(inputSymbol, inputQuantity, buyPrice, -1, sumReceiveIncome, Constants.Status.SELL);
-                if (updateStockPortfolio){
+                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, -1, sumReceiveIncome, Constants.Status.SELL);
+                if (updateStockData){
                     Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_SHORT).show();
                     return true;
                 } else {

@@ -24,27 +24,27 @@ public class DbHelper extends SQLiteOpenHelper {
         // This is the Stock table skeleton.
         // We'll need to add/remove columns here to reflect the actual data we'll store in db.
 
-        String builder_stock_symbols = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
-                PortfolioContract.StockPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
-                PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_CURRENT_PERCENT + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE + " REAL, " +
-                "UNIQUE (" + PortfolioContract.StockPortfolio.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+        String builder_stock_data = "CREATE TABLE " + PortfolioContract.StockData.TABLE_NAME + " (" +
+                PortfolioContract.StockData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.StockData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.StockData.COLUMN_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.StockData.COLUMN_INCOME_TOTAL + " REAL, " +
+                PortfolioContract.StockData.COLUMN_VALUE_GAIN + " REAL, " +
+                PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.StockData.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.StockData.COLUMN_MEDIUM_PRICE + " REAL, " +
+                "UNIQUE (" + PortfolioContract.StockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
-        String builder_stock_quote = "CREATE TABLE " + PortfolioContract.StockQuote.TABLE_NAME + " (" +
-                PortfolioContract.StockQuote._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.StockQuote.COLUMN_SYMBOL + " INTEGER NOT NULL, " +
-                PortfolioContract.StockQuote.COLUMN_QUANTITY + " INTEGER, " +
-                PortfolioContract.StockQuote.COLUMN_PRICE + " REAL, " +
-                PortfolioContract.StockQuote.COLUMN_TIMESTAMP + " LONG, " +
-                PortfolioContract.StockQuote.COLUMN_STATUS + " INTEGER, " +
-                " FOREIGN KEY (" + PortfolioContract.StockQuote.COLUMN_SYMBOL + ") REFERENCES "
-                + PortfolioContract.StockPortfolio.TABLE_NAME + " (" + PortfolioContract.StockPortfolio._ID + "));";
+        String builder_stock_transaction = "CREATE TABLE " + PortfolioContract.StockTransaction.TABLE_NAME + " (" +
+                PortfolioContract.StockTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.StockTransaction.COLUMN_SYMBOL + " INTEGER NOT NULL, " +
+                PortfolioContract.StockTransaction.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.StockTransaction.COLUMN_PRICE + " REAL, " +
+                PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.StockTransaction.COLUMN_STATUS + " INTEGER, " +
+                " FOREIGN KEY (" + PortfolioContract.StockTransaction.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
         String builder_stock_income = "CREATE TABLE " + PortfolioContract.StockIncome.TABLE_NAME + " (" +
                 PortfolioContract.StockIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -58,10 +58,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
                 PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "
-                + PortfolioContract.StockPortfolio.TABLE_NAME + " (" + PortfolioContract.StockPortfolio._ID + "));";
+                + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
-        db.execSQL(builder_stock_symbols);
-        db.execSQL(builder_stock_quote);
+        db.execSQL(builder_stock_data);
+        db.execSQL(builder_stock_transaction);
         db.execSQL(builder_stock_income);
 
     }
@@ -70,8 +70,8 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockQuote.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockTransaction.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockIncome.TABLE_NAME);
         onCreate(db);
     }

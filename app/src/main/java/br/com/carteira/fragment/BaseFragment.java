@@ -34,16 +34,17 @@ public abstract class BaseFragment extends Fragment {
     // Delete stock and all its information from database
     // This is different then selling a stock, that will maintain some information
     public boolean removeStock(String symbol) {
-        int deletedQuote = getActivity().getContentResolver().delete(PortfolioContract.StockQuote
-                .makeUriForStockQuote(symbol), null, null);
-        int deletedSymbol = getActivity().getContentResolver().delete(PortfolioContract.StockPortfolio
-                .makeUriForStockPortfolio(symbol), null, null);
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .StockTransaction
+                .makeUriForStockTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.StockData
+                .makeUriForStockData(symbol), null, null);
         // Cannot check if deletedIncome > 0, because stock may not have any income to delete
         // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
-        Log.d(LOG_TAG, "DeletedQuote: " + deletedQuote + " DeletedSymbol: " + deletedSymbol + " DeletedIncome: " + deletedIncome);
-        if (deletedQuote > 0 && deletedSymbol > 0) {
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
+        if (deletedTransaction > 0 && deletedData > 0) {
 
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();

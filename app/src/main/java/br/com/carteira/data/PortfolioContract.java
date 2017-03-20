@@ -12,20 +12,20 @@ public class PortfolioContract {
 
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
-    public static final String PATH_STOCK_PORTFOLIO = "portfolio";
-    public static final String PATH_STOCK_PORTFOLIO_WITH_SYMBOL = "portfolio/*";
+    public static final String PATH_STOCK_DATA = "stock_data";
+    public static final String PATH_STOCK_DATA_WITH_SYMBOL = "stock_data/*";
 
-    public static final String PATH_STOCK_QUOTE = "quote";
-    public static final String PATH_STOCK_QUOTE_WITH_SYMBOL = "quote/*";
+    public static final String PATH_STOCK_TRANSACTION = "stock_transaction";
+    public static final String PATH_STOCK_TRANSACTION_WITH_SYMBOL = "stock_transaction/*";
 
-    public static final String PATH_STOCK_INCOME = "income";
-    public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "income/*";
+    public static final String PATH_STOCK_INCOME = "stock_income";
+    public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "stock_income/*";
 
-    public static final class StockPortfolio implements BaseColumns {
+    public static final class StockData implements BaseColumns {
 
-        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_PORTFOLIO).build();
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_DATA).build();
 
-        public static final String TABLE_NAME = "stock_portfolio";
+        public static final String TABLE_NAME = "stock_data";
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
@@ -36,7 +36,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
 
-        public static final String[] STOCK_PORTFOLIO_COLUMNS = {
+        public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY_TOTAL,
@@ -48,25 +48,25 @@ public class PortfolioContract {
                 COLUMN_MEDIUM_PRICE
         };
 
-        public static Uri makeUriForStockPortfolio(String symbol) {
+        public static Uri makeUriForStockData(String symbol) {
             return URI.buildUpon().appendPath(symbol).build();
         }
 
-        public static Uri buildPortfolioUri(long id) {
+        public static Uri buildDataUri(long id) {
             return ContentUris.withAppendedId(URI, id);
         }
 
-        public static String getStockPortfolioFromUri(Uri uri) {
+        public static String getStockDataFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }
 
     /* This is the methods and constants used for Stocks table */
-    public static final class StockQuote implements BaseColumns {
+    public static final class StockTransaction implements BaseColumns {
 
-        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_QUOTE).build();
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_TRANSACTION).build();
 
-        public static final String TABLE_NAME = "stock_quotes";
+        public static final String TABLE_NAME = "stock_transaction";
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY = "quantity";
@@ -74,7 +74,7 @@ public class PortfolioContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_STATUS = "status";
 
-        public static final String[] STOCK_QUOTE_COLUMNS = {
+        public static final String[] STOCK_TRANSACTION_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY,
@@ -83,15 +83,15 @@ public class PortfolioContract {
                 COLUMN_STATUS
         };
 
-        public static Uri buildQuoteUri(long id) {
+        public static Uri buildTransactionUri(long id) {
             return ContentUris.withAppendedId(URI, id);
         }
 
-        public static Uri makeUriForStockQuote(String symbol) {
+        public static Uri makeUriForStockTransaction(String symbol) {
             return URI.buildUpon().appendPath(symbol).build();
         }
 
-        public static String getStockQuoteFromUri(Uri uri) {
+        public static String getStockTransactionFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

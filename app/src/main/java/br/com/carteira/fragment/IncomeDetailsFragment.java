@@ -39,7 +39,7 @@ public class IncomeDetailsFragment extends BaseFragment {
         TextView viewTax = (TextView) mView.findViewById(R.id.tax);
         TextView viewLiquidReceived = (TextView) mView.findViewById(R.id.liquidReceived);
 
-        // Prepare query for stock portfolio
+        // Prepare query for stock income
         String selection = PortfolioContract.StockIncome._ID + " = ? ";
         String[] selectionArguments = {id};
 

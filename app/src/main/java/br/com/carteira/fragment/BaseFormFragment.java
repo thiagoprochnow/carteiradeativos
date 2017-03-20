@@ -13,9 +13,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -77,17 +75,18 @@ public abstract class BaseFormFragment extends BaseFragment {
         boolean isDigitOnly = TextUtils.isDigitsOnly(editableQuantity.toString());
         boolean isQuantityEnough = false;
 
-        // Prepare query for stock portfolio
-        String selection = PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " = ? ";
+        // Prepare query for stock data
+        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
         Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockPortfolio.URI,
+                PortfolioContract.StockData.URI,
                 null, selection, selectionArguments, null);
-        // Gets portfolio quantity to see if bought quantity is enough
+        // Gets data quantity to see if bought quantity is enough
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL));
+            int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                    .StockData.COLUMN_QUANTITY_TOTAL));
             if(boughtQuantity >= quantity){
                 // Bought quantity is bigger then quantity trying to sell
                 isQuantityEnough = true;
@@ -213,13 +212,13 @@ public abstract class BaseFormFragment extends BaseFragment {
     // timestamp is to query only the quantity of stocks bought before the timestamp
     public int getStockQuantity(String symbol, Long timestamp){
         // Return column should be only quantity of stock
-        String[] affectedColumn = {"sum("+PortfolioContract.StockQuote.COLUMN_QUANTITY+")"};
-        String selection = PortfolioContract.StockQuote.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockQuote.COLUMN_TIMESTAMP + " < ?";
+        String[] affectedColumn = {"sum("+ PortfolioContract.StockTransaction.COLUMN_QUANTITY+")"};
+        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
         String[] selectionArguments = {symbol,String.valueOf(timestamp)};
 
         // Check if the symbol exists in the db
         Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockQuote.URI,
+                PortfolioContract.StockTransaction.URI,
                 affectedColumn, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
@@ -244,7 +243,7 @@ public abstract class BaseFormFragment extends BaseFragment {
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            // Sum that will be returned and updated on StockPortfolio table by updateStockPortfolio()
+            // Sum that will be returned and updated on StockData table by updateStockData()
             double sumReceiveTotal = 0;
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome._ID)));
@@ -281,93 +280,94 @@ public abstract class BaseFormFragment extends BaseFragment {
         }
     }
 
-    public boolean updateStockPortfolio(String symbol, int quantity, double buyPrice, double objective, double sumReceiveIncome, int status){
-        // Prepare query for stock portfolio
-        String selection = PortfolioContract.StockPortfolio.COLUMN_SYMBOL + " = ? ";
+    public boolean updateStockData(String symbol, int quantity, double buyPrice, double objective, double sumReceiveIncome, int status){
+        // Prepare query for stock data
+        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
         Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockPortfolio.URI,
+                PortfolioContract.StockData.URI,
                 null, selection, selectionArguments, null);
 
         double value = quantity*buyPrice;
 
-        // Check if there already is a portfolio for this stock to update
+        // Check if there already is a data for this stock to update
         // If not, will create one new
         if(queryCursor.getCount() > 0 ){
             queryCursor.moveToFirst();
-            Log.d(LOG_TAG, "Updating portfolio for " + symbol);
+            Log.d(LOG_TAG, "Updating data for " + symbol);
 
             int quantityTotal;
             double valueTotal;
             double receiveIncome;
             double mediumPrice;
 
-            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
             // Check if buying or selling stock
             if(status == Constants.Status.BUY) {
-                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) + quantity;
-                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))) + value;
+                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) + quantity;
+                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VALUE_TOTAL))) + value;
                 mediumPrice = valueTotal/quantityTotal;
-                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) + sumReceiveIncome;
+                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL))) + sumReceiveIncome;
             // Sell
             } else {
-                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL)) - quantity;
-                mediumPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE));
+                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) - quantity;
+                mediumPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE));
                 valueTotal = quantityTotal*mediumPrice;
-                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))) - sumReceiveIncome;
+                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL))) - sumReceiveIncome;
             }
 
-            ContentValues updatePortfolioCV = new ContentValues();
-            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL, quantityTotal);
-            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, valueTotal);
+            ContentValues updateDataCV = new ContentValues();
+            updateDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            updateDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, valueTotal);
             if (status == Constants.Status.BUY){
-                updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
+                updateDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
             }
             if (status == Constants.Status.BUY){
-                updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE, mediumPrice);
+                updateDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
             }
-            updatePortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, receiveIncome);
+            updateDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
 
-            // Prepare query to update stock portfolio
-            String updateSelection = PortfolioContract.StockPortfolio._ID + " = ?";
+            // Prepare query to update stock data
+            String updateSelection = PortfolioContract.StockData._ID + " = ?";
             String[] updatedSelectionArguments = {_id};
 
-            // Update value on stock portfolio
+            // Update value on stock data
             int updatedRows = mContext.getContentResolver().update(
-                    PortfolioContract.StockPortfolio.URI,
-                    updatePortfolioCV, updateSelection, updatedSelectionArguments);
+                    PortfolioContract.StockData.URI,
+                    updateDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                Log.d(LOG_TAG, "updateStockPortfolio successfully updated");
+                Log.d(LOG_TAG, "updateStockData successfully updated");
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateStockPortfolio failed update");
+                Log.d(LOG_TAG, "updateStockData failed update");
                 return false;
             }
 
         } else {
-            Log.d(LOG_TAG, "No portfolio created for " + symbol + ". Creating new one");
+            Log.d(LOG_TAG, "No data created for " + symbol + ". Creating new one");
             // Only way to create is if status = "Buy", so quantity here will always be positive
 
-            ContentValues newPortfolioCV = new ContentValues();
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_SYMBOL, symbol);
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL, quantity);
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, value);
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT, objective);
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, sumReceiveIncome);
-            newPortfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_MEDIUM_PRICE, buyPrice);
+            ContentValues newDataCV = new ContentValues();
+            newDataCV.put(PortfolioContract.StockData.COLUMN_SYMBOL, symbol);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantity);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, value);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, sumReceiveIncome);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, buyPrice);
 
-            // Adds portfolio to the database
-            Uri insertedStockPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
-                    newPortfolioCV);
+            // Adds data to the database
+            Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockData.URI,
+
+                    newDataCV);
 
             // If error occurs to add, shows error message
-            if (insertedStockPortfolioUri != null) {
-                Log.d(LOG_TAG, "Added stock portfolio");
+            if (insertedStockDataUri != null) {
+                Log.d(LOG_TAG, "Added stock data");
                 return true;
             } else {
-                Log.d(LOG_TAG, "Error adding stock portfolio");
+                Log.d(LOG_TAG, "Error adding stock data");
             }
         }
         return false;

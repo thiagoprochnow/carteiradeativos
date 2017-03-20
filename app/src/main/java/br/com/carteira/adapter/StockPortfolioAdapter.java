@@ -2,9 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
-        .StockQuoteViewHolder> {
+public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAdapter.StockPortfolioViewHolder> {
     private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public StockQuoteAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public StockPortfolioAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -37,33 +34,34 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
     }
 
     @Override
-    public StockQuoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StockPortfolioViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
-        return new StockQuoteViewHolder(item);
+        return new StockPortfolioViewHolder(item);
     }
 
     @Override
-    public void onBindViewHolder(StockQuoteViewHolder holder, int position) {
+    public void onBindViewHolder(StockPortfolioViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        // Get handled values of StockQuote with current symbol
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockQuote.
+        // Get handled values of StockTransaction with current symbol
+        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+                .StockTransaction.
                 COLUMN_SYMBOL)));
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_QUANTITY_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
         holder.currentTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
         holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT))));
+                (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
         holder.stockAppreciation.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
         holder.currentPercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT))));
+                (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
         holder.totalIncome.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_INCOME_TOTAL))));
         holder.totalGain.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
     }
 
     @Override
@@ -82,7 +80,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
                                         ContextMenu.ContextMenuInfo menuInfo, String symbol);
     }
 
-    class StockQuoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    class StockPortfolioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.symbol)
         TextView symbol;
@@ -112,7 +110,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         TextView totalGain;
 
 
-        StockQuoteViewHolder(View itemView) {
+        StockPortfolioViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -123,7 +121,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_SYMBOL);
+            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
             mClickHandler.onClick(mCursor.getString(symbolColumn));
         }
 
@@ -131,7 +129,7 @@ public class StockQuoteAdapter extends RecyclerView.Adapter<StockQuoteAdapter
                                         ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_SYMBOL);
+            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(symbolColumn));
         }
     }
