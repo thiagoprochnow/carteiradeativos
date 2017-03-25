@@ -11,15 +11,18 @@ import android.support.annotation.Nullable;
 
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
+    static final int PORTFOLIO = 100;
 
-    static final int STOCK_DATA = 100;
-    static final int STOCK_DATA_WITH_SYMBOL = 101;
+    static final int STOCK_PORTFOLIO = 1100;
 
-    static final int STOCK_TRANSACTION = 200;
-    static final int STOCK_TRANSACTION_FOR_SYMBOL = 201;
+    static final int STOCK_DATA = 1200;
+    static final int STOCK_DATA_WITH_SYMBOL = 1201;
 
-    static final int STOCK_INCOME = 300;
-    static final int STOCK_INCOME_FOR_SYMBOL = 301;
+    static final int STOCK_TRANSACTION = 1300;
+    static final int STOCK_TRANSACTION_FOR_SYMBOL = 1301;
+
+    static final int STOCK_INCOME = 1400;
+    static final int STOCK_INCOME_FOR_SYMBOL = 1401;
 
     static UriMatcher uriMatcher = buildUriMatcher();
 
@@ -30,11 +33,12 @@ public class PortfolioProvider extends ContentProvider {
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, STOCK_DATA);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_WITH_SYMBOL, STOCK_DATA_WITH_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_TRANSACTION, STOCK_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_TRANSACTION_WITH_SYMBOL,
-
                 STOCK_TRANSACTION_FOR_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME, STOCK_INCOME);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME_WITH_SYMBOL,
@@ -56,6 +60,30 @@ public class PortfolioProvider extends ContentProvider {
         Cursor returnCursor;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         switch (uriMatcher.match(uri)) {
+            // Returns complete portfolio of user
+            case PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.Portfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns stock portfolio of user
+            case STOCK_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.StockPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             // Returns all stock symbols possessed by user
             case STOCK_DATA:
                 returnCursor = db.query(
@@ -140,6 +168,30 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
         long _id;
         switch (uriMatcher.match(uri)) {
+            case PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.Portfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.Portfolio.buildPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+            case STOCK_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.StockPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.StockPortfolio.buildStockPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
             case STOCK_DATA:
                 _id = db.insert(
                         PortfolioContract.StockData.TABLE_NAME,
@@ -251,6 +303,15 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
+            case PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.Portfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+            case STOCK_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.StockPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
             case STOCK_DATA:
                 rowsUpdated = db.update(PortfolioContract.StockData.TABLE_NAME, values,
                         selection,
@@ -275,7 +336,6 @@ public class PortfolioProvider extends ContentProvider {
         }
 
         return rowsUpdated;
-
     }
 
     /* Add several items at once (it's like insert being called several times */

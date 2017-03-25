@@ -108,18 +108,15 @@ public class SellStockFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedStockTransactionUri != null) {
                 // Rescan incomes tables to check if added stock changed their receive values.
-                double sumReceiveIncome = updateStockIncomes(inputSymbol, timestamp);
-                Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_SHORT).show();
-                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, -1, sumReceiveIncome, Constants.Status.SELL);
+                updateStockIncomes(inputSymbol, timestamp);
+                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, -1, Constants.Status.SELL);
                 if (updateStockData){
-                    Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_LONG).show();
                     return true;
-                } else {
-                    Toast.makeText(mContext, R.string.sell_stock_fail, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(mContext, R.string.sell_stock_fail, Toast.LENGTH_SHORT).show();
             }
+            Toast.makeText(mContext, R.string.sell_stock_fail, Toast.LENGTH_LONG).show();
+            return false;
         } else {
             // If validation fails, show validation error message
             if(!isValidSymbol){

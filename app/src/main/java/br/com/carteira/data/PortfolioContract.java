@@ -12,6 +12,10 @@ public class PortfolioContract {
 
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
+    public static final String PATH_PORTFOLIO = "portfolio";
+
+    public static final String PATH_STOCK_PORTFOLIO = "stock_portfolio";
+
     public static final String PATH_STOCK_DATA = "stock_data";
     public static final String PATH_STOCK_DATA_WITH_SYMBOL = "stock_data/*";
 
@@ -21,6 +25,83 @@ public class PortfolioContract {
     public static final String PATH_STOCK_INCOME = "stock_income";
     public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "stock_income/*";
 
+    /* STOCK TABLES */
+
+    // Table with information of whole user portfolio
+    public static final class Portfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "portfolio";
+
+        public static final String COLUMN_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_VALUE_GAIN_PERCENT = "value_gain_percent";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_INCOME_PERCENT = "income_percent";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_TOTAL_GAIN_PERCENT = "total_gain_percent";
+
+        public static final String[] PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_VALUE_TOTAL,
+                COLUMN_VALUE_GAIN,
+                COLUMN_VALUE_GAIN_PERCENT,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_INCOME_PERCENT,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_TOTAL_GAIN_PERCENT
+        };
+
+        public static Uri makeUriForPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole stock portfolio
+    public static final class StockPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "stock_portfolio";
+
+        public static final String COLUMN_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+
+        public static final String[] STOCK_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_VALUE_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_VALUE_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT
+        };
+
+        public static Uri makeUriForStockPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildStockPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getStockPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each stock owned, ITUB4, PETR4, etc
     public static final class StockData implements BaseColumns {
 
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_DATA).build();
@@ -61,7 +142,7 @@ public class PortfolioContract {
         }
     }
 
-    /* This is the methods and constants used for Stocks table */
+    // Table with information of each stock buy and sell
     public static final class StockTransaction implements BaseColumns {
 
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_TRANSACTION).build();
@@ -96,6 +177,7 @@ public class PortfolioContract {
         }
     }
 
+    // Table with information of stock incomes
     public static final class StockIncome implements BaseColumns{
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_INCOME).build();
 

@@ -114,18 +114,16 @@ public class BuyStockFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedStockTransactionUri != null) {
                 Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
-                // Rescan incomes tables to check if added stock changed their receive values.
-                double sumReceiveIncome = updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, inputObjective, sumReceiveIncome, Constants.Status.BUY);
-                if (updateStockData){
-                    Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_SHORT).show();
+                // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
+                updateStockIncomes(inputSymbol, timestamp);
+                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, inputObjective, Constants.Status.BUY);
+                if (updateStockData) {
+                    Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_LONG).show();
                     return true;
-                } else {
-                    Toast.makeText(mContext, R.string.buy_stock_fail, Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(mContext, R.string.buy_stock_fail, Toast.LENGTH_SHORT).show();
             }
+            Toast.makeText(mContext, R.string.buy_stock_fail, Toast.LENGTH_LONG).show();
+            return false;
         } else {
             // If validation fails, show validation error message
             if(!isValidSymbol){

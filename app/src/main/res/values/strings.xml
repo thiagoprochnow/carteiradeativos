@@ -59,8 +59,8 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
-    <string name="add_jcp_success">Dividend added successfully</string>
-    <string name="add_jcp_fail">Error adding dividend</string>
+    <string name="add_jcp_success">Interest on capital added successfully</string>
+    <string name="add_jcp_fail">Error adding interest on capital</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Real Estate Fund added successfully</string>

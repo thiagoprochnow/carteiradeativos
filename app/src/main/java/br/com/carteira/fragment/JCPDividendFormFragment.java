@@ -3,6 +3,7 @@ package br.com.carteira.fragment;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -108,20 +109,25 @@ public class JCPDividendFormFragment extends BaseFormFragment {
                     incomeCV);
             // If error occurs to add, shows error message
             if (insertedUri != null) {
-                if(incomeType == Constants.IncomeType.DIVIDEND) {
-                    Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(mContext, R.string.add_jcp_success, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            } else {
-                if (incomeType == Constants.IncomeType.JCP) {
-                    Toast.makeText(mContext, R.string.add_dividend_fail, Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(mContext, R.string.add_jcp_fail, Toast.LENGTH_LONG).show();
+                boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue);
+                if (updateStockDataIncome) {
+                    if (incomeType == Constants.IncomeType.DIVIDEND) {
+                        Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Toast.makeText(mContext, R.string.add_jcp_success, Toast.LENGTH_LONG)
+                                .show();
+                    }
+                    return true;
                 }
             }
 
+            if (incomeType == Constants.IncomeType.DIVIDEND) {
+                Toast.makeText(mContext, R.string.add_dividend_fail, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, R.string.add_jcp_fail, Toast.LENGTH_LONG).show();
+            }
+            return false;
         } else{
             // If validation fails, show validation error message
             if(!isValidExDate){
@@ -137,5 +143,37 @@ public class JCPDividendFormFragment extends BaseFormFragment {
     private double calculateTax(double receiveValue){
         // Tax for JCP is of 15% of total receive value
         return receiveValue*0.15;
+    }
+
+    // Update Total Income on Stock Data by new income added
+    private boolean updateStockDataIncome(String symbol, double valueReceived){
+        // Prepare query to update stock data income
+        // and the total income received
+        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockData.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+            double totalIncome = dbIncome + valueReceived;
+
+            ContentValues updateCV = new ContentValues();
+
+            updateCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, totalIncome);
+
+            int updateQueryCursor = mContext.getContentResolver().update(
+                    PortfolioContract.StockData.URI,
+                    updateCV, selection, selectionArguments);
+            if (updateQueryCursor == 1){
+                boolean updateStockPortfolio = updateStockPortfolio();
+                if (updateStockPortfolio) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

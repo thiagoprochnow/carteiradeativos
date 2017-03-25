@@ -209,20 +209,37 @@ public abstract class BaseFormFragment extends BaseFragment {
 
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
-    // timestamp is to query only the quantity of stocks bought before the timestamp
-    public int getStockQuantity(String symbol, Long timestamp){
+    // income timestamp is to query only the quantity of stocks bought-sold before the timestamp
+    public int getStockQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of stock
         String[] affectedColumn = {"sum("+ PortfolioContract.StockTransaction.COLUMN_QUANTITY+")"};
-        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
-        String[] selectionArguments = {symbol,String.valueOf(timestamp)};
+        String selectionBuy = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ? AND "
+                + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
+        String[] selectionArgumentsBuy = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.BUY)};
 
         // Check if the symbol exists in the db
-        Cursor queryCursor = mContext.getContentResolver().query(
+        Cursor queryCursorBuy = mContext.getContentResolver().query(
                 PortfolioContract.StockTransaction.URI,
-                affectedColumn, selection, selectionArguments, null);
-        if(queryCursor.getCount() > 0) {
-            queryCursor.moveToFirst();
-            return queryCursor.getInt(0);
+                affectedColumn, selectionBuy, selectionArgumentsBuy, null);
+        if(queryCursorBuy.getCount() > 0) {
+            queryCursorBuy.moveToFirst();
+            int quantity = queryCursorBuy.getInt(0);
+            String selectionSell = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
+                    + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " <= ? AND "
+                    + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
+            String[] selectionArgumentsSell = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.SELL)};
+
+            Cursor queryCursorSell = mContext.getContentResolver().query(
+                    PortfolioContract.StockTransaction.URI,
+                    affectedColumn, selectionBuy, selectionArgumentsSell, null);
+            if (queryCursorSell.getCount() > 0){
+                queryCursorSell.moveToFirst();
+                // Return buy quantity - sell quantity
+                return quantity - queryCursorSell.getInt(0);
+            } else{
+                return quantity;
+            }
         } else{
             return 0;
         }
@@ -232,7 +249,7 @@ public abstract class BaseFormFragment extends BaseFragment {
     // is affected by this buy/sell stock.
     // If any income is affected, it will update income line with new value by using
     // getStockQuantity function for each affected line
-    public double updateStockIncomes(String symbol, long timestamp){
+    public void updateStockIncomes(String symbol, long timestamp){
         // Prepare query for checking affected incomes
         String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
         String[] selectionArguments = {symbol, String.valueOf(timestamp)};
@@ -250,6 +267,7 @@ public abstract class BaseFormFragment extends BaseFragment {
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 int quantity = getStockQuantity(symbol, incomeTimestamp);
                 double perStock = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK)));
+                int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
                 double receiveTotal = quantity * perStock;
 
                 // Prepare query to update stock quantity applied for that dividend
@@ -259,8 +277,14 @@ public abstract class BaseFormFragment extends BaseFragment {
                 ContentValues incomeCV = new ContentValues();
                 incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, quantity);
                 incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
-
-                sumReceiveTotal += receiveTotal;
+                if(incomeType == Constants.IncomeType.DIVIDEND) {
+                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
+                } else {
+                    double tax = receiveTotal * 0.15;
+                    double receiveLiquid = receiveTotal - tax;
+                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
+                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
+                }
 
                 // Update value on incomes table
                 int updatedRows = mContext.getContentResolver().update(
@@ -273,14 +297,12 @@ public abstract class BaseFormFragment extends BaseFragment {
                     Log.d(LOG_TAG, "updateStockIncomes failed update");
                 }
             } while (queryCursor.moveToNext());
-            return sumReceiveTotal;
         } else {
             Log.d(LOG_TAG, "No incomes affected by buy/sell stock");
-            return 0;
         }
     }
 
-    public boolean updateStockData(String symbol, int quantity, double buyPrice, double objective, double sumReceiveIncome, int status){
+    public boolean updateStockData(String symbol, int quantity, double buyPrice, double objective, int status){
         // Prepare query for stock data
         String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -308,13 +330,26 @@ public abstract class BaseFormFragment extends BaseFragment {
                 quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) + quantity;
                 valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VALUE_TOTAL))) + value;
                 mediumPrice = valueTotal/quantityTotal;
-                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL))) + sumReceiveIncome;
             // Sell
             } else {
                 quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) - quantity;
                 mediumPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE));
                 valueTotal = quantityTotal*mediumPrice;
-                receiveIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL))) - sumReceiveIncome;
+            }
+
+            // Query Income table to get total of this stock income
+            String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")"};
+            selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.StockIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+            } else {
+                receiveIncome = 0;
             }
 
             ContentValues updateDataCV = new ContentValues();
@@ -339,7 +374,11 @@ public abstract class BaseFormFragment extends BaseFragment {
             // Log update success/fail result
             if (updatedRows > 0){
                 Log.d(LOG_TAG, "updateStockData successfully updated");
-                return true;
+                // Update Stock Portfolio
+                boolean updateStockPortfolio = updateStockPortfolio();
+                if(updateStockPortfolio) {
+                    return true;
+                }
             } else {
                 Log.d(LOG_TAG, "updateStockData failed update");
                 return false;
@@ -354,7 +393,7 @@ public abstract class BaseFormFragment extends BaseFragment {
             newDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantity);
             newDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, value);
             newDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, sumReceiveIncome);
+            newDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, 0);
             newDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, buyPrice);
 
             // Adds data to the database
@@ -365,11 +404,79 @@ public abstract class BaseFormFragment extends BaseFragment {
             // If error occurs to add, shows error message
             if (insertedStockDataUri != null) {
                 Log.d(LOG_TAG, "Added stock data");
-                return true;
+                // Update Stock Portfolio
+                boolean updateStockPortfolio = updateStockPortfolio();
+                if (updateStockPortfolio) {
+                    return true;
+                }
             } else {
                 Log.d(LOG_TAG, "Error adding stock data");
             }
         }
         return false;
+    }
+
+    // Reads all of Stock Data value and sets the calculation on StockPortfolio table
+    // Dosent need any data because it will not query for a specific stock, but for all of them.
+    public boolean updateStockPortfolio(){
+        // Return column should be the sum of value total, income total, value gain
+        String[] affectedColumn = {"sum("+ PortfolioContract.StockData.COLUMN_VALUE_TOTAL +"), " +
+                "sum("+ PortfolioContract.StockData.COLUMN_INCOME_TOTAL +"), " +
+                "sum("+PortfolioContract.StockData.COLUMN_VALUE_GAIN+")"};
+
+        // Check if the symbol exists in the db
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockData.URI,
+                affectedColumn, null, null, null);
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
+            double valueTotal = queryCursor.getInt(0);
+            double incomeTotal = queryCursor.getInt(1);
+            double valueGain = queryCursor.getInt(2);
+
+            // Values to be inserted or updated on StockPortfolio table
+            ContentValues portfolioCV = new ContentValues();
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, valueTotal);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN, valueGain);
+
+            // Query for the only stock portfolio, if dosent exist, creates one
+            Cursor portfolioQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.StockPortfolio.URI,
+                    null, null, null, null);
+            // If exists, updates value, else create a new field and add values
+            if(portfolioQueryCursor.getCount() > 0){
+                portfolioQueryCursor.moveToFirst();
+                String _id = String.valueOf(portfolioQueryCursor.getInt(portfolioQueryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
+                // Prepare query to update stock data
+                String updateSelection = PortfolioContract.StockData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+                // Update value on stock data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.StockPortfolio.URI,
+                        portfolioCV, updateSelection, updatedSelectionArguments);
+
+                if (updatedRows > 0 ){
+                    return true;
+                }
+            } else {
+                // Creates table and add values
+                Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
+                        portfolioCV);
+                if(insertedStockDataUri != null){
+                    return true;
+                }
+            }
+            return false;
+        } else{
+            return false;
+        }
+    }
+
+    // Reads all of Investment Portfolios value and sets the calculation on Portfolio table
+    // Dosent need any data because it will not query for a specific investment, but for all of them.
+    public boolean updatePortfolio(){
+        // TODO: Develop function to read all Stock, FII, Fixed Income, etc table to get total value of portfolio
+        return true;
     }
 }
