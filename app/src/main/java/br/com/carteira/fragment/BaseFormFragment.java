@@ -215,8 +215,9 @@ public abstract class BaseFormFragment extends BaseFragment {
         String[] affectedColumn = {"sum("+ PortfolioContract.StockTransaction.COLUMN_QUANTITY+")"};
         String selectionBuy = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ? AND "
-                + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
-        String[] selectionArgumentsBuy = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.BUY)};
+                + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ? OR "
+                +PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
+        String[] selectionArgumentsBuy = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.BUY), String.valueOf(Constants.Status.BONIFICATION)};
 
         // Check if the symbol exists in the db
         Cursor queryCursorBuy = mContext.getContentResolver().query(
@@ -232,7 +233,7 @@ public abstract class BaseFormFragment extends BaseFragment {
 
             Cursor queryCursorSell = mContext.getContentResolver().query(
                     PortfolioContract.StockTransaction.URI,
-                    affectedColumn, selectionBuy, selectionArgumentsSell, null);
+                    affectedColumn, selectionSell, selectionArgumentsSell, null);
             if (queryCursorSell.getCount() > 0){
                 queryCursorSell.moveToFirst();
                 // Return buy quantity - sell quantity
@@ -326,7 +327,7 @@ public abstract class BaseFormFragment extends BaseFragment {
 
             String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
             // Check if buying or selling stock
-            if(status == Constants.Status.BUY) {
+            if(status == Constants.Status.BUY || status == Constants.Status.BONIFICATION) {
                 quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) + quantity;
                 valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VALUE_TOTAL))) + value;
                 mediumPrice = valueTotal/quantityTotal;
@@ -358,7 +359,7 @@ public abstract class BaseFormFragment extends BaseFragment {
             if (status == Constants.Status.BUY){
                 updateDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
             }
-            if (status == Constants.Status.BUY){
+            if (status == Constants.Status.BUY || status == Constants.Status.BONIFICATION){
                 updateDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
             }
             updateDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);

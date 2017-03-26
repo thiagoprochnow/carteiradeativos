@@ -21,6 +21,7 @@ public final class Constants {
         public static final int INVALID = -1;
         public static final int BUY = 0;
         public static final int SELL = 1;
+        public static final int BONIFICATION = 2;
     }
 
     // This should contains all product types in the portfolio
@@ -35,5 +36,6 @@ public final class Constants {
         public static final int INVALID = -1;
         public static final int DIVIDEND = 0;
         public static final int JCP = 1;
+        public static final int BONIFICATION = 2;
     }
 }

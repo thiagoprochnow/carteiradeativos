@@ -8,4 +8,8 @@
         android:id="@+id/menu_item_jcp"
         android:title="@string/menu_item_jcp"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_bonification"
+        android:title="@string/menu_item_bonification"
+        app:showAsAction="never"/>
 </menu>

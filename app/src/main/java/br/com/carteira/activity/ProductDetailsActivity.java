@@ -80,6 +80,11 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;
+            case R.id.menu_item_bonification:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.BONIFICATION);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

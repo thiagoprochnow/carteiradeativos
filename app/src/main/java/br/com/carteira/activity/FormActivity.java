@@ -8,6 +8,7 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.BonificationFormFragment;
 import br.com.carteira.fragment.BuyStockFormFragment;
 import br.com.carteira.fragment.JCPDividendFormFragment;
 import br.com.carteira.fragment.SellStockFormFragment;
@@ -69,10 +70,16 @@ public class FormActivity extends AppCompatActivity {
                     Constants.IncomeType.INVALID);
             switch (incomeType) {
                 case Constants.IncomeType.DIVIDEND:
+                    Log.d(LOG_TAG, "Dividend Form Fragment");
                     replaceFragment(new JCPDividendFormFragment());
                     break;
                 case Constants.IncomeType.JCP:
+                    Log.d(LOG_TAG, "JCP Form Fragment");
                     replaceFragment(new JCPDividendFormFragment());
+                    break;
+                case Constants.IncomeType.BONIFICATION:
+                    Log.d(LOG_TAG, "Bonification Form Fragment");
+                    replaceFragment(new BonificationFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

@@ -7,6 +7,7 @@
     <string name="sell_price">Sell Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="buy_date">Buy Date</string>
+    <string name="bonification_date">Bonification Date</string>
     <string name="sell_date">Sell Date</string>
     <string name="ex_date">Ex Dividend Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
@@ -22,10 +23,13 @@
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividends</string>
     <string name="menu_item_jcp">Interest on Capital</string>
+    <string name="menu_item_bonification">Bonification</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Stock added successfully</string>
     <string name="buy_stock_fail">Error adding stock</string>
+    <string name="bonification_success">Bonification added successfully</string>
+    <string name="bonification_fail">Error adding bonification</string>
     <string name="sell_stock_success">Stock sold successfully</string>
     <string name="sell_stock_fail">Error selling stock</string>
     <string name="delete_stock_title">Delete stock from your portfolio?</string>
