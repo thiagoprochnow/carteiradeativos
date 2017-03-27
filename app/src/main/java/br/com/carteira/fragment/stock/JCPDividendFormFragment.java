@@ -1,4 +1,4 @@
-package br.com.carteira.fragment;
+package br.com.carteira.fragment.stock;
 
 
 import android.content.ContentValues;
@@ -20,6 +20,7 @@ import java.util.Date;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFormFragment;
 
 /**
  * A simple {@link Fragment} subclass.

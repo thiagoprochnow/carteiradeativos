@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.IncomeDetailsFragment;
-import br.com.carteira.fragment.StockIncomesFragment;
+import br.com.carteira.fragment.stock.IncomeDetailsFragment;
 import br.com.carteira.listener.AddProductListener;
 
 public class IncomeDetailsActivity extends AppCompatActivity {

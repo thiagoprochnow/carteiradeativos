@@ -16,11 +16,11 @@ import android.widget.ImageView;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.CurrencyMainFragment;
-import br.com.carteira.fragment.FiiMainFragment;
-import br.com.carteira.fragment.FixedIncomeMainFragment;
+import br.com.carteira.fragment.currency.CurrencyMainFragment;
+import br.com.carteira.fragment.fii.FiiMainFragment;
+import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
-import br.com.carteira.fragment.StockMainFragment;
+import br.com.carteira.fragment.stock.StockMainFragment;
 import br.com.carteira.listener.AddProductListener;
 import br.com.carteira.listener.ProductDetailsListener;
 

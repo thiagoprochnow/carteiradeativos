@@ -1,15 +1,13 @@
-package br.com.carteira.fragment;
+package br.com.carteira.fragment.stock;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,12 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.adapter.StockDividendAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFragment;
 import br.com.carteira.listener.IncomeDetailsListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;

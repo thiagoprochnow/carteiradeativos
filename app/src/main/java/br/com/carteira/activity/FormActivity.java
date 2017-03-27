@@ -8,10 +8,10 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.BonificationFormFragment;
-import br.com.carteira.fragment.BuyStockFormFragment;
-import br.com.carteira.fragment.JCPDividendFormFragment;
-import br.com.carteira.fragment.SellStockFormFragment;
+import br.com.carteira.fragment.stock.BonificationFormFragment;
+import br.com.carteira.fragment.stock.BuyStockFormFragment;
+import br.com.carteira.fragment.stock.JCPDividendFormFragment;
+import br.com.carteira.fragment.stock.SellStockFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.

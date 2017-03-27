@@ -7,11 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.StockIncomesFragment;
+import br.com.carteira.fragment.stock.StockIncomesFragment;
 import br.com.carteira.listener.AddProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
 

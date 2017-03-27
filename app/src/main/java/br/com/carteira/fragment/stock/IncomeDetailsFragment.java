@@ -1,4 +1,4 @@
-package br.com.carteira.fragment;
+package br.com.carteira.fragment.stock;
 
 
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFormFragment;
+import br.com.carteira.fragment.BaseFragment;
 
 
 public class IncomeDetailsFragment extends BaseFragment {

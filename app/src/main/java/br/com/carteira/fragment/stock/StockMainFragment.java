@@ -1,4 +1,4 @@
-package br.com.carteira.fragment;
+package br.com.carteira.fragment.stock;
 
 
 import android.content.Context;
@@ -25,6 +25,7 @@ import br.com.carteira.R;
 import br.com.carteira.adapter.StockPortfolioAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFragment;
 import br.com.carteira.listener.AddProductListener;
 import br.com.carteira.listener.ProductDetailsListener;
 import butterknife.BindView;
