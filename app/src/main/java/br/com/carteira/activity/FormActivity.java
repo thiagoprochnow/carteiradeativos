@@ -10,8 +10,10 @@ import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
+import br.com.carteira.fragment.stock.GroupingFormFragment;
 import br.com.carteira.fragment.stock.JCPDividendFormFragment;
 import br.com.carteira.fragment.stock.SellStockFormFragment;
+import br.com.carteira.fragment.stock.SplitFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.
@@ -33,8 +35,8 @@ public class FormActivity extends AppCompatActivity {
             int productType = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
                     Constants.ProductType.INVALID);
             int productStatus = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_STATUS,
-                    Constants.Status.INVALID);
-            if(productStatus == Constants.Status.BUY) {
+                    Constants.Type.INVALID);
+            if(productStatus == Constants.Type.BUY) {
                 switch (productType) {
                     case Constants.ProductType.STOCK:
                         replaceFragment(new BuyStockFormFragment());
@@ -47,7 +49,7 @@ public class FormActivity extends AppCompatActivity {
                         finish();
                         break;
                 }
-            } else if(productStatus == Constants.Status.SELL) {
+            } else if(productStatus == Constants.Type.SELL) {
                 switch (productType) {
                     case Constants.ProductType.STOCK:
                         replaceFragment(new SellStockFormFragment());
@@ -80,6 +82,14 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.BONIFICATION:
                     Log.d(LOG_TAG, "Bonification Form Fragment");
                     replaceFragment(new BonificationFormFragment());
+                    break;
+                case Constants.IncomeType.SPLIT:
+                    Log.d(LOG_TAG, "Split Form Fragment");
+                    replaceFragment(new SplitFormFragment());
+                    break;
+                case Constants.IncomeType.GROUPING:
+                    Log.d(LOG_TAG, "Grouping Form Fragment");
+                    replaceFragment(new GroupingFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

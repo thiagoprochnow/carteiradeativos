@@ -106,7 +106,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, buyPrice);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockTransaction.COLUMN_STATUS, Constants.Status.BUY);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.BUY);
             // Adds to the database
             Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
                     .StockTransaction.URI,
@@ -117,7 +117,8 @@ public class BuyStockFormFragment extends BaseFormFragment {
                 Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, inputObjective, Constants.Status.BUY);
+                boolean updateStockData = updateStockData(inputSymbol, inputObjective, Constants
+                        .Type.BUY);
                 if (updateStockData) {
                     Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_LONG).show();
                     return true;
@@ -142,7 +143,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));
             }
-
         }
         return false;
     }

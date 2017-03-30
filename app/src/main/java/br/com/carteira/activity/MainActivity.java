@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
-                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Status.BUY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
                 if(!symbol.isEmpty()){
                     intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 }
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
-                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Status.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;

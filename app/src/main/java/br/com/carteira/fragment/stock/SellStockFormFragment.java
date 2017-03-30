@@ -87,7 +87,7 @@ public class SellStockFormFragment extends BaseFormFragment {
         if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
-            double buyPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
+            double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -98,9 +98,9 @@ public class SellStockFormFragment extends BaseFormFragment {
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
-            stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, buyPrice);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, sellPrice);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockTransaction.COLUMN_STATUS, Constants.Status.SELL);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.SELL);
             // Adds to the database
             Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
                     .StockTransaction.URI,
@@ -110,7 +110,7 @@ public class SellStockFormFragment extends BaseFormFragment {
             if (insertedStockTransactionUri != null) {
                 // Rescan incomes tables to check if added stock changed their receive values.
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, inputQuantity, buyPrice, -1, Constants.Status.SELL);
+                boolean updateStockData = updateStockData(inputSymbol, -1, Constants.Type.SELL);
                 if (updateStockData){
                     Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_LONG).show();
                     return true;

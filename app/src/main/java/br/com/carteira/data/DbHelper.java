@@ -62,7 +62,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockTransaction.COLUMN_QUANTITY + " INTEGER, " +
                 PortfolioContract.StockTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " LONG, " +
-                PortfolioContract.StockTransaction.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.StockTransaction.COLUMN_TYPE + " INTEGER, " +
                 " FOREIGN KEY (" + PortfolioContract.StockTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 

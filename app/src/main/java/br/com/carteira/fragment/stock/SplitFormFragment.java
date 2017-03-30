@@ -21,8 +21,8 @@ import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFormFragment;
 
-public class BonificationFormFragment extends BaseFormFragment {
-    private static final String LOG_TAG = BonificationFormFragment.class.getSimpleName();
+public class SplitFormFragment extends BaseFormFragment {
+    private static final String LOG_TAG = SplitFormFragment.class.getSimpleName();
     private View mView;
 
     private String mSymbol;
@@ -33,7 +33,7 @@ public class BonificationFormFragment extends BaseFormFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_done:
-                if (addBonification()) {
+                if (addSplit()) {
                     getActivity().finish();
                 }
                 return true;
@@ -45,14 +45,15 @@ public class BonificationFormFragment extends BaseFormFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_bonification_form, container, false);
+        mView = inflater.inflate(R.layout.fragment_split_form, container, false);
 
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
-        mInputDateView = (EditText) mView.findViewById(R.id.inputBonificationDate);
+        mInputDateView = (EditText) mView.findViewById(R.id.inputSplitDate);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
         mSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        // Place selling stock symbol on field
 
         // Adding current date to Buy Date field and set Listener to the Spinner
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
@@ -62,8 +63,8 @@ public class BonificationFormFragment extends BaseFormFragment {
         return mView;
     }
 
-    // Validate inputted values and add the stock to the portfolio
-    private boolean addBonification() {
+    // Validate inputted values and add the split stock to the transaction table
+    private boolean addSplit() {
 
         // Validate for each inputted value
         boolean isValidQuantity = isValidInt(mInputQuantityView);
@@ -73,6 +74,7 @@ public class BonificationFormFragment extends BaseFormFragment {
         if (isValidQuantity && isValidDate) {
             String inputSymbol = mSymbol;
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double buyPrice = 0;
             double inputObjective = -1;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
@@ -86,7 +88,7 @@ public class BonificationFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, 0);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
-            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.BONIFICATION);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.SPLIT);
             // Adds to the database
             Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
                     .StockTransaction.URI,
@@ -94,17 +96,17 @@ public class BonificationFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedStockTransactionUri != null) {
-                Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
+                Log.d(LOG_TAG, "Added stock split " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
                 boolean updateStockData = updateStockData(inputSymbol, inputObjective, Constants
-                        .Type.BONIFICATION);
+                        .Type.SPLIT);
                 if (updateStockData) {
-                    Toast.makeText(mContext, R.string.bonification_success, Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, R.string.split_success, Toast.LENGTH_LONG).show();
                     return true;
                 }
             }
-            Toast.makeText(mContext, R.string.bonification_fail, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.split_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
             // If validation fails, show validation error message

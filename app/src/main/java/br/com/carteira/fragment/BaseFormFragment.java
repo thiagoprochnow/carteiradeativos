@@ -209,39 +209,48 @@ public abstract class BaseFormFragment extends BaseFragment {
 
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
-    // income timestamp is to query only the quantity of stocks bought-sold before the timestamp
+    // income timestamp is to query only the quantity of stocks transactions before the timestamp
     public int getStockQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of stock
-        String[] affectedColumn = {"sum("+ PortfolioContract.StockTransaction.COLUMN_QUANTITY+")"};
-        String selectionBuy = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
-                + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ? AND "
-                + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ? OR "
-                +PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
-        String[] selectionArgumentsBuy = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.BUY), String.valueOf(Constants.Status.BONIFICATION)};
+        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
+        String[] selectionArguments = {symbol,String.valueOf(incomeTimestamp)};
+        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
 
         // Check if the symbol exists in the db
-        Cursor queryCursorBuy = mContext.getContentResolver().query(
+        Cursor queryCursor = mContext.getContentResolver().query(
                 PortfolioContract.StockTransaction.URI,
-                affectedColumn, selectionBuy, selectionArgumentsBuy, null);
-        if(queryCursorBuy.getCount() > 0) {
-            queryCursorBuy.moveToFirst();
-            int quantity = queryCursorBuy.getInt(0);
-            String selectionSell = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
-                    + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " <= ? AND "
-                    + PortfolioContract.StockTransaction.COLUMN_STATUS + " = ?";
-            String[] selectionArgumentsSell = {symbol,String.valueOf(incomeTimestamp),String.valueOf(Constants.Status.SELL)};
-
-            Cursor queryCursorSell = mContext.getContentResolver().query(
-                    PortfolioContract.StockTransaction.URI,
-                    affectedColumn, selectionSell, selectionArgumentsSell, null);
-            if (queryCursorSell.getCount() > 0){
-                queryCursorSell.moveToFirst();
-                // Return buy quantity - sell quantity
-                return quantity - queryCursorSell.getInt(0);
-            } else{
-                return quantity;
-            }
+                null, selection, selectionArguments, sortOrder);
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
+            int quantityTotal = 0;
+            int currentType = 0;
+            do {
+                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.BONIFICATION:
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SPLIT:
+                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "getStockQuantity currentType Unknown");
+                }
+            } while (queryCursor.moveToNext());
+            return quantityTotal;
         } else{
+            Log.d(LOG_TAG, "");
             return 0;
         }
     }
@@ -303,40 +312,56 @@ public abstract class BaseFormFragment extends BaseFragment {
         }
     }
 
-    public boolean updateStockData(String symbol, int quantity, double buyPrice, double objective, int status){
-        // Prepare query for stock data
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+    // Reads the StockTransaction entries and calculates value for StockData table for this symbol
+    public boolean updateStockData(String symbol, double objective, int type){
+
+        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
 
-        Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
-                null, selection, selectionArguments, null);
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
 
-        double value = quantity*buyPrice;
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in StockData
+            int quantityTotal = 0;
+            double valueTotal = 0;
+            double receiveIncome = 0;
+            double mediumPrice = 0;
+            int currentType;
 
-        // Check if there already is a data for this stock to update
-        // If not, will create one new
-        if(queryCursor.getCount() > 0 ){
-            queryCursor.moveToFirst();
-            Log.d(LOG_TAG, "Updating data for " + symbol);
-
-            int quantityTotal;
-            double valueTotal;
-            double receiveIncome;
-            double mediumPrice;
-
-            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
-            // Check if buying or selling stock
-            if(status == Constants.Status.BUY || status == Constants.Status.BONIFICATION) {
-                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) + quantity;
-                valueTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VALUE_TOTAL))) + value;
-                mediumPrice = valueTotal/quantityTotal;
-            // Sell
-            } else {
-                quantityTotal = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)) - quantity;
-                mediumPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE));
-                valueTotal = quantityTotal*mediumPrice;
-            }
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        valueTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        mediumPrice = valueTotal/quantityTotal;
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        valueTotal = quantityTotal*mediumPrice;
+                        break;
+                    case Constants.Type.BONIFICATION:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = valueTotal/quantityTotal;
+                        break;
+                    case Constants.Type.SPLIT:
+                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = valueTotal/quantityTotal;
+                        break;
+                    case Constants.Type.GROUPING:
+                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = valueTotal/quantityTotal;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
 
             // Query Income table to get total of this stock income
             String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")"};
@@ -353,66 +378,69 @@ public abstract class BaseFormFragment extends BaseFragment {
                 receiveIncome = 0;
             }
 
-            ContentValues updateDataCV = new ContentValues();
-            updateDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
-            updateDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, valueTotal);
-            if (status == Constants.Status.BUY){
-                updateDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
-            if (status == Constants.Status.BUY || status == Constants.Status.BONIFICATION){
-                updateDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
-            }
-            updateDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
+            ContentValues stockDataCV = new ContentValues();
 
-            // Prepare query to update stock data
-            String updateSelection = PortfolioContract.StockData._ID + " = ?";
-            String[] updatedSelectionArguments = {_id};
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_SYMBOL, symbol);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, valueTotal);
+            if (type == Constants.Type.BUY) {
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
 
-            // Update value on stock data
-            int updatedRows = mContext.getContentResolver().update(
+            // Searches for existing StockData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
                     PortfolioContract.StockData.URI,
-                    updateDataCV, updateSelection, updatedSelectionArguments);
-            // Log update success/fail result
-            if (updatedRows > 0){
-                Log.d(LOG_TAG, "updateStockData successfully updated");
-                // Update Stock Portfolio
-                boolean updateStockPortfolio = updateStockPortfolio();
-                if(updateStockPortfolio) {
-                    return true;
+                    null, selection, selectionArguments, null);
+
+            if (queryCursor.getCount() > 0){
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
+                // Update
+                // Prepare query to update stock data
+                String updateSelection = PortfolioContract.StockData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on stock data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.StockData.URI,
+                        stockDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "updateStockData successfully updated");
+                    // Update Stock Portfolio
+                    boolean updateStockPortfolio = updateStockPortfolio();
+                    if(updateStockPortfolio) {
+                        return true;
+                    }
+                } else {
+                    Log.d(LOG_TAG, "updateStockData failed update");
+                    return false;
                 }
             } else {
-                Log.d(LOG_TAG, "updateStockData failed update");
-                return false;
-            }
+                // Insert
+                // Adds data to the database
+                Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockData.URI,
+                        stockDataCV);
 
-        } else {
-            Log.d(LOG_TAG, "No data created for " + symbol + ". Creating new one");
-            // Only way to create is if status = "Buy", so quantity here will always be positive
-
-            ContentValues newDataCV = new ContentValues();
-            newDataCV.put(PortfolioContract.StockData.COLUMN_SYMBOL, symbol);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantity);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, value);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, 0);
-            newDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, buyPrice);
-
-            // Adds data to the database
-            Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockData.URI,
-
-                    newDataCV);
-
-            // If error occurs to add, shows error message
-            if (insertedStockDataUri != null) {
-                Log.d(LOG_TAG, "Added stock data");
-                // Update Stock Portfolio
-                boolean updateStockPortfolio = updateStockPortfolio();
-                if (updateStockPortfolio) {
-                    return true;
+                // If error occurs to add, shows error message
+                if (insertedStockDataUri != null) {
+                    Log.d(LOG_TAG, "Created stock data");
+                    // Update Stock Portfolio
+                    boolean updateStockPortfolio = updateStockPortfolio();
+                    if (updateStockPortfolio) {
+                        return true;
+                    }
+                } else {
+                    Log.d(LOG_TAG, "Error creating stock data");
                 }
-            } else {
-                Log.d(LOG_TAG, "Error adding stock data");
             }
+        } else{
+            Log.d(LOG_TAG, "No StockTransaction found");
+            return false;
         }
         return false;
     }

@@ -8,6 +8,10 @@
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="buy_date">Buy Date</string>
     <string name="bonification_date">Bonification Date</string>
+    <string name="split_date">Stock Split Date</string>
+    <string name="split_grouping_numerator">1</string>
+    <string name="split_grouping_to">to</string>
+    <string name="grouping_date">Stock Grouping Date</string>
     <string name="sell_date">Sell Date</string>
     <string name="ex_date">Ex Dividend Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
@@ -24,12 +28,18 @@
     <string name="menu_item_dividends">Dividends</string>
     <string name="menu_item_jcp">Interest on Capital</string>
     <string name="menu_item_bonification">Bonification</string>
+    <string name="menu_item_split">Split</string>
+    <string name="menu_item_grouping">Grouping</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Stock added successfully</string>
     <string name="buy_stock_fail">Error adding stock</string>
     <string name="bonification_success">Bonification added successfully</string>
     <string name="bonification_fail">Error adding bonification</string>
+    <string name="split_success">Stock split successfully</string>
+    <string name="split_fail">Stock split failed</string>
+    <string name="grouping_success">Stock grouping successfully</string>
+    <string name="grouping_fail">Stock grouping failed</string>
     <string name="sell_stock_success">Stock sold successfully</string>
     <string name="sell_stock_fail">Error selling stock</string>
     <string name="delete_stock_title">Delete stock from your portfolio?</string>

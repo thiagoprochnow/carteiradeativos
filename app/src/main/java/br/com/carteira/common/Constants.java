@@ -16,12 +16,14 @@ public final class Constants {
         public static final String EXTRA_INCOME_ID = "extra_income_id";
     }
 
-    // Value of stock/fii status, buy or sell
-    public static class Status {
+    // Value of stock/fii type, buy, sell, bonification, grouping, split
+    public static class Type {
         public static final int INVALID = -1;
         public static final int BUY = 0;
         public static final int SELL = 1;
         public static final int BONIFICATION = 2;
+        public static final int GROUPING = 3;
+        public static final int SPLIT = 4;
     }
 
     // This should contains all product types in the portfolio
@@ -37,5 +39,7 @@ public final class Constants {
         public static final int DIVIDEND = 0;
         public static final int JCP = 1;
         public static final int BONIFICATION = 2;
+        public static final int GROUPING = 3;
+        public static final int SPLIT = 4;
     }
 }

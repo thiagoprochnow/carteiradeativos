@@ -67,21 +67,27 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(this, FormActivity.class);
         String symbol = comingIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
         // Open correct income form
         switch (item.getItemId()) {
             case R.id.menu_item_dividends:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
-                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;
             case R.id.menu_item_jcp:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
-                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;
             case R.id.menu_item_bonification:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.BONIFICATION);
-                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case R.id.menu_item_split:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.SPLIT);
+                startActivity(intent);
+                break;
+            case R.id.menu_item_grouping:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
                 break;
             default:

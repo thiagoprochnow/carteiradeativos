@@ -9,6 +9,21 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/fragment_form_margin"
         android:orientation="vertical">
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/split_date"/>
+
+        <EditText
+            android:id="@+id/inputSplitDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="date"/>
+
         <TextView
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
@@ -16,24 +31,26 @@
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/quantity"/>
 
-        <EditText
-            android:id="@+id/inputQuantity"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
-
-        <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/bonification_date"/>
-
-        <EditText
-            android:id="@+id/inputBonificationDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="date"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <EditText
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/split_grouping_numerator"
+                android:focusable="false"/>
+            <TextView
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/split_grouping_to"/>
+            <EditText
+                android:id="@+id/inputQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

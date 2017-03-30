@@ -153,7 +153,7 @@ public class PortfolioContract {
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_PRICE = "bought_price";
         public static final String COLUMN_TIMESTAMP = "timestamp";
-        public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_TYPE = "type";
 
         public static final String[] STOCK_TRANSACTION_COLUMNS = {
                 _ID,
@@ -161,7 +161,7 @@ public class PortfolioContract {
                 COLUMN_QUANTITY,
                 COLUMN_PRICE,
                 COLUMN_TIMESTAMP,
-                COLUMN_STATUS
+                COLUMN_TYPE
         };
 
         public static Uri buildTransactionUri(long id) {

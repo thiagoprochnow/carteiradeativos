@@ -8,6 +8,10 @@
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="buy_date">Data da compra</string>
     <string name="bonification_date">Data da bonificação</string>
+    <string name="split_date">Data do Desdobramento</string>
+    <string name="grouping_date">Data do Grupamento</string>
+    <string name="split_grouping_numerator">1</string>
+    <string name="split_grouping_to">para</string>
     <string name="sell_date">Data da venda</string>
     <string name="ex_date">Data Ex Dividendo</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
@@ -20,17 +24,22 @@
     <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
     <string name="menu_done">Concluir</string>
 
-
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividendos</string>
     <string name="menu_item_jcp">Juros sobre Capital</string>
     <string name="menu_item_bonification">Bonificação</string>
+    <string name="menu_item_split">Desdobramento</string>
+    <string name="menu_item_grouping">Grupamento</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Ação adicionado com sucesso</string>
     <string name="buy_stock_fail">Falha ao adicionar ação</string>
     <string name="bonification_success">Bonificação adicionada com sucesso</string>
     <string name="bonification_fail">Falha ao adicionar bonificação</string>
+    <string name="split_success">Desdobramento feito com sucesso</string>
+    <string name="split_fail">Desdobramento falhou</string>
+    <string name="grouping_success">Grupamento feito com sucesso</string>
+    <string name="grouping_fail">Grupamento falhou</string>
     <string name="sell_stock_success">Ação vendida com sucesso</string>
     <string name="sell_stock_fail">Falha ao vender ação</string>
     <string name="delete_stock_title">Deletar ação da sua carteira?</string>
