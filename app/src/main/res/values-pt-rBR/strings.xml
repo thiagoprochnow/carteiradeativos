@@ -20,6 +20,7 @@
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_date">Data inválida</string>
+    <string name="future_date">Data não pode ser no futuro</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
     <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
     <string name="menu_done">Concluir</string>

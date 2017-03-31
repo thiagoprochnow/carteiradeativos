@@ -87,9 +87,10 @@ public class BuyStockFormFragment extends BaseFormFragment {
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
         boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
+        boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the stock
-        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate) {
+        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
@@ -142,6 +143,11 @@ public class BuyStockFormFragment extends BaseFormFragment {
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));
+                Toast.makeText(mContext, R.string.wrong_date, Toast.LENGTH_LONG).show();
+            }
+            if(isFutureDate){
+                mInputDateView.setError(this.getString(R.string.future_date));
+                Toast.makeText(mContext, R.string.future_date, Toast.LENGTH_LONG).show();
             }
         }
         return false;

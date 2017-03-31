@@ -163,6 +163,20 @@ public abstract class BaseFormFragment extends BaseFragment {
         }
     }
 
+    // Validate if an EditText was set with date that is in the future of current date
+    protected boolean isFutureDate(EditText date) {
+        Editable editable = date.getText();
+        String textDate = editable.toString();
+        long timestamp = DateToTimestamp(textDate);
+        long currentTime = new Date().getTime();
+        // Check if it future date input
+        if (timestamp > currentTime) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Sets DatePicker and return the OnClickListener
     public View.OnClickListener setDatePicker(final EditText inputDateView) {
         View.OnClickListener onClickListener = new View.OnClickListener() {

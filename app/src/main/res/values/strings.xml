@@ -20,6 +20,7 @@
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_date">Invalid date</string>
+    <string name="future_date">Date cannot be in the future</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="menu_done">Done</string>
