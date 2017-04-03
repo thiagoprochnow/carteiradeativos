@@ -52,15 +52,18 @@ public class StockDetailAdapter extends RecyclerView.Adapter<StockDetailAdapter.
         String date = TimestampToDate(timestamp);
         int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
         double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
-        String totalValue = "R$" + String.format("%.2f",price*quantity);
-        String priceText = "R$" + String.format("%.2f",price);
+        // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
+        if (price > 0) {
+            String totalValue = "R$" + String.format("%.2f", price * quantity);
+            String priceText = "R$" + String.format("%.2f", price);
+            holder.price.setText(priceText);
+            holder.totalValue.setText(totalValue);
+        }
         String quantityText = String.valueOf(quantity);
 
         holder.transactionType.setText(type);
         holder.transactionDate.setText(date);
         holder.quantity.setText(quantityText);
-        holder.price.setText(priceText);
-        holder.totalValue.setText(totalValue);
     }
 
     @Override
