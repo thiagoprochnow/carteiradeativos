@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.stock.StockIncomesFragment;
+import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.AddProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
 
@@ -34,7 +35,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             switch (productType) {
                 case Constants.ProductType.STOCK:
                     // TODO: Make tabs to switch between incomes and details.
-                    replaceFragment(new StockIncomesFragment());
+                    replaceFragment(new StockTabFragment());
                     break;
                 case Constants.ProductType.FII:
                     // TODO: replaceFragment(new FiiIncomesFragment());

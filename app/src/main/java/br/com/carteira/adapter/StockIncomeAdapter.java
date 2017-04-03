@@ -11,24 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.security.Timestamp;
-
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
-import br.com.carteira.fragment.BaseFormFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdapter
-        .StockDividendViewHolder> {
-    private static final String LOG_TAG = StockDividendAdapter.class.getSimpleName();
+public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
+        StockIncomeViewHolder> {
+    private static final String LOG_TAG = StockIncomeAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public StockDividendAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public StockIncomeAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -40,19 +37,23 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
     }
 
     @Override
-    public StockDividendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public StockIncomeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes, parent, false);
-        return new StockDividendViewHolder(item);
+        return new StockIncomeViewHolder(item);
     }
 
     @Override
-    public void onBindViewHolder(StockDividendViewHolder holder, int position) {
+    public void onBindViewHolder(StockIncomeViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
         Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
         String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
         String date = TimestampToDate(timestamp);
+        Log.d(LOG_TAG, "IncomeType: " + incomeType);
+        Log.d(LOG_TAG, "IncomeValue: " + "R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
+        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+        Log.d(LOG_TAG, "Date: " + date);
         holder.incomeType.setText(incomeType);
         holder.incomeValue.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
@@ -75,7 +76,7 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
                                  ContextMenu.ContextMenuInfo menuInfo, String id, int type);
     }
 
-    class StockDividendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+    class StockIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
 
         @BindView(R.id.incomeType)
         TextView incomeType;
@@ -90,7 +91,7 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
         TextView incomeValue;
 
 
-        StockDividendViewHolder(View itemView) {
+        StockIncomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -129,13 +130,13 @@ public class StockDividendAdapter extends RecyclerView.Adapter<StockDividendAdap
                 return "invalid";
             case Constants.IncomeType.DIVIDEND:
                 Log.d(LOG_TAG, "Dividend IncomeType");
-                return mContext.getResources().getString(R.string.dividendIncomeType);
+                return mContext.getResources().getString(R.string.dividend_income_type);
             case Constants.IncomeType.JCP:
                 Log.d(LOG_TAG, "JCP IncomeType");
-                return mContext.getResources().getString(R.string.jcpIncomeType);
+                return mContext.getResources().getString(R.string.jcp_income_type);
             default:
                 Log.d(LOG_TAG, "Default IncomeType");
-                return mContext.getResources().getString(R.string.dividendIncomeType);
+                return mContext.getResources().getString(R.string.dividend_income_type);
         }
     }
 }

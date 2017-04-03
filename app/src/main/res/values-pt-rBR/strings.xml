@@ -53,12 +53,22 @@
     <string name="menu_delete">Deletar</string>
 
     <!-- Stock Adapter -->
-    <string name="currentPercentLabel">Percent:</string>
-    <string name="targetPercentLabel">Target:</string>
+    <string name="current_percent_label">Percent:</string>
+    <string name="target_percent_label">Target:</string>
 
-    <!-- Dividend Adapter -->
-    <string name="dividendIncomeType">Dividendo</string>
-    <string name="jcpIncomeType">Juros s/ Capital</string>
+    <!-- Stock Income Adapter -->
+    <string name="dividend_income_type">Dividendo</string>
+    <string name="jcp_income_type">Juros s/ Capital</string>
+    <string name="incomes">Rendimentos</string>
+    <string name="operations">Operações</string>
+    <string name="operation">Operação</string>
+
+    <!-- Stock Detail Adapter -->
+    <string name="stock_buy">Compra</string>
+    <string name="stock_sell">Venda</string>
+    <string name="stock_bonification">Bonificação</string>
+    <string name="stock_split">Desdobramento</string>
+    <string name="stock_grouping">Grupamento</string>
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
