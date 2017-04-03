@@ -1,15 +1,18 @@
 package br.com.carteira.fragment.stock;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.adapter.StockDetailAdapter;
@@ -31,6 +35,8 @@ public class StockDetailsFragment extends BaseFragment implements
         StockDetailAdapter.StockAdapterOnClickHandler, LoaderManager.
         LoaderCallbacks<Cursor>{
 
+    private static final String LOG_TAG = StockDetailsFragment.class.getSimpleName();
+
     private View mView;
 
     @BindView(R.id.detailsRecyclerView)
@@ -40,6 +46,7 @@ public class StockDetailsFragment extends BaseFragment implements
     protected TextView mEmptyListTextView;
 
     private String id;
+    private String mSymbol;
     // Loader IDs
     private static final int DETAIL_LOADER = 2;
 
@@ -59,9 +66,9 @@ public class StockDetailsFragment extends BaseFragment implements
 
         // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
         Intent mainActivityIntent = getActivity().getIntent();
-        String symbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -85,7 +92,29 @@ public class StockDetailsFragment extends BaseFragment implements
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.menu_item_delete_detail:
+                // Show Dialog for user confirmation to delete Stock Operation from database
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(R.string.delete_stock_detail_title);
 
+                builder.setMessage(R.string.delete_stock_detail_dialog)
+                        .setPositiveButton(R.string.delete_confirm, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                deleteStockTransaction(id, mSymbol);
+                            }
+                        })
+                        .setNegativeButton(R.string.delete_cancel, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+                break;
+            default:
+                Log.d(LOG_TAG, "Wrong menu Id");
+                break;
         }
         return super.onContextItemSelected(item);
     }

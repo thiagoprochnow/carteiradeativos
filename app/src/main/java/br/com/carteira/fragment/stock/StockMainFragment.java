@@ -145,13 +145,13 @@ public class StockMainFragment extends BaseFragment implements
                 builder.setTitle(R.string.delete_stock_title);
 
                 builder.setMessage(R.string.delete_stock_dialog)
-                        .setPositiveButton(R.string.delete_stock_confirm, new DialogInterface
+                        .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                removeStock(symbol);
+                                deleteStock(symbol);
                             }
                         })
-                        .setNegativeButton(R.string.delete_stock_cancel, new DialogInterface
+                        .setNegativeButton(R.string.delete_cancel, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();

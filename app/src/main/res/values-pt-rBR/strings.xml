@@ -45,8 +45,8 @@
     <string name="sell_stock_fail">Falha ao vender ação</string>
     <string name="delete_stock_title">Deletar ação da sua carteira?</string>
     <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar a ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
-    <string name="delete_stock_confirm">Deletar</string>
-    <string name="delete_stock_cancel">Cancelar</string>
+    <string name="delete_confirm">Deletar</string>
+    <string name="delete_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
     <string name="menu_sell">Vender</string>
@@ -72,6 +72,12 @@
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
+    <string name="delete_stock_income_title">Deletar esse provento do seu portfolio?</string>
+    <string name="delete_stock_income_dialog">Tem certeza que deseja deletar esse provento do seu portfolio?</string>
+
+    <!-- Stock Details Fragment -->
+    <string name="delete_stock_detail_title">Deletar essa operação do seu portfolio?</string>
+    <string name="delete_stock_detail_dialog">Tem certeza que deseja deletar essa operação do seu portfolio?</string>
 
     <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Compra de Ação</string>

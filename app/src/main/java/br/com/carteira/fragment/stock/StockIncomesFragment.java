@@ -2,12 +2,14 @@ package br.com.carteira.fragment.stock;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +49,7 @@ public class StockIncomesFragment extends BaseFragment implements
     private StockIncomeAdapter mStockIncomeAdapter;
 
     private String id;
+    private String mSymbol;
     // Loader IDs
     private static final int INCOME_LOADER = 1;
 
@@ -75,10 +78,10 @@ public class StockIncomesFragment extends BaseFragment implements
 
         // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
         Intent mainActivityIntent = getActivity().getIntent();
-        String symbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        getActivity().setTitle(symbol);
+        mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        getActivity().setTitle(mSymbol);
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
         setUserVisibleHint(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -108,7 +111,29 @@ public class StockIncomesFragment extends BaseFragment implements
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            case R.id.menu_item_delete_income:
+                // Show Dialog for user confirmation to delete Stock Income from database
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(R.string.delete_stock_income_title);
 
+                builder.setMessage(R.string.delete_stock_income_dialog)
+                        .setPositiveButton(R.string.delete_confirm, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                deleteStockIncome(id, mSymbol);
+                            }
+                        })
+                        .setNegativeButton(R.string.delete_cancel, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+                break;
+            default:
+                Log.d(LOG_TAG, "Wrong menu Id");
+                break;
         }
         return super.onContextItemSelected(item);
     }

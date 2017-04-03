@@ -45,8 +45,8 @@
     <string name="sell_stock_fail">Error selling stock</string>
     <string name="delete_stock_title">Delete stock from your portfolio?</string>
     <string name="delete_stock_dialog">If you sold the stock, select "Sell" from the option menu. Deleting the stock will remove all its data, including all income received.</string>
-    <string name="delete_stock_confirm">Delete</string>
-    <string name="delete_stock_cancel">Cancel</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_cancel">Cancel</string>
     <string name="menu_buy">Buy</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_sell">Sell</string>
@@ -72,6 +72,12 @@
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Incomes</string>
+    <string name="delete_stock_income_title">Delete stock income from your portfolio?</string>
+    <string name="delete_stock_income_dialog">Are you sure you want to delete this income from your portfolio?</string>
+
+    <!-- Stock Details Fragment -->
+    <string name="delete_stock_detail_title">Delete stock operation from your portfolio?</string>
+    <string name="delete_stock_detail_dialog">Are you sure you want to delete this operation from your portfolio?</string>
 
     <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Buy Stock</string>
