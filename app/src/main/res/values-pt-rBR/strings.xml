@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Form Activity -->
+    <string name="objective_update_success">Objetivo atualizado com sucesso</string>
+    <string name="objective_update_fail">Atualização do objetivo falhou</string>
+
     <!-- Dialog Fragment -->
     <string name="quantity">Quantidade</string>
     <string name="buy_price">Preço de compra</string>
@@ -49,6 +53,7 @@
     <string name="delete_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
+    <string name="menu_edit_objective">Editar Objetivo</string>
     <string name="menu_sell">Vender</string>
     <string name="menu_delete">Deletar</string>
 

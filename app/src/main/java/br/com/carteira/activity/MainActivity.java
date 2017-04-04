@@ -21,11 +21,10 @@ import br.com.carteira.fragment.fii.FiiMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.stock.StockMainFragment;
-import br.com.carteira.listener.AddProductListener;
-import br.com.carteira.listener.ProductDetailsListener;
+import br.com.carteira.listener.ProductListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements AddProductListener, ProductDetailsListener {
+public class MainActivity extends AppCompatActivity implements ProductListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -209,6 +208,22 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
                 break;
             default:
                 Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
+                break;
+        }
+    }
+
+    @Override
+    public void onEditProduct(int productType, String symbol){
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (productType) {
+            case Constants.ProductType.STOCK:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "(onEditProduct) Could not launch the FormActivity.");
                 break;
         }
     }

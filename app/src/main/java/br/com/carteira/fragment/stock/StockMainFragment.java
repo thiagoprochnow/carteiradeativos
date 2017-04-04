@@ -26,8 +26,7 @@ import br.com.carteira.adapter.StockPortfolioAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
-import br.com.carteira.listener.AddProductListener;
-import br.com.carteira.listener.ProductDetailsListener;
+import br.com.carteira.listener.ProductListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,8 +46,7 @@ public class StockMainFragment extends BaseFragment implements
     protected TextView mEmptyListTextView;
 
     private StockPortfolioAdapter mStockPortfolioAdapter;
-    private AddProductListener mFormProductListener;
-    private ProductDetailsListener mProductDetailsListener;
+    private ProductListener mFormProductListener;
 
     private String symbol;
 
@@ -59,18 +57,11 @@ public class StockMainFragment extends BaseFragment implements
     // Tem que ter um jeito de ficar apenas no BaseFragment
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AddProductListener) {
-            mFormProductListener = (AddProductListener) context;
+        if (context instanceof ProductListener) {
+            mFormProductListener = (ProductListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " Parent Activity must implements AddProductListener");
-        }
-
-        if (context instanceof ProductDetailsListener) {
-            mProductDetailsListener = (ProductDetailsListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " Parent Activity must implements ProductDetailsListener");
+                    + " Parent Activity must implements ProductListener");
         }
     }
 
@@ -113,7 +104,7 @@ public class StockMainFragment extends BaseFragment implements
     public void onClick(String symbol) {
         // Launch details activity for clicked stock
         Log.d(LOG_TAG, ": "+symbol);
-        mProductDetailsListener.onProductDetails(Constants.ProductType.STOCK, symbol);
+        mFormProductListener.onProductDetails(Constants.ProductType.STOCK, symbol);
     }
 
     @Override
@@ -132,6 +123,10 @@ public class StockMainFragment extends BaseFragment implements
             case R.id.menu_item_buy:
                 // This will call the FormActivity with the correct form fragment
                 mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, symbol);
+                break;
+
+            case R.id.menu_item_edit:
+                mFormProductListener.onEditProduct(Constants.ProductType.STOCK, symbol);
                 break;
 
             case R.id.menu_item_sell:

@@ -6,7 +6,7 @@
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_item_edit"
-        android:title="@string/menu_edit"
+        android:title="@string/menu_edit_objective"
         app:showAsAction="never"/>
     <item
         android:id="@+id/menu_item_sell"

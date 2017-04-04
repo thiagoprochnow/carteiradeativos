@@ -9,11 +9,11 @@ import android.util.Log;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.stock.IncomeDetailsFragment;
-import br.com.carteira.listener.AddProductListener;
+import br.com.carteira.listener.ProductListener;
 
 public class IncomeDetailsActivity extends AppCompatActivity {
 
-    private AddProductListener mFormProductListener;
+    private ProductListener mFormProductListener;
 
     private static final String LOG_TAG = IncomeDetailsActivity.class.getSimpleName();
 

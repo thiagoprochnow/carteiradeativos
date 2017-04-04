@@ -10,6 +10,7 @@ import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
+import br.com.carteira.fragment.stock.EditStockFormFragment;
 import br.com.carteira.fragment.stock.GroupingFormFragment;
 import br.com.carteira.fragment.stock.JCPDividendFormFragment;
 import br.com.carteira.fragment.stock.SellStockFormFragment;
@@ -56,6 +57,18 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.FII:
                         // TODO: replaceFragment(new SellFiiFormFragment());
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+                        finish();
+                        break;
+                }
+            } else if (productStatus == Constants.Type.EDIT){
+                switch (productType) {
+                    case Constants.ProductType.STOCK:
+                        replaceFragment(new EditStockFormFragment());
+                        break;
+                    case Constants.ProductType.FII:
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

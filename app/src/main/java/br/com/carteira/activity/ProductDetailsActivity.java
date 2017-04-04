@@ -10,14 +10,13 @@ import android.view.MenuItem;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.stock.StockIncomesFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
-import br.com.carteira.listener.AddProductListener;
+import br.com.carteira.listener.ProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
 
 public class ProductDetailsActivity extends AppCompatActivity implements IncomeDetailsListener {
 
-    private AddProductListener mFormProductListener;
+    private ProductListener mFormProductListener;
 
     private static final String LOG_TAG = ProductDetailsActivity.class.getSimpleName();
 
