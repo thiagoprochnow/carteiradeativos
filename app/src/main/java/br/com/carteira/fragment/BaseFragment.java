@@ -57,7 +57,7 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
         Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
-        if (deletedTransaction > 0 && deletedData > 0) {
+        if (deletedData > 0) {
 
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -120,6 +120,23 @@ public abstract class BaseFragment extends Fragment {
             if (updateStockData)
                 return true;
         }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from StockData
+
+        String selectionTransaction = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArgumentsTransaction = {symbol};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more transction for this symbol, delete the stock and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteStock(symbol);
+            getActivity().finish();
+        }
+
         return false;
     }
 
