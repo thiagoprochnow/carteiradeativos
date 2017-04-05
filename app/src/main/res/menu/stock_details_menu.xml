@@ -20,4 +20,8 @@
         android:id="@+id/menu_item_grouping"
         android:title="@string/menu_item_grouping"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_sync"
+        android:title="Sync API"
+        app:showAsAction="never"/>
 </menu>

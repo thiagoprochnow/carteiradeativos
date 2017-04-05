@@ -1,5 +1,6 @@
 package br.com.carteira.activity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.ProductListener;
@@ -89,6 +91,15 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case R.id.menu_item_grouping:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
+                break;
+            case R.id.menu_item_sync:
+                //TODO Provisory request, this API be migrate to a service
+                // Add .SA in the symbol to the API
+                Intent mServiceIntent = new Intent(getApplicationContext(), StockIntentService
+                        .class);
+                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol.charAt(symbol
+                        .length() - 1) == '4' ? symbol + ".SA" : symbol);
+                startService(mServiceIntent);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

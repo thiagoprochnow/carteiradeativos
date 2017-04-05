@@ -30,7 +30,7 @@ public class StockIntentService extends IntentService {
 
         Log.d(LOG_TAG, "Stock Intent Service start");
 
-        StockTaskService stockTaskService = new StockTaskService();
+        StockTaskService stockTaskService = new StockTaskService(this);
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {

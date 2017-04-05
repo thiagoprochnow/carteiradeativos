@@ -116,6 +116,7 @@ public class PortfolioContract {
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
+        public static final String COLUMN_CURRENT_PRICE = "current_price";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
