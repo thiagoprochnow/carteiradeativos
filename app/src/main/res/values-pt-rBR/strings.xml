@@ -57,16 +57,20 @@
     <string name="menu_sell">Vender</string>
     <string name="menu_delete">Deletar</string>
 
+    <!-- Stock Tab Adapter -->
+    <string name="stocks_portfolio">Carteira</string>
+    <string name="stocks_history">Histórico</string>
+
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
     <string name="target_percent_label">Target:</string>
+    <string name="incomes">Rendimentos</string>
+    <string name="operations">Operações</string>
+    <string name="operation">Operação</string>
 
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividendo</string>
     <string name="jcp_income_type">Juros s/ Capital</string>
-    <string name="incomes">Rendimentos</string>
-    <string name="operations">Operações</string>
-    <string name="operation">Operação</string>
 
     <!-- Stock Detail Adapter -->
     <string name="stock_buy">Compra</string>

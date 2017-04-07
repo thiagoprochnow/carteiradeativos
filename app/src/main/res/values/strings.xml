@@ -57,6 +57,10 @@
     <string name="menu_sell">Sell</string>
     <string name="menu_delete">Delete</string>
 
+    <!-- Stock Tab Adapter -->
+    <string name="stocks_portfolio">Portfolio</string>
+    <string name="stocks_history">History</string>
+
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
     <string name="target_percent_label">Target:</string>

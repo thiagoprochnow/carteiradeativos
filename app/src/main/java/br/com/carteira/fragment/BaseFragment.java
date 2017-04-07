@@ -522,6 +522,13 @@ public abstract class BaseFragment extends Fragment {
             stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
 
+            if(quantityTotal > 0){
+                // Set stock as active
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_STATUS, Constants.Status.ACTIVE);
+            } else {
+                // Set stock as sold
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_STATUS, Constants.Status.SOLD);
+            }
             // Searches for existing StockData to update value.
             // If dosent exists, creates new one
             Cursor queryCursor = mContext.getContentResolver().query(

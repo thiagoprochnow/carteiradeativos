@@ -117,6 +117,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
         public static final String COLUMN_CURRENT_PRICE = "current_price";
+        public static final String COLUMN_STATUS = "status";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
@@ -127,7 +128,8 @@ public class PortfolioContract {
                 COLUMN_VALUE_GAIN,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_CURRENT_PERCENT,
-                COLUMN_MEDIUM_PRICE
+                COLUMN_MEDIUM_PRICE,
+                COLUMN_STATUS
         };
 
         public static Uri makeUriForStockData(String symbol) {

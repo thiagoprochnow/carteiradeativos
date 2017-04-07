@@ -43,4 +43,15 @@ public final class Constants {
         public static final int GROUPING = 3;
         public static final int SPLIT = 4;
     }
+
+    // Status of the a specific investment
+    // If Active, means user still is in that investment
+    // If Sold, means user already sold or expired that investment
+    // For Stocks and FIIs will be used to know if user still has that stock in his portfolio
+    // For other the same, will be used to know if it is a past investment or current.
+    public static class Status{
+        public static final int INVALID = -1;
+        public static final int ACTIVE = 0;
+        public static final int SOLD = 1;
+    }
 }

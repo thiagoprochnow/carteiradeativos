@@ -21,6 +21,7 @@ import br.com.carteira.fragment.fii.FiiMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.stock.StockMainFragment;
+import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.ProductListener;
 
 // Main app Activity
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 break;
             case R.id.nav_item_stocks:
                 Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
-                replaceFragment(new StockMainFragment());
+                replaceFragment(new StockTabFragment());
                 break;
             case R.id.nav_item_fii:
                 Log.d(LOG_TAG, "Loaded FII Fragment from menu");
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
-                if(!symbol.isEmpty()){
+                if(symbol != null && !symbol.isEmpty()){
                     intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 }
                 startActivity(intent);

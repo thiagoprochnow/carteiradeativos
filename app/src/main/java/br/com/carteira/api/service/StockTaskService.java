@@ -41,8 +41,6 @@ public class StockTaskService extends GcmTaskService {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
-
-
         // Build retrofit base request
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(StockService.BASE_URL)

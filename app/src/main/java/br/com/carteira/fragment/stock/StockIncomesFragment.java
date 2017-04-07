@@ -51,7 +51,7 @@ public class StockIncomesFragment extends BaseFragment implements
     private String id;
     private String mSymbol;
     // Loader IDs
-    private static final int INCOME_LOADER = 1;
+    private static final int INCOME_LOADER = 4;
 
     public void onAttach(Context context) {
         super.onAttach(context);

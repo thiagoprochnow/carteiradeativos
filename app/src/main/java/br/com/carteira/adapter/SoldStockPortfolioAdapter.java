@@ -16,13 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAdapter.StockPortfolioViewHolder> {
-    private static final String LOG_TAG = StockPortfolioAdapter.class.getSimpleName();
+public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPortfolioAdapter.StockPortfolioViewHolder> {
+    private static final String LOG_TAG = SoldStockPortfolioAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public StockPortfolioAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public SoldStockPortfolioAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -77,7 +77,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
     public interface StockAdapterOnClickHandler {
         void onClick(String symbol);
         void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo, String symbol);
+                                 ContextMenu.ContextMenuInfo menuInfo, String symbol);
     }
 
     class StockPortfolioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {

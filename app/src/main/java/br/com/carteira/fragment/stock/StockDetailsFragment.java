@@ -48,7 +48,7 @@ public class StockDetailsFragment extends BaseFragment implements
     private String id;
     private String mSymbol;
     // Loader IDs
-    private static final int DETAIL_LOADER = 2;
+    private static final int DETAIL_LOADER = 3;
 
     private StockDetailAdapter mStockDetailAdapter;
 
