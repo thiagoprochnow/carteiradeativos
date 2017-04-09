@@ -129,6 +129,7 @@ public class PortfolioContract {
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_CURRENT_PERCENT,
                 COLUMN_MEDIUM_PRICE,
+                COLUMN_CURRENT_PRICE,
                 COLUMN_STATUS
         };
 
