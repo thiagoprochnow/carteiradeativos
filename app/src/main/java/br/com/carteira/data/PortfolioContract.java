@@ -73,17 +73,19 @@ public class PortfolioContract {
 
         public static final String TABLE_NAME = "stock_portfolio";
 
-        public static final String COLUMN_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
 
         public static final String[] STOCK_PORTFOLIO_COLUMNS = {
                 _ID,
-                COLUMN_VALUE_TOTAL,
+                COLUMN_BUY_TOTAL,
+                COLUMN_VARIATION_TOTAL,
                 COLUMN_INCOME_TOTAL,
-                COLUMN_VALUE_GAIN,
+                COLUMN_TOTAL_GAIN,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_PORTFOLIO_PERCENT
         };
@@ -110,26 +112,30 @@ public class PortfolioContract {
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
-        public static final String COLUMN_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_VARIATION = "variation_gain";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
         public static final String COLUMN_CURRENT_PRICE = "current_price";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_STATUS = "status";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY_TOTAL,
-                COLUMN_VALUE_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
                 COLUMN_INCOME_TOTAL,
-                COLUMN_VALUE_GAIN,
+                COLUMN_VARIATION,
+                COLUMN_TOTAL_GAIN,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_CURRENT_PERCENT,
                 COLUMN_MEDIUM_PRICE,
                 COLUMN_CURRENT_PRICE,
+                COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS
         };
 

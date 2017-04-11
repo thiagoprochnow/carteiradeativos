@@ -50,6 +50,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.ProductDetailsActivity" />
         </activity>
+        <receiver
+            android:name=".receiver.StockReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_STOCK_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

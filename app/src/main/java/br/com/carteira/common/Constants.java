@@ -54,4 +54,9 @@ public final class Constants {
         public static final int ACTIVE = 0;
         public static final int SOLD = 1;
     }
+
+    // Constant for calling BroadcastReceivers
+    public static class Receiver{
+        public static final String STOCK = "UPDATE_STOCK_PORTFOLIO";
+    }
 }

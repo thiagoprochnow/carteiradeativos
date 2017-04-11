@@ -37,9 +37,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String builder_stock_portfolio = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
                 PortfolioContract.StockPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockPortfolio._ID + ") ON CONFLICT REPLACE);";
@@ -48,13 +49,15 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.StockData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
-                PortfolioContract.StockData.COLUMN_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.StockData.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.StockData.COLUMN_VALUE_GAIN + " REAL, " +
+                PortfolioContract.StockData.COLUMN_VARIATION + " REAL, " +
+                PortfolioContract.StockData.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_CURRENT_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.StockData.COLUMN_CURRENT_PRICE + " REAL, " +
+                PortfolioContract.StockData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.StockData.COLUMN_STATUS + " INTEGER, " +
                 "UNIQUE (" + PortfolioContract.StockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 

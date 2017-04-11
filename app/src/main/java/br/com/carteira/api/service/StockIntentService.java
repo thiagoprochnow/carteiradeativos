@@ -3,6 +3,8 @@ package br.com.carteira.api.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
@@ -12,6 +14,7 @@ import java.io.IOException;
 
 import br.com.carteira.api.domain.ResponseStock;
 import br.com.carteira.api.domain.ResponseStocks;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -27,6 +30,9 @@ public class StockIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
+
+    private boolean mSuccess = false;
+    private String mSymbol;
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
@@ -103,7 +109,7 @@ public class StockIntentService extends IntentService {
                     // Prepare query to update stock data
                     String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
                     String[] updatedSelectionArguments = {tableSymbol};
-
+                    mSymbol = tableSymbol;
                     // Update value on stock data
                     int updatedRows = this.getContentResolver().update(
                             PortfolioContract.StockData.URI,
@@ -112,6 +118,7 @@ public class StockIntentService extends IntentService {
                     if (updatedRows > 0) {
                         Log.d(LOG_TAG, "updateStockData successfully updated");
                         // Update Stock Portfolio
+                        mSuccess = true;
                     }
                 }
             }else{
@@ -154,5 +161,58 @@ public class StockIntentService extends IntentService {
         }
 
         return resultQuery;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Updates the StockData values
+        if(mSuccess == true){
+            String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {mSymbol};
+
+            Cursor queryCursor = this.getContentResolver().query(
+                    PortfolioContract.StockData.URI,
+                    null, selection, selectionArguments, null);
+
+            if (queryCursor.getCount() > 0){
+                queryCursor.moveToFirst();
+
+                // Prepare new values to update StockData table
+                int quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL));
+                double currentPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
+                double totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
+                double incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                double currentTotal = quantity*currentPrice;
+                double variation = currentTotal - totalBuy;
+                double totalGain = currentTotal + incomeTotal - totalBuy;
+
+                ContentValues stockDataCV = new ContentValues();
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
+
+                // Update value on stock data
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.StockData.URI,
+                        stockDataCV, selection, selectionArguments);
+
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "updateStockData successfully updated");
+                    // Send broadcast so StockReceiver can update the rest
+                    this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                } else {
+                    Log.d(LOG_TAG, "updateStockData failed update");
+                }
+
+            } else{
+                Log.d(LOG_TAG, "StockData was not found for symbol: " + mSymbol);
+            }
+
+        } else {
+            // Current Price was not updated
+            Log.d(LOG_TAG, "StockData values not updated");
+        }
     }
 }

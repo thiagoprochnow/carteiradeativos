@@ -3,6 +3,7 @@ package br.com.carteira.fragment;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 
@@ -496,9 +498,42 @@ public abstract class BaseFragment extends Fragment {
                 }
             } while (STQueryCursor.moveToNext());
 
+            ContentValues stockDataCV = new ContentValues();
+
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing StockData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.StockData.URI,
+                    null, selection, selectionArguments, null);
+
+            // Create new StockData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Adds data to the database
+                Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockData.URI,
+                        stockDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedStockDataUri != null) {
+                    Log.d(LOG_TAG, "Created stock data");
+                    // Update Stock Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating stock data");
+                    return false;
+                }
+            }
+
+            Intent mServiceIntent = new Intent(mContext, StockIntentService
+                    .class);
+            mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol + ".SA");
+            getActivity().startService(mServiceIntent);
+
             // Query Income table to get total of this stock income
             String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")"};
-            selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ?";
+            selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
 
             Cursor incomeQueryCursor = mContext.getContentResolver().query(
                     PortfolioContract.StockIncome.URI,
@@ -511,11 +546,8 @@ public abstract class BaseFragment extends Fragment {
                 receiveIncome = 0;
             }
 
-            ContentValues stockDataCV = new ContentValues();
-
-            stockDataCV.put(PortfolioContract.StockData.COLUMN_SYMBOL, symbol);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
-            stockDataCV.put(PortfolioContract.StockData.COLUMN_VALUE_TOTAL, valueTotal);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL, valueTotal);
             if (type == Constants.Type.BUY) {
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
             }
@@ -535,117 +567,34 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.StockData.URI,
                     null, selection, selectionArguments, null);
 
-            if (queryCursor.getCount() > 0){
-                queryCursor.moveToFirst();
+            queryCursor.moveToFirst();
 
-                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
-                // Update
-                // Prepare query to update stock data
-                String updateSelection = PortfolioContract.StockData._ID + " = ?";
-                String[] updatedSelectionArguments = {_id};
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData._ID)));
 
-                // Update value on stock data
-                int updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.StockData.URI,
-                        stockDataCV, updateSelection, updatedSelectionArguments);
-                // Log update success/fail result
-                if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateStockData successfully updated");
-                    // Update Stock Portfolio
-                    boolean updateStockPortfolio = updateStockPortfolio();
-                    if(updateStockPortfolio) {
-                        return true;
-                    }
-                } else {
-                    Log.d(LOG_TAG, "updateStockData failed update");
-                    return false;
-                }
+            // Update
+            // Prepare query to update stock data
+            String updateSelection = PortfolioContract.StockData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on stock data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.StockData.URI,
+                    stockDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateStockData successfully updated");
+                // Update Stock Portfolio
+                // Send broadcast so StockReceiver can update the rest
+                mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                return true;
             } else {
-                // Insert
-                // Adds data to the database
-                Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockData.URI,
-                        stockDataCV);
-
-                // If error occurs to add, shows error message
-                if (insertedStockDataUri != null) {
-                    Log.d(LOG_TAG, "Created stock data");
-                    // Update Stock Portfolio
-                    boolean updateStockPortfolio = updateStockPortfolio();
-                    if (updateStockPortfolio) {
-                        return true;
-                    }
-                } else {
-                    Log.d(LOG_TAG, "Error creating stock data");
-                }
+                Log.d(LOG_TAG, "updateStockData failed update");
+                return false;
             }
         } else{
             Log.d(LOG_TAG, "No StockTransaction found");
             return false;
         }
-        return false;
     }
 
-    // Reads all of Stock Data value and sets the calculation on StockPortfolio table
-    // Dosent need any data because it will not query for a specific stock, but for all of them.
-    public boolean updateStockPortfolio(){
-        // Return column should be the sum of value total, income total, value gain
-        String[] affectedColumn = {"sum("+ PortfolioContract.StockData.COLUMN_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.StockData.COLUMN_INCOME_TOTAL +"), " +
-                "sum("+PortfolioContract.StockData.COLUMN_VALUE_GAIN+")"};
-
-        // Check if the symbol exists in the db
-        Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
-                affectedColumn, null, null, null);
-        if(queryCursor.getCount() > 0) {
-            queryCursor.moveToFirst();
-            double valueTotal = queryCursor.getInt(0);
-            double incomeTotal = queryCursor.getInt(1);
-            double valueGain = queryCursor.getInt(2);
-
-            // Values to be inserted or updated on StockPortfolio table
-            ContentValues portfolioCV = new ContentValues();
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_TOTAL, valueTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VALUE_GAIN, valueGain);
-
-            // Query for the only stock portfolio, if dosent exist, creates one
-            Cursor portfolioQueryCursor = mContext.getContentResolver().query(
-                    PortfolioContract.StockPortfolio.URI,
-                    null, null, null, null);
-            // If exists, updates value, else create a new field and add values
-            if(portfolioQueryCursor.getCount() > 0){
-                portfolioQueryCursor.moveToFirst();
-                String _id = String.valueOf(portfolioQueryCursor.getInt(portfolioQueryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
-                // Prepare query to update stock data
-                String updateSelection = PortfolioContract.StockData._ID + " = ?";
-                String[] updatedSelectionArguments = {_id};
-                // Update value on stock data
-                int updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.StockPortfolio.URI,
-                        portfolioCV, updateSelection, updatedSelectionArguments);
-
-                if (updatedRows > 0 ){
-                    return true;
-                }
-            } else {
-                // Creates table and add values
-                Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
-                        portfolioCV);
-                if(insertedStockDataUri != null){
-                    return true;
-                }
-            }
-            return false;
-        } else{
-            return false;
-        }
-    }
-
-    // Reads all of Investment Portfolios value and sets the calculation on Portfolio table
-    // Dosent need any data because it will not query for a specific investment, but for all of them.
-    public boolean updatePortfolio(){
-        // TODO: Develop function to read all Stock, FII, Fixed Income, etc table to get total value of portfolio
-        return true;
-    }
 }

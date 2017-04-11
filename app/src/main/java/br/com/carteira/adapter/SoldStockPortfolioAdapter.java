@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
-import br.com.carteira.fragment.BaseFormFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -49,19 +48,19 @@ public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPor
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
         holder.currentTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_CURRENT_TOTAL))));
         holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
         holder.stockAppreciation.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
         holder.currentPercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
         holder.totalIncome.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_INCOME_TOTAL))));
         holder.totalGain.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_VALUE_TOTAL))));
+                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
     }
 
     @Override

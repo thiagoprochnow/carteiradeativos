@@ -169,10 +169,8 @@ public class JCPDividendFormFragment extends BaseFormFragment {
                     PortfolioContract.StockData.URI,
                     updateCV, selection, selectionArguments);
             if (updateQueryCursor == 1){
-                boolean updateStockPortfolio = updateStockPortfolio();
-                if (updateStockPortfolio) {
-                    return true;
-                }
+                mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                return true;
             }
         }
         return false;
