@@ -196,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="12,43%"
+                android:text="0,0%"
                 android:ellipsize="end"
                 android:maxLines="1"/>
             <TextView
@@ -204,7 +204,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="1,32%"
+                android:text="0,0%"
                 android:ellipsize="end"
                 android:maxLines="1"/>
             <TextView
@@ -212,7 +212,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="13,75%"
+                android:text="0,0%"
                 android:ellipsize="end"
                 android:maxLines="1"/>
         </LinearLayout>

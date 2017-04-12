@@ -79,6 +79,7 @@ public class PortfolioContract {
         public static final String COLUMN_TOTAL_GAIN = "value_gain";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
 
         public static final String[] STOCK_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -87,7 +88,8 @@ public class PortfolioContract {
                 COLUMN_INCOME_TOTAL,
                 COLUMN_TOTAL_GAIN,
                 COLUMN_OBJECTIVE_PERCENT,
-                COLUMN_PORTFOLIO_PERCENT
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL
         };
 
         public static Uri makeUriForStockPortfolio(String symbol) {
@@ -114,8 +116,11 @@ public class PortfolioContract {
         public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
         public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_VARIATION = "variation_gain";
-        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_INCOME_TOTAL_PERCENT = "income_total_percent";
+        public static final String COLUMN_VARIATION = "variation";
+        public static final String COLUMN_VARIATION_PERCENT = "variation_percent";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_TOTAL_GAIN_PERCENT = "total_gain_percent";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
@@ -129,8 +134,11 @@ public class PortfolioContract {
                 COLUMN_QUANTITY_TOTAL,
                 COLUMN_BUY_VALUE_TOTAL,
                 COLUMN_INCOME_TOTAL,
+                COLUMN_INCOME_TOTAL_PERCENT,
                 COLUMN_VARIATION,
+                COLUMN_VARIATION_PERCENT,
                 COLUMN_TOTAL_GAIN,
+                COLUMN_TOTAL_GAIN_PERCENT,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_CURRENT_PERCENT,
                 COLUMN_MEDIUM_PRICE,

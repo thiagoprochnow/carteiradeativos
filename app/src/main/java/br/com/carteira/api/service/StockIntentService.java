@@ -167,7 +167,6 @@ public class StockIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         // Updates the StockData values
-        if(mSuccess == true){
             String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
             String[] selectionArguments = {mSymbol};
 
@@ -186,11 +185,17 @@ public class StockIntentService extends IntentService {
                 double currentTotal = quantity*currentPrice;
                 double variation = currentTotal - totalBuy;
                 double totalGain = currentTotal + incomeTotal - totalBuy;
+                double incomeTotalPercent = incomeTotal/totalBuy*100;
+                double variationPercent= variation/totalBuy*100;
+                double totalGainPercent = totalGain/totalBuy*100;
 
                 ContentValues stockDataCV = new ContentValues();
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT, incomeTotalPercent);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT, variationPercent);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT, totalGainPercent);
 
                 // Update value on stock data
                 int updatedRows = this.getContentResolver().update(
@@ -209,10 +214,5 @@ public class StockIntentService extends IntentService {
             } else{
                 Log.d(LOG_TAG, "StockData was not found for symbol: " + mSymbol);
             }
-
-        } else {
-            // Current Price was not updated
-            Log.d(LOG_TAG, "StockData values not updated");
-        }
     }
 }

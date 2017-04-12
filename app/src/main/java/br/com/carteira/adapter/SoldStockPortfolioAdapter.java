@@ -41,6 +41,11 @@ public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPor
     @Override
     public void onBindViewHolder(StockPortfolioViewHolder holder, int position) {
         mCursor.moveToPosition(position);
+        double stockAppreciation = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_VARIATION));
+        double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+        double totalGain = stockAppreciation+totalIncome;
         // Get handled values of StockTransaction with current symbol
         holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .StockTransaction.
@@ -53,14 +58,17 @@ public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPor
                 (PortfolioContract.StockData.COLUMN_CURRENT_TOTAL))));
         holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
-        holder.stockAppreciation.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
-        holder.currentPercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
-        holder.totalIncome.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_INCOME_TOTAL))));
-        holder.totalGain.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
+        holder.stockAppreciation.setText("R$"+String.format("%.2f",stockAppreciation));
+        holder.currentPercent.setText(String.format("%.2f",mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT))) + "%");
+        holder.totalIncome.setText("R$"+String.format("%.2f",totalIncome));
+        holder.totalGain.setText("R$"+String.format("%.2f",totalGain));
+        holder.stockAppreciationPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
+        holder.totalIncomePercent.setText("("+ String.format("%.2f",mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT))) + "%)");
+        holder.totalGainPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
     }
 
     @Override
@@ -107,6 +115,15 @@ public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPor
 
         @BindView(R.id.totalGain)
         TextView totalGain;
+
+        @BindView(R.id.stockAppreciationPercent)
+        TextView stockAppreciationPercent;
+
+        @BindView(R.id.totalIncomePercent)
+        TextView totalIncomePercent;
+
+        @BindView(R.id.totalGainPercent)
+        TextView totalGainPercent;
 
 
         StockPortfolioViewHolder(View itemView) {

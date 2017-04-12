@@ -11,8 +11,8 @@
     <dimen name="stock_percentage_text_size">35dp</dimen>
     <dimen name="stock_value_percentage_width">50dp</dimen>
     <dimen name="stock_values_margin">20dp</dimen>
-    <dimen name="stock_values_width">90dp</dimen>
-    <dimen name="stock_symbol_info_size">130dp</dimen>
+    <dimen name="stock_values_width">70dp</dimen>
+    <dimen name="stock_symbol_info_size">110dp</dimen>
 
     <!-- Fii Adapter -->
     <dimen name="fii_quantity">21dp</dimen>

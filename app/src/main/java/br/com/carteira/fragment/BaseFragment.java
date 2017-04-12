@@ -60,7 +60,7 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForStockIncome(symbol), null, null);
         Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
         if (deletedData > 0) {
-
+            mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;

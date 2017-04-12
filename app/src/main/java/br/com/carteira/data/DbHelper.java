@@ -43,6 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_stock_data = "CREATE TABLE " + PortfolioContract.StockData.TABLE_NAME + " (" +
@@ -51,8 +52,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
                 PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.StockData.COLUMN_INCOME_TOTAL + " REAL, " +
+                PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_VARIATION + " REAL, " +
+                PortfolioContract.StockData.COLUMN_VARIATION_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_CURRENT_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_MEDIUM_PRICE + " REAL, " +

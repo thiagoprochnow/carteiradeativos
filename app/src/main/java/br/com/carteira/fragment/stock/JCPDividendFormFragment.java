@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFormFragment;
@@ -169,7 +170,10 @@ public class JCPDividendFormFragment extends BaseFormFragment {
                     PortfolioContract.StockData.URI,
                     updateCV, selection, selectionArguments);
             if (updateQueryCursor == 1){
-                mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                Intent mServiceIntent = new Intent(mContext, StockIntentService
+                        .class);
+                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol + ".SA");
+                getActivity().startService(mServiceIntent);
                 return true;
             }
         }
