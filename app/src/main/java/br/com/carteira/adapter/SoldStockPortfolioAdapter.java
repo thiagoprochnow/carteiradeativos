@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
@@ -46,23 +49,25 @@ public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPor
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
         double totalGain = stockAppreciation+totalIncome;
+        Locale locale = new Locale( "pt", "BR" );
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         // Get handled values of StockTransaction with current symbol
         holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .StockTransaction.
                 COLUMN_SYMBOL)));
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
-        holder.boughtTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL))));
-        holder.currentTotal.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_CURRENT_TOTAL))));
-        holder.objectivePercent.setText(Double.toString(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))));
-        holder.stockAppreciation.setText("R$"+String.format("%.2f",stockAppreciation));
+        holder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)))));
+        holder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
+        holder.objectivePercent.setText(String.format("%.2f",mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))) + "%");
+        holder.stockAppreciation.setText(String.format(formatter.format(stockAppreciation)));
         holder.currentPercent.setText(String.format("%.2f",mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT))) + "%");
-        holder.totalIncome.setText("R$"+String.format("%.2f",totalIncome));
-        holder.totalGain.setText("R$"+String.format("%.2f",totalGain));
+        holder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+        holder.totalGain.setText(String.format(formatter.format(totalGain)));
         holder.stockAppreciationPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
         holder.totalIncomePercent.setText("("+ String.format("%.2f",mCursor.getDouble(

@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -54,8 +57,10 @@ public class StockDetailAdapter extends RecyclerView.Adapter<StockDetailAdapter.
         double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
         // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
         if (price > 0) {
-            String totalValue = "R$" + String.format("%.2f", price * quantity);
-            String priceText = "R$" + String.format("%.2f", price);
+            Locale locale = new Locale( "pt", "BR" );
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+            String totalValue = formatter.format(price * quantity);
+            String priceText = formatter.format(price);
             holder.price.setText(priceText);
             holder.totalValue.setText(totalValue);
         }

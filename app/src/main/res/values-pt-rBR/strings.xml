@@ -67,6 +67,7 @@
     <string name="incomes">Rendimentos</string>
     <string name="operations">Operações</string>
     <string name="operation">Operação</string>
+    <string name="stock_quantity_label">Quantidade: </string>
 
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividendo</string>

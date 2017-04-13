@@ -8,4 +8,6 @@
     <color name="fab_background">#67a6ed</color>
     <color name="stocks_summary">#e4effc</color>
     <color name="activity_main_background">#E9E9E9</color>
+    <color name="darkGray">#8a8b8b</color>
+    <color name="lightGray">#e4e6e6</color>
 </resources>
