@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -47,15 +50,17 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
         mCursor.moveToPosition(position);
         // TODO: Below values are stored in DB as REALs.
         // We'll need to format them to currency number format.
+        Locale locale = new Locale( "pt", "BR" );
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
         String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
         String date = TimestampToDate(timestamp);
         Log.d(LOG_TAG, "IncomeType: " + incomeType);
-        Log.d(LOG_TAG, "IncomeValue: " + "R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+        Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
         Log.d(LOG_TAG, "Date: " + date);
         holder.incomeType.setText(incomeType);
-        holder.incomeValue.setText("R$"+String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
+        holder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
         holder.incomeDate.setText(date);
     }
