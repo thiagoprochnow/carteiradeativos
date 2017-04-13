@@ -8,8 +8,13 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.AddStockFormFragment;
-import br.com.carteira.fragment.DividendFormFragment;
+import br.com.carteira.fragment.stock.BonificationFormFragment;
+import br.com.carteira.fragment.stock.BuyStockFormFragment;
+import br.com.carteira.fragment.stock.EditStockFormFragment;
+import br.com.carteira.fragment.stock.GroupingFormFragment;
+import br.com.carteira.fragment.stock.JCPDividendFormFragment;
+import br.com.carteira.fragment.stock.SellStockFormFragment;
+import br.com.carteira.fragment.stock.SplitFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.
@@ -30,17 +35,46 @@ public class FormActivity extends AppCompatActivity {
 
             int productType = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
                     Constants.ProductType.INVALID);
-            switch (productType) {
-                case Constants.ProductType.STOCK:
-                    replaceFragment(new AddStockFormFragment());
-                    break;
-                case Constants.ProductType.FII:
-                    // TODO: replaceFragment(new AddFiiFormFragment());
-                    break;
-                default:
-                    Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
-                    finish();
-                    break;
+            int productStatus = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_STATUS,
+                    Constants.Type.INVALID);
+            if(productStatus == Constants.Type.BUY) {
+                switch (productType) {
+                    case Constants.ProductType.STOCK:
+                        replaceFragment(new BuyStockFormFragment());
+                        break;
+                    case Constants.ProductType.FII:
+                        // TODO: replaceFragment(new BuyFiiFormFragment());
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+                        finish();
+                        break;
+                }
+            } else if(productStatus == Constants.Type.SELL) {
+                switch (productType) {
+                    case Constants.ProductType.STOCK:
+                        replaceFragment(new SellStockFormFragment());
+                        break;
+                    case Constants.ProductType.FII:
+                        // TODO: replaceFragment(new SellFiiFormFragment());
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+                        finish();
+                        break;
+                }
+            } else if (productStatus == Constants.Type.EDIT){
+                switch (productType) {
+                    case Constants.ProductType.STOCK:
+                        replaceFragment(new EditStockFormFragment());
+                        break;
+                    case Constants.ProductType.FII:
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+                        finish();
+                        break;
+                }
             }
         }
 
@@ -51,7 +85,24 @@ public class FormActivity extends AppCompatActivity {
                     Constants.IncomeType.INVALID);
             switch (incomeType) {
                 case Constants.IncomeType.DIVIDEND:
-                    replaceFragment(new DividendFormFragment());
+                    Log.d(LOG_TAG, "Dividend Form Fragment");
+                    replaceFragment(new JCPDividendFormFragment());
+                    break;
+                case Constants.IncomeType.JCP:
+                    Log.d(LOG_TAG, "JCP Form Fragment");
+                    replaceFragment(new JCPDividendFormFragment());
+                    break;
+                case Constants.IncomeType.BONIFICATION:
+                    Log.d(LOG_TAG, "Bonification Form Fragment");
+                    replaceFragment(new BonificationFormFragment());
+                    break;
+                case Constants.IncomeType.SPLIT:
+                    Log.d(LOG_TAG, "Split Form Fragment");
+                    replaceFragment(new SplitFormFragment());
+                    break;
+                case Constants.IncomeType.GROUPING:
+                    Log.d(LOG_TAG, "Grouping Form Fragment");
+                    replaceFragment(new GroupingFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

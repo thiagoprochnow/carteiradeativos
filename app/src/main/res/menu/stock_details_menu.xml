@@ -8,4 +8,20 @@
         android:id="@+id/menu_item_jcp"
         android:title="@string/menu_item_jcp"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_bonification"
+        android:title="@string/menu_item_bonification"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_split"
+        android:title="@string/menu_item_split"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_grouping"
+        android:title="@string/menu_item_grouping"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_sync"
+        android:title="Sync API"
+        app:showAsAction="never"/>
 </menu>

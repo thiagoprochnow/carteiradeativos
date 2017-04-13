@@ -27,14 +27,6 @@
             android:authorities="br.com.carteira"
             android:exported="false" />
 
-        <service
-            android:name=".api.service.StockTaskService"
-            android:exported="true"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
         <service android:name=".api.service.StockIntentService" />
 
         <activity
@@ -45,12 +37,27 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.DetailsActivity"
+            android:name=".activity.ProductDetailsActivity"
             android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
+        <activity
+            android:name=".activity.IncomeDetailsActivity"
+            android:parentActivityName=".activity.ProductDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.ProductDetailsActivity" />
+        </activity>
+        <receiver
+            android:name=".receiver.StockReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_STOCK_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

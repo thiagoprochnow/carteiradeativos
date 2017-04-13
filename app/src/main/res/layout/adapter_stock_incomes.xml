@@ -42,7 +42,7 @@
                 android:id="@+id/incomeDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="02/01/2016"
+                android:text="dd/MM/yyyy"
                 android:textSize="@dimen/stock_income_date"
                 android:ellipsize="end"
                 android:maxLines="1" />

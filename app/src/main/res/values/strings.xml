@@ -1,17 +1,30 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Form Activity -->
+    <string name="objective_update_success">Objective updated successfuly</string>
+    <string name="objective_update_fail">Objective update failed</string>
+
     <!-- Form Fragment -->
     <string name="quantity">Quantity</string>
     <string name="buy_price">Buy Price</string>
+    <string name="sell_price">Sell Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="buy_date">Buy Date</string>
-    <string name="receive_date">Receive Date</string>
+    <string name="bonification_date">Bonification Date</string>
+    <string name="split_date">Stock Split Date</string>
+    <string name="split_grouping_numerator">1</string>
+    <string name="split_grouping_to">to</string>
+    <string name="grouping_date">Stock Grouping Date</string>
+    <string name="sell_date">Sell Date</string>
+    <string name="ex_date">Ex Dividend Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
-    <string name="wrong_buy_price">Price should be a number</string>
+    <string name="wrong_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
+    <string name="wrong_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_date">Invalid date</string>
+    <string name="future_date">Date cannot be in the future</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="menu_done">Done</string>
@@ -19,23 +32,64 @@
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividends</string>
     <string name="menu_item_jcp">Interest on Capital</string>
+    <string name="menu_item_bonification">Bonification</string>
+    <string name="menu_item_split">Split</string>
+    <string name="menu_item_grouping">Grouping</string>
 
     <!-- Stock Main Fragment -->
-    <string name="add_stock_success">Stock added successfully</string>
-    <string name="add_stock_fail">Error adding stock</string>
+    <string name="buy_stock_success">Stock added successfully</string>
+    <string name="buy_stock_fail">Error adding stock</string>
+    <string name="bonification_success">Bonification added successfully</string>
+    <string name="bonification_fail">Error adding bonification</string>
+    <string name="split_success">Stock split successfully</string>
+    <string name="split_fail">Stock split failed</string>
+    <string name="grouping_success">Stock grouping successfully</string>
+    <string name="grouping_fail">Stock grouping failed</string>
+    <string name="sell_stock_success">Stock sold successfully</string>
+    <string name="sell_stock_fail">Error selling stock</string>
     <string name="delete_stock_title">Delete stock from your portfolio?</string>
     <string name="delete_stock_dialog">If you sold the stock, select "Sell" from the option menu. Deleting the stock will remove all its data, including all income received.</string>
-    <string name="delete_stock_confirm">Delete</string>
-    <string name="delete_stock_cancel">Cancel</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_cancel">Cancel</string>
+    <string name="menu_buy">Buy</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_edit_objective">Edit Objective</string>
+    <string name="menu_sell">Sell</string>
+    <string name="menu_delete">Delete</string>
+
+    <!-- Stock Tab Adapter -->
+    <string name="stocks_portfolio">Portfolio</string>
+    <string name="stocks_history">History</string>
 
     <!-- Stock Adapter -->
-    <string name="currentPercentLabel">Percent:</string>
-    <string name="targetPercentLabel">Target:</string>
+    <string name="current_percent_label">Percent:</string>
+    <string name="target_percent_label">Target:</string>
+    <string name="incomes">Incomes</string>
+    <string name="operations">Operations</string>
+    <string name="operation">Operation</string>
+    <string name="stock_quantity_label">Quantity: </string>
+
+    <!-- Stock Income Adapter -->
+    <string name="dividend_income_type">Dividend</string>
+    <string name="jcp_income_type">Interest on Capital</string>
+
+    <!-- Stock Detail Adapter -->
+    <string name="stock_buy">Buy</string>
+    <string name="stock_sell">Sell</string>
+    <string name="stock_bonification">Bonification</string>
+    <string name="stock_split">Split</string>
+    <string name="stock_grouping">Grouping</string>
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Incomes</string>
+    <string name="delete_stock_income_title">Delete stock income from your portfolio?</string>
+    <string name="delete_stock_income_dialog">Are you sure you want to delete this income from your portfolio?</string>
 
-    <!-- Add Stock Form Fragment -->
+    <!-- Stock Details Fragment -->
+    <string name="delete_stock_detail_title">Delete stock operation from your portfolio?</string>
+    <string name="delete_stock_detail_dialog">Are you sure you want to delete this operation from your portfolio?</string>
+
+    <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Buy Stock</string>
     <string name="buy_stock_button">Buy</string>
     <string name="cancel_stock_button">Cancel</string>
@@ -46,6 +100,8 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
+    <string name="add_jcp_success">Interest on capital added successfully</string>
+    <string name="add_jcp_fail">Error adding interest on capital</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Real Estate Fund added successfully</string>
@@ -59,7 +115,6 @@
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
     <!-- Item Navigational Drawer -->
-    <string name="title_expenses_control">Expenses Control</string>
     <string name="title_complete_portfolio">Complete Portfolio</string>
     <string name="title_fixed_income">Fixed Income</string>
     <string name="title_fii">Real State Fund</string>

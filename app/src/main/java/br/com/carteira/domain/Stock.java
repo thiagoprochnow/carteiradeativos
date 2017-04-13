@@ -39,7 +39,7 @@ public class Stock {
     // (Ex: R$35,50/Stock)
     private double mCurrentPrice;
 
-    // (Atual) Total money value of the user stock portfolio. If user has 100 stocks of PETR4 at
+    // (Atual) Total money value of the user stock. If user has 100 stocks of PETR4 at
     // currentPrice of R$35,50,
     // he has a currentTotal of R$3550,00.
     private double mCurrentTotal;
@@ -50,7 +50,7 @@ public class Stock {
     private double mStockAppreciation;
 
     // (Set by system according to current stock price) The percentual value owned by the user of
-    // that stock compared to his whole stock portfolio
+    // that stock compared to his whole stock
     // If the user has a total of R$10.000 in stocks, and R$2000,00 of PETR4, on PETR4 card view
     // will show this as 20% (R$2000/R$10000)
     // Note that this values changes in time depending on the currentPrice of the stock.

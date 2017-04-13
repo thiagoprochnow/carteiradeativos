@@ -1,4 +1,4 @@
-package br.com.carteira.fragment;
+package br.com.carteira.fragment.fixedincome;
 
 
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import br.com.carteira.R;
 import br.com.carteira.api.service.StockIntentService;
+import br.com.carteira.fragment.BaseFragment;
 
 
 public class FixedIncomeMainFragment extends BaseFragment {

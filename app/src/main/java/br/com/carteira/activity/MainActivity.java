@@ -16,17 +16,16 @@ import android.widget.ImageView;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.CurrencyMainFragment;
-import br.com.carteira.fragment.ExpensesControlMainFragment;
-import br.com.carteira.fragment.FiiMainFragment;
-import br.com.carteira.fragment.FixedIncomeMainFragment;
+import br.com.carteira.fragment.currency.CurrencyMainFragment;
+import br.com.carteira.fragment.fii.FiiMainFragment;
+import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
-import br.com.carteira.fragment.StockMainFragment;
-import br.com.carteira.listener.AddProductListener;
-import br.com.carteira.listener.DetailsProductListener;
+import br.com.carteira.fragment.stock.StockMainFragment;
+import br.com.carteira.fragment.stock.StockTabFragment;
+import br.com.carteira.listener.ProductListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements AddProductListener, DetailsProductListener {
+public class MainActivity extends AppCompatActivity implements ProductListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -42,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "Loaded ExpensesControlMainFragment onCreate");
-            replaceFragment(new ExpensesControlMainFragment());
+            Log.d(LOG_TAG, "Loaded PortfolioMainFragment onCreate");
+            replaceFragment(new PortfolioMainFragment());
         }
     }
 
@@ -95,10 +94,6 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     // Will treat the selected item and attach the correct fragment.
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.nav_item_expenses_control:
-                Log.d(LOG_TAG, "Loaded Expenses Control from menu");
-                replaceFragment(new ExpensesControlMainFragment());
-                break;
             case R.id.nav_item_complete_portfolio:
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
@@ -109,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
                 break;
             case R.id.nav_item_stocks:
                 Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
-                replaceFragment(new StockMainFragment());
+                replaceFragment(new StockTabFragment());
                 break;
             case R.id.nav_item_fii:
                 Log.d(LOG_TAG, "Loaded FII Fragment from menu");
@@ -168,31 +163,68 @@ public class MainActivity extends AppCompatActivity implements AddProductListene
     }
 
     @Override
-    public void onAddProduct(int productType) {
+    public void onBuyProduct(int productType, String symbol) {
         Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "(onAddProduct) Could not launch the FormActivity.");
+                Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
                 break;
         }
     }
 
     @Override
-    public void onDetailsProduct(int productType, String itemId){
-        Intent intent = new Intent(this, DetailsActivity.class);
+    public void onSellProduct(int productType, String symbol) {
+        Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
             case Constants.ProductType.STOCK:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "(onSellProduct) Could not launch the FormActivity.");
+                break;
+        }
+    }
+
+    @Override
+    public void onProductDetails(int productType, String itemId){
+        Intent intent = new Intent(this, ProductDetailsActivity.class);
+        switch (productType) {
+            case Constants.ProductType.STOCK:
+                // Sends symbol of clicked stock to details acitivity
                 Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the DetailsActivity.");
+                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
+                break;
+        }
+    }
+
+    @Override
+    public void onEditProduct(int productType, String symbol){
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (productType) {
+            case Constants.ProductType.STOCK:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "(onEditProduct) Could not launch the FormActivity.");
                 break;
         }
     }
