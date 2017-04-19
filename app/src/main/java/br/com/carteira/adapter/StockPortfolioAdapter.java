@@ -3,6 +3,7 @@ package br.com.carteira.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,13 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAdapter.StockPortfolioViewHolder> {
+public class StockPortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String LOG_TAG = StockPortfolioAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
@@ -36,44 +38,67 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
     }
 
     @Override
-    public StockPortfolioViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
-        return new StockPortfolioViewHolder(item);
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
-    public void onBindViewHolder(StockPortfolioViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
-        double stockAppreciation = mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_VARIATION));
-        double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
-        double totalGain = stockAppreciation+totalIncome;
-        Locale locale = new Locale( "pt", "BR" );
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-        // Get handled values of StockTransaction with current symbol
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                .StockTransaction.
-                COLUMN_SYMBOL)));
-        holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
-                (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
-        holder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)))));
-        holder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
-        holder.objectivePercent.setText(String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))) + "%");
-        holder.stockAppreciation.setText(String.format(formatter.format(stockAppreciation)));
-        holder.currentPercent.setText(String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT))) + "%");
-        holder.totalIncome.setText(String.format(formatter.format(totalIncome)));
-        holder.totalGain.setText(String.format(formatter.format(totalGain)));
-        holder.stockAppreciationPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
-        holder.totalIncomePercent.setText("("+ String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT))) + "%)");
-        holder.totalGainPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View item;
+        switch (viewType){
+            // If it is the first view, return viewholder for StockPortfolio overview
+            case 0:
+                item = LayoutInflater.from(mContext).inflate(R.layout.stock_summary, parent, false);
+                return new StockPortfolioViewHolder(item);
+            default:
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
+                return new StockDataViewHolder(item);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case 0:
+                // If it is the first view, return viewholder for StockPortfolio overview
+                break;
+            default:
+                // If it is one of the StockData adapter views
+                mCursor.moveToPosition(position-1);
+                StockDataViewHolder viewHolder = (StockDataViewHolder) holder;
+                double stockAppreciation = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockData.COLUMN_VARIATION));
+                double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                double totalGain = stockAppreciation + totalIncome;
+                Locale locale = new Locale("pt", "BR");
+                NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+                // Get handled values of StockData with current symbol
+                viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+                        .StockTransaction.
+                        COLUMN_SYMBOL)));
+                viewHolder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
+                        (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
+                viewHolder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)))));
+                viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
+                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))) + "%");
+
+                viewHolder.stockAppreciation.setText(String.format(formatter.format(stockAppreciation)));
+                viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT)))
+                        + "%");
+                viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+                viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
+                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT))) + "%)");
+                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
+        }
 
     }
 
@@ -82,6 +107,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
         int count = 0;
         if (mCursor != null) {
             count = mCursor.getCount();
+            count++;
         }
         return count;
     }
@@ -93,7 +119,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
                                         ContextMenu.ContextMenuInfo menuInfo, String symbol);
     }
 
-    class StockPortfolioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    class StockDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
         @BindView(R.id.symbol)
         TextView symbol;
@@ -131,7 +157,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;
 
-        StockPortfolioViewHolder(View itemView) {
+        public StockDataViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -141,7 +167,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
+            mCursor.moveToPosition(adapterPosition-1);
             int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
             mClickHandler.onClick(mCursor.getString(symbolColumn));
         }
@@ -149,9 +175,23 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<StockPortfolioAd
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
+            mCursor.moveToPosition(adapterPosition-1);
             int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(symbolColumn));
         }
+    }
+
+    class StockPortfolioViewHolder extends RecyclerView.ViewHolder{
+
+        public StockPortfolioViewHolder(View itemView){
+            super(itemView);
+        }
+    }
+
+    // Returns StockPortfolio cursor values
+    public Cursor getStockPortfolioCursor(){
+        return mContext.getContentResolver().query(
+                PortfolioContract.StockPortfolio.URI,
+                null, null, null, null);
     }
 }

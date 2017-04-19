@@ -68,6 +68,18 @@
     <string name="operations">Operações</string>
     <string name="operation">Operação</string>
     <string name="stock_quantity_label">Quantidade: </string>
+    <string name="data_bought_label"><u>C</u></string>
+    <string name="data_current_label"><u>A</u></string>
+    <string name="data_appreciation_label"><u>V</u></string>
+    <string name="data_income_label"><u>R</u></string>
+    <string name="data_total_gain_label"><u>G</u></string>
+
+    <!-- Stock Portfolio -->
+    <string name="portfolio_bought_label"><u>C</u>ompra</string>
+    <string name="portfolio_current_label"><u>A</u>tual</string>
+    <string name="portfolio_appreciation_label"><u>V</u>alorização</string>
+    <string name="portfolio_income_label"><u>R</u>endimentos</string>
+    <string name="portfolio_total_gain_label"><u>G</u>anho</string>
 
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividendo</string>

@@ -6,16 +6,19 @@
     android:id="@+id/stock_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="0dp"
-    app:cardCornerRadius="0dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="3dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="false"
-    app:cardBackgroundColor="@android:color/transparent"
-    card_view:cardCornerRadius="0dp"
-    card_view:cardBackgroundColor="@android:color/transparent"
-    card_view:cardElevation="0dp"
-    android:foreground="?attr/selectableItemBackground"
-    android:textSize="@dimen/stock_text">
+    app:cardBackgroundColor="@android:color/white"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardBackgroundColor="@android:color/white"
+    card_view:cardElevation="2dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +32,7 @@
             android:paddingTop="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingBottom="0dp">
+            android:paddingBottom="3dp">
             <TextView
                 android:id="@+id/symbol"
                 android:layout_width="wrap_content"
@@ -59,15 +62,15 @@
                     android:maxLines="1" />
                 </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:padding="5dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="0dp">
+            android:paddingTop="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp">
 
             <LinearLayout
                 android:layout_width="@dimen/stock_symbol_info_size"
@@ -125,36 +128,35 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="C" />
+                    android:text="@string/data_bought_label" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="A" />
+                    android:text="@string/data_current_label" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="V" />
+                    android:text="@string/data_appreciation_label" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="R" />
+                    android:text="@string/data_income_label" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="G" />
+                    android:text="@string/data_total_gain_label" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="@dimen/stock_values_width"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="@dimen/stock_values_margin"
-                android:layout_weight="1">
+                android:layout_marginLeft="@dimen/stock_values_margin">
                 <TextView
                     android:id="@+id/boughtTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="R$2345,62"
+                    android:text="R$1.000.345,62"
                     android:textSize="@dimen/stock_price"
                     android:ellipsize="end"
                     android:maxLines="1"/>
@@ -196,29 +198,30 @@
                     android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="@dimen/stock_value_percentage_width"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginLeft="@dimen/stock_percentage_text_margin"
-                android:layout_weight="1">
+                android:layout_marginLeft="@dimen/stock_percentage_text_margin">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:ellipsize="end"
                     android:maxLines="1"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:ellipsize="end"
                     android:maxLines="1"/>
+
                 <TextView
                     android:id="@+id/stockAppreciationPercent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="0,0%"
+                    android:text="(1580,53%)"
                     android:ellipsize="end"
                     android:maxLines="1"/>
                 <TextView
@@ -239,10 +242,5 @@
                     android:maxLines="1"/>
             </LinearLayout>
         </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="@dimen/letters_text_margin"
-            android:background="@color/darkGray" />
     </LinearLayout>
 </android.support.v7.widget.CardView>
