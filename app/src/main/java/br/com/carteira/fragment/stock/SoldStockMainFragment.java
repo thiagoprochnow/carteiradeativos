@@ -22,8 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.SoldStockPortfolioAdapter;
-import br.com.carteira.adapter.StockPortfolioAdapter;
+import br.com.carteira.adapter.SoldStockDataAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
 public class SoldStockMainFragment extends BaseFragment implements
-        SoldStockPortfolioAdapter.StockAdapterOnClickHandler, LoaderManager
+        SoldStockDataAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
     private static final String LOG_TAG = SoldStockMainFragment.class.getSimpleName();
@@ -46,13 +45,10 @@ public class SoldStockMainFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private SoldStockPortfolioAdapter mStockPortfolioAdapter;
+    private SoldStockDataAdapter mStockPortfolioAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
-
-    // Loader IDs
-    private static final int STOCK_SOLD_LOADER = 1;
 
     // TODO: Precisamos ver uma maneira de otimizar o onAttach. Não vamos colocar em todos XMainFragment
     // Tem que ter um jeito de ficar apenas no BaseFragment
@@ -76,7 +72,7 @@ public class SoldStockMainFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stocks_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_stock_data, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -92,10 +88,10 @@ public class SoldStockMainFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
             }
         });
-        mStockPortfolioAdapter = new SoldStockPortfolioAdapter(mContext, this);
+        mStockPortfolioAdapter = new SoldStockDataAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockPortfolioAdapter);
         registerForContextMenu(mRecyclerView);
-        getActivity().getSupportLoaderManager().initLoader(STOCK_SOLD_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_STOCK_DATA, null, this);
         // Inflate the layout for this fragment
         return view;
     }
@@ -160,7 +156,7 @@ public class SoldStockMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockPortfolioAdapter.
+        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockDataAdapter.
         String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
         String[] selectionArgs = {String.valueOf(Constants.Status.SOLD)};
         // STOCK_SOLD_LOADER for sold stocks tab

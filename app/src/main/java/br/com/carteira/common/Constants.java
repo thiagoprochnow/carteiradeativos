@@ -59,4 +59,14 @@ public final class Constants {
     public static class Receiver{
         public static final String STOCK = "UPDATE_STOCK_PORTFOLIO";
     }
+
+    // Constants for Loaders IDs
+    public static class Loaders{
+        public static final int INVALID = -1;
+        public static final int STOCK_DATA = 0;
+        public static final int SOLD_STOCK_DATA = 1;
+        public static final int STOCK_INCOME = 2;
+        public static final int STOCK_OVERVIEW = 3;
+        public static final int STOCK_DETAILS = 4;
+    }
 }

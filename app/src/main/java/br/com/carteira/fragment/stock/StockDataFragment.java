@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.LoginFilter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -23,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.StockPortfolioAdapter;
+import br.com.carteira.adapter.StockDataAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -34,11 +33,11 @@ import butterknife.ButterKnife;
 /**
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
-public class StockMainFragment extends BaseFragment implements
-        StockPortfolioAdapter.StockAdapterOnClickHandler, LoaderManager
+public class StockDataFragment extends BaseFragment implements
+        StockDataAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = StockMainFragment.class.getSimpleName();
+    private static final String LOG_TAG = StockDataFragment.class.getSimpleName();
 
     @BindView(R.id.stockRecyclerView)
     protected RecyclerView mRecyclerView;
@@ -46,13 +45,10 @@ public class StockMainFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private StockPortfolioAdapter mStockPortfolioAdapter;
+    private StockDataAdapter mStockDataAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
-
-    // Loader IDs
-    private static final int STOCK_LOADER = 0;
 
     // TODO: Precisamos ver uma maneira de otimizar o onAttach. Não vamos colocar em todos XMainFragment
     // Tem que ter um jeito de ficar apenas no BaseFragment
@@ -76,7 +72,7 @@ public class StockMainFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stocks_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_stock_data, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -92,10 +88,10 @@ public class StockMainFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
             }
         });
-        mStockPortfolioAdapter = new StockPortfolioAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockPortfolioAdapter);
+        mStockDataAdapter = new StockDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockDataAdapter);
         registerForContextMenu(mRecyclerView);
-        getActivity().getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DATA, null, this);
         // Inflate the layout for this fragment
         return view;
     }
@@ -160,7 +156,7 @@ public class StockMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockPortfolioAdapter.
+        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockDataAdapter.
         String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
         String[] selectionArgs = {String.valueOf(Constants.Status.ACTIVE)};
         // STOCK_SOLD_LOADER for sold stocks tab
@@ -181,11 +177,11 @@ public class StockMainFragment extends BaseFragment implements
             }
         }
 
-        mStockPortfolioAdapter.setCursor(data);
+        mStockDataAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockPortfolioAdapter.setCursor(null);
+        mStockDataAdapter.setCursor(null);
     }
 }

@@ -58,6 +58,7 @@
     <string name="menu_delete">Delete</string>
 
     <!-- Stock Tab Adapter -->
+    <string name="stocks_overview">Overview</string>
     <string name="stocks_portfolio">Portfolio</string>
     <string name="stocks_history">History</string>
 

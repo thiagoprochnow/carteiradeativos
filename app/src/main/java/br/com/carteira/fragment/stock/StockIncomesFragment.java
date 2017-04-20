@@ -50,8 +50,6 @@ public class StockIncomesFragment extends BaseFragment implements
 
     private String id;
     private String mSymbol;
-    // Loader IDs
-    private static final int INCOME_LOADER = 4;
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -89,7 +87,7 @@ public class StockIncomesFragment extends BaseFragment implements
 
         mStockIncomeAdapter = new StockIncomeAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockIncomeAdapter);
-        getActivity().getSupportLoaderManager().initLoader(INCOME_LOADER, bundle, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_INCOME, bundle, this);
 
         return view;
     }

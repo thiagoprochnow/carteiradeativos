@@ -2,6 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -14,19 +15,18 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import br.com.carteira.R;
-import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockPortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String LOG_TAG = StockPortfolioAdapter.class.getSimpleName();
+public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String LOG_TAG = StockDataAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public StockPortfolioAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public StockDataAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -49,7 +49,7 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             // If it is the first view, return viewholder for StockPortfolio overview
             case 0:
                 item = LayoutInflater.from(mContext).inflate(R.layout.stock_summary, parent, false);
-                return new StockPortfolioViewHolder(item);
+                return new StockSummaryViewHolder(item);
             default:
                 item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
                 return new StockDataViewHolder(item);
@@ -60,7 +60,15 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case 0:
+                StockSummaryViewHolder summaryViewHolder = (StockSummaryViewHolder) holder;
                 // If it is the first view, return viewholder for StockPortfolio overview
+                if (mCursor != null && summaryViewHolder != null) {
+                    if (mCursor.getCount() != 0) {
+                        summaryViewHolder.itemView.setVisibility(View.VISIBLE);
+                    } else {
+                        summaryViewHolder.itemView.setVisibility(View.GONE);
+                    }
+                }
                 break;
             default:
                 // If it is one of the StockData adapter views
@@ -181,17 +189,10 @@ public class StockPortfolioAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
     }
 
-    class StockPortfolioViewHolder extends RecyclerView.ViewHolder{
+    class StockSummaryViewHolder extends RecyclerView.ViewHolder{
 
-        public StockPortfolioViewHolder(View itemView){
+        public StockSummaryViewHolder(View itemView){
             super(itemView);
         }
-    }
-
-    // Returns StockPortfolio cursor values
-    public Cursor getStockPortfolioCursor(){
-        return mContext.getContentResolver().query(
-                PortfolioContract.StockPortfolio.URI,
-                null, null, null, null);
     }
 }

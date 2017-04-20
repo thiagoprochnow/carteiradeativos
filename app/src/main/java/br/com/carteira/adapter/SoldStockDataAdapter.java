@@ -18,13 +18,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class SoldStockPortfolioAdapter extends RecyclerView.Adapter<SoldStockPortfolioAdapter.StockPortfolioViewHolder> {
-    private static final String LOG_TAG = SoldStockPortfolioAdapter.class.getSimpleName();
+public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdapter.StockPortfolioViewHolder> {
+    private static final String LOG_TAG = SoldStockDataAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public SoldStockPortfolioAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public SoldStockDataAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 

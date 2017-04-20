@@ -20,7 +20,6 @@ import br.com.carteira.fragment.currency.CurrencyMainFragment;
 import br.com.carteira.fragment.fii.FiiMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
-import br.com.carteira.fragment.stock.StockMainFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.ProductListener;
 

@@ -47,8 +47,6 @@ public class StockDetailsFragment extends BaseFragment implements
 
     private String id;
     private String mSymbol;
-    // Loader IDs
-    private static final int DETAIL_LOADER = 3;
 
     private StockDetailAdapter mStockDetailAdapter;
 
@@ -76,7 +74,7 @@ public class StockDetailsFragment extends BaseFragment implements
 
         mStockDetailAdapter = new StockDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockDetailAdapter);
-        getActivity().getSupportLoaderManager().initLoader(DETAIL_LOADER, bundle, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DETAILS, bundle, this);
 
         return mView;
     }

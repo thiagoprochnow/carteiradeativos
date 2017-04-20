@@ -3,20 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
-    android:id="@+id/stock_portfolio_card_view"
+    android:id="@+id/stock_summary_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
     app:cardElevation="2dp"
-    app:cardCornerRadius="0dp"
+    app:cardCornerRadius="3dp"
     app:cardPreventCornerOverlap="false"
-    android:paddingTop="0dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="40dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
     app:cardUseCompatPadding="false"
     app:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="0dp"
+    card_view:cardCornerRadius="3dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardElevation="2dp"
     android:foreground="?attr/selectableItemBackground">
@@ -29,17 +28,15 @@
         android:paddingBottom="5dp"
         android:gravity="center">
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/portfolio_bought_label"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:gravity="center" />
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/portfolio_current_label"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:gravity="center"/>
         <TextView
             android:layout_width="85dp"
             android:layout_height="wrap_content"
@@ -52,10 +49,9 @@
             android:text="@string/portfolio_income_label"
             android:gravity="center" />
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/portfolio_total_gain_label"
-            android:gravity="center"
-            android:layout_weight="1"/>
+            android:gravity="center" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

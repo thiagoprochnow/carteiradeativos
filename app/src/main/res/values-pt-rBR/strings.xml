@@ -58,6 +58,7 @@
     <string name="menu_delete">Deletar</string>
 
     <!-- Stock Tab Adapter -->
+    <string name="stocks_overview">Visão Geral</string>
     <string name="stocks_portfolio">Carteira</string>
     <string name="stocks_history">Histórico</string>
 

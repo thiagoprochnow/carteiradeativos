@@ -1,7 +1,6 @@
 package br.com.carteira.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,9 +8,8 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.fragment.stock.SoldStockMainFragment;
-import br.com.carteira.fragment.stock.StockDetailsFragment;
-import br.com.carteira.fragment.stock.StockIncomesFragment;
-import br.com.carteira.fragment.stock.StockMainFragment;
+import br.com.carteira.fragment.stock.StockDataFragment;
+import br.com.carteira.fragment.stock.StockOverviewFragment;
 
 
 public class StockTabAdapter extends FragmentPagerAdapter {
@@ -24,12 +22,15 @@ public class StockTabAdapter extends FragmentPagerAdapter {
     }
     @Override
     public int getCount(){
-        return 2;
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position){
         if(position == 0){
+            return mContext.getString(R.string.stocks_overview);
+        }
+         else if(position == 1){
             return mContext.getString(R.string.stocks_portfolio);
         }
         return mContext.getString(R.string.stocks_history);
@@ -38,8 +39,12 @@ public class StockTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading StockMainFragment()");
-            return new StockMainFragment();
+            Log.d(LOG_TAG, "Loading StockDataFragment()");
+            return new StockOverviewFragment();
+        }
+        else if (position == 1){
+            Log.d(LOG_TAG, "Loading StockDataFragment()");
+            return new StockDataFragment();
         } else {
             Log.d(LOG_TAG, "Loading SoldStockMainFragment()");
             return new SoldStockMainFragment();
