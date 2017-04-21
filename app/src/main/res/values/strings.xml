@@ -75,12 +75,25 @@
     <string name="data_income_label"><u>I</u></string>
     <string name="data_total_gain_label"><u>G</u></string>
 
-    <!-- Stock Portfolio -->
-    <string name="portfolio_bought_label"><u>B</u>ought</string>
-    <string name="portfolio_current_label"><u>C</u>urrent</string>
-    <string name="portfolio_appreciation_label"><u>A</u>ppreciation</string>
-    <string name="portfolio_income_label"><u>I</u>ncome</string>
-    <string name="portfolio_total_gain_label"><u>G</u>ain</string>
+    <!-- Sold Stock Adapter -->
+    <string name="sold_data_bought_label">Bought Value</string>
+    <string name="sold_data_sold_label">Sold Value</string>
+    <string name="sold_data_gain_label">Sell Gain</string>
+
+    <!-- Stock Summary -->
+    <string name="summary_bought_label"><u>B</u>ought</string>
+    <string name="summary_current_label"><u>C</u>urrent</string>
+    <string name="summary_appreciation_label"><u>A</u>ppreciation</string>
+    <string name="summary_income_label"><u>I</u>ncome</string>
+    <string name="summary_total_gain_label"><u>G</u>ain</string>
+
+    <!-- Stock Portolfio -->
+    <string name="portfolio_bought_label">Bought</string>
+    <string name="portfolio_current_label">Current</string>
+    <string name="portfolio_sold_label">Sold</string>
+    <string name="portfolio_appreciation_label">Appreciation</string>
+    <string name="portfolio_income_label">Income</string>
+    <string name="portfolio_total_gain_label">Gain</string>
 
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividend</string>

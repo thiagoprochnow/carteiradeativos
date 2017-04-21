@@ -19,7 +19,7 @@ public class StockReceiver extends BroadcastReceiver {
 
     private Context mContext;
 
-    private double mCurrentTotal;
+    private double mCurrentTotal = 0;
 
     @Override
     public void onReceive(Context c, Intent intent){
@@ -30,6 +30,29 @@ public class StockReceiver extends BroadcastReceiver {
     // Reads all of Stock Data value and sets the calculation on StockPortfolio table
     // Dosent need any data because it will not query for a specific stock, but for all of them.
     public void updateStockPortfolio(){
+
+        double buyTotal = 0;
+        double totalGain = 0;
+        double variationTotal = 0;
+        double sellTotal = 0;
+        // Return column should be the sum of buy total, sell total, sell gain
+        String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL +"), " +
+                "sum("+ PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL +"), " +
+                "sum("+PortfolioContract.SoldStockData.COLUMN_SELL_GAIN +")"};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.SoldStockData.URI,
+                soldAffectedColumn, null, null, null);
+
+        // Adds the value of the already sold stock to the portfolio
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            buyTotal = queryCursor.getDouble(0);
+            sellTotal = queryCursor.getDouble(1);
+            variationTotal = queryCursor.getDouble(2);
+            totalGain = queryCursor.getDouble(2);
+        }
+
         // Return column should be the sum of value total, income total, value gain
         String[] affectedColumn = {"sum("+ PortfolioContract.StockData.COLUMN_VARIATION +"), " +
                 "sum("+ PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL +"), " +
@@ -38,24 +61,31 @@ public class StockReceiver extends BroadcastReceiver {
                 "sum("+PortfolioContract.StockData.COLUMN_TOTAL_GAIN +")"};
 
         // Check if the symbol exists in the db
-        Cursor queryCursor = mContext.getContentResolver().query(
+        queryCursor = mContext.getContentResolver().query(
                 PortfolioContract.StockData.URI,
                 affectedColumn, null, null, null);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            double variationTotal = queryCursor.getDouble(0);
-            double buyTotal = queryCursor.getDouble(1);
+            variationTotal += queryCursor.getDouble(0);
+            buyTotal += queryCursor.getDouble(1);
             double incomeTotal = queryCursor.getDouble(2);
-            mCurrentTotal = queryCursor.getDouble(3);
-            double totalGain = queryCursor.getDouble(4);
+            mCurrentTotal += queryCursor.getDouble(3);
+            totalGain += queryCursor.getDouble(4);
+            double variationPercent = variationTotal/buyTotal*100;
+            double incomePercent = incomeTotal/buyTotal*100;
+            double totalGainPercent = totalGain/buyTotal*100;
 
             // Values to be inserted or updated on StockPortfolio table
             ContentValues portfolioCV = new ContentValues();
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL, variationTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL, buyTotal);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN, totalGain);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VARIATION_PERCENT, variationPercent);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_PERCENT, incomePercent);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN_PERCENT, totalGainPercent);
 
             // Query for the only stock portfolio, if dosent exist, creates one
             Cursor portfolioQueryCursor = mContext.getContentResolver().query(
@@ -90,7 +120,7 @@ public class StockReceiver extends BroadcastReceiver {
     }
 
     public void updateCurrentPercent(){
-        // Check if the symbol exists in the db
+        // Check if the symbol exists in the stock data db
         Cursor queryDataCursor = mContext.getContentResolver().query(
                 PortfolioContract.StockData.URI,
                 null, null, null, null);

@@ -69,4 +69,23 @@ public final class Constants {
         public static final int STOCK_OVERVIEW = 3;
         public static final int STOCK_DETAILS = 4;
     }
+
+    // Constants for Providers IDs
+    public static class Provider{
+        public static final int PORTFOLIO = 100;
+
+        public static final int STOCK_PORTFOLIO = 1100;
+
+        public static final int STOCK_DATA = 1200;
+        public static final int STOCK_DATA_WITH_SYMBOL = 1201;
+
+        public static final int SOLD_STOCK_DATA = 1300;
+        public static final int SOLD_STOCK_DATA_WITH_SYMBOL = 1301;
+
+        public static final int STOCK_TRANSACTION = 1400;
+        public static final int STOCK_TRANSACTION_FOR_SYMBOL = 1401;
+
+        public static final int STOCK_INCOME = 1500;
+        public static final int STOCK_INCOME_FOR_SYMBOL = 1501;
+    }
 }

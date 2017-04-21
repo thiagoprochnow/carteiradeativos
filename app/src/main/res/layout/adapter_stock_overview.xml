@@ -51,6 +51,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/portfolio_sold_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/portfolio_appreciation_label" />
                 <TextView
                     android:layout_width="match_parent"
@@ -77,6 +81,14 @@
                     android:maxLines="1"/>
                 <TextView
                     android:id="@+id/currentTotal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="R$3345,62"
+                    android:gravity="right"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/soldTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="R$3345,62"
@@ -114,6 +126,12 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/stock_percentage_text_margin"
                 android:layout_weight="1">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

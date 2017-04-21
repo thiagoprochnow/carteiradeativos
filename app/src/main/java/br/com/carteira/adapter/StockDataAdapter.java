@@ -83,7 +83,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
                 // Get handled values of StockData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                        .StockTransaction.
+                        .SoldStockData.
                         COLUMN_SYMBOL)));
                 viewHolder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                         (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));

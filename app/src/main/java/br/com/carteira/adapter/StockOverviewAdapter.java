@@ -71,11 +71,19 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 viewHolder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL)))));
+                viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL)))));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.stockAppreciation.setText(String.format(formatter.format(totalAppreciation)));
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VARIATION_PERCENT))) + "%)");
+                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_PERCENT))) + "%)");
+                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
                 break;
             default:
                 // If it is one of the StockData adapter views
@@ -97,6 +105,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
+
+        @BindView(R.id.soldTotal)
+        TextView soldTotal;
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;

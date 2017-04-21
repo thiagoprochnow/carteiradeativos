@@ -75,12 +75,25 @@
     <string name="data_income_label"><u>R</u></string>
     <string name="data_total_gain_label"><u>G</u></string>
 
-    <!-- Stock Portfolio -->
-    <string name="portfolio_bought_label"><u>C</u>ompra</string>
-    <string name="portfolio_current_label"><u>A</u>tual</string>
-    <string name="portfolio_appreciation_label"><u>V</u>alorização</string>
-    <string name="portfolio_income_label"><u>R</u>endimentos</string>
-    <string name="portfolio_total_gain_label"><u>G</u>anho</string>
+    <!-- Sold Stock Adapter -->
+    <string name="sold_data_bought_label">Comprado</string>
+    <string name="sold_data_sold_label">Vendido</string>
+    <string name="sold_data_gain_label">Ganho</string>
+
+    <!-- Stock Summary -->
+    <string name="summary_bought_label"><u>C</u>ompra</string>
+    <string name="summary_current_label"><u>A</u>tual</string>
+    <string name="summary_appreciation_label"><u>V</u>alorização</string>
+    <string name="summary_income_label"><u>R</u>endimentos</string>
+    <string name="summary_total_gain_label"><u>G</u>anho</string>
+
+    <!-- Stock Portolfio -->
+    <string name="portfolio_bought_label">Compra</string>
+    <string name="portfolio_current_label">Atual</string>
+    <string name="portfolio_sold_label">Vendido</string>
+    <string name="portfolio_appreciation_label">Valorização</string>
+    <string name="portfolio_income_label">Rendimentos</string>
+    <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividendo</string>

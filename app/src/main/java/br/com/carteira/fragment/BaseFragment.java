@@ -54,6 +54,9 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForStockTransaction(symbol), null, null);
         int deletedData = getActivity().getContentResolver().delete(PortfolioContract.StockData
                 .makeUriForStockData(symbol), null, null);
+
+        int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldStockData
+                .makeUriForSoldStockData(symbol), null, null);
         // Cannot check if deletedIncome > 0, because stock may not have any income to delete
         // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
@@ -469,7 +472,6 @@ public abstract class BaseFragment extends Fragment {
 
             do {
                 currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
-                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                 // Does correct operation to values depending on Transaction type
                 switch (currentType){
                     case Constants.Type.BUY:
@@ -585,12 +587,126 @@ public abstract class BaseFragment extends Fragment {
                 Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Stock Portfolio
                 // Send broadcast so StockReceiver can update the rest
-                mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                updateSoldStockData(symbol, mediumPrice, receiveIncome);
                 return true;
             } else {
                 Log.d(LOG_TAG, "updateStockData failed update");
                 return false;
             }
+        } else{
+            Log.d(LOG_TAG, "No StockTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the StockTransaction entries and calculates value for StockData table for this symbol
+    public boolean updateSoldStockData(String symbol, double buyMediumPrice, double totalIncome){
+
+        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.StockTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in StockData
+            int quantityTotal = 0;
+            double soldTotal = 0;
+            double sellMediumPrice = 0;
+            int currentType;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.SELL:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        sellMediumPrice = soldTotal/quantityTotal;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Do nothing");
+                }
+            } while (STQueryCursor.moveToNext());
+
+            // If there is any sold stock
+            if (quantityTotal > 0) {
+                ContentValues stockDataCV = new ContentValues();
+
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SYMBOL, symbol);
+
+                selection = PortfolioContract.SoldStockData.COLUMN_SYMBOL + " = ? ";
+
+                // Searches for existing StockData to update value.
+                // If dosent exists, creates new one
+                Cursor queryDataCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldStockData.URI,
+                        null, selection, selectionArguments, null);
+
+                // Create new StockData for this symbol
+                if (queryDataCursor.getCount() == 0) {
+                    // Adds data to the database
+                    Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldStockData.URI,
+
+                            stockDataCV);
+
+                    // If error occurs to add, shows error message
+                    if (insertedStockDataUri != null) {
+                        Log.d(LOG_TAG, "Created stock sold data");
+                        // Update Stock Portfolio
+                    } else {
+                        Log.d(LOG_TAG, "Error creating sold stock data");
+                        return false;
+                    }
+                }
+
+                double valueTotal = buyMediumPrice * quantityTotal;
+                double sellGain = soldTotal - valueTotal;
+                double gainPercent = sellGain/valueTotal*100;
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL, valueTotal);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL, soldTotal);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN, sellGain);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT, gainPercent);
+
+                // Searches for existing StockData to update value.
+                // If dosent exists, creates new one
+                Cursor queryCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldStockData.URI,
+                        null, selection, selectionArguments, null);
+
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.SoldStockData._ID)));
+
+                // Update
+                // Prepare query to update stock data
+                String updateSelection = PortfolioContract.SoldStockData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on stock data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.SoldStockData.URI,
+                        stockDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0) {
+                    Log.d(LOG_TAG, "updateSoldStockData successfully updated");
+                    // Update Stock Portfolio
+                    // Send broadcast so StockReceiver can update the rest
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                    return true;
+                } else {
+                    Log.d(LOG_TAG, "updateSoldStockData failed update");
+                    return false;
+                }
+            }
+            Log.d(LOG_TAG, "No sold stock yet");
+            return true;
         } else{
             Log.d(LOG_TAG, "No StockTransaction found");
             return false;

@@ -157,13 +157,11 @@ public class SoldStockMainFragment extends BaseFragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockDataAdapter.
-        String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
-        String[] selectionArgs = {String.valueOf(Constants.Status.SOLD)};
         // STOCK_SOLD_LOADER for sold stocks tab
         return new CursorLoader(mContext,
-                PortfolioContract.StockData.URI,
-                PortfolioContract.StockData.STOCK_DATA_COLUMNS,
-                selection, selectionArgs, PortfolioContract.StockData.COLUMN_SYMBOL);
+                PortfolioContract.SoldStockData.URI,
+                PortfolioContract.SoldStockData.SOLD_STOCK_DATA_COLUMNS,
+                null, null, PortfolioContract.SoldStockData.COLUMN_SYMBOL);
     }
 
     @Override

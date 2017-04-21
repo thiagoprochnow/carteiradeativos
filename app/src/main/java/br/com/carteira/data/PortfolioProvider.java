@@ -9,20 +9,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import br.com.carteira.common.Constants;
+
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
-    static final int PORTFOLIO = 100;
-
-    static final int STOCK_PORTFOLIO = 1100;
-
-    static final int STOCK_DATA = 1200;
-    static final int STOCK_DATA_WITH_SYMBOL = 1201;
-
-    static final int STOCK_TRANSACTION = 1300;
-    static final int STOCK_TRANSACTION_FOR_SYMBOL = 1301;
-
-    static final int STOCK_INCOME = 1400;
-    static final int STOCK_INCOME_FOR_SYMBOL = 1401;
 
     static UriMatcher uriMatcher = buildUriMatcher();
 
@@ -33,16 +23,18 @@ public class PortfolioProvider extends ContentProvider {
      */
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, PORTFOLIO);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, STOCK_PORTFOLIO);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, STOCK_DATA);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_WITH_SYMBOL, STOCK_DATA_WITH_SYMBOL);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_TRANSACTION, STOCK_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, Constants.Provider.PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_WITH_SYMBOL, Constants.Provider.STOCK_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_STOCK_DATA, Constants.Provider.SOLD_STOCK_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_STOCK_DATA_WITH_SYMBOL, Constants.Provider.SOLD_STOCK_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_TRANSACTION, Constants.Provider.STOCK_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_TRANSACTION_WITH_SYMBOL,
-                STOCK_TRANSACTION_FOR_SYMBOL);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME, STOCK_INCOME);
+                Constants.Provider.STOCK_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME, Constants.Provider.STOCK_INCOME);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME_WITH_SYMBOL,
-                STOCK_INCOME_FOR_SYMBOL);
+                Constants.Provider.STOCK_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -61,7 +53,7 @@ public class PortfolioProvider extends ContentProvider {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         switch (uriMatcher.match(uri)) {
             // Returns complete portfolio of user
-            case PORTFOLIO:
+            case Constants.Provider.PORTFOLIO:
                 returnCursor = db.query(
                         PortfolioContract.Portfolio.TABLE_NAME,
                         projection,
@@ -73,7 +65,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
             // Returns stock portfolio of user
-            case STOCK_PORTFOLIO:
+            case Constants.Provider.STOCK_PORTFOLIO:
                 returnCursor = db.query(
                         PortfolioContract.StockPortfolio.TABLE_NAME,
                         projection,
@@ -85,7 +77,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
             // Returns all stock symbols possessed by user
-            case STOCK_DATA:
+            case Constants.Provider.STOCK_DATA:
                 returnCursor = db.query(
                         PortfolioContract.StockData.TABLE_NAME,
                         projection,
@@ -96,8 +88,19 @@ public class PortfolioProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case Constants.Provider.SOLD_STOCK_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.SoldStockData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             // Returns all stocks information possessed by user
-            case STOCK_TRANSACTION:
+            case Constants.Provider.STOCK_TRANSACTION:
                 returnCursor = db.query(
                         PortfolioContract.StockTransaction.TABLE_NAME,
                         projection,
@@ -109,7 +112,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
             // Returns all stock information possessed by user for a specific stock symbol
-            case STOCK_TRANSACTION_FOR_SYMBOL:
+            case Constants.Provider.STOCK_TRANSACTION_FOR_SYMBOL:
                 returnCursor = db.query(
                         PortfolioContract.StockTransaction.TABLE_NAME,
                         projection,
@@ -121,7 +124,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
-            case STOCK_INCOME:
+            case Constants.Provider.STOCK_INCOME:
                 returnCursor = db.query(
                         PortfolioContract.StockIncome.TABLE_NAME,
                         projection,
@@ -133,7 +136,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
-            case STOCK_INCOME_FOR_SYMBOL:
+            case Constants.Provider.STOCK_INCOME_FOR_SYMBOL:
                 returnCursor = db.query(
                         PortfolioContract.StockIncome.TABLE_NAME,
                         projection,
@@ -168,7 +171,7 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
         long _id;
         switch (uriMatcher.match(uri)) {
-            case PORTFOLIO:
+            case Constants.Provider.PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.Portfolio.TABLE_NAME,
                         null,
@@ -180,7 +183,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
-            case STOCK_PORTFOLIO:
+            case Constants.Provider.STOCK_PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.StockPortfolio.TABLE_NAME,
                         null,
@@ -192,7 +195,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
-            case STOCK_DATA:
+            case Constants.Provider.STOCK_DATA:
                 _id = db.insert(
                         PortfolioContract.StockData.TABLE_NAME,
                         null,
@@ -204,7 +207,20 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
-            case STOCK_TRANSACTION:
+
+            case Constants.Provider.SOLD_STOCK_DATA:
+                _id = db.insert(
+                        PortfolioContract.SoldStockData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.SoldStockData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+            case Constants.Provider.STOCK_TRANSACTION:
                 _id = db.insert(
                         PortfolioContract.StockTransaction.TABLE_NAME,
                         null,
@@ -217,7 +233,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
-            case STOCK_INCOME:
+            case Constants.Provider.STOCK_INCOME:
                 db.insert(
                         PortfolioContract.StockIncome.TABLE_NAME,
                         null,
@@ -242,16 +258,25 @@ public class PortfolioProvider extends ContentProvider {
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
-            case STOCK_DATA_WITH_SYMBOL:
+            case Constants.Provider.STOCK_DATA_WITH_SYMBOL:
                 symbol = PortfolioContract.StockData.getStockDataFromUri(uri);
                 rowsDeleted = db.delete(
                         PortfolioContract.StockData.TABLE_NAME,
-                        '"' + symbol + '"' + " =" + PortfolioContract.StockTransaction.COLUMN_SYMBOL,
+                        '"' + symbol + '"' + " =" + PortfolioContract.StockData.COLUMN_SYMBOL,
                         selectionArgs
                 );
                 break;
 
-            case STOCK_TRANSACTION:
+            case Constants.Provider.SOLD_STOCK_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.SoldStockData.getSoldStockDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldStockData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.SoldStockData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.STOCK_TRANSACTION:
                 rowsDeleted = db.delete(
                         PortfolioContract.StockTransaction.TABLE_NAME,
                         selection,
@@ -260,7 +285,7 @@ public class PortfolioProvider extends ContentProvider {
 
                 break;
 
-            case STOCK_TRANSACTION_FOR_SYMBOL:
+            case Constants.Provider.STOCK_TRANSACTION_FOR_SYMBOL:
                 symbol = PortfolioContract.StockTransaction.getStockTransactionFromUri(uri);
                 rowsDeleted = db.delete(
                         PortfolioContract.StockTransaction.TABLE_NAME,
@@ -269,7 +294,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
-            case STOCK_INCOME:
+            case Constants.Provider.STOCK_INCOME:
                 rowsDeleted = db.delete(
                         PortfolioContract.StockIncome.TABLE_NAME,
                         selection,
@@ -277,7 +302,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
-            case STOCK_INCOME_FOR_SYMBOL:
+            case Constants.Provider.STOCK_INCOME_FOR_SYMBOL:
                 // TODO: Needs to change, otherwise it will always delete all incomes of that stock symbol
                 symbol = PortfolioContract.StockIncome.getStockIncomeFromUri(uri);
                 rowsDeleted = db.delete(
@@ -303,26 +328,31 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
         switch (uriMatcher.match(uri)) {
-            case PORTFOLIO:
+            case Constants.Provider.PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.Portfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
-            case STOCK_PORTFOLIO:
+            case Constants.Provider.STOCK_PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.StockPortfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
-            case STOCK_DATA:
+            case Constants.Provider.STOCK_DATA:
                 rowsUpdated = db.update(PortfolioContract.StockData.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
-            case STOCK_TRANSACTION:
+            case Constants.Provider.SOLD_STOCK_DATA:
+                rowsUpdated = db.update(PortfolioContract.SoldStockData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+            case Constants.Provider.STOCK_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.StockTransaction.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
-            case STOCK_INCOME:
+            case Constants.Provider.STOCK_INCOME:
                 rowsUpdated = db.update(PortfolioContract.StockIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
@@ -345,7 +375,7 @@ public class PortfolioProvider extends ContentProvider {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         switch (uriMatcher.match(uri)) {
-            case STOCK_TRANSACTION:
+            case Constants.Provider.STOCK_TRANSACTION:
                 db.beginTransaction();
                 int returnCount = 0;
                 try {
