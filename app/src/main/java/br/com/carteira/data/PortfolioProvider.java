@@ -8,11 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import java.util.Locale;
 
 import br.com.carteira.common.Constants;
 
 /* Content Provider for all portfolio items */
 public class PortfolioProvider extends ContentProvider {
+
+    private static final String LOG_TAG = PortfolioProvider.class.getSimpleName();
 
     static UriMatcher uriMatcher = buildUriMatcher();
 
@@ -26,6 +31,9 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, Constants.Provider.PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_BULK_UPDATE, Constants.Provider.STOCK_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.STOCK_DATA_BULK_UPDATE_FOR_CURRENT);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_WITH_SYMBOL, Constants.Provider.STOCK_DATA_WITH_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_STOCK_DATA, Constants.Provider.SOLD_STOCK_DATA);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_STOCK_DATA_WITH_SYMBOL, Constants.Provider.SOLD_STOCK_DATA_WITH_SYMBOL);
@@ -347,6 +355,19 @@ public class PortfolioProvider extends ContentProvider {
                         selection,
                         selectionArgs);
                 break;
+            case Constants.Provider.STOCK_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkStockUpdade(values);
+                break;
+            case Constants.Provider.STOCK_DATA_BULK_UPDATE_FOR_CURRENT:
+                String currentTotal = PortfolioContract.StockTransaction
+                        .getStockTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateCurrentPercent(Double.parseDouble(PortfolioContract
+                            .StockTransaction.getStockTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
             case Constants.Provider.STOCK_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.StockTransaction.TABLE_NAME, values,
                         selection,
@@ -398,6 +419,153 @@ public class PortfolioProvider extends ContentProvider {
         }
     }
 
+    /**
+     * This function is responsible for update the value several values of the Stock of table
+     * StockData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkStockUpdade(ContentValues contValues) {
 
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int quantity;
+        double currentPrice;
+        double totalBuy;
+        double incomeTotal;
+        double currentTotal;
+        double variation;
+        double totalGain;
+        double incomeTotalPercent;
+        double variationPercent;
+        double totalGainPercent;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update stock data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.StockData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentPrice = Double.parseDouble(contValues.get(key).toString());
+                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                            .StockData.COLUMN_QUANTITY_TOTAL));
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .StockData.COLUMN_BUY_VALUE_TOTAL));
+                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                    currentTotal = quantity * currentPrice;
+                    variation = currentTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy;
+                    incomeTotalPercent = incomeTotal / totalBuy * 100;
+                    variationPercent = variation / totalBuy * 100;
+                    totalGainPercent = totalGain / totalBuy * 100;
+
+                    ContentValues stockCV = new ContentValues();
+                    stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PRICE,
+                            contValues.get(key).toString());
+                    stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
+                    stockCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
+                    stockCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT,
+                            incomeTotalPercent);
+                    stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT,
+                            variationPercent);
+                    stockCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT,
+                            totalGainPercent);
+
+                    returnCount += this.update(
+                            PortfolioContract.StockData.URI,
+                            stockCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "StockData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.StockData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value Current Percent of all the Stocks in the
+     * table StockData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateCurrentPercent(double currentTotal) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.StockData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.StockData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                            PortfolioContract.StockData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        Log.d(LOG_TAG, "isLast() sum: " + percentSum);
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues stockDataCV = new ContentValues();
+                    stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update stock data
+                    String updateSelection = PortfolioContract.StockData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.StockData.URI,
+                            stockDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No StockData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.StockData.URI, null);
+        return returnCount;
+    }
 
 }

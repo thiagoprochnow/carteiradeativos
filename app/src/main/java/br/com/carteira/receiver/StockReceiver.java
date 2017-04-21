@@ -108,7 +108,10 @@ public class StockReceiver extends BroadcastReceiver {
                 Uri insertedStockDataUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
                         portfolioCV);
             }
-            updatePortfolio();
+            // Prepare URI with Current Total to bulkupdate the Current Percent
+            Uri updateCurrentURI = PortfolioContract.StockData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
+            int updatedRows = mContext.getContentResolver().update(
+                    updateCurrentURI, null, null, null);
         }
     }
 
@@ -116,57 +119,6 @@ public class StockReceiver extends BroadcastReceiver {
     // Dosent need any data because it will not query for a specific investment, but for all of them.
     public void updatePortfolio(){
         // TODO: Develop function to read all Stock, FII, Fixed Income, etc table to get total value of portfolio
-        updateCurrentPercent();
-    }
-
-    public void updateCurrentPercent(){
-        // Check if the symbol exists in the stock data db
-        Cursor queryDataCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
-                null, null, null, null);
-        double percentSum = 0;
-        double currentPercent = 0;
-        if (queryDataCursor.getCount() > 0){
-            queryDataCursor.moveToFirst();
-            // Update the Current Percent of each StockData
-            // TODO: Need to change this to bulk_insert, so it wont open and close db lots of times
-            do {
-                String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor.getColumnIndex(
-                        PortfolioContract.StockData._ID)));
-                double currentDataTotal = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(
-                        PortfolioContract.StockData.COLUMN_CURRENT_TOTAL));
-                if (queryDataCursor.isLast()){
-                    // If it is last, round last so sum of all will be 100%
-                    Log.d(LOG_TAG, "isLast() sum: " + percentSum);
-                    currentPercent = 100 - percentSum;
-                } else {
-                    // else calculates current percent for stock
-                    String currentPercentString = String.format(Locale.US, "%.2f",currentDataTotal/mCurrentTotal*100);
-                    currentPercent = Double.valueOf(currentPercentString);
-                    percentSum += currentPercent;
-                }
-
-                ContentValues stockDataCV = new ContentValues();
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PERCENT, currentPercent);
-
-                // Update
-                // Prepare query to update stock data
-                String updateSelection = PortfolioContract.StockData._ID + " = ?";
-                String[] updatedSelectionArguments = {_id};
-
-                // Update value on stock data
-                int updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.StockData.URI,
-                        stockDataCV, updateSelection, updatedSelectionArguments);
-                // Log update success/fail result
-                if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateStockData successfully updated");
-                } else {
-                    Log.d(LOG_TAG, "updateStockData failed update");
-                }
-            } while (queryDataCursor.moveToNext());
-        } else {
-            Log.d(LOG_TAG, "No StockData found");
-        }
+        // updateCurrentPercent();
     }
 }

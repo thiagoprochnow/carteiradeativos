@@ -12,11 +12,15 @@ public class PortfolioContract {
 
     public static final Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
 
+    public static final String BASE_BULK_UPDATE = "update";
+
     public static final String PATH_PORTFOLIO = "portfolio";
 
     public static final String PATH_STOCK_PORTFOLIO = "stock_portfolio";
 
     public static final String PATH_STOCK_DATA = "stock_data";
+    public static final String PATH_STOCK_DATA_BULK_UPDATE = "stock_data/update";
+    public static final String PATH_STOCK_DATA_BULK_UPDATE_WITH_CURRENT = "stock_data/update/*";
     public static final String PATH_STOCK_DATA_WITH_SYMBOL = "stock_data/*";
 
     public static final String PATH_SOLD_STOCK_DATA = "sold_stock_data";
@@ -120,6 +124,7 @@ public class PortfolioContract {
     public static final class StockData implements BaseColumns {
 
         public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_STOCK_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
 
         public static final String TABLE_NAME = "stock_data";
 

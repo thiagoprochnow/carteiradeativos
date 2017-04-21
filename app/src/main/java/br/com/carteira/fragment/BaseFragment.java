@@ -530,7 +530,7 @@ public abstract class BaseFragment extends Fragment {
 
             Intent mServiceIntent = new Intent(mContext, StockIntentService
                     .class);
-            mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol + ".SA");
+            mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
             getActivity().startService(mServiceIntent);
 
             // Query Income table to get total of this stock income

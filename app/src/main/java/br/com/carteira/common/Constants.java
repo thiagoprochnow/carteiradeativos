@@ -78,6 +78,8 @@ public final class Constants {
 
         public static final int STOCK_DATA = 1200;
         public static final int STOCK_DATA_WITH_SYMBOL = 1201;
+        public static final int STOCK_DATA_BULK_UPDATE = 1202;
+        public static final int STOCK_DATA_BULK_UPDATE_FOR_CURRENT = 1203;
 
         public static final int SOLD_STOCK_DATA = 1300;
         public static final int SOLD_STOCK_DATA_WITH_SYMBOL = 1301;

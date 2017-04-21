@@ -97,7 +97,9 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 // Add .SA in the symbol to the API
                 Intent mServiceIntent = new Intent(getApplicationContext(), StockIntentService
                         .class);
-                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL,symbol + ".SA");
+                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL,symbol
+                     //   + ",ITUB4"
+                );
                 startService(mServiceIntent);
                 break;
             default:

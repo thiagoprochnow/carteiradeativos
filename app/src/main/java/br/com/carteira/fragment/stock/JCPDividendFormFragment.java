@@ -172,7 +172,7 @@ public class JCPDividendFormFragment extends BaseFormFragment {
             if (updateQueryCursor == 1){
                 Intent mServiceIntent = new Intent(mContext, StockIntentService
                         .class);
-                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol + ".SA");
+                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
                 getActivity().startService(mServiceIntent);
                 return true;
             }
