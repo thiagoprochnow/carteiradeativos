@@ -12,6 +12,7 @@
 
         <TextView
             style="@style/TextAppearance.AppCompat.Subhead"
+            android:id="@+id/inputJCPDividendExLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"

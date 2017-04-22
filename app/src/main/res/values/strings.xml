@@ -29,6 +29,7 @@
     <string name="grouping_date">Stock Grouping Date</string>
     <string name="sell_date">Sell Date</string>
     <string name="ex_date">Ex Dividend Date</string>
+    <string name="ex_date_jcp">Ex Interest on Capital Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_sell_quantity">Quantity should be a number and need to have enough stock bought</string>

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -57,6 +58,10 @@ public class JCPDividendFormFragment extends BaseFormFragment {
         Intent intent = getActivity().getIntent();
         // Set title according to income type
         int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.INVALID);
+        TextView exDateLabel = (TextView) mView.findViewById(R.id.inputJCPDividendExLabel);
+        if (incomeType == Constants.IncomeType.JCP){
+            exDateLabel.setText(R.string.ex_date_jcp);
+        }
         if (incomeType == Constants.IncomeType.JCP){
             getActivity().setTitle(R.string.form_title_jcp);
         } else {

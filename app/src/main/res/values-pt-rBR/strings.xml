@@ -29,6 +29,7 @@
     <string name="split_grouping_to">para</string>
     <string name="sell_date">Data da venda</string>
     <string name="ex_date">Data Ex Dividendo</string>
+    <string name="ex_date_jcp">Data Ex Juros s/ Capital</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
