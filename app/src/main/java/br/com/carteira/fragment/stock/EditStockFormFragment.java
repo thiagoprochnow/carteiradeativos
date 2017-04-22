@@ -47,7 +47,7 @@ public class EditStockFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_edit_stock_form, container, false);
-
+        getActivity().setTitle(R.string.form_title_objective);
         mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
 
         // Gets symbol received from selected CardView on intent

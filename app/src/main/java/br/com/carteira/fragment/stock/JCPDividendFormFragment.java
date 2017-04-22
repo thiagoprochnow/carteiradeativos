@@ -54,7 +54,14 @@ public class JCPDividendFormFragment extends BaseFormFragment {
         mView = inflater.inflate(R.layout.fragment_jcp_dividend_form, container, false);
         mInputPerStockView = (EditText) mView.findViewById(R.id.inputReceivedPerStock);
         mInputExDateView = (EditText) mView.findViewById(R.id.inputJCPDividendExDate);
-
+        Intent intent = getActivity().getIntent();
+        // Set title according to income type
+        int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.INVALID);
+        if (incomeType == Constants.IncomeType.JCP){
+            getActivity().setTitle(R.string.form_title_jcp);
+        } else {
+            getActivity().setTitle(R.string.form_title_dividend);
+        }
         // Adding current date to Buy Date field
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
         mInputExDateView.setText(simpleDateFormat.format(new Date()));

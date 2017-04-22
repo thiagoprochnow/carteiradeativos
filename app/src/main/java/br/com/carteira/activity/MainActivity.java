@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.api.service.StockIntentService;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             public void onReceive(Context context, Intent intent) {
                 // Ends progress bar on menu when portfolio is updated
                 mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                Toast.makeText(getApplicationContext(), R.string.refresh_done, Toast.LENGTH_SHORT).show();
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
@@ -155,7 +158,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 }
             case R.id.menu_refresh:
                 refreshPortfolio();
-                item.setActionView(new ProgressBar(this));
+                ProgressBar spinner = new ProgressBar(this);
+                spinner.getIndeterminateDrawable().setColorFilter(
+                        ContextCompat.getColor(this,R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                item.setActionView(spinner);
                 return true;
         }
         return super.onOptionsItemSelected(item);

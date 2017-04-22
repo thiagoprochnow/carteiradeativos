@@ -92,16 +92,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
                 break;
-            case R.id.menu_item_sync:
-                //TODO Provisory request, this API be migrate to a service
-                // Add .SA in the symbol to the API
-                Intent mServiceIntent = new Intent(getApplicationContext(), StockIntentService
-                        .class);
-                mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL,symbol
-                     //   + ",ITUB4"
-                );
-                startService(mServiceIntent);
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -46,7 +46,7 @@ public class GroupingFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_grouping_form, container, false);
-
+        getActivity().setTitle(R.string.form_title_grouping);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputDateView = (EditText) mView.findViewById(R.id.inputGroupingDate);
 

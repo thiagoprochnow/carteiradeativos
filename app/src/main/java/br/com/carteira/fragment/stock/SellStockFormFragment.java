@@ -50,7 +50,7 @@ public class SellStockFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_sell_stock_form, container, false);
-
+        getActivity().setTitle(R.string.form_title_sell);
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputSellPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);

@@ -1,9 +1,20 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Main Activity -->
+    <string name="refresh_done">Portfolio updated successfully</string>
+
     <!-- Form Activity -->
     <string name="objective_update_success">Objective updated successfuly</string>
     <string name="objective_update_fail">Objective update failed</string>
+    <string name="form_title_buy">Buy</string>
+    <string name="form_title_sell">Sell</string>
+    <string name="form_title_objective">Objective</string>
+    <string name="form_title_dividend">Dividend</string>
+    <string name="form_title_jcp">Interest on Capital</string>
+    <string name="form_title_bonification">Bonification</string>
+    <string name="form_title_split">Split</string>
+    <string name="form_title_grouping">Grouping</string>
 
     <!-- Form Fragment -->
     <string name="quantity">Quantity</string>

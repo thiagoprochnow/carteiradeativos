@@ -1,9 +1,20 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Main Activity -->
+    <string name="refresh_done">Carteira atualizada com sucesso</string>
+
     <!-- Form Activity -->
     <string name="objective_update_success">Objetivo atualizado com sucesso</string>
     <string name="objective_update_fail">Atualização do objetivo falhou</string>
+    <string name="form_title_buy">Comprar</string>
+    <string name="form_title_sell">Vender</string>
+    <string name="form_title_objective">Objetivo</string>
+    <string name="form_title_dividend">Dividendo</string>
+    <string name="form_title_jcp">Juros s/ Capital</string>
+    <string name="form_title_bonification">Bonificação</string>
+    <string name="form_title_split">Desdobramento</string>
+    <string name="form_title_grouping">Grupamento</string>
 
     <!-- Dialog Fragment -->
     <string name="quantity">Quantidade</string>
