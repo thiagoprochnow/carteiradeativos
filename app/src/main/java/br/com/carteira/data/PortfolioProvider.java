@@ -532,7 +532,6 @@ public class PortfolioProvider extends ContentProvider {
                             PortfolioContract.StockData.COLUMN_CURRENT_TOTAL));
                     if (queryDataCursor.isLast()) {
                         // If it is last, round last so sum of all will be 100%
-                        Log.d(LOG_TAG, "isLast() sum: " + percentSum);
                         currentPercent = 100 - percentSum;
                     } else {
                         // else calculates current percent for stock

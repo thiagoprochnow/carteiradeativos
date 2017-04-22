@@ -5,12 +5,15 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.util.logging.Handler;
 
 import br.com.carteira.api.domain.ResponseStock;
 import br.com.carteira.api.domain.ResponseStocks;
@@ -34,6 +37,7 @@ public class StockIntentService extends IntentService {
 
     private boolean mSuccess = false;
     private String mSymbol;
+    Handler mHandler;
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
@@ -175,6 +179,7 @@ public class StockIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
         /*// Updates the StockData values
             String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
             String[] selectionArguments = {mSymbol};

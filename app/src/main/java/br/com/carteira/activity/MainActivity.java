@@ -1,21 +1,31 @@
 package br.com.carteira.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
+import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.currency.CurrencyMainFragment;
 import br.com.carteira.fragment.fii.FiiMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
@@ -30,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
 
     protected DrawerLayout mDrawerLayout;
 
+    private Menu mMenu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +54,24 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             Log.d(LOG_TAG, "Loaded PortfolioMainFragment onCreate");
             replaceFragment(new PortfolioMainFragment());
         }
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Ends progress bar on menu when portfolio is updated
+                mMenu.findItem(R.id.menu_refresh).setActionView(null);
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        mMenu = menu;
+        return true;
     }
 
     @Override
@@ -124,6 +153,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                     openDrawer();
                     return true;
                 }
+            case R.id.menu_refresh:
+                refreshPortfolio();
+                item.setActionView(new ProgressBar(this));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -225,6 +258,37 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             default:
                 Log.d(LOG_TAG, "(onEditProduct) Could not launch the FormActivity.");
                 break;
+        }
+    }
+
+    // Refresh the portfolio by getting the values from their respective services and updating on the tables
+    public void refreshPortfolio(){
+
+        Intent mStockServiceIntent = new Intent(this, StockIntentService
+                .class);
+
+        String[] affectedColumn = {PortfolioContract.StockData.COLUMN_SYMBOL};
+
+        Cursor queryCursor = this.getContentResolver().query(
+                PortfolioContract.StockData.URI, affectedColumn,
+                null, null, null);
+
+        // For each symbol found on StockData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
+            startService(mStockServiceIntent);
         }
     }
 }

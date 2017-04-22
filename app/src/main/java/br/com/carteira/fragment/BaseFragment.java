@@ -1,16 +1,22 @@
 package br.com.carteira.fragment;
 
 import android.app.DatePickerDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,9 +41,13 @@ public abstract class BaseFragment extends Fragment {
 
     private static final String LOG_TAG = BaseFragment.class.getSimpleName();
 
+    private Menu mMenu;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Enables the menu
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -712,5 +722,4 @@ public abstract class BaseFragment extends Fragment {
             return false;
         }
     }
-
 }
