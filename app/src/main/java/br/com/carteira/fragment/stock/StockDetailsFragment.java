@@ -67,7 +67,7 @@ public class StockDetailsFragment extends BaseFragment implements
         mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
-
+        getActivity().setTitle(mSymbol);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);

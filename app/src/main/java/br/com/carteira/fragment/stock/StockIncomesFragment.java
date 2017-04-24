@@ -77,7 +77,7 @@ public class StockIncomesFragment extends BaseFragment implements
         // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
         Intent mainActivityIntent = getActivity().getIntent();
         mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        getActivity().setTitle(mSymbol);
+
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
         setUserVisibleHint(true);

@@ -117,6 +117,12 @@
     <string name="stock_bonification">Bonificação</string>
     <string name="stock_split">Desdobramento</string>
     <string name="stock_grouping">Grupamento</string>
+    <string name="details_current">Atual</string>
+    <string name="details_sold">Média Venda</string>
+    <string name="details_medium_price">Média Compra</string>
+    <string name="details_gain">Ganho</string>
+    <string name="details_price">Preço</string>
+    <string name="details_total">Total</string>
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
