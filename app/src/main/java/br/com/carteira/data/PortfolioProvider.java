@@ -284,6 +284,13 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.SOLD_STOCK_DATA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldStockData.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
             case Constants.Provider.STOCK_TRANSACTION:
                 rowsDeleted = db.delete(
                         PortfolioContract.StockTransaction.TABLE_NAME,

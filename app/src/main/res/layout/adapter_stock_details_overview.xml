@@ -134,14 +134,6 @@
                     android:gravity="right"
                     android:ellipsize="end"
                     android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/gainPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="R$15,00"
-                    android:gravity="right"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

@@ -80,7 +80,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     double soldTotal = 0;
                     double gainTotal = 0;
                     double buyTotal = 0;
-                    double priceGain = 0;
                     double quantity = 0;
 
                     // Check if there is any sold stocks first and add values
@@ -108,7 +107,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         // Gain total is sum of gain from variation and sold stocks
                         gainTotal += dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION)));
-                        priceGain = gainTotal/quantity;
 
                         viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData
@@ -121,7 +119,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
-                        viewOverviewHolder.gainPrice.setText(formatter.format(priceGain));
                     } else{
                         Log.d(LOG_TAG, "No Stock Data found for symbol: " + symbol);
                     }
@@ -213,9 +210,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @BindView(R.id.soldPrice)
         TextView soldPrice;
-
-        @BindView(R.id.gainPrice)
-        TextView gainPrice;
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
