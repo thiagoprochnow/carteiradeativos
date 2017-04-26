@@ -131,7 +131,7 @@ public abstract class BaseFragment extends Fragment {
         if (deletedResult > 0){
             // Update stock data and stock income for that symbol
             updateStockIncomes(symbol, timestamp);
-            updateStockData(symbol, -1, -1);
+            updateStockData(symbol, -1, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -564,6 +564,8 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.StockData.URI,
                     null, selection, selectionArguments, null);
 
+            double currentTotal = 0;
+            double variation = 0;
             // Create new StockData for this symbol
             if (queryDataCursor.getCount() == 0){
                 // Adds data to the database
@@ -577,6 +579,15 @@ public abstract class BaseFragment extends Fragment {
                 } else {
                     Log.d(LOG_TAG, "Error creating stock data");
                     return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, StockDetailsOverview will not update current total and total gain, unless refreshing the View
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION){
+                    queryDataCursor.moveToFirst();
+                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
+                    currentTotal = currentPrice*quantityTotal;
+                    variation = currentTotal - buyTotal;
                 }
             }
 
@@ -604,6 +615,10 @@ public abstract class BaseFragment extends Fragment {
             stockDataCV.put(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL, buyValue);
             if (type == Constants.Type.BUY) {
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
+                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
             }
             stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);

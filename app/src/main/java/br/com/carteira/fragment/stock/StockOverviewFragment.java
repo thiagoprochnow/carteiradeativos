@@ -1,12 +1,16 @@
 package br.com.carteira.fragment.stock;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +61,15 @@ public class StockOverviewFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
         // Set fragment title
         getActivity().setTitle(R.string.title_stocks);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // After new current price is get, reload Overview view
+                mStockOverviewAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
     }
 
     @Override

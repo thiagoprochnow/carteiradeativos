@@ -25,6 +25,7 @@ public final class Constants {
         public static final int GROUPING = 3;
         public static final int SPLIT = 4;
         public static final int EDIT = 5;
+        public static final int DELETE_TRANSACION = 6;
     }
 
     // This should contains all product types in the portfolio

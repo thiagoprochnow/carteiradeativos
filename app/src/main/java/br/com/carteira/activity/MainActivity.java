@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             public void onReceive(Context context, Intent intent) {
                 // Ends progress bar on menu when portfolio is updated
                 mMenu.findItem(R.id.menu_refresh).setActionView(null);
-                Toast.makeText(getApplicationContext(), R.string.refresh_done, Toast.LENGTH_SHORT).show();
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
