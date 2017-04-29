@@ -55,8 +55,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
                 PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
-                PortfolioContract.StockData.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT + " REAL, " +
+                PortfolioContract.StockData.COLUMN_NET_INCOME + " REAL, " +
+                PortfolioContract.StockData.COLUMN_INCOME_TAX + " REAL, " +
+                PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_VARIATION + " REAL, " +
                 PortfolioContract.StockData.COLUMN_VARIATION_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_TOTAL_GAIN + " REAL, " +

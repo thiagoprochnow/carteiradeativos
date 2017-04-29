@@ -2,9 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +75,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 double stockAppreciation = mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockData.COLUMN_VARIATION));
                 double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                        (PortfolioContract.StockData.COLUMN_NET_INCOME));
                 double totalGain = stockAppreciation + totalIncome;
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
@@ -103,7 +101,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
                 viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT))) + "%)");
+                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT))) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
         }

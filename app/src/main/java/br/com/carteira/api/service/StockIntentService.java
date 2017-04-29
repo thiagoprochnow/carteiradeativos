@@ -195,7 +195,7 @@ public class StockIntentService extends IntentService {
                 int quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL));
                 double currentPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
                 double totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
-                double incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                double incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME));
                 double currentTotal = quantity*currentPrice;
                 double variation = currentTotal - totalBuy;
                 double totalGain = currentTotal + incomeTotal - totalBuy;

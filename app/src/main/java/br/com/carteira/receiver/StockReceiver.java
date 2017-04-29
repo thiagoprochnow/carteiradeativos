@@ -6,11 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
-import java.util.Locale;
-
-import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 
 public class StockReceiver extends BroadcastReceiver {
@@ -56,7 +52,7 @@ public class StockReceiver extends BroadcastReceiver {
         // Return column should be the sum of value total, income total, value gain
         String[] affectedColumn = {"sum("+ PortfolioContract.StockData.COLUMN_VARIATION +"), " +
                 "sum("+ PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.StockData.COLUMN_INCOME_TOTAL +"), " +
+                "sum("+ PortfolioContract.StockData.COLUMN_NET_INCOME +"), " +
                 "sum("+ PortfolioContract.StockData.COLUMN_CURRENT_TOTAL +"), " +
                 "sum("+PortfolioContract.StockData.COLUMN_TOTAL_GAIN +")"};
 

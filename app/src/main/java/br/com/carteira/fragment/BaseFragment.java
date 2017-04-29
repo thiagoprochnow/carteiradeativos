@@ -1,22 +1,17 @@
 package br.com.carteira.fragment;
 
 import android.app.DatePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -505,6 +500,7 @@ public abstract class BaseFragment extends Fragment {
             double buyQuantity = 0;
             double buyTotal = 0;
             double receiveIncome = 0;
+            double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
             int bonificationQuantity = 0;
@@ -597,7 +593,8 @@ public abstract class BaseFragment extends Fragment {
             getActivity().startService(mServiceIntent);
 
             // Query Income table to get total of this stock income
-            String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")"};
+            String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")",
+                    "sum("+ PortfolioContract.StockIncome.COLUMN_TAX+")"};
             selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
 
             Cursor incomeQueryCursor = mContext.getContentResolver().query(
@@ -607,6 +604,7 @@ public abstract class BaseFragment extends Fragment {
             if (incomeQueryCursor.getCount() > 0){
                 incomeQueryCursor.moveToFirst();
                 receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
             } else {
                 receiveIncome = 0;
             }
@@ -620,7 +618,8 @@ public abstract class BaseFragment extends Fragment {
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
             }
-            stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, receiveIncome);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME, receiveIncome);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TAX, taxIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
 
             if(quantityTotal > 0){

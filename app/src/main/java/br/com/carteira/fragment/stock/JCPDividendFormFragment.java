@@ -123,7 +123,7 @@ public class JCPDividendFormFragment extends BaseFormFragment {
                     incomeCV);
             // If error occurs to add, shows error message
             if (insertedUri != null) {
-                boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue);
+                boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue, tax);
                 if (updateStockDataIncome) {
                     if (incomeType == Constants.IncomeType.DIVIDEND) {
                         Toast.makeText(mContext, R.string.add_dividend_success, Toast.LENGTH_LONG).show();
@@ -160,7 +160,7 @@ public class JCPDividendFormFragment extends BaseFormFragment {
     }
 
     // Update Total Income on Stock Data by new income added
-    private boolean updateStockDataIncome(String symbol, double valueReceived){
+    private boolean updateStockDataIncome(String symbol, double valueReceived, double tax){
         // Prepare query to update stock data income
         // and the total income received
         String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
@@ -171,12 +171,15 @@ public class JCPDividendFormFragment extends BaseFormFragment {
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+            double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME));
+            double dbTax = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TAX));
             double totalIncome = dbIncome + valueReceived;
+            double totalTax = dbTax + tax;
 
             ContentValues updateCV = new ContentValues();
 
-            updateCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL, totalIncome);
+            updateCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME, totalIncome);
+            updateCV.put(PortfolioContract.StockData.COLUMN_INCOME_TAX, totalTax);
 
             int updateQueryCursor = mContext.getContentResolver().update(
                     PortfolioContract.StockData.URI,

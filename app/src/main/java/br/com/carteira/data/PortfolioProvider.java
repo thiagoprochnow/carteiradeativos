@@ -468,7 +468,7 @@ public class PortfolioProvider extends ContentProvider {
                     totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .StockData.COLUMN_BUY_VALUE_TOTAL));
                     incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
-                            (PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
+                            (PortfolioContract.StockData.COLUMN_NET_INCOME));
                     currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
                     totalGain = currentTotal + incomeTotal - totalBuy;
@@ -482,7 +482,7 @@ public class PortfolioProvider extends ContentProvider {
                     stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                     stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
                     stockCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
-                    stockCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT,
+                    stockCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT,
                             incomeTotalPercent);
                     stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT,
                             variationPercent);

@@ -131,8 +131,9 @@ public class PortfolioContract {
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
         public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
-        public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_INCOME_TOTAL_PERCENT = "income_total_percent";
+        public static final String COLUMN_NET_INCOME = "income_total";
+        public static final String COLUMN_INCOME_TAX = "income_tax";
+        public static final String COLUMN_NET_INCOME_PERCENT = "income_total_percent";
         public static final String COLUMN_VARIATION = "variation";
         public static final String COLUMN_VARIATION_PERCENT = "variation_percent";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
@@ -149,8 +150,9 @@ public class PortfolioContract {
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY_TOTAL,
                 COLUMN_BUY_VALUE_TOTAL,
-                COLUMN_INCOME_TOTAL,
-                COLUMN_INCOME_TOTAL_PERCENT,
+                COLUMN_NET_INCOME,
+                COLUMN_INCOME_TAX,
+                COLUMN_NET_INCOME_PERCENT,
                 COLUMN_VARIATION,
                 COLUMN_VARIATION_PERCENT,
                 COLUMN_TOTAL_GAIN,

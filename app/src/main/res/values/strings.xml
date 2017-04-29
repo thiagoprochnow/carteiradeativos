@@ -110,6 +110,10 @@
     <!-- Stock Income Adapter -->
     <string name="dividend_income_type">Dividend</string>
     <string name="jcp_income_type">Interest on Capital</string>
+    <string name="income_overview_bought_label">Bought</string>
+    <string name="income_overview_net_label">Net Income</string>
+    <string name="income_overview_tax_label">Tax</string>
+    <string name="income_overview_gross_label">Gross Income</string>
 
     <!-- Stock Detail Adapter -->
     <string name="stock_buy">Buy</string>

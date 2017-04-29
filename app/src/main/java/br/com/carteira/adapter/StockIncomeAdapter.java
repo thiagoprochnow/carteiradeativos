@@ -21,8 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
-        StockIncomeViewHolder> {
+public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String LOG_TAG = StockIncomeAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
@@ -40,29 +39,97 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
     }
 
     @Override
-    public StockIncomeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes, parent, false);
-        return new StockIncomeViewHolder(item);
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
-    public void onBindViewHolder(StockIncomeViewHolder holder, int position) {
-        mCursor.moveToPosition(position);
-        // TODO: Below values are stored in DB as REALs.
-        // We'll need to format them to currency number format.
-        Locale locale = new Locale( "pt", "BR" );
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View item;
+        switch (viewType){
+            // If it is the first view, return viewholder for StockIncome overview
+            case 0:
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_income_overview, parent, false);
+                return new StockIncomeOverviewViewHolder(item);
+            default:
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes, parent, false);
+                return new StockIncomeViewHolder(item);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-        Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-        String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
-        String date = TimestampToDate(timestamp);
-        Log.d(LOG_TAG, "IncomeType: " + incomeType);
-        Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
-        Log.d(LOG_TAG, "Date: " + date);
-        holder.incomeType.setText(incomeType);
-        holder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
-        holder.incomeDate.setText(date);
+        switch (holder.getItemViewType()) {
+            case 0:
+                StockIncomeOverviewViewHolder overviewViewHolder = (StockIncomeOverviewViewHolder) holder;
+                if (mCursor.getCount() > 0) {
+                    mCursor.moveToFirst();
+                    // Get symbol to use on StockIncome query
+                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL));
+
+                    Cursor dataCursor = getDataCursor(symbol);
+                    Cursor soldDataCursor = getSoldDataCursor(symbol);
+
+                    double buyTotal = 0;
+                    double tax = 0;
+                    double netIncome = 0;
+                    double grossIncome = 0;
+                    double netPercent = 0;
+                    double grossPercent = 0;
+                    double taxPercent = 0;
+
+                    // Check if there is any sold stocks first and add values
+                    if (soldDataCursor.getCount() > 0){
+                        soldDataCursor.moveToFirst();
+                        buyTotal = soldDataCursor.getDouble(
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)));
+                    }
+
+                    if (dataCursor.getCount() > 0) {
+                        dataCursor.moveToFirst();
+                        // Buy total is the sum of stock in data portfolio and already sold ones
+                        buyTotal += dataCursor.getDouble(
+                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)));
+                        tax = dataCursor.getDouble(
+                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TAX)));
+                        netIncome= dataCursor.getDouble(
+                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME)));
+                        grossIncome = netIncome + tax;
+                        netPercent = netIncome/buyTotal*100;
+                        grossPercent = grossIncome/buyTotal*100;
+                        taxPercent = tax/buyTotal*100;
+                        overviewViewHolder.boughtTotal.setText(formatter.format(buyTotal));
+                        overviewViewHolder.grossIncome.setText(formatter.format(grossIncome));
+                        overviewViewHolder.taxIncome.setText(formatter.format(tax));
+                        overviewViewHolder.netIncome.setText(formatter.format(netIncome));
+                        overviewViewHolder.grossIncomePercent.setText("(" + String.format("%.2f",grossPercent)+"%)");
+                        overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
+                        overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
+                    } else{
+                        Log.d(LOG_TAG, "(Income) No Stock Data found for symbol: " + symbol);
+                    }
+                }
+                break;
+            default:
+                StockIncomeViewHolder viewHolder = (StockIncomeViewHolder) holder;
+                mCursor.moveToPosition(position-1);
+                // TODO: Below values are stored in DB as REALs.
+                // We'll need to format them to currency number format.
+                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
+                String date = TimestampToDate(timestamp);
+                Log.d(LOG_TAG, "IncomeType: " + incomeType);
+                Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+                Log.d(LOG_TAG, "Date: " + date);
+                viewHolder.incomeType.setText(incomeType);
+                viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+                viewHolder.incomeDate.setText(date);
+                break;
+        }
     }
 
     @Override
@@ -70,6 +137,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
         int count = 0;
         if (mCursor != null) {
             count = mCursor.getCount();
+            count++;
         }
         return count;
     }
@@ -89,9 +157,6 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
         @BindView(R.id.incomeDate)
         TextView incomeDate;
 
-        @BindView(R.id.incomePercent)
-        TextView incomePercent;
-
         @BindView(R.id.incomeValue)
         TextView incomeValue;
 
@@ -106,7 +171,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
+            mCursor.moveToPosition(adapterPosition-1);
             int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
             int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
             mClickHandler.onClick(mCursor.getString(idColumn), type);
@@ -116,10 +181,40 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
         public void onCreateContextMenu(ContextMenu menu, View v,
                                            ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
+            mCursor.moveToPosition(adapterPosition-1);
             int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
             int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
+        }
+    }
+
+    class StockIncomeOverviewViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.boughtTotal)
+        TextView boughtTotal;
+
+        @BindView(R.id.grossIncome)
+        TextView grossIncome;
+
+        @BindView(R.id.taxIncome)
+        TextView taxIncome;
+
+        @BindView(R.id.netIncome)
+        TextView netIncome;
+
+        @BindView(R.id.grossIncomePercent)
+        TextView grossIncomePercent;
+
+        @BindView(R.id.taxIncomePercent)
+        TextView taxIncomePercent;
+
+        @BindView(R.id.netIncomePercent)
+        TextView netIncomePercent;
+
+
+        StockIncomeOverviewViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -143,5 +238,27 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<StockIncomeAdapter.
                 Log.d(LOG_TAG, "Default IncomeType");
                 return mContext.getResources().getString(R.string.dividend_income_type);
         }
+    }
+
+    private Cursor getDataCursor(String symbol){
+        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.StockData.URI,
+                null, selection, selectionArguments, null);
+    }
+
+    private Cursor getSoldDataCursor(String symbol){
+        String selection = PortfolioContract.SoldStockData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.SoldStockData.URI,
+                null, selection, selectionArguments, null);
     }
 }
