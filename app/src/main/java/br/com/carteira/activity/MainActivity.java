@@ -156,11 +156,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                     return true;
                 }
             case R.id.menu_refresh:
-                refreshPortfolio();
                 ProgressBar spinner = new ProgressBar(this);
                 spinner.getIndeterminateDrawable().setColorFilter(
                         ContextCompat.getColor(this,R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 item.setActionView(spinner);
+                refreshPortfolio();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -294,6 +294,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             Log.d(LOG_TAG, symbol);
             mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
             startService(mStockServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            mMenu.findItem(R.id.menu_refresh).setActionView(null);
         }
     }
 }
