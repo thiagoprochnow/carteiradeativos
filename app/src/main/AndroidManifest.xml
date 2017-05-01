@@ -28,6 +28,7 @@
             android:exported="false" />
 
         <service android:name=".api.service.StockIntentService" />
+        <service android:name=".api.service.DividendIntentService" />
 
         <activity
             android:name=".activity.FormActivity"

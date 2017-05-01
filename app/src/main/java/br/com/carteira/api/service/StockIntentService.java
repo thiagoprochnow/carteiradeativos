@@ -180,53 +180,5 @@ public class StockIntentService extends IntentService {
         super.onDestroy();
         this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
-        /*// Updates the StockData values
-            String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
-            String[] selectionArguments = {mSymbol};
-
-            Cursor queryCursor = this.getContentResolver().query(
-                    PortfolioContract.StockData.URI,
-                    null, selection, selectionArguments, null);
-
-            if (queryCursor.getCount() > 0){
-                queryCursor.moveToFirst();
-
-                // Prepare new values to update StockData table
-                int quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL));
-                double currentPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
-                double totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
-                double incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME));
-                double currentTotal = quantity*currentPrice;
-                double variation = currentTotal - totalBuy;
-                double totalGain = currentTotal + incomeTotal - totalBuy;
-                double incomeTotalPercent = incomeTotal/totalBuy*100;
-                double variationPercent= variation/totalBuy*100;
-                double totalGainPercent = totalGain/totalBuy*100;
-
-                ContentValues stockDataCV = new ContentValues();
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT, incomeTotalPercent);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT, variationPercent);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT, totalGainPercent);
-
-                // Update value on stock data
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.StockData.URI,
-                        stockDataCV, selection, selectionArguments);
-
-                // Log update success/fail result
-                if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateStockData successfully updated");
-                    // Send broadcast so StockReceiver can update the rest
-                    this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
-                } else {
-                    Log.d(LOG_TAG, "updateStockData failed update");
-                }
-
-            } else{
-                Log.d(LOG_TAG, "StockData was not found for symbol: " + mSymbol);
-            }*/
     }
 }

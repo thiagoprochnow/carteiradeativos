@@ -1,5 +1,6 @@
 package br.com.carteira.api.service;
 
+import br.com.carteira.api.domain.ResponseDividend;
 import br.com.carteira.api.domain.ResponseStock;
 import br.com.carteira.api.domain.ResponseStocks;
 import retrofit2.Call;
@@ -21,6 +22,11 @@ public interface StockService {
             "format=json&diagnostics=true&" +
             "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
     Call<ResponseStocks> getStocks(@Query("q") String query);
+
+    @GET("/v1/public/yql?" +
+            "format=json&diagnostics=true&" +
+            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
+    Call<ResponseDividend> getDividend(@Query("q") String query);
 
     // Add here other API requests
 }
