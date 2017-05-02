@@ -15,7 +15,7 @@
     <dimen name="letters_text_margin">10dp</dimen>
     <dimen name="stock_percentage_text_size">35dp</dimen>
     <dimen name="stock_value_percentage_width">50dp</dimen>
-    <dimen name="stock_values_margin">20dp</dimen>
+    <dimen name="stock_values_margin">10dp</dimen>
     <dimen name="stock_values_width">100dp</dimen>
     <dimen name="stock_percent_width">90dp</dimen>
     <dimen name="stock_symbol_info_size">90dp</dimen>

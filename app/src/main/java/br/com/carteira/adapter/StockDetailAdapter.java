@@ -2,6 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -107,6 +108,14 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         // Gain total is sum of gain from variation and sold stocks
                         gainTotal += dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION)));
+
+                        if (gainTotal >= 0){
+                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                        } else {
+                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                        }
 
                         viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData

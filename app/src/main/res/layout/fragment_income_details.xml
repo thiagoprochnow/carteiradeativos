@@ -4,26 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/exDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/perStock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/totalReceived"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/tax"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/liquidReceived"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

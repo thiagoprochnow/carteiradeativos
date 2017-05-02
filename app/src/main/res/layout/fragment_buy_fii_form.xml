@@ -5,46 +5,56 @@
     android:layout_height="wrap_content"
     android:padding="20dp">
     <TextView
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/fii_symbol"/>
     <EditText
+        android:fontFamily="sans-serif-light"
         android:id="@+id/inputSymbol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/fii_symbol_hint" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/quantity"/>
     <EditText
+        android:fontFamily="sans-serif-light"
         android:id="@+id/inputQuantity"
         android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buy_price"/>
     <EditText
+        android:fontFamily="sans-serif-light"
         android:id="@+id/inputBuyPrice"
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/percentual_objective"/>
     <EditText
+        android:fontFamily="sans-serif-light"
         android:id="@+id/inputObjective"
         android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:fontFamily="sans-serif-light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/buy_date"/>
     <EditText
+        android:fontFamily="sans-serif-light"
         android:id="@+id/inputBuyDate"
         android:inputType="date"
         android:layout_width="match_parent"

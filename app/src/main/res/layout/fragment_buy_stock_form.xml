@@ -11,12 +11,13 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/stock_symbol"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,39 +27,42 @@
             android:maxLength="6"/>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/quantity"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/buy_price"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputBuyPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"/>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/percentual_objective"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputObjective"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,13 +70,14 @@
             android:inputType="numberDecimal"/>
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/buy_date"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputBuyDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

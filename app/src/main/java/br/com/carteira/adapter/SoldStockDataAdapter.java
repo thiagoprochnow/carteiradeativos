@@ -2,6 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -47,6 +48,20 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         // Get handled values of StockTransaction with current symbol
+        double sellGain = mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN));
+        double sellGainPercent = mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT));
+        // Set text colors according to positive or negative values
+
+        if (sellGain >=0){
+            holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
+
         holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldStockData.
                 COLUMN_SYMBOL)));
@@ -56,10 +71,8 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)))));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL)))));
-        holder.sellGain.setText(String.format(formatter.format(mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN)))));
-        holder.sellGainPercent.setText("("+ String.format("%.2f",mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT))) + "%)");
+        holder.sellGain.setText(String.format(formatter.format(sellGain)));
+        holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
     }
 
     @Override

@@ -2,6 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -79,6 +80,32 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 double totalGain = stockAppreciation + totalIncome;
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+
+                // Set text colors according to positive or negative values
+                if (stockAppreciation >= 0){
+                    viewHolder.stockAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.stockAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                } else {
+                    viewHolder.stockAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.stockAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                }
+
+                if (totalIncome >= 0){
+                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                } else {
+                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                }
+
+                if (totalGain >= 0){
+                    viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                } else {
+                    viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                }
+
                 // Get handled values of StockData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .SoldStockData.

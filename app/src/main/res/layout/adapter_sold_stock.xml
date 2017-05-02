@@ -28,16 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/lightGray"
+            android:background="@color/header_title"
             android:paddingTop="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
+                android:textColor="@color/white"
                 android:textSize="@dimen/stock_symbol" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,17 +47,22 @@
                 android:orientation="horizontal"
                 android:gravity="right">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/stockQuantityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stock_quantity_label"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
                     android:textSize="@dimen/stock_quantity"
                     android:ellipsize="end"
                     android:maxLines="1" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/stockQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
                     android:text="100"
                     android:textSize="@dimen/stock_quantity"
                     android:ellipsize="end"
@@ -68,90 +75,101 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingTop="3dp"
-            android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_marginLeft="@dimen/letters_text_margin"
-                android:layout_weight="1">
+                android:layout_marginLeft="@dimen/letters_text_margin">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sold_data_bought_label" />
-                <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sold_data_sold_label" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sold_data_bought_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/sold_data_gain_label" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/boughtTotal"
-                    android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$1.000.345,62"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/sellTotal"
-                    android:layout_width="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/sellTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$3345,62"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/boughtTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1.345,62"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/sellGain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1150,00"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$3345,62"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/sellGain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$1150,00"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/stock_percentage_text_margin"
-                android:layout_weight="1">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
-                <TextView
-                    android:id="@+id/sellGainPercent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="(15800,53%)"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/sellGainPercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(15,53%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

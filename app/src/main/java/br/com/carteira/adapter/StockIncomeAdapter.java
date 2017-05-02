@@ -2,6 +2,7 @@ package br.com.carteira.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -100,6 +101,31 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         netPercent = netIncome/buyTotal*100;
                         grossPercent = grossIncome/buyTotal*100;
                         taxPercent = tax/buyTotal*100;
+
+                        if (grossIncome >= 0){
+                            overviewViewHolder.grossIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                            overviewViewHolder.grossIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                        } else {
+                            overviewViewHolder.grossIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                            overviewViewHolder.grossIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                        }
+
+                        if (netIncome >= 0){
+                            overviewViewHolder.netIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                            overviewViewHolder.netIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                        } else {
+                            overviewViewHolder.netIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                            overviewViewHolder.netIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                        }
+
+                        if (tax >= 0){
+                            overviewViewHolder.taxIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                            overviewViewHolder.taxIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                        } else {
+                            overviewViewHolder.taxIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                            overviewViewHolder.taxIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                        }
+
                         overviewViewHolder.boughtTotal.setText(formatter.format(buyTotal));
                         overviewViewHolder.grossIncome.setText(formatter.format(grossIncome));
                         overviewViewHolder.taxIncome.setText(formatter.format(tax));

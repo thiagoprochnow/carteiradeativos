@@ -100,6 +100,7 @@
     <string name="summary_total_gain_label"><u>G</u>anho</string>
 
     <!-- Stock Portolfio -->
+    <string name="stock_portfolio_label">Carteira de Ações</string>
     <string name="portfolio_bought_label">Compra</string>
     <string name="portfolio_current_label">Atual</string>
     <string name="portfolio_sold_label">Vendido</string>
@@ -108,6 +109,7 @@
     <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Stock Income Adapter -->
+    <string name="income_overview_label">Visão Geral</string>
     <string name="dividend_income_type">Dividendo</string>
     <string name="jcp_income_type">Juros s/ Capital</string>
     <string name="income_overview_bought_label">Compra</string>

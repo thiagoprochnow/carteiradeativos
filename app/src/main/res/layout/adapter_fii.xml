@@ -34,17 +34,20 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/fiiQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100"
                     android:textSize="@dimen/fii_quantity"/>
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="|"
                     android:textSize="@dimen/fii_symbol"/>
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/symbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,6 +69,7 @@
                     android:layout_marginRight="@dimen/fii_percentage_image_margin" />
 
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/currentPercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,6 +91,7 @@
                     android:layout_marginRight="@dimen/fii_percentage_image_margin" />
 
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/objectivePercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -102,26 +107,31 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1">
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="C" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="A" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="V" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="R" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -134,30 +144,35 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1">
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/boughtTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="R$2345,62" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/currentTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="R$3345,62" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/fiiAppreciation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="R$1000,00" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/totalIncome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="R$150,00" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/totalGain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -171,26 +186,31 @@
             android:layout_marginLeft="20dp"
             android:layout_weight="1">
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/fiiAppreciationPercent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="12,43%" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/totalIncomePercent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:text="1,32%" />
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/totalGainPercent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

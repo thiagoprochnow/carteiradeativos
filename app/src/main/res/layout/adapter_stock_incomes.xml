@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/incomeType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,6 +44,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"/>
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/incomeDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -58,6 +60,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="right">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/incomeValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

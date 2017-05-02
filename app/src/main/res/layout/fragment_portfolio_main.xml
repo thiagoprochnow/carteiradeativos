@@ -4,6 +4,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:fontFamily="sans-serif-light"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

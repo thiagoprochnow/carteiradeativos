@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputJCPDividendExLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,19 +19,21 @@
             android:text="@string/ex_date"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputJCPDividendExDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
             android:inputType="date"/>
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/receive_value"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputReceivedPerStock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

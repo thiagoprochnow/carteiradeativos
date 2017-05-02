@@ -28,16 +28,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:background="@color/lightGray"
+            android:background="@color/header_title"
             android:paddingTop="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
             <TextView
+                android:fontFamily="sans-serif-light"
                 android:id="@+id/symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
+                android:textColor="@color/white"
+                android:textAllCaps="true"
                 android:textSize="@dimen/stock_symbol" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,19 +48,25 @@
                 android:orientation="horizontal"
                 android:gravity="right">
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/stockQuantityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stock_quantity_label"
-                    android:textSize="@dimen/stock_quantity"
+                    android:textSize="@dimen/stock_symbol"
                     android:ellipsize="end"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
                     android:maxLines="1" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:id="@+id/stockQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100"
-                    android:textSize="@dimen/stock_quantity"
+                    android:textSize="@dimen/stock_symbol"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
                     android:ellipsize="end"
                     android:maxLines="1" />
                 </LinearLayout>
@@ -91,6 +100,7 @@
                         android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
 
                     <TextView
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/currentPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -112,6 +122,7 @@
                         android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
 
                     <TextView
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/objectivePercent"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -126,120 +137,141 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/letters_text_margin">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_bought_label" />
-                <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/data_current_label" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/data_bought_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/data_appreciation_label" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/data_income_label" />
                 <TextView
+                    android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/data_total_gain_label" />
             </LinearLayout>
             <LinearLayout
-                android:layout_width="@dimen/stock_values_width"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/stock_values_margin">
-                <TextView
-                    android:id="@+id/boughtTotal"
-                    android:layout_width="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$1.000.345,62"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/currentTotal"
-                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/stock_values_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/currentTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$3345,62"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/boughtTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1.345,62"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/stockAppreciation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1000,00"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalIncome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$150,00"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalGain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1150,00"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$3345,62"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/stockAppreciation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$1000,00"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/totalIncome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$150,00"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/totalGain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="R$1150,00"
-                    android:textSize="@dimen/stock_price"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="@dimen/stock_percent_width"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/stock_percentage_text_margin">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
 
-                <TextView
-                    android:id="@+id/stockAppreciationPercent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="(15800,53%)"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/totalIncomePercent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="0,0%"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:id="@+id/totalGainPercent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="0,0%"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/stockAppreciationPercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(158,53%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalIncomePercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(0,0%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalGainPercent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(0,0%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
