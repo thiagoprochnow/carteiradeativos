@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -34,6 +37,7 @@ public class IncomeDetailsFragment extends BaseFragment {
 
     // Query the income information using the "id" and displays them on the screen
     public void showIncomeDetails(String id){
+        TextView viewSymbol = (TextView) mView.findViewById(R.id.incomeSymbol);
         TextView viewExDate = (TextView) mView.findViewById(R.id.exDate);
         TextView viewQuantity = (TextView) mView.findViewById(R.id.quantity);
         TextView viewPerStock = (TextView) mView.findViewById(R.id.perStock);
@@ -53,14 +57,19 @@ public class IncomeDetailsFragment extends BaseFragment {
             queryCursor.moveToFirst();
             Log.d(LOG_TAG, "Income details found");
 
+            Locale locale = new Locale("pt", "BR");
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+
             long timestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+            String symbol = String.valueOf(queryCursor.getString(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL)));
             String exDate = TimestampToDate(timestamp);
             String quantity = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY)));
-            String perStock = String.valueOf(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK)));
-            String totalReceived = String.valueOf(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL)));
-            String tax = String.valueOf(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TAX)));
-            String liquidReceived = String.valueOf(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID)));
+            String perStock = String.format(formatter.format(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK))));
+            String totalReceived = String.format(formatter.format(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL))));
+            String tax = String.format(formatter.format(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TAX))));
+            String liquidReceived = String.format(formatter.format(queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
 
+            viewSymbol.setText(symbol);
             viewExDate.setText(exDate);
             viewQuantity.setText(quantity);
             viewPerStock.setText(perStock);

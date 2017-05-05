@@ -139,6 +139,12 @@
     <string name="delete_stock_detail_title">Deletar essa operação do seu portfolio?</string>
     <string name="delete_stock_detail_dialog">Tem certeza que deseja deletar essa operação do seu portfolio?</string>
 
+    <!-- Income Details Fragment -->
+    <string name="income_per_stock">Recebido por Ação</string>
+    <string name="gross_income">Rendimento Bruto</string>
+    <string name="tax_income">Imposto Pago</string>
+    <string name="net_income">Rendimento Liquido</string>
+
     <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Compra de Ação</string>
     <string name="buy_stock_button">Comprar</string>

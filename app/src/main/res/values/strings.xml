@@ -139,6 +139,12 @@
     <string name="delete_stock_detail_title">Delete stock operation from your portfolio?</string>
     <string name="delete_stock_detail_dialog">Are you sure you want to delete this operation from your portfolio?</string>
 
+    <!-- Income Details Fragment -->
+    <string name="income_per_stock">Received per Stock</string>
+    <string name="gross_income">Gross Income</string>
+    <string name="tax_income">Paid Tax</string>
+    <string name="net_income">Net Income</string>
+
     <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Buy Stock</string>
     <string name="buy_stock_button">Buy</string>

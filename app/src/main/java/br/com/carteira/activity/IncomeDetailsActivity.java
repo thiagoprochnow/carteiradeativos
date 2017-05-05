@@ -30,9 +30,11 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                     Constants.ProductType.INVALID);
             switch (productType) {
                 case Constants.IncomeType.DIVIDEND:
+                    setTitle(R.string.dividend_income_type);
                     replaceFragment(new IncomeDetailsFragment());
                     break;
                 case Constants.IncomeType.JCP:
+                    setTitle(R.string.jcp_income_type);
                     replaceFragment(new IncomeDetailsFragment());
                     break;
                 default:
