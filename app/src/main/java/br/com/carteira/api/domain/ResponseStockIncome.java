@@ -11,11 +11,11 @@ import br.com.carteira.domain.Dividend;
  * Domain class that will map the response of a getDividend request made to YAHOO Api.
  */
 @SuppressWarnings("unused")
-public class ResponseDividend {
+public class ResponseStockIncome {
 
 
     @SerializedName("query")
-    private ResponseDividend.Result mResult;
+    private ResponseStockIncome.Result mResult;
 
     /**
      * Get list of Dividends that have DAte and Dividends attributes present in response
@@ -39,12 +39,12 @@ public class ResponseDividend {
     private class Result {
 
         @SerializedName("results")
-        private ResponseDividend.Quotes mQuote;
+        private ResponseStockIncome.Quotes mQuote;
 
         @SerializedName("count")
         private int mCount;
 
-        private ResponseDividend.Quotes getQuotes() {
+        private ResponseStockIncome.Quotes getQuotes() {
             return mQuote;
         }
 

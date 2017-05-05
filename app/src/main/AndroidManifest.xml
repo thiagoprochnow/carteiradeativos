@@ -28,7 +28,7 @@
             android:exported="false" />
 
         <service android:name=".api.service.StockIntentService" />
-        <service android:name=".api.service.DividendIntentService" />
+        <service android:name=".api.service.StockIncomeIntentService" />
 
         <activity
             android:name=".activity.FormActivity"

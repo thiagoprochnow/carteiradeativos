@@ -9,13 +9,13 @@ import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
 
-import br.com.carteira.api.domain.ResponseDividend;
+import br.com.carteira.api.domain.ResponseStockIncome;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DividendIntentService extends IntentService {
+public class StockIncomeIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
@@ -23,13 +23,13 @@ public class DividendIntentService extends IntentService {
     public static final String END_DATE = "end_date";
 
     // Log variable
-    private static final String LOG_TAG = DividendIntentService.class.getSimpleName();
+    private static final String LOG_TAG = StockIncomeIntentService.class.getSimpleName();
 
     /**
      * Constructor matching super is needed
      */
-    public DividendIntentService() {
-        super(DividendIntentService.class.getName());
+    public StockIncomeIntentService() {
+        super(StockIncomeIntentService.class.getName());
     }
 
     @Override
@@ -61,9 +61,9 @@ public class DividendIntentService extends IntentService {
             // Make the request and parse the result
             StockService service = retrofit.create(StockService.class);
 
-            String[] symbols = params.getExtras().getString(DividendIntentService.ADD_SYMBOL).split(",");
-            String startDate = params.getExtras().getString(DividendIntentService.START_DATE);
-            String endDate = params.getExtras().getString(DividendIntentService.END_DATE);
+            String[] symbols = params.getExtras().getString(StockIncomeIntentService.ADD_SYMBOL).split(",");
+            String startDate = params.getExtras().getString(StockIncomeIntentService.START_DATE);
+            String endDate = params.getExtras().getString(StockIncomeIntentService.END_DATE);
 
             // Prepare the query to be added in YQL (Yahoo API)
             String query = "select * from yahoo.finance.dividendhistory where symbol in ("
@@ -71,9 +71,9 @@ public class DividendIntentService extends IntentService {
             Log.d(LOG_TAG, "Response log test:" +
                     "\nquery: " + query);
 
-            Call<ResponseDividend> call = service.getDividend(query);
-            Response<ResponseDividend> response = call.execute();
-            ResponseDividend responseGetStock = response.body();
+            Call<ResponseStockIncome> call = service.getDividend(query);
+            Response<ResponseStockIncome> response = call.execute();
+            ResponseStockIncome responseGetStock = response.body();
 
             if(responseGetStock.getDividendQuotes() != null) {
                 Log.d(LOG_TAG, "Response log test:" +
