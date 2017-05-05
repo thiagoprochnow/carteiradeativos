@@ -2,6 +2,7 @@ package br.com.carteira.fragment.stock;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -114,6 +115,13 @@ public class StockIncomesFragment extends BaseFragment implements
         MenuInflater inflater = getActivity().getMenuInflater();
         this.id = id;
         inflater.inflate(R.menu.income_item_menu, menu);
+        if (type == Constants.IncomeType.JCP){
+            menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
+            menu.findItem(R.id.menu_item_change_dividend).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
+            menu.findItem(R.id.menu_item_change_jcp).setVisible(true);
+        }
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -139,6 +147,12 @@ public class StockIncomesFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
+                break;
+            case R.id.menu_item_change_jcp:
+                changeIncomeType(id, mSymbol, Constants.IncomeType.JCP);
+                break;
+            case R.id.menu_item_change_dividend:
+                changeIncomeType(id, mSymbol, Constants.IncomeType.DIVIDEND);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");
@@ -177,5 +191,55 @@ public class StockIncomesFragment extends BaseFragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mStockIncomeAdapter.setCursor(null);
+    }
+
+    // Change the income of "id" from dividend to JCP or JCP to dividend
+    public void changeIncomeType(String id, String symbol, int type){
+        String selection = PortfolioContract.StockIncome._ID + " = ? AND "
+                + PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(PortfolioContract.StockIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            double perStock = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK));
+            double quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY));
+            double grossIncome = perStock*quantity;
+            double tax = 0;
+            double netIncome = 0;
+            if (type == Constants.IncomeType.JCP){
+                // Change to JCP
+                tax = grossIncome*0.15;
+                netIncome = grossIncome-tax;
+            } else {
+                // Change to Dividend
+                tax = 0;
+                netIncome = grossIncome;
+            }
+
+            String updateSelection = PortfolioContract.StockIncome._ID + " = ?";
+            String[] updatedSelectionArguments = {id};
+
+            ContentValues incomeCV = new ContentValues();
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, grossIncome);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, netIncome);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, type);
+
+            // Update value on incomes table
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.StockIncome.URI,
+                    incomeCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                updateStockData(mSymbol, -1, -1);
+                Log.d(LOG_TAG, "updateStockIncomes successfully updated");
+            } else {
+                Log.d(LOG_TAG, "updateStockIncomes failed update");
+            }
+        } else {
+            Log.d(LOG_TAG, "No income found for this ID and Symbol");
+        }
     }
 }

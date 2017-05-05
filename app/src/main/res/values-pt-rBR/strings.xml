@@ -116,6 +116,8 @@
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>
     <string name="income_overview_gross_label">Bruto</string>
+    <string name="income_change_jcp">Transformar em JCP</string>
+    <string name="income_change_dividend">Transformar em Dividendo</string>
 
     <!-- Stock Detail Adapter -->
     <string name="stock_buy">Compra</string>

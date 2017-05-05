@@ -116,6 +116,8 @@
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>
     <string name="income_overview_gross_label">Gross Income</string>
+    <string name="income_change_jcp">Make it JCP</string>
+    <string name="income_change_dividend">Make it Dividend</string>
 
     <!-- Stock Detail Adapter -->
     <string name="stock_buy">Buy</string>

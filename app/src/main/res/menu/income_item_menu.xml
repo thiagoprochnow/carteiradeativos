@@ -1,6 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_item_change_jcp"
+        android:title="@string/income_change_jcp"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_change_dividend"
+        android:title="@string/income_change_dividend"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/menu_item_delete_income"
         android:title="@string/menu_delete"
         app:showAsAction="never"/>
