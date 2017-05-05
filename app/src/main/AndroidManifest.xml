@@ -39,14 +39,16 @@
         </activity>
         <activity
             android:name=".activity.ProductDetailsActivity"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.IncomeDetailsActivity"
-            android:parentActivityName=".activity.ProductDetailsActivity">
+            android:parentActivityName=".activity.ProductDetailsActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.ProductDetailsActivity" />
