@@ -9,6 +9,7 @@ import android.util.Log;
 import br.com.carteira.R;
 import br.com.carteira.fragment.stock.SoldStockMainFragment;
 import br.com.carteira.fragment.stock.StockDataFragment;
+import br.com.carteira.fragment.stock.StockIncomesMainFragment;
 import br.com.carteira.fragment.stock.StockOverviewFragment;
 
 
@@ -22,7 +23,7 @@ public class StockTabAdapter extends FragmentPagerAdapter {
     }
     @Override
     public int getCount(){
-        return 3;
+        return 4;
     }
 
     @Override
@@ -32,8 +33,10 @@ public class StockTabAdapter extends FragmentPagerAdapter {
         }
          else if(position == 1){
             return mContext.getString(R.string.stocks_portfolio);
+        } else if(position == 2){
+            return mContext.getString(R.string.stocks_history);
         }
-        return mContext.getString(R.string.stocks_history);
+        return mContext.getString(R.string.stocks_incomes);
     }
 
     @Override
@@ -45,9 +48,12 @@ public class StockTabAdapter extends FragmentPagerAdapter {
         else if (position == 1){
             Log.d(LOG_TAG, "Loading StockDataFragment()");
             return new StockDataFragment();
-        } else {
+        } else if (position == 2) {
             Log.d(LOG_TAG, "Loading SoldStockMainFragment()");
             return new SoldStockMainFragment();
+        } else {
+            Log.d(LOG_TAG, "Loading StockIncomesMainFragment()");
+            return new StockIncomesMainFragment();
         }
     }
 }
