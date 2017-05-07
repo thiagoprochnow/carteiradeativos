@@ -84,6 +84,21 @@ public abstract class BaseFragment extends Fragment {
     public boolean deleteStockIncome(String id, String symbol){
         String selection = PortfolioContract.StockIncome._ID + " = ? AND "
                 + PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
+        if (symbol == null){
+            String selectionData = PortfolioContract.StockIncome._ID + " = ? ";
+            String[] selectionDataArguments = {id};
+            String[] affectedColumn = {PortfolioContract.StockIncome.COLUMN_SYMBOL};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PortfolioContract.StockIncome.URI,
+                    affectedColumn, selectionData, selectionDataArguments, null);
+
+            if (cursor.getCount() > 0){
+                cursor.moveToFirst();
+                symbol = cursor.getString(0);
+            } else {
+                Log.d(LOG_TAG, "No symbol for for that income");
+            }
+        }
         String[] selectionArguments = {id, symbol};
 
         int deletedResult = mContext.getContentResolver().delete(

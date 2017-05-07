@@ -22,13 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String LOG_TAG = StockIncomeAdapter.class.getSimpleName();
+public class StockIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String LOG_TAG = StockIncomeMainAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
     private StockAdapterOnClickHandler mClickHandler;
 
-    public StockIncomeAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public StockIncomeMainAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -53,7 +53,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_income_overview, parent, false);
                 return new StockIncomeOverviewViewHolder(item);
             default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes, parent, false);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes_main, parent, false);
                 return new StockIncomeViewHolder(item);
         }
     }
@@ -68,11 +68,8 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (mCursor.getCount() > 0) {
                     mCursor.moveToFirst();
                     overviewViewHolder.itemView.setVisibility(View.VISIBLE);
-                    // Get symbol to use on StockIncome query
-                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL));
-
-                    Cursor dataCursor = getDataCursor(symbol);
-                    Cursor soldDataCursor = getSoldDataCursor(symbol);
+                    Cursor dataCursor = getDataCursor();
+                    Cursor soldDataCursor = getSoldDataCursor();
 
                     double buyTotal = 0;
                     double tax = 0;
@@ -85,19 +82,24 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // Check if there is any sold stocks first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
-                        buyTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)));
+                        do {
+                            buyTotal += soldDataCursor.getDouble(
+                                    (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)));
+                        } while (soldDataCursor.moveToNext());
                     }
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
-                        // Buy total is the sum of stock in data portfolio and already sold ones
-                        buyTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)));
-                        tax = dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TAX)));
-                        netIncome= dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME)));
+                        do {
+                            // Buy total is the sum of stock in data portfolio and already sold ones
+                            buyTotal += dataCursor.getDouble(
+                                    (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)));
+                            tax += dataCursor.getDouble(
+                                    (dataCursor.getColumnIndex(PortfolioContract.StockData
+                                            .COLUMN_INCOME_TAX)));
+                            netIncome += dataCursor.getDouble(
+                                    (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME)));
+                        } while (dataCursor.moveToNext());
                         grossIncome = netIncome + tax;
                         netPercent = netIncome/buyTotal*100;
                         grossPercent = grossIncome/buyTotal*100;
@@ -135,7 +137,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Stock Data found for symbol: " + symbol);
+                        Log.d(LOG_TAG, "(Income) No Stock Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
@@ -153,6 +155,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
                 Log.d(LOG_TAG, "Date: " + date);
+                viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL)));
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
@@ -179,6 +182,9 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class StockIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+
+        @BindView(R.id.symbol)
+        TextView symbol;
 
         @BindView(R.id.incomeType)
         TextView incomeType;
@@ -269,25 +275,17 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private Cursor getDataCursor(String symbol){
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
-        String[] selectionArguments = {symbol};
-
-        // Searches for existing StockData to update value.
-        // If dosent exists, creates new one
+    private Cursor getDataCursor(){
+        // Searches for existing StockData
         return mContext.getContentResolver().query(
                 PortfolioContract.StockData.URI,
-                null, selection, selectionArguments, null);
+                null, null, null, null);
     }
 
-    private Cursor getSoldDataCursor(String symbol){
-        String selection = PortfolioContract.SoldStockData.COLUMN_SYMBOL + " = ? ";
-        String[] selectionArguments = {symbol};
-
-        // Searches for existing StockData to update value.
-        // If dosent exists, creates new one
+    private Cursor getSoldDataCursor(){
+        // Searches for existing SoldStockData
         return mContext.getContentResolver().query(
                 PortfolioContract.SoldStockData.URI,
-                null, selection, selectionArguments, null);
+                null, null, null, null);
     }
 }

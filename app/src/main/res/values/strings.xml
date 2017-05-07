@@ -73,6 +73,7 @@
     <string name="stocks_overview">Overview</string>
     <string name="stocks_portfolio">Portfolio</string>
     <string name="stocks_history">History</string>
+    <string name="stocks_incomes">Incomes</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>

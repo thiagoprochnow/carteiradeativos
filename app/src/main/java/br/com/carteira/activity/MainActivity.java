@@ -33,10 +33,11 @@ import br.com.carteira.fragment.fii.FiiMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
+import br.com.carteira.listener.IncomeDetailsListener;
 import br.com.carteira.listener.ProductListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements ProductListener {
+public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -297,6 +298,29 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
         } else{
             // Clear menu progressbar so it is not set indefinitely
             mMenu.findItem(R.id.menu_refresh).setActionView(null);
+        }
+    }
+
+    @Override
+    public void onIncomeDetails(int incomeType, String id){
+        Intent intent = new Intent(this, IncomeDetailsActivity.class);
+        Log.d(LOG_TAG, "ID: " + id);
+        switch (incomeType) {
+            case Constants.IncomeType.DIVIDEND:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.JCP:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
+                break;
         }
     }
 }
