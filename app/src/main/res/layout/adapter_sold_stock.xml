@@ -111,7 +111,7 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/sellTotal"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
@@ -121,7 +121,7 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/boughtTotal"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
@@ -131,7 +131,7 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/sellGain"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
@@ -146,7 +146,7 @@
                     android:layout_marginLeft="@dimen/stock_percentage_text_margin">
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:ellipsize="end"
@@ -154,7 +154,7 @@
 
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:ellipsize="end"
@@ -163,7 +163,7 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/sellGainPercent"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="(15,53%)"
