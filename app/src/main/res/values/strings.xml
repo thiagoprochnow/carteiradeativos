@@ -5,8 +5,8 @@
     <string name="refresh_done">Portfolio updated successfully</string>
 
     <!-- Form Activity -->
-    <string name="objective_update_success">Objective updated successfuly</string>
-    <string name="objective_update_fail">Objective update failed</string>
+    <string name="stock_update_success">Stock updated successfuly</string>
+    <string name="stock_update_fail">Objective update failed</string>
     <string name="form_title_buy">Buy</string>
     <string name="form_title_sell">Sell</string>
     <string name="form_title_objective">Objective</string>
@@ -20,7 +20,9 @@
     <string name="quantity">Quantity</string>
     <string name="buy_price">Buy Price</string>
     <string name="sell_price">Sell Price</string>
+    <string name="stock_current_price">Stock Current Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
+    <string name="stock_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="buy_date">Buy Date</string>
     <string name="bonification_date">Bonification Date</string>
     <string name="split_date">Stock Split Date</string>
@@ -35,6 +37,7 @@
     <string name="wrong_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
+    <string name="wrong_current_price">Current Price is not valid</string>
     <string name="wrong_date">Invalid date</string>
     <string name="future_date">Date cannot be in the future</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
@@ -65,7 +68,6 @@
     <string name="delete_cancel">Cancel</string>
     <string name="menu_buy">Buy</string>
     <string name="menu_edit">Edit</string>
-    <string name="menu_edit_objective">Edit Objective</string>
     <string name="menu_sell">Sell</string>
     <string name="menu_delete">Delete</string>
 

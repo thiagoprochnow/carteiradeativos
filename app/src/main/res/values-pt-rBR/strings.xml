@@ -5,8 +5,8 @@
     <string name="refresh_done">Carteira atualizada com sucesso</string>
 
     <!-- Form Activity -->
-    <string name="objective_update_success">Objetivo atualizado com sucesso</string>
-    <string name="objective_update_fail">Atualização do objetivo falhou</string>
+    <string name="stock_update_success">Ação atualizada com sucesso</string>
+    <string name="stock_update_fail">Atualização do objetivo falhou</string>
     <string name="form_title_buy">Comprar</string>
     <string name="form_title_sell">Vender</string>
     <string name="form_title_objective">Objetivo</string>
@@ -20,7 +20,9 @@
     <string name="quantity">Quantidade</string>
     <string name="buy_price">Preço de compra</string>
     <string name="sell_price">Preço de venda</string>
+    <string name="stock_current_price">Preço Atual da Ação</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
+    <string name="stock_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="buy_date">Data da compra</string>
     <string name="bonification_date">Data da bonificação</string>
     <string name="split_date">Data do Desdobramento</string>
@@ -35,6 +37,7 @@
     <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
+    <string name="wrong_current_price">Preço Atual não é valido</string>
     <string name="wrong_date">Data inválida</string>
     <string name="future_date">Data não pode ser no futuro</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
@@ -65,7 +68,6 @@
     <string name="delete_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
-    <string name="menu_edit_objective">Editar Objetivo</string>
     <string name="menu_sell">Vender</string>
     <string name="menu_delete">Deletar</string>
 
