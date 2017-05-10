@@ -94,9 +94,12 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
-
-                viewHolder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL)))));
+                double buyTotal =  mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL));
+                double stockAppreciationPercent = totalAppreciation/buyTotal*100;
+                double totalGainPercent = totalGain/buyTotal*100;
+                double incomePercent = totalIncome/buyTotal*100;
+                viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL)))));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
@@ -104,12 +107,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 viewHolder.stockAppreciation.setText(String.format(formatter.format(totalAppreciation)));
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_VARIATION_PERCENT))) + "%)");
-                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_INCOME_PERCENT))) + "%)");
-                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
+                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", stockAppreciationPercent) + "%)");
+                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", incomePercent) + "%)");
+                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
             default:
                 // If it is one of the StockData adapter views

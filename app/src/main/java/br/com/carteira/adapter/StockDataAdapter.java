@@ -105,15 +105,17 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
-
+                double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
+                double variationPercent = stockAppreciation/buyTotal*100;
+                double netIncomePercent = totalIncome/buyTotal*100;
+                double totalGainPercent = totalGain/buyTotal*100;
                 // Get handled values of StockData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .SoldStockData.
                         COLUMN_SYMBOL)));
                 viewHolder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                         (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
-                viewHolder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)))));
+                viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
@@ -125,12 +127,9 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         + "%");
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT))) + "%)");
-                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT))) + "%)");
-                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT))) + "%)");
+                viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
+                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
+                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
         }
 
     }

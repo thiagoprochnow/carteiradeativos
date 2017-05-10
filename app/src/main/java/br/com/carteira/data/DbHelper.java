@@ -28,11 +28,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.Portfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.Portfolio.COLUMN_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_VALUE_GAIN + " REAL, " +
-                PortfolioContract.Portfolio.COLUMN_VALUE_GAIN_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.Portfolio.COLUMN_INCOME_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN + " REAL, " +
-                PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN_PERCENT + " REAL, " +
                 "UNIQUE (" + PortfolioContract.Portfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_stock_portfolio = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
@@ -40,11 +37,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_VARIATION_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_INCOME_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
-                PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
@@ -57,11 +51,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.StockData.COLUMN_NET_INCOME + " REAL, " +
                 PortfolioContract.StockData.COLUMN_INCOME_TAX + " REAL, " +
-                PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_VARIATION + " REAL, " +
-                PortfolioContract.StockData.COLUMN_VARIATION_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_TOTAL_GAIN + " REAL, " +
-                PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_CURRENT_PERCENT + " REAL, " +
                 PortfolioContract.StockData.COLUMN_MEDIUM_PRICE + " REAL, " +
@@ -76,7 +67,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
                 PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.SoldStockData.COLUMN_SELL_GAIN + " REAL, " +
-                PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT + " REAL, " +
                 PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL + " REAL, " +
                 "UNIQUE (" + PortfolioContract.SoldStockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
@@ -101,7 +91,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
-                PortfolioContract.StockIncome.COLUMN_PERCENT + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
