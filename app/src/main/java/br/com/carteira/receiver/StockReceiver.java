@@ -79,9 +79,6 @@ public class StockReceiver extends BroadcastReceiver {
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN, totalGain);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VARIATION_PERCENT, variationPercent);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_PERCENT, incomePercent);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN_PERCENT, totalGainPercent);
 
             // Query for the only stock portfolio, if dosent exist, creates one
             Cursor portfolioQueryCursor = mContext.getContentResolver().query(

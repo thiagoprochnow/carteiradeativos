@@ -47,11 +47,12 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+
+        double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL));
         // Get handled values of StockTransaction with current symbol
         double sellGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN));
-        double sellGainPercent = mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT));
+        double sellGainPercent = sellGain/buyTotal*100;
         // Set text colors according to positive or negative values
 
         if (sellGain >=0){
@@ -67,8 +68,7 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
                 COLUMN_SYMBOL)));
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL))));
-        holder.boughtTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)))));
+        holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL)))));
         holder.sellGain.setText(String.format(formatter.format(sellGain)));

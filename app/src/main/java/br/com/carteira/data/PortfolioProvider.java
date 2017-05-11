@@ -482,12 +482,6 @@ public class PortfolioProvider extends ContentProvider {
                     stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                     stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
                     stockCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
-                    stockCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME_PERCENT,
-                            incomeTotalPercent);
-                    stockCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT,
-                            variationPercent);
-                    stockCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT,
-                            totalGainPercent);
 
                     returnCount += this.update(
                             PortfolioContract.StockData.URI,

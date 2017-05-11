@@ -43,21 +43,15 @@ public class PortfolioContract {
 
         public static final String COLUMN_VALUE_TOTAL = "value_total";
         public static final String COLUMN_VALUE_GAIN = "value_gain";
-        public static final String COLUMN_VALUE_GAIN_PERCENT = "value_gain_percent";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_INCOME_PERCENT = "income_percent";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
-        public static final String COLUMN_TOTAL_GAIN_PERCENT = "total_gain_percent";
 
         public static final String[] PORTFOLIO_COLUMNS = {
                 _ID,
                 COLUMN_VALUE_TOTAL,
                 COLUMN_VALUE_GAIN,
-                COLUMN_VALUE_GAIN_PERCENT,
                 COLUMN_INCOME_TOTAL,
-                COLUMN_INCOME_PERCENT,
                 COLUMN_TOTAL_GAIN,
-                COLUMN_TOTAL_GAIN_PERCENT
         };
 
         public static Uri makeUriForPortfolio(String symbol) {
@@ -83,11 +77,8 @@ public class PortfolioContract {
         public static final String COLUMN_BUY_TOTAL = "value_total";
         public static final String COLUMN_SOLD_TOTAL = "sold_total";
         public static final String COLUMN_VARIATION_TOTAL = "variation_total";
-        public static final String COLUMN_VARIATION_PERCENT = "variation_percent";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
-        public static final String COLUMN_INCOME_PERCENT = "income_percent";
         public static final String COLUMN_TOTAL_GAIN = "value_gain";
-        public static final String COLUMN_TOTAL_GAIN_PERCENT = "total_gain_percent";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
@@ -97,11 +88,8 @@ public class PortfolioContract {
                 COLUMN_BUY_TOTAL,
                 COLUMN_SOLD_TOTAL,
                 COLUMN_VARIATION_TOTAL,
-                COLUMN_VARIATION_PERCENT,
                 COLUMN_INCOME_TOTAL,
-                COLUMN_INCOME_PERCENT,
                 COLUMN_TOTAL_GAIN,
-                COLUMN_TOTAL_GAIN_PERCENT,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL
@@ -133,11 +121,8 @@ public class PortfolioContract {
         public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
         public static final String COLUMN_NET_INCOME = "income_total";
         public static final String COLUMN_INCOME_TAX = "income_tax";
-        public static final String COLUMN_NET_INCOME_PERCENT = "income_total_percent";
         public static final String COLUMN_VARIATION = "variation";
-        public static final String COLUMN_VARIATION_PERCENT = "variation_percent";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
-        public static final String COLUMN_TOTAL_GAIN_PERCENT = "total_gain_percent";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
         public static final String COLUMN_MEDIUM_PRICE = "medium_price";
@@ -152,11 +137,8 @@ public class PortfolioContract {
                 COLUMN_BUY_VALUE_TOTAL,
                 COLUMN_NET_INCOME,
                 COLUMN_INCOME_TAX,
-                COLUMN_NET_INCOME_PERCENT,
                 COLUMN_VARIATION,
-                COLUMN_VARIATION_PERCENT,
                 COLUMN_TOTAL_GAIN,
-                COLUMN_TOTAL_GAIN_PERCENT,
                 COLUMN_OBJECTIVE_PERCENT,
                 COLUMN_CURRENT_PERCENT,
                 COLUMN_MEDIUM_PRICE,
@@ -189,7 +171,6 @@ public class PortfolioContract {
         public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
         public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
         public static final String COLUMN_SELL_GAIN = "sell_gain";
-        public static final String COLUMN_SELL_GAIN_PERCENT = "sell_gain_percent";
         public static final String COLUMN_SELL_MEDIUM_PRICE = "current_price";
         public static final String COLUMN_SELL_TOTAL = "current_total";
 
@@ -199,7 +180,6 @@ public class PortfolioContract {
                 COLUMN_QUANTITY_TOTAL,
                 COLUMN_BUY_VALUE_TOTAL,
                 COLUMN_SELL_GAIN,
-                COLUMN_SELL_GAIN_PERCENT,
                 COLUMN_SELL_MEDIUM_PRICE,
                 COLUMN_SELL_TOTAL
         };
@@ -261,7 +241,6 @@ public class PortfolioContract {
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_TYPE = "income_type";
         public static final String COLUMN_PER_STOCK = "per_stock";
-        public static final String COLUMN_PERCENT = "current_percent";
         public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
         public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
         public static final String COLUMN_TAX = "tax";
@@ -273,7 +252,6 @@ public class PortfolioContract {
                 COLUMN_SYMBOL,
                 COLUMN_TYPE,
                 COLUMN_PER_STOCK,
-                COLUMN_PERCENT,
                 COLUMN_EXDIVIDEND_TIMESTAMP,
                 COLUMN_RECEIVE_TOTAL,
                 COLUMN_TAX,

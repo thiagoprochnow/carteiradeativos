@@ -117,7 +117,6 @@ public class JCPDividendFormFragment extends BaseFormFragment {
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
             incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
             // TODO: Calculate the percent based on total stocks value that received the income
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_PERCENT, "5.32");
             // Adds to the database
             Uri insertedUri = mContext.getContentResolver().insert(PortfolioContract.StockIncome.URI,
                     incomeCV);

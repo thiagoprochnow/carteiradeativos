@@ -755,7 +755,6 @@ public abstract class BaseFragment extends Fragment {
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL, soldTotal);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN, sellGain);
-                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN_PERCENT, gainPercent);
 
                 // Searches for existing StockData to update value.
                 // If dosent exists, creates new one
