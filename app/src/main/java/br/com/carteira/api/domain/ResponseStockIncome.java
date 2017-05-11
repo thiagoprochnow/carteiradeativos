@@ -1,5 +1,6 @@
 package br.com.carteira.api.domain;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ResponseStockIncome {
      */
     public List<Dividend> getDividendQuotes() {
         List<Dividend> result = new ArrayList<>();
-        List<Dividend> dividendQuotes = mResult.getQuotes().getDividendQuotes();
+        List<Dividend> dividendQuotes =  mResult.getQuotes();
         for (Dividend dividend : dividendQuotes){
             if (dividend.getDate() != null
                     && dividend.getDividends() != null) {
@@ -38,16 +39,28 @@ public class ResponseStockIncome {
      */
     private class Result {
 
-        @SerializedName("results")
-        private ResponseStockIncome.Quotes mQuote;
-
         @SerializedName("count")
         private int mCount;
 
-        private ResponseStockIncome.Quotes getQuotes() {
-            return mQuote;
-        }
+        @SerializedName("results")
+        private Object mRawQuote;
 
+        private List<Dividend> getQuotes() {
+            Gson gson = new Gson();
+            String rawJson = gson.toJson(mRawQuote);
+
+            // Api return two different types of response - one if there is only one element in the
+            // list, and if there is more than one. A JSON list is returned.
+            if(mCount == 1){
+                Quote quote = gson.fromJson(rawJson, Quote.class);
+                List<Dividend> dividendList = new ArrayList<Dividend>();
+                dividendList.add(quote.getDividendQuote());
+                return dividendList;
+            }else{
+                Quotes quotes = gson.fromJson(rawJson, Quotes.class);
+                return quotes.getDividendQuotes();
+            }
+        }
         public int getCount() {
             return mCount;
         }
@@ -63,6 +76,19 @@ public class ResponseStockIncome {
 
         public List<Dividend> getDividendQuotes() {
             return mDividendQuotes;
+        }
+    }
+
+    /**
+     * Inner class - Quote response mapping
+     */
+    private class Quote {
+
+        @SerializedName("quote")
+        private Dividend mDividendQuote;
+
+        private Dividend getDividendQuote() {
+            return mDividendQuote;
         }
     }
 }
