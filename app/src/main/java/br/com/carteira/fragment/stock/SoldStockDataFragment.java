@@ -22,7 +22,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.SoldStockDataAdapter;
+import br.com.carteira.adapter.stock.SoldStockDataAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -33,11 +33,11 @@ import butterknife.ButterKnife;
 /**
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
-public class SoldStockMainFragment extends BaseFragment implements
+public class SoldStockDataFragment extends BaseFragment implements
         SoldStockDataAdapter.StockAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = SoldStockMainFragment.class.getSimpleName();
+    private static final String LOG_TAG = SoldStockDataFragment.class.getSimpleName();
 
     @BindView(R.id.stockRecyclerView)
     protected RecyclerView mRecyclerView;

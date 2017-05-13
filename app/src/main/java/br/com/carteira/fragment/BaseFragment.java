@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.FiiIntentService;
 import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -189,6 +190,144 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete fii and all its information from database
+    // This is different then selling a fii, that will maintain some information
+    public boolean deleteFii(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .FiiTransaction
+                .makeUriForFiiTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.FiiData
+                .makeUriForFiiData(symbol), null, null);
+
+        int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldFiiData
+                .makeUriForSoldFiiData(symbol), null, null);
+        // Cannot check if deletedIncome > 0, because fii may not have any income to delete
+        // Which is not an error
+        int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.FiiIncome
+                .makeUriForFiiIncome(symbol), null, null);
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
+        if (deletedData > 0) {
+            mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
+            Toast.makeText(mContext, getString(R.string.toast_fii_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_fii_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    // Delete fii income from table by using its id
+    // symbol is used to update Fii Data table
+    public boolean deleteFiiIncome(String id, String symbol){
+        String selection = PortfolioContract.FiiIncome._ID + " = ? AND "
+                + PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
+        if (symbol == null){
+            String selectionData = PortfolioContract.FiiIncome._ID + " = ? ";
+            String[] selectionDataArguments = {id};
+            String[] affectedColumn = {PortfolioContract.FiiIncome.COLUMN_SYMBOL};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiIncome.URI,
+                    affectedColumn, selectionData, selectionDataArguments, null);
+
+            if (cursor.getCount() > 0){
+                cursor.moveToFirst();
+                symbol = cursor.getString(0);
+            } else {
+                Log.d(LOG_TAG, "No symbol for for that income");
+            }
+        }
+        String[] selectionArguments = {id, symbol};
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.FiiIncome.URI,
+                selection, selectionArguments);
+        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
+        if (deletedResult > 0){
+            // Update stock data for that symbol
+            boolean updateFiiData = updateFiiData(symbol, -1, -1);
+            if (updateFiiData)
+                return true;
+        }
+        return false;
+    }
+
+    // Delete fii transaction from table by using its id
+    // symbol is used to update Fii Data table
+    public boolean deleteFiiTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.FiiTransaction._ID + " = ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.FiiTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update fii data and fii income for that symbol
+            updateFiiIncomes(symbol, timestamp);
+            updateFiiData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from FiiData
+
+        String selectionTransaction = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the fii and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteFii(symbol);
+            getActivity().finish();
+        }
+
+        // Check if there is any more SELL transaction for this symbol
+        // If not, delete this symbol from SoldFiiData
+
+        String sellSelectionTransaction = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        // No more Sell transactions, delete SoldFiiData
+        if (queryCursor.getCount() == 0){
+            String selectionSoldData = PortfolioContract.SoldFiiData.COLUMN_SYMBOL + " = ?";
+            String[] selectionArgumentsSoldData = {symbol};
+            int rowsDeleted = mContext.getContentResolver().delete(
+                    PortfolioContract.SoldFiiData.URI, selectionSoldData,
+                    selectionArgumentsSoldData);
+            if (rowsDeleted == 1){
+                Log.d(LOG_TAG, "SoldFiiData deleted successfully");
+            } else {
+                Log.d(LOG_TAG, "Problem deleting SoldFiiData");
+            }
+        }
+
+        return false;
+    }
+
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
         Log.d(LOG_TAG, "InputDate String: " + inputDate);
@@ -225,6 +364,18 @@ public abstract class BaseFragment extends Fragment {
         Editable editable = symbol.getText();
         // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
         Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid Fii Symbol
+    protected boolean isValidFiiSymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Fii (EX: KNRI11)
+        Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9][0-9][A-Z]|[0-9][0-9])$");
         if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
@@ -792,6 +943,403 @@ public abstract class BaseFragment extends Fragment {
         } else{
             Log.d(LOG_TAG, "No StockTransaction found");
             return false;
+        }
+    }
+
+    // Reads the StockTransaction entries and calculates value for FiiData table for this symbol
+    public boolean updateFiiData(String symbol, double objective, int type){
+
+        String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in FiiData
+            int quantityTotal = 0;
+            double buyValue = 0;
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyQuantity = 0;
+            double buyTotal = 0;
+            double receiveIncome = 0;
+            double taxIncome = 0;
+            double mediumPrice = 0;
+            int currentType;
+            int bonificationQuantity = 0;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldBuyValue = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        mediumPrice = buyTotal/buyQuantity;
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        buyValue = quantityTotal*mediumPrice;
+                        // Add the value sold times the current medium buy price
+                        soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        break;
+                    case Constants.Type.BONIFICATION:
+                        bonificationQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SPLIT:
+                        buyQuantity = buyQuantity*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        buyQuantity = buyQuantity/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
+            // Adds the bonification after the buyValue is totally calculated
+            // Bonification cannot influence on the buy value
+            quantityTotal += bonificationQuantity;
+            ContentValues fiiDataCV = new ContentValues();
+
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing StockData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            double variation = 0;
+            // Create new StockData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Adds data to the database
+                Uri insertedFiiDataUri = mContext.getContentResolver().insert(PortfolioContract.FiiData.URI,
+                        fiiDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedFiiDataUri != null) {
+                    Log.d(LOG_TAG, "Created fii data");
+                    // Update Fii Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating fii data");
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, FiiDetailsOverview will not update current total and total gain, unless refreshing the View
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION){
+                    queryDataCursor.moveToFirst();
+                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE));
+                    currentTotal = currentPrice*quantityTotal;
+                    variation = currentTotal - buyTotal;
+                }
+            }
+
+            Intent mServiceIntent = new Intent(mContext, FiiIntentService
+                    .class);
+            mServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
+
+            // Query Income table to get total of this stock income
+            String[] affectedColumn = {"sum("+ PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID+")",
+                    "sum("+ PortfolioContract.FiiIncome.COLUMN_TAX+")"};
+            selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
+            } else {
+                receiveIncome = 0;
+            }
+
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL, buyValue);
+            if (type == Constants.Type.BUY) {
+                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL, currentTotal);
+                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_VARIATION, variation);
+            }
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME, receiveIncome);
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME_TAX, taxIncome);
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE, mediumPrice);
+
+            if(quantityTotal > 0){
+                // Set fii as active
+                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_STATUS, Constants.Status.ACTIVE);
+            } else {
+                // Set fii as sold
+                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_STATUS, Constants.Status.SOLD);
+            }
+            // Searches for existing FiiData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiData._ID)));
+
+            // Update
+            // Prepare query to update stock data
+            String updateSelection = PortfolioContract.FiiData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on stock data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.FiiData.URI,
+                    fiiDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateStockData successfully updated");
+                // Update Stock Portfolio
+                // Send broadcast so StockReceiver can update the rest
+                updateSoldFiiData(symbol, soldBuyValue);
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateStockData failed update");
+                return false;
+            }
+        } else{
+            Log.d(LOG_TAG, "No StockTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the FiiTransaction entries and calculates value for FiiData table for this symbol
+    public boolean updateSoldFiiData(String symbol, double soldBuyValue){
+
+        String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in FiiData
+            int quantityTotal = 0;
+            double soldTotal = 0;
+            double sellMediumPrice = 0;
+            int currentType;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.SELL:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        sellMediumPrice = soldTotal/quantityTotal;
+                        Log.d(LOG_TAG, "SELL: QuantityTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "SELL: SoldTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "SELL: soldBuyValue: " + soldBuyValue);
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Do nothing");
+                }
+            } while (STQueryCursor.moveToNext());
+
+            // If there is any sold fii
+            if (quantityTotal > 0) {
+                ContentValues fiiDataCV = new ContentValues();
+
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SYMBOL, symbol);
+
+                selection = PortfolioContract.SoldFiiData.COLUMN_SYMBOL + " = ? ";
+
+                // Searches for existing FiiData to update value.
+                // If dosent exists, creates new one
+                Cursor queryDataCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldFiiData.URI,
+                        null, selection, selectionArguments, null);
+
+                // Create new StockData for this symbol
+                if (queryDataCursor.getCount() == 0) {
+                    // Adds data to the database
+                    Uri insertedFiiDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldFiiData.URI,
+
+                            fiiDataCV);
+
+                    // If error occurs to add, shows error message
+                    if (insertedFiiDataUri != null) {
+                        Log.d(LOG_TAG, "Created fii sold data");
+                        // Update Fii Portfolio
+                    } else {
+                        Log.d(LOG_TAG, "Error creating sold fii data");
+                        return false;
+                    }
+                }
+
+                double sellGain = soldTotal - soldBuyValue;
+                double gainPercent = sellGain/soldBuyValue*100;
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL, soldTotal);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN, sellGain);
+
+                // Searches for existing FiiData to update value.
+                // If dosent exists, creates new one
+                Cursor queryCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldFiiData.URI,
+                        null, selection, selectionArguments, null);
+
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.SoldFiiData._ID)));
+
+                // Update
+                // Prepare query to update fii data
+                String updateSelection = PortfolioContract.SoldStockData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on fii data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.SoldFiiData.URI,
+                        fiiDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0) {
+                    Log.d(LOG_TAG, "updateSoldFiiData successfully updated");
+                    // Update Fii Portfolio
+                    // Send broadcast so FiiReceiver can update the rest
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                    return true;
+                } else {
+                    Log.d(LOG_TAG, "updateSoldFiiData failed update");
+                    return false;
+                }
+            }
+            Log.d(LOG_TAG, "No sold fii yet");
+            return true;
+        } else{
+            Log.d(LOG_TAG, "No FiiTransaction found");
+            return false;
+        }
+    }
+
+    // By using the timestamp of bought/sold fii, function will check if any added income
+    // is affected by this buy/sell fii.
+    // If any income is affected, it will update income line with new value by using
+    // getFiiQuantity function for each affected line
+    public void updateFiiIncomes(String symbol, long timestamp){
+        // Prepare query for checking affected incomes
+        String selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
+        String[] selectionArguments = {symbol, String.valueOf(timestamp)};
+
+        // Check if any income is affected by stock buy/sell
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            // Sum that will be returned and updated on FiiData table by updateFiiData()
+            double sumReceiveTotal = 0;
+            do{
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiIncome._ID)));
+                long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int quantity = getFiiQuantity(symbol, incomeTimestamp);
+                double perFii = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_PER_FII)));
+                int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE)));
+                double receiveTotal = quantity * perFii;
+
+                // Prepare query to update fii quantity applied for that dividend
+                // and the total income received
+                String updateSelection = PortfolioContract.FiiIncome._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+                ContentValues incomeCV = new ContentValues();
+                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY, quantity);
+                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
+                if(incomeType == Constants.IncomeType.DIVIDEND) {
+                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
+                } else {
+                    double tax = receiveTotal * 0.15;
+                    double receiveLiquid = receiveTotal - tax;
+                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
+                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
+                }
+
+                // Update value on incomes table
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.FiiIncome.URI,
+                        incomeCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
+                } else {
+                    Log.d(LOG_TAG, "updateFiiIncomes failed update");
+                }
+            } while (queryCursor.moveToNext());
+        } else {
+            Log.d(LOG_TAG, "No incomes affected by buy/sell fii");
+        }
+    }
+
+    // Get stock quantity that will receive the dividend per fii
+    // symbol is to query by specific symbol only
+    // income timestamp is to query only the quantity of fiis transactions before the timestamp
+    public int getFiiQuantity(String symbol, Long incomeTimestamp){
+        // Return column should be only quantity of fii
+        String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " < ?";
+        String[] selectionArguments = {symbol,String.valueOf(incomeTimestamp)};
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        // Check if the symbol exists in the db
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
+            int quantityTotal = 0;
+            int currentType = 0;
+            do {
+                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "getStockQuantity currentType Unknown");
+                }
+            } while (queryCursor.moveToNext());
+            return quantityTotal;
+        } else{
+            Log.d(LOG_TAG, "");
+            return 0;
         }
     }
 }

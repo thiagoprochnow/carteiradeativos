@@ -17,19 +17,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import br.com.carteira.R;
 import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.currency.CurrencyMainFragment;
-import br.com.carteira.fragment.fii.FiiMainFragment;
+import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case R.id.nav_item_fii:
                 Log.d(LOG_TAG, "Loaded FII Fragment from menu");
-                replaceFragment(new FiiMainFragment());
+                replaceFragment(new FiiTabFragment());
                 break;
             case R.id.currency:
                 Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
@@ -206,6 +204,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
                 if(symbol != null && !symbol.isEmpty()){
                     intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);

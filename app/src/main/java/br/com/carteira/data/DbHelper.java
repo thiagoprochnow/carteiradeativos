@@ -94,12 +94,79 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
+        String builder_fii_portfolio = "CREATE TABLE " + PortfolioContract.FiiPortfolio.TABLE_NAME + " (" +
+                PortfolioContract.FiiPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.FiiPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                "UNIQUE (" + PortfolioContract.FiiPortfolio._ID + ") ON CONFLICT REPLACE);";
+
+        String builder_fii_data = "CREATE TABLE " + PortfolioContract.FiiData.TABLE_NAME + " (" +
+                PortfolioContract.FiiData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.FiiData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_INCOME + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_INCOME_TAX + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_VARIATION + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_CURRENT_PRICE + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_STATUS + " INTEGER, " +
+                "UNIQUE (" + PortfolioContract.FiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+        String builder_sold_fii_data = "CREATE TABLE " + PortfolioContract.SoldFiiData.TABLE_NAME + " (" +
+                PortfolioContract.SoldFiiData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.SoldFiiData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN + " REAL, " +
+                PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
+                PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL + " REAL, " +
+                "UNIQUE (" + PortfolioContract.SoldFiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+        String builder_fii_transaction = "CREATE TABLE " + PortfolioContract.FiiTransaction.TABLE_NAME + " (" +
+                PortfolioContract.FiiTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.FiiTransaction.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.FiiTransaction.COLUMN_PRICE + " REAL, " +
+                PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.FiiTransaction.COLUMN_TYPE + " INTEGER, " +
+                " FOREIGN KEY (" + PortfolioContract.FiiTransaction.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.FiiData.TABLE_NAME + " (" + PortfolioContract.FiiData._ID + "));";
+
+        String builder_fii_income = "CREATE TABLE " + PortfolioContract.FiiIncome.TABLE_NAME + " (" +
+                PortfolioContract.FiiIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.FiiIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.FiiIncome.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                PortfolioContract.FiiIncome.COLUMN_PER_FII + " REAL, " +
+                PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
+                PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
+                PortfolioContract.FiiIncome.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
+                PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
+                " FOREIGN KEY (" + PortfolioContract.FiiIncome.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.FiiData.TABLE_NAME + " (" + PortfolioContract.FiiData._ID + "));";
+
         db.execSQL(builder_portfolio);
         db.execSQL(builder_stock_portfolio);
         db.execSQL(builder_stock_data);
         db.execSQL(builder_sold_stock_data);
         db.execSQL(builder_stock_transaction);
         db.execSQL(builder_stock_income);
+        db.execSQL(builder_fii_portfolio);
+        db.execSQL(builder_fii_data);
+        db.execSQL(builder_sold_fii_data);
+        db.execSQL(builder_fii_transaction);
+        db.execSQL(builder_fii_income);
 
     }
 
@@ -113,6 +180,11 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldStockData.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockTransaction.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockIncome.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiPortfolio.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldFiiData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiTransaction.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiIncome.TABLE_NAME);
         onCreate(db);
     }
 }

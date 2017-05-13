@@ -1,4 +1,4 @@
-package br.com.carteira.fragment.stock;
+package br.com.carteira.fragment.fii;
 
 
 import android.content.BroadcastReceiver;
@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
+import br.com.carteira.adapter.fii.FiiOverviewAdapter;
 import br.com.carteira.adapter.stock.StockOverviewAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -31,18 +32,18 @@ import butterknife.ButterKnife;
 /**
  * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
  */
-public class StockOverviewFragment extends BaseFragment implements
+public class FiiOverviewFragment extends BaseFragment implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    private static final String LOG_TAG = StockOverviewFragment.class.getSimpleName();
+    private static final String LOG_TAG = FiiOverviewFragment.class.getSimpleName();
 
-    @BindView(R.id.stockRecyclerView)
+    @BindView(R.id.fiiRecyclerView)
     protected RecyclerView mRecyclerView;
 
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private StockOverviewAdapter mStockOverviewAdapter;
+    private FiiOverviewAdapter mFiiOverviewAdapter;
     private ProductListener mFormProductListener;
 
     public void onAttach(Context context) {
@@ -59,23 +60,23 @@ public class StockOverviewFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set fragment title
-        getActivity().setTitle(R.string.title_stocks);
+        getActivity().setTitle(R.string.title_fii);
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // After new current price is get, reload Overview view
-                mStockOverviewAdapter.notifyDataSetChanged();
+                mFiiOverviewAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_stock_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_fii_overview, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -84,24 +85,24 @@ public class StockOverviewFragment extends BaseFragment implements
         mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
-        view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fabFiis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
+                mFormProductListener.onBuyProduct(Constants.ProductType.FII, "");
             }
         });
-        mStockOverviewAdapter = new StockOverviewAdapter(mContext);
-        mRecyclerView.setAdapter(mStockOverviewAdapter);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_OVERVIEW, null, this);
+        mFiiOverviewAdapter = new FiiOverviewAdapter(mContext);
+        mRecyclerView.setAdapter(mFiiOverviewAdapter);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_OVERVIEW, null, this);
         return view;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(mContext,
-                PortfolioContract.StockPortfolio.URI,
-                PortfolioContract.StockPortfolio.STOCK_PORTFOLIO_COLUMNS,
+                PortfolioContract.FiiPortfolio.URI,
+                PortfolioContract.FiiPortfolio.FII_PORTFOLIO_COLUMNS,
                 null, null, null);
     }
 
@@ -116,11 +117,11 @@ public class StockOverviewFragment extends BaseFragment implements
             }
         }
 
-        mStockOverviewAdapter.setCursor(data);
+        mFiiOverviewAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockOverviewAdapter.setCursor(null);
+        mFiiOverviewAdapter.setCursor(null);
     }
 }

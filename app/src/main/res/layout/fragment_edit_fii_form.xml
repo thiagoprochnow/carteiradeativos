@@ -14,44 +14,15 @@
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fii_symbol"/>
-
-        <EditText
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/inputSymbol"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="0,1,2,3,4,5,6,7,8,9,QWERTZUIOPASDFGHJKLYXCVBNM"
-            android:hint="@string/fii_symbol_hint"
-            android:inputType="textCapCharacters"
-            android:maxLength="6"/>
-
-        <TextView
-            android:fontFamily="sans-serif-light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/quantity"/>
+            android:text="@string/fii_current_price"/>
 
         <EditText
             android:fontFamily="sans-serif-light"
-            android:id="@+id/inputQuantity"
+            android:id="@+id/inputCurrentPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
-
-        <TextView
-            android:fontFamily="sans-serif-light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/buy_price"/>
-
-        <EditText
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/inputBuyPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:maxLength="5"
             android:inputType="numberDecimal"/>
 
         <TextView
@@ -74,14 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/buy_date"/>
+            android:text="@string/fii_edit_tip"/>
 
-        <EditText
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/inputBuyDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="date"/>
     </LinearLayout>
 </ScrollView>

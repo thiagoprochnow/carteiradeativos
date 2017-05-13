@@ -1,4 +1,4 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.fii;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -7,15 +7,15 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import br.com.carteira.R;
-import br.com.carteira.fragment.stock.StockDetailsFragment;
-import br.com.carteira.fragment.stock.StockIncomesFragment;
+import br.com.carteira.fragment.fii.FiiDetailsFragment;
+import br.com.carteira.fragment.fii.FiiIncomesFragment;
 
 
-public class StockDetailsTabAdapter extends FragmentPagerAdapter {
-    private static final String LOG_TAG = StockDetailsTabAdapter.class.getSimpleName();
+public class FiiDetailsTabAdapter extends FragmentPagerAdapter {
+    private static final String LOG_TAG = FiiDetailsTabAdapter.class.getSimpleName();
     final private Context mContext;
 
-    public StockDetailsTabAdapter(Context context, FragmentManager fm) {
+    public FiiDetailsTabAdapter(Context context, FragmentManager fm) {
         super(fm);
         this.mContext = context;
     }
@@ -35,11 +35,11 @@ public class StockDetailsTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading StockDetailsFragment()");
-            return new StockDetailsFragment();
+            Log.d(LOG_TAG, "Loading FiiDetailsFragment()");
+            return new FiiDetailsFragment();
         } else {
-            Log.d(LOG_TAG, "Loading StockIncomesFragment()");
-            return new StockIncomesFragment();
+            Log.d(LOG_TAG, "Loading FiiIncomesFragment()");
+            return new FiiIncomesFragment();
         }
     }
 }

@@ -1,4 +1,4 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.fii;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -22,13 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String LOG_TAG = StockIncomeAdapter.class.getSimpleName();
+public class FiiIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String LOG_TAG = FiiIncomeAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
-    private StockAdapterOnClickHandler mClickHandler;
+    private FiiAdapterOnClickHandler mClickHandler;
 
-    public StockIncomeAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public FiiIncomeAdapter(Context context, FiiAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -48,13 +48,13 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item;
         switch (viewType){
-            // If it is the first view, return viewholder for StockIncome overview
+            // If it is the first view, return viewholder for FiiIncome overview
             case 0:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_income_overview, parent, false);
-                return new StockIncomeOverviewViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_income_overview, parent, false);
+                return new FiiIncomeOverviewViewHolder(item);
             default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_incomes, parent, false);
-                return new StockIncomeViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_incomes, parent, false);
+                return new FiiIncomeViewHolder(item);
         }
     }
 
@@ -64,12 +64,12 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
             case 0:
-                StockIncomeOverviewViewHolder overviewViewHolder = (StockIncomeOverviewViewHolder) holder;
+                FiiIncomeOverviewViewHolder overviewViewHolder = (FiiIncomeOverviewViewHolder) holder;
                 if (mCursor.getCount() > 0) {
                     mCursor.moveToFirst();
                     overviewViewHolder.itemView.setVisibility(View.VISIBLE);
-                    // Get symbol to use on StockIncome query
-                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL));
+                    // Get symbol to use on FiiIncome query
+                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_SYMBOL));
 
                     Cursor dataCursor = getDataCursor(symbol);
                     Cursor soldDataCursor = getSoldDataCursor(symbol);
@@ -82,22 +82,22 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     double grossPercent = 0;
                     double taxPercent = 0;
 
-                    // Check if there is any sold stocks first and add values
+                    // Check if there is any sold fiis first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
                         buyTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL)));
                     }
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
-                        // Buy total is the sum of stock in data portfolio and already sold ones
+                        // Buy total is the sum of fii in data portfolio and already sold ones
                         buyTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL)));
                         tax = dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TAX)));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_INCOME_TAX)));
                         netIncome= dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME)));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_INCOME)));
                         grossIncome = netIncome + tax;
                         netPercent = netIncome/buyTotal*100;
                         grossPercent = grossIncome/buyTotal*100;
@@ -135,27 +135,27 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Stock Data found for symbol: " + symbol);
+                        Log.d(LOG_TAG, "(Income) No Fii Data found for symbol: " + symbol);
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
                 }
                 break;
             default:
-                StockIncomeViewHolder viewHolder = (StockIncomeViewHolder) holder;
+                FiiIncomeViewHolder viewHolder = (FiiIncomeViewHolder) holder;
                 mCursor.moveToPosition(position-1);
                 // TODO: Below values are stored in DB as REALs.
                 // We'll need to format them to currency number format.
-                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
+                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
                 Log.d(LOG_TAG, "IncomeType: " + incomeType);
                 Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+                        (PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID))));
                 Log.d(LOG_TAG, "Date: " + date);
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
+                        (PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID))));
                 viewHolder.incomeDate.setText(date);
                 break;
         }
@@ -172,13 +172,13 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    public interface StockAdapterOnClickHandler {
+    public interface FiiAdapterOnClickHandler {
         void onClick(String symbol, int type);
         void onCreateContextMenu(ContextMenu menu, View v,
                                  ContextMenu.ContextMenuInfo menuInfo, String id, int type);
     }
 
-    class StockIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+    class FiiIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
 
         @BindView(R.id.incomeType)
         TextView incomeType;
@@ -190,7 +190,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView incomeValue;
 
 
-        StockIncomeViewHolder(View itemView) {
+        FiiIncomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -201,8 +201,8 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.FiiIncome._ID);
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
             mClickHandler.onClick(mCursor.getString(idColumn), type);
         }
 
@@ -211,13 +211,13 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                            ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.FiiIncome._ID);
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 
-    class StockIncomeOverviewViewHolder extends RecyclerView.ViewHolder {
+    class FiiIncomeOverviewViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
@@ -241,7 +241,7 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView netIncomePercent;
 
 
-        StockIncomeOverviewViewHolder(View itemView) {
+        FiiIncomeOverviewViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -270,24 +270,24 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private Cursor getDataCursor(String symbol){
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+        String selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
-        // Searches for existing StockData to update value.
+        // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
+                PortfolioContract.FiiData.URI,
                 null, selection, selectionArguments, null);
     }
 
     private Cursor getSoldDataCursor(String symbol){
-        String selection = PortfolioContract.SoldStockData.COLUMN_SYMBOL + " = ? ";
+        String selection = PortfolioContract.SoldFiiData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
-        // Searches for existing StockData to update value.
+        // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
-                PortfolioContract.SoldStockData.URI,
+                PortfolioContract.SoldFiiData.URI,
                 null, selection, selectionArguments, null);
     }
 }

@@ -1,4 +1,4 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.fii;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -22,13 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String LOG_TAG = StockDetailAdapter.class.getSimpleName();
+public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String LOG_TAG = FiiDetailAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
-    private StockAdapterOnClickHandler mClickHandler;
+    private FiiAdapterOnClickHandler mClickHandler;
 
-    public StockDetailAdapter(Context context, StockAdapterOnClickHandler clickHandler) {
+    public FiiDetailAdapter(Context context, FiiAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -48,15 +48,15 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item;
         switch (viewType){
-            // If it is the first view, return viewholder for StockDetails overview
+            // If it is the first view, return viewholder for FiiDetails overview
             case 0:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_details_overview, parent, false);
-                return new StockDetailsOverviewViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_details_overview, parent, false);
+                return new FiiDetailsOverviewViewHolder(item);
             default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock_details, parent, false);
-                return new StockDetailViewHolder(item);
-            //item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
-            //return new StockDataViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_details, parent, false);
+                return new FiiDetailViewHolder(item);
+            //item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii, parent, false);
+            //return new FiiDataViewHolder(item);
 
 
         }
@@ -68,11 +68,11 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
             case 0:
-                StockDetailsOverviewViewHolder viewOverviewHolder = (StockDetailsOverviewViewHolder) holder;
+                FiiDetailsOverviewViewHolder viewOverviewHolder = (FiiDetailsOverviewViewHolder) holder;
                 if (mCursor.getCount() > 0) {
                     mCursor.moveToFirst();
-                    // Get symbol to use on StockData query
-                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_SYMBOL));
+                    // Get symbol to use on FiiData query
+                    String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_SYMBOL));
 
                     Cursor dataCursor = getDataCursor(symbol);
                     Cursor soldDataCursor = getSoldDataCursor(symbol);
@@ -83,31 +83,31 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     double buyTotal = 0;
                     double quantity = 0;
 
-                    // Check if there is any sold stocks first and add values
+                    // Check if there is any sold fiis first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
                         soldPrice = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE)));
                         soldTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL)));
                         buyTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL)));
                         gainTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN)));
                         quantity = soldDataCursor.getInt(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL)));
+                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL)));
                     }
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
-                        // Buy total is the sum of stock in data portfolio and already sold ones
+                        // Buy total is the sum of fii in data portfolio and already sold ones
                         buyTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL)));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL)));
                         quantity += dataCursor.getInt(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL)));
-                        // Gain total is sum of gain from variation and sold stocks
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL)));
+                        // Gain total is sum of gain from variation and sold fiis
                         gainTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_VARIATION)));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_VARIATION)));
 
                         if (gainTotal >= 0){
                             viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -118,32 +118,32 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         }
 
                         viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData
                                         .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE)))));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.currentTotal.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
+                                (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL)))));
                         viewOverviewHolder.mediumTotal.setText(formatter.format(buyTotal));
                         viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
-                        Log.d(LOG_TAG, "No Stock Data found for symbol: " + symbol);
+                        Log.d(LOG_TAG, "No Fii Data found for symbol: " + symbol);
                     }
                 }
                 break;
             default:
-                StockDetailViewHolder viewHolder = (StockDetailViewHolder) holder;
+                FiiDetailViewHolder viewHolder = (FiiDetailViewHolder) holder;
                 mCursor.moveToPosition(position-1);
                 // TODO: Below values are stored in DB as REALs.
                 // We'll need to format them to currency number format.
-                String type = getDetailType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE)));
+                String type = getDetailType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE)));
 
-                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP));
+                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                 // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
                 if (price > 0) {
                     String totalValue = formatter.format(price * quantity);
@@ -169,12 +169,12 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return count;
     }
 
-    public interface StockAdapterOnClickHandler {
+    public interface FiiAdapterOnClickHandler {
         void onCreateContextMenu(ContextMenu menu, View v,
                                  ContextMenu.ContextMenuInfo menuInfo, String id, int type);
     }
 
-    class StockDetailViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    class FiiDetailViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
 
         @BindView(R.id.transactionType)
         TextView transactionType;
@@ -192,7 +192,7 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView totalValue;
 
 
-        StockDetailViewHolder(View itemView) {
+        FiiDetailViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnCreateContextMenuListener(this);
@@ -203,13 +203,13 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition - 1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.StockTransaction._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.FiiTransaction._ID);
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 
-    class StockDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
+    class FiiDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.currentPrice)
         TextView currentPrice;
@@ -232,7 +232,7 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.totalGain)
         TextView totalGain;
 
-        public StockDetailsOverviewViewHolder(View itemView){
+        public FiiDetailsOverviewViewHolder(View itemView){
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -254,15 +254,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case Constants.Type.SELL:
                 Log.d(LOG_TAG, "Sell Transaction Type");
                 return mContext.getResources().getString(R.string.stock_sell);
-            case Constants.Type.BONIFICATION:
-                Log.d(LOG_TAG, "Bonification Transaction Type");
-                return mContext.getResources().getString(R.string.stock_bonification);
-            case Constants.Type.SPLIT:
-                Log.d(LOG_TAG, "Split Transaction Type");
-                return mContext.getResources().getString(R.string.stock_split);
-            case Constants.Type.GROUPING:
-                Log.d(LOG_TAG, "Grouping Transaction Type");
-                return mContext.getResources().getString(R.string.stock_grouping);
             default:
                 Log.d(LOG_TAG, "Default Transaction Type");
                 return mContext.getResources().getString(R.string.stock_buy);
@@ -270,24 +261,24 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private Cursor getDataCursor(String symbol){
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+        String selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
-        // Searches for existing StockData to update value.
+        // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
+                PortfolioContract.FiiData.URI,
                 null, selection, selectionArguments, null);
     }
 
     private Cursor getSoldDataCursor(String symbol){
-        String selection = PortfolioContract.SoldStockData.COLUMN_SYMBOL + " = ? ";
+        String selection = PortfolioContract.SoldFiiData.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
 
-        // Searches for existing StockData to update value.
+        // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
-                PortfolioContract.SoldStockData.URI,
+                PortfolioContract.SoldFiiData.URI,
                 null, selection, selectionArguments, null);
     }
 }

@@ -27,8 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.StockIncomeAdapter;
-import br.com.carteira.adapter.StockIncomeMainAdapter;
+import br.com.carteira.adapter.stock.StockIncomeMainAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;

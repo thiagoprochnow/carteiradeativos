@@ -1,11 +1,10 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.stock;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

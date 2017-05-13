@@ -8,6 +8,10 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.fii.BuyFiiFormFragment;
+import br.com.carteira.fragment.fii.EditFiiFormFragment;
+import br.com.carteira.fragment.fii.FiiIncomeFormFragment;
+import br.com.carteira.fragment.fii.SellFiiFormFragment;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
 import br.com.carteira.fragment.stock.EditStockFormFragment;
@@ -43,7 +47,7 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new BuyStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
-                        // TODO: replaceFragment(new BuyFiiFormFragment());
+                        replaceFragment(new BuyFiiFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -56,7 +60,7 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new SellStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
-                        // TODO: replaceFragment(new SellFiiFormFragment());
+                        replaceFragment(new SellFiiFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -69,6 +73,7 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new EditStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
+                        replaceFragment(new EditFiiFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -103,6 +108,10 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.GROUPING:
                     Log.d(LOG_TAG, "Grouping Form Fragment");
                     replaceFragment(new GroupingFormFragment());
+                    break;
+                case Constants.IncomeType.FII_INCOME:
+                    Log.d(LOG_TAG, "Grouping Form Fragment");
+                    replaceFragment(new FiiIncomeFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

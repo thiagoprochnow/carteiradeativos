@@ -43,6 +43,20 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME, Constants.Provider.STOCK_INCOME);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_INCOME_WITH_SYMBOL,
                 Constants.Provider.STOCK_INCOME_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_PORTFOLIO, Constants.Provider.FII_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_DATA, Constants.Provider.FII_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_DATA_BULK_UPDATE, Constants.Provider.FII_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.FII_DATA_BULK_UPDATE_FOR_CURRENT);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_DATA_WITH_SYMBOL, Constants.Provider.FII_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FII_DATA, Constants.Provider.SOLD_FII_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FII_DATA_WITH_SYMBOL, Constants.Provider.SOLD_FII_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_TRANSACTION, Constants.Provider.FII_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_TRANSACTION_WITH_SYMBOL,
+                Constants.Provider.FII_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_INCOME, Constants.Provider.FII_INCOME);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_INCOME_WITH_SYMBOL,
+                Constants.Provider.FII_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -156,6 +170,91 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            // Returns fii portfolio of user
+            case Constants.Provider.FII_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.FiiPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all fii symbols possessed by user
+            case Constants.Provider.FII_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.FiiData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case Constants.Provider.SOLD_FII_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.SoldFiiData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all fiis information possessed by user
+            case Constants.Provider.FII_TRANSACTION:
+                returnCursor = db.query(
+                        PortfolioContract.FiiTransaction.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all fii information possessed by user for a specific stock symbol
+            case Constants.Provider.FII_TRANSACTION_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.FiiTransaction.TABLE_NAME,
+                        projection,
+                        PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.FiiTransaction.getFiiTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.FII_INCOME:
+                returnCursor = db.query(
+                        PortfolioContract.FiiIncome.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.FII_INCOME_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.FiiIncome.TABLE_NAME,
+                        projection,
+                        PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.FiiIncome.getFiiIncomeFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -179,6 +278,7 @@ public class PortfolioProvider extends ContentProvider {
         Uri returnUri;
         long _id;
         switch (uriMatcher.match(uri)) {
+
             case Constants.Provider.PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.Portfolio.TABLE_NAME,
@@ -191,6 +291,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
+
             case Constants.Provider.STOCK_PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.StockPortfolio.TABLE_NAME,
@@ -203,6 +304,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
+
             case Constants.Provider.STOCK_DATA:
                 _id = db.insert(
                         PortfolioContract.StockData.TABLE_NAME,
@@ -216,6 +318,7 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+
             case Constants.Provider.SOLD_STOCK_DATA:
                 _id = db.insert(
                         PortfolioContract.SoldStockData.TABLE_NAME,
@@ -228,6 +331,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
+
             case Constants.Provider.STOCK_TRANSACTION:
                 _id = db.insert(
                         PortfolioContract.StockTransaction.TABLE_NAME,
@@ -241,6 +345,7 @@ public class PortfolioProvider extends ContentProvider {
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
                 break;
+
             case Constants.Provider.STOCK_INCOME:
                 db.insert(
                         PortfolioContract.StockIncome.TABLE_NAME,
@@ -249,6 +354,70 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 returnUri = PortfolioContract.StockIncome.URI;
                 break;
+
+            case Constants.Provider.FII_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.FiiPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FiiPortfolio.buildFiiPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FII_DATA:
+                _id = db.insert(
+                        PortfolioContract.FiiData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FiiData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+
+            case Constants.Provider.SOLD_FII_DATA:
+                _id = db.insert(
+                        PortfolioContract.SoldFiiData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.SoldFiiData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FII_TRANSACTION:
+                _id = db.insert(
+                        PortfolioContract.FiiTransaction.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FiiTransaction.buildTransactionUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.FiiData.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FII_INCOME:
+                db.insert(
+                        PortfolioContract.FiiIncome.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.FiiIncome.URI;
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -266,6 +435,7 @@ public class PortfolioProvider extends ContentProvider {
 
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
+
             case Constants.Provider.STOCK_DATA_WITH_SYMBOL:
                 symbol = PortfolioContract.StockData.getStockDataFromUri(uri);
                 rowsDeleted = db.delete(
@@ -327,6 +497,67 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.FII_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.FiiData.getFiiDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FiiData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FiiData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_FII_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.SoldFiiData.getSoldFiiDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldFiiData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.SoldFiiData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_FII_DATA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldFiiData.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+            case Constants.Provider.FII_TRANSACTION:
+                rowsDeleted = db.delete(
+                        PortfolioContract.FiiTransaction.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.FII_TRANSACTION_FOR_SYMBOL:
+                symbol = PortfolioContract.FiiTransaction.getFiiTransactionFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FiiTransaction.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FiiTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.FII_INCOME:
+                rowsDeleted = db.delete(
+                        PortfolioContract.FiiIncome.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.FII_INCOME_FOR_SYMBOL:
+                // TODO: Needs to change, otherwise it will always delete all incomes of that fii symbol
+                symbol = PortfolioContract.FiiIncome.getFiiIncomeFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FiiIncome.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FiiIncome.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -342,53 +573,109 @@ public class PortfolioProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
         int rowsUpdated;
+        String currentTotal;
         switch (uriMatcher.match(uri)) {
+
             case Constants.Provider.PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.Portfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
+
             case Constants.Provider.STOCK_PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.StockPortfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
+
             case Constants.Provider.STOCK_DATA:
                 rowsUpdated = db.update(PortfolioContract.StockData.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
+
             case Constants.Provider.SOLD_STOCK_DATA:
                 rowsUpdated = db.update(PortfolioContract.SoldStockData.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
+
             case Constants.Provider.STOCK_DATA_BULK_UPDATE:
                 rowsUpdated = this.bulkStockUpdade(values);
                 break;
+
             case Constants.Provider.STOCK_DATA_BULK_UPDATE_FOR_CURRENT:
-                String currentTotal = PortfolioContract.StockTransaction
+                currentTotal = PortfolioContract.StockTransaction
                         .getStockTransactionFromUri(uri);
                 if (currentTotal != null) {
-                    rowsUpdated = this.updateCurrentPercent(Double.parseDouble(PortfolioContract
+                    rowsUpdated = this.updateStockCurrentPercent(Double.parseDouble(PortfolioContract
                             .StockTransaction.getStockTransactionFromUri(uri)));
                 }else{
                     rowsUpdated = 0;
                 }
                 break;
+
             case Constants.Provider.STOCK_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.StockTransaction.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
+
             case Constants.Provider.STOCK_INCOME:
                 rowsUpdated = db.update(PortfolioContract.StockIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
+
+            case Constants.Provider.FII_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.FiiPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FII_DATA:
+                rowsUpdated = db.update(PortfolioContract.FiiData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.SOLD_FII_DATA:
+                rowsUpdated = db.update(PortfolioContract.SoldFiiData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FII_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkFiiUpdade(values);
+                break;
+
+            case Constants.Provider.FII_DATA_BULK_UPDATE_FOR_CURRENT:
+                currentTotal = PortfolioContract.FiiTransaction
+                        .getFiiTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateStockCurrentPercent(Double.parseDouble(PortfolioContract
+                            .FiiTransaction.getFiiTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
+
+            case Constants.Provider.FII_TRANSACTION:
+                rowsUpdated = db.update(PortfolioContract.FiiTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FII_INCOME:
+                rowsUpdated = db.update(PortfolioContract.FiiIncome.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
         }
+
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
@@ -401,11 +688,11 @@ public class PortfolioProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
-
+        int returnCount = 0;
         switch (uriMatcher.match(uri)) {
             case Constants.Provider.STOCK_TRANSACTION:
                 db.beginTransaction();
-                int returnCount = 0;
+                returnCount = 0;
                 try {
                     for (ContentValues value : values) {
                         db.insert(
@@ -421,6 +708,26 @@ public class PortfolioProvider extends ContentProvider {
 
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
+
+            case Constants.Provider.FII_TRANSACTION:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.FiiTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
             default:
                 return super.bulkInsert(uri, values);
         }
@@ -442,9 +749,6 @@ public class PortfolioProvider extends ContentProvider {
         double currentTotal;
         double variation;
         double totalGain;
-        double incomeTotalPercent;
-        double variationPercent;
-        double totalGainPercent;
 
         db.beginTransaction();
         int returnCount = 0;
@@ -472,9 +776,6 @@ public class PortfolioProvider extends ContentProvider {
                     currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
                     totalGain = currentTotal + incomeTotal - totalBuy;
-                    incomeTotalPercent = incomeTotal / totalBuy * 100;
-                    variationPercent = variation / totalBuy * 100;
-                    totalGainPercent = totalGain / totalBuy * 100;
 
                     ContentValues stockCV = new ContentValues();
                     stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PRICE,
@@ -502,11 +803,80 @@ public class PortfolioProvider extends ContentProvider {
     }
 
     /**
+     * This function is responsible for update the value several values of the Fii of table
+     * FiiData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkFiiUpdade(ContentValues contValues) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int quantity;
+        double currentPrice;
+        double totalBuy;
+        double incomeTotal;
+        double currentTotal;
+        double variation;
+        double totalGain;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update stock data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.FiiData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentPrice = Double.parseDouble(contValues.get(key).toString());
+                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                            .FiiData.COLUMN_QUANTITY_TOTAL));
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .FiiData.COLUMN_BUY_VALUE_TOTAL));
+                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_INCOME));
+                    currentTotal = quantity * currentPrice;
+                    variation = currentTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy;
+
+                    ContentValues fiiCV = new ContentValues();
+                    fiiCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE,
+                            contValues.get(key).toString());
+                    fiiCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    fiiCV.put(PortfolioContract.FiiData.COLUMN_VARIATION, variation);
+                    fiiCV.put(PortfolioContract.FiiData.COLUMN_TOTAL_GAIN, totalGain);
+
+                    returnCount += this.update(
+                            PortfolioContract.FiiData.URI,
+                            fiiCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "FiiData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.FiiData.URI, null);
+        return returnCount;
+    }
+
+    /**
      * This function is responsible for update the value Current Percent of all the Stocks in the
      * table StockData according to the Current Total passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
-    private int updateCurrentPercent(double currentTotal) {
+    private int updateStockCurrentPercent(double currentTotal) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -565,6 +935,73 @@ public class PortfolioProvider extends ContentProvider {
             db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(PortfolioContract.StockData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value Current Percent of all the Stocks in the
+     * table StockData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateFiiCurrentPercent(double currentTotal) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.FiiData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.FiiData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues fiiDataCV = new ContentValues();
+                    fiiDataCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update stock data
+                    String updateSelection = PortfolioContract.FiiData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.FiiData.URI,
+                            fiiDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No FiiData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.FiiData.URI, null);
         return returnCount;
     }
 

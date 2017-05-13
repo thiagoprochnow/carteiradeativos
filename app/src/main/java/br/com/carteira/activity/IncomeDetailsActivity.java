@@ -8,7 +8,8 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.stock.IncomeDetailsFragment;
+import br.com.carteira.fragment.fii.FiiIncomeDetailsFragment;
+import br.com.carteira.fragment.stock.StockIncomeDetailsFragment;
 import br.com.carteira.listener.ProductListener;
 
 public class IncomeDetailsActivity extends AppCompatActivity {
@@ -31,11 +32,15 @@ public class IncomeDetailsActivity extends AppCompatActivity {
             switch (productType) {
                 case Constants.IncomeType.DIVIDEND:
                     setTitle(R.string.dividend_income_type);
-                    replaceFragment(new IncomeDetailsFragment());
+                    replaceFragment(new StockIncomeDetailsFragment());
                     break;
                 case Constants.IncomeType.JCP:
                     setTitle(R.string.jcp_income_type);
-                    replaceFragment(new IncomeDetailsFragment());
+                    replaceFragment(new StockIncomeDetailsFragment());
+                    break;
+                case Constants.IncomeType.FII_INCOME:
+                    setTitle(R.string.fii_income_type);
+                    replaceFragment(new FiiIncomeDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");

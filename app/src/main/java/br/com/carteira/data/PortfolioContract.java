@@ -32,7 +32,21 @@ public class PortfolioContract {
     public static final String PATH_STOCK_INCOME = "stock_income";
     public static final String PATH_STOCK_INCOME_WITH_SYMBOL = "stock_income/*";
 
-    /* STOCK TABLES */
+    public static final String PATH_FII_PORTFOLIO = "fii_portfolio";
+
+    public static final String PATH_FII_DATA = "fii_data";
+    public static final String PATH_FII_DATA_BULK_UPDATE = "fii_data/update";
+    public static final String PATH_FII_DATA_BULK_UPDATE_WITH_CURRENT = "fii_data/update/*";
+    public static final String PATH_FII_DATA_WITH_SYMBOL = "fii_data/*";
+
+    public static final String PATH_SOLD_FII_DATA = "sold_fii_data";
+    public static final String PATH_SOLD_FII_DATA_WITH_SYMBOL = "sold_fii_data/*";
+
+    public static final String PATH_FII_TRANSACTION = "fii_transaction";
+    public static final String PATH_FII_TRANSACTION_WITH_SYMBOL = "fii_transaction/*";
+
+    public static final String PATH_FII_INCOME = "fii_income";
+    public static final String PATH_FII_INCOME_WITH_SYMBOL = "fii_income/*";
 
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
@@ -264,6 +278,207 @@ public class PortfolioContract {
         }
 
         public static String getStockIncomeFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole fii portfolio
+    public static final class FiiPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FII_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "fii_portfolio";
+
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+
+        public static final String[] FII_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_VARIATION_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL
+        };
+
+        public static Uri makeUriForFiiPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildFiiPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFiiPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fii owned, KNRI11, BRCR11, etc
+    public static final class FiiData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FII_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
+
+        public static final String TABLE_NAME = "fii_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_INCOME = "income_total";
+        public static final String COLUMN_INCOME_TAX = "income_tax";
+        public static final String COLUMN_VARIATION = "variation";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_MEDIUM_PRICE = "medium_price";
+        public static final String COLUMN_CURRENT_PRICE = "current_price";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_STATUS = "status";
+
+        public static final String[] FII_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_INCOME,
+                COLUMN_INCOME_TAX,
+                COLUMN_VARIATION,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_MEDIUM_PRICE,
+                COLUMN_CURRENT_PRICE,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_STATUS
+        };
+
+        public static Uri makeUriForFiiData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFiiDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each stock owned, ITUB4, PETR4, etc
+    public static final class SoldFiiData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_SOLD_FII_DATA).build();
+
+        public static final String TABLE_NAME = "sold_fii_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_SELL_GAIN = "sell_gain";
+        public static final String COLUMN_SELL_MEDIUM_PRICE = "current_price";
+        public static final String COLUMN_SELL_TOTAL = "current_total";
+
+        public static final String[] SOLD_FII_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_SELL_GAIN,
+                COLUMN_SELL_MEDIUM_PRICE,
+                COLUMN_SELL_TOTAL
+        };
+
+        public static Uri makeUriForSoldFiiData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getSoldFiiDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each stock buy and sell
+    public static final class FiiTransaction implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FII_TRANSACTION).build();
+
+        public static final String TABLE_NAME = "fii_transaction";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY = "quantity";
+        public static final String COLUMN_PRICE = "bought_price";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] FII_TRANSACTION_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY,
+                COLUMN_PRICE,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE
+        };
+
+        public static Uri buildTransactionUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForFiiTransaction(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getFiiTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of stock incomes
+    public static final class FiiIncome implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FII_INCOME).build();
+
+        public static final String TABLE_NAME = "fii_incomes";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TYPE = "income_type";
+        public static final String COLUMN_PER_FII = "per_fii";
+        public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
+        public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
+        public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
+
+        public static final String[] FII_INCOME_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TYPE,
+                COLUMN_PER_FII,
+                COLUMN_EXDIVIDEND_TIMESTAMP,
+                COLUMN_RECEIVE_TOTAL,
+                COLUMN_TAX,
+                COLUMN_RECEIVE_LIQUID,
+                COLUMN_AFFECTED_QUANTITY
+        };
+
+        public static Uri makeUriForFiiIncome(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getFiiIncomeFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

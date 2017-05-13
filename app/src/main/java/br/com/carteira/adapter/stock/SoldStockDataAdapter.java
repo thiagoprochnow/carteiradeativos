@@ -1,4 +1,4 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.stock;
 
 import android.content.Context;
 import android.database.Cursor;

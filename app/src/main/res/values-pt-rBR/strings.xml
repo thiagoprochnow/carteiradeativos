@@ -6,12 +6,15 @@
 
     <!-- Form Activity -->
     <string name="stock_update_success">Ação atualizada com sucesso</string>
-    <string name="stock_update_fail">Atualização do objetivo falhou</string>
+    <string name="stock_update_fail">Atualização da ação falhou</string>
+    <string name="fii_update_success">Fundo Imobiliario atualizado com sucesso</string>
+    <string name="fii_update_fail">Atualização do fundo imobiliario falhou</string>
     <string name="form_title_buy">Comprar</string>
     <string name="form_title_sell">Vender</string>
     <string name="form_title_objective">Objetivo</string>
     <string name="form_title_dividend">Dividendo</string>
     <string name="form_title_jcp">Juros s/ Capital</string>
+    <string name="form_title_fii_income">Rendimento</string>
     <string name="form_title_bonification">Bonificação</string>
     <string name="form_title_split">Desdobramento</string>
     <string name="form_title_grouping">Grupamento</string>
@@ -21,8 +24,10 @@
     <string name="buy_price">Preço de compra</string>
     <string name="sell_price">Preço de venda</string>
     <string name="stock_current_price">Preço Atual da Ação</string>
+    <string name="fii_current_price">Preço Atual do Fundo Imobiliario</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="stock_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
+    <string name="fii_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="buy_date">Data da compra</string>
     <string name="bonification_date">Data da bonificação</string>
     <string name="split_date">Data do Desdobramento</string>
@@ -32,7 +37,9 @@
     <string name="sell_date">Data da venda</string>
     <string name="ex_date">Data Ex Dividendo</string>
     <string name="ex_date_jcp">Data Ex Juros s/ Capital</string>
+    <string name="ex_date_fii_income">Data Ex Rendimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
+    <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
@@ -42,6 +49,7 @@
     <string name="future_date">Data não pode ser no futuro</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
     <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
+    <string name="wrong_income_per_fii">Valor inválido recebido por fundo imobiliario</string>
     <string name="menu_done">Concluir</string>
 
     <!-- Details Fragment -->
@@ -50,6 +58,7 @@
     <string name="menu_item_bonification">Bonificação</string>
     <string name="menu_item_split">Desdobramento</string>
     <string name="menu_item_grouping">Grupamento</string>
+    <string name="menu_item_income">Rendimentos</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Ação adicionada com sucesso</string>
@@ -71,11 +80,25 @@
     <string name="menu_sell">Vender</string>
     <string name="menu_delete">Deletar</string>
 
+    <!-- Fii Main Fragment -->
+    <string name="buy_fii_success">Fundo Imobiliario adicionado com sucesso</string>
+    <string name="buy_fii_fail">Falha ao adicionar Fundo Imobiliario</string>
+    <string name="sell_fii_success">Fundo Imobiliario vendido com sucesso</string>
+    <string name="sell_fii_fail">Falha ao vender Fundo Imobiliario</string>
+    <string name="delete_fii_title">Deletar fundo imobilario da sua carteira?</string>
+    <string name="delete_fii_dialog">Se vendeu o fundo imobiliario, escolha "Vender" no menu de opções. Deletar o fundo imobiliario irá remover todos os dados sobre ele, inclusive proventos recebidos.</string>
+
     <!-- Stock Tab Adapter -->
     <string name="stocks_overview">Visão Geral</string>
     <string name="stocks_portfolio">Carteira</string>
     <string name="stocks_history">Histórico</string>
     <string name="stocks_incomes">Rendimentos</string>
+
+    <!-- Stock Tab Adapter -->
+    <string name="fii_overview">Visão Geral</string>
+    <string name="fii_portfolio">Carteira</string>
+    <string name="fii_history">Histórico</string>
+    <string name="fii_incomes">Rendimentos</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -95,6 +118,9 @@
     <string name="sold_data_sold_label">Vendido</string>
     <string name="sold_data_gain_label">Ganho</string>
 
+    <!-- Fii Adapter -->
+    <string name="fii_quantity_label">Quantidade: </string>
+
     <!-- Stock Summary -->
     <string name="summary_bought_label"><u>C</u>ompra</string>
     <string name="summary_current_label"><u>A</u>tual</string>
@@ -111,10 +137,14 @@
     <string name="portfolio_income_label">Rendimentos</string>
     <string name="portfolio_total_gain_label">Ganho</string>
 
-    <!-- Stock Income Adapter -->
+    <!-- Fii Portolfio -->
+    <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
+
+    <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
     <string name="dividend_income_type">Dividendo</string>
     <string name="jcp_income_type">Juros s/ Capital</string>
+    <string name="fii_income_type">Rendimento</string>
     <string name="income_overview_bought_label">Compra</string>
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>
@@ -146,6 +176,7 @@
 
     <!-- Income Details Fragment -->
     <string name="income_per_stock">Recebido por Ação</string>
+    <string name="income_per_fii">Recebido por cota</string>
     <string name="gross_income">Rendimento Bruto</string>
     <string name="tax_income">Imposto Pago</string>
     <string name="net_income">Rendimento Liquido</string>
@@ -159,10 +190,13 @@
 
     <!-- Dividend Form Fragment -->
     <string name="receive_value">Valor Recebido por Ação</string>
+    <string name="receive_value_fii">Valor Recebido por Fundo Imobiliario</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
     <string name="add_jcp_success">Juros sobre capital adicionado com sucesso</string>
     <string name="add_jcp_fail">Falha ao adicionar juros sobre capital</string>
+    <string name="add_fii_income_success">Rendimento adicionado com sucesso</string>
+    <string name="add_fii_income_fail">Falha ao adicionar rendimento</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
@@ -189,6 +223,8 @@
     <string name="title_activity_add_new_stock_form">Adicionar Ação</string>
 
     <string name="toast_stock_successfully_removed">Ação %s removida com sucesso</string>
+    <string name="toast_fii_successfully_removed">Fundo Imobiliario %s removido com sucesso</string>
     <string name="toast_stock_not_removed">Não foi possível remover a ação %s</string>
+    <string name="toast_fii_not_removed">Não foi possível remover o Fundo Imobiliario %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 </resources>

@@ -1,4 +1,4 @@
-package br.com.carteira.fragment.stock;
+package br.com.carteira.fragment.fii;
 
 
 import android.content.Context;
@@ -22,7 +22,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.stock.StockDataAdapter;
+import br.com.carteira.adapter.fii.FiiDataAdapter;
+import br.com.carteira.adapter.fii.FiiDataAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -31,21 +32,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Main fragment screen of Stocks of portfolio, accessed by selecting "Stocks" in navigation menu.
+ * Main fragment screen of Fiis of portfolio, accessed by selecting "Fiis" in navigation menu.
  */
-public class StockDataFragment extends BaseFragment implements
-        StockDataAdapter.StockAdapterOnClickHandler, LoaderManager
+public class FiiDataFragment extends BaseFragment implements
+        FiiDataAdapter.FiiAdapterOnClickHandler, LoaderManager
         .LoaderCallbacks<Cursor> {
 
-    private static final String LOG_TAG = StockDataFragment.class.getSimpleName();
+    private static final String LOG_TAG = FiiDataFragment.class.getSimpleName();
 
-    @BindView(R.id.stockRecyclerView)
+    @BindView(R.id.fiiRecyclerView)
     protected RecyclerView mRecyclerView;
 
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private StockDataAdapter mStockDataAdapter;
+    private FiiDataAdapter mFiiDataAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
@@ -66,13 +67,13 @@ public class StockDataFragment extends BaseFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set fragment title
-        getActivity().setTitle(R.string.title_stocks);
+        getActivity().setTitle(R.string.title_fii);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stock_data, container, false);
+        View view = inflater.inflate(R.layout.fragment_fii_data, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -81,26 +82,26 @@ public class StockDataFragment extends BaseFragment implements
         mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
-        view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fabFiis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
+                mFormProductListener.onBuyProduct(Constants.ProductType.FII, "");
             }
         });
-        mStockDataAdapter = new StockDataAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockDataAdapter);
+        mFiiDataAdapter = new FiiDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mFiiDataAdapter);
         registerForContextMenu(mRecyclerView);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_DATA, null, this);
         // Inflate the layout for this fragment
         return view;
     }
 
     @Override
     public void onClick(String symbol) {
-        // Launch details activity for clicked stock
+        // Launch details activity for clicked fii
         Log.d(LOG_TAG, ": "+symbol);
-        mFormProductListener.onProductDetails(Constants.ProductType.STOCK, symbol);
+        mFormProductListener.onProductDetails(Constants.ProductType.FII, symbol);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class StockDataFragment extends BaseFragment implements
                              ContextMenu.ContextMenuInfo menuInfo, String symbol){
         MenuInflater inflater = getActivity().getMenuInflater();
         this.symbol = symbol;
-        inflater.inflate(R.menu.stock_item_menu, menu);
+        inflater.inflate(R.menu.fii_item_menu, menu);
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -118,28 +119,28 @@ public class StockDataFragment extends BaseFragment implements
 
             case R.id.menu_item_buy:
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, symbol);
+                mFormProductListener.onBuyProduct(Constants.ProductType.FII, symbol);
                 break;
 
             case R.id.menu_item_edit:
-                mFormProductListener.onEditProduct(Constants.ProductType.STOCK, symbol);
+                mFormProductListener.onEditProduct(Constants.ProductType.FII, symbol);
                 break;
 
             case R.id.menu_item_sell:
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onSellProduct(Constants.ProductType.STOCK, symbol);
+                mFormProductListener.onSellProduct(Constants.ProductType.FII, symbol);
                 break;
 
             case R.id.menu_item_delete:
-                // Show Dialog for user confirmation to delete Stock from database
+                // Show Dialog for user confirmation to delete Fii from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_stock_title);
+                builder.setTitle(R.string.delete_fii_title);
 
-                builder.setMessage(R.string.delete_stock_dialog)
+                builder.setMessage(R.string.delete_fii_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                deleteStock(symbol);
+                                deleteFii(symbol);
                             }
                         })
                         .setNegativeButton(R.string.delete_cancel, new DialogInterface
@@ -156,14 +157,14 @@ public class StockDataFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Will use the table of stock symbols as cursor. StockTransaction values will be handled at StockDataAdapter.
-        String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
+        // Will use the table of fii symbols as cursor. FiiTransaction values will be handled at FiiDataAdapter.
+        String selection = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
         String[] selectionArgs = {String.valueOf(Constants.Status.ACTIVE)};
-        // STOCK_SOLD_LOADER for sold stocks tab
+        // FII_SOLD_LOADER for sold fiis tab
         return new CursorLoader(mContext,
-                PortfolioContract.StockData.URI,
-                PortfolioContract.StockData.STOCK_DATA_COLUMNS,
-                selection, selectionArgs, PortfolioContract.StockData.COLUMN_SYMBOL);
+                PortfolioContract.FiiData.URI,
+                PortfolioContract.FiiData.FII_DATA_COLUMNS,
+                selection, selectionArgs, PortfolioContract.FiiData.COLUMN_SYMBOL);
     }
 
     @Override
@@ -177,11 +178,11 @@ public class StockDataFragment extends BaseFragment implements
             }
         }
 
-        mStockDataAdapter.setCursor(data);
+        mFiiDataAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockDataAdapter.setCursor(null);
+        mFiiDataAdapter.setCursor(null);
     }
 }

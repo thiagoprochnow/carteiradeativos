@@ -1,6 +1,5 @@
 package br.com.carteira.activity;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import br.com.carteira.R;
-import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.ProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
@@ -24,6 +23,8 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
 
     Intent comingIntent;
 
+    int mProductType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +32,16 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
         comingIntent = getIntent();
         if (comingIntent != null && comingIntent.hasExtra(Constants.Extra.EXTRA_PRODUCT_TYPE)) {
 
-            int productType = comingIntent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
+            mProductType = comingIntent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
                     Constants.ProductType.INVALID);
-            switch (productType) {
+            switch (mProductType) {
                 case Constants.ProductType.STOCK:
                     // TODO: Make tabs to switch between incomes and details.
                     replaceFragment(new StockTabFragment());
                     break;
                 case Constants.ProductType.FII:
                     // TODO: replaceFragment(new FiiIncomesFragment());
+                    replaceFragment(new FiiTabFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -59,10 +61,17 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO: Need to change to show menu depending on product (Stock, FII, etc)
         // Common menu for details
-        getMenuInflater().inflate(R.menu.stock_details_menu, menu);
-        return true;
+        switch (mProductType) {
+            case Constants.ProductType.STOCK:
+                getMenuInflater().inflate(R.menu.stock_details_menu, menu);
+                return true;
+            case Constants.ProductType.FII:
+                getMenuInflater().inflate(R.menu.fii_details_menu, menu);
+                return true;
+            default:
+                return true;
+        }
     }
 
     @Override
@@ -92,6 +101,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
                 break;
+            case R.id.menu_item_income:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII_INCOME);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -112,6 +125,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case Constants.IncomeType.JCP:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FII_INCOME:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII_INCOME);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

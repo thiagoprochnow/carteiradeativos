@@ -1,4 +1,4 @@
-package br.com.carteira.fragment.stock;
+package br.com.carteira.fragment.fii;
 
 
 import android.content.BroadcastReceiver;
@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.stock.StockDetailAdapter;
+import br.com.carteira.adapter.fii.FiiDetailAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -34,11 +34,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockDetailsFragment extends BaseFragment implements
-        StockDetailAdapter.StockAdapterOnClickHandler, LoaderManager.
+public class FiiDetailsFragment extends BaseFragment implements
+        FiiDetailAdapter.FiiAdapterOnClickHandler, LoaderManager.
         LoaderCallbacks<Cursor>{
 
-    private static final String LOG_TAG = StockDetailsFragment.class.getSimpleName();
+    private static final String LOG_TAG = FiiDetailsFragment.class.getSimpleName();
 
     private View mView;
 
@@ -51,7 +51,7 @@ public class StockDetailsFragment extends BaseFragment implements
     private String id;
     private String mSymbol;
 
-    private StockDetailAdapter mStockDetailAdapter;
+    private FiiDetailAdapter mFiiDetailAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,16 +61,16 @@ public class StockDetailsFragment extends BaseFragment implements
             @Override
             public void onReceive(Context context, Intent intent) {
                 // After new current price is get, reload Overview view
-                mStockDetailAdapter.notifyDataSetChanged();
+                mFiiDetailAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_stock_details, container, false);
+        mView = inflater.inflate(R.layout.fragment_fii_details, container, false);
 
         ButterKnife.bind(this, mView);
 
@@ -84,9 +84,9 @@ public class StockDetailsFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mStockDetailAdapter = new StockDetailAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockDetailAdapter);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DETAILS, bundle, this);
+        mFiiDetailAdapter = new FiiDetailAdapter(mContext, this);
+        mRecyclerView.setAdapter(mFiiDetailAdapter);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_DETAILS, bundle, this);
 
         return mView;
     }
@@ -103,7 +103,7 @@ public class StockDetailsFragment extends BaseFragment implements
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_delete_detail:
-                // Show Dialog for user confirmation to delete Stock Operation from database
+                // Show Dialog for user confirmation to delete Fii Operation from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(R.string.delete_stock_detail_title);
 
@@ -111,7 +111,7 @@ public class StockDetailsFragment extends BaseFragment implements
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {
-                                deleteStockTransaction(id, mSymbol);
+                                deleteFiiTransaction(id, mSymbol);
                             }
                         })
                         .setNegativeButton(R.string.delete_cancel, new DialogInterface
@@ -133,11 +133,11 @@ public class StockDetailsFragment extends BaseFragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Receives symbol to make query of detail for specific symbol
         String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
         CursorLoader Loader = new CursorLoader(mContext,
-                PortfolioContract.StockTransaction
-                        .makeUriForStockTransaction(symbol),
-                PortfolioContract.StockTransaction.STOCK_TRANSACTION_COLUMNS,
+                PortfolioContract.FiiTransaction
+                        .makeUriForFiiTransaction(symbol),
+                PortfolioContract.FiiTransaction.FII_TRANSACTION_COLUMNS,
                 null, null, sortOrder);
         return Loader;
     }
@@ -153,11 +153,11 @@ public class StockDetailsFragment extends BaseFragment implements
             }
         }
 
-        mStockDetailAdapter.setCursor(data);
+        mFiiDetailAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockDetailAdapter.setCursor(null);
+        mFiiDetailAdapter.setCursor(null);
     }
 }

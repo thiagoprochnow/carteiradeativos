@@ -20,14 +20,14 @@ import br.com.carteira.fragment.BaseFormFragment;
 import br.com.carteira.fragment.BaseFragment;
 
 
-public class IncomeDetailsFragment extends BaseFragment {
+public class StockIncomeDetailsFragment extends BaseFragment {
     private View mView;
     private static final String LOG_TAG = BaseFormFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_income_details, container, false);
+        mView = inflater.inflate(R.layout.fragment_stock_income_details, container, false);
         // TODO: Only for testing, will change later, sets text as symbol passed by intent
         Intent intent = getActivity().getIntent();
         String id = intent.getStringExtra(Constants.Extra.EXTRA_INCOME_ID);

@@ -1,15 +1,15 @@
-package br.com.carteira.fragment.stock;
+package br.com.carteira.fragment.fii;
 
 
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
-import android.support.v4.app.LoaderManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.stock.StockIncomeAdapter;
+import br.com.carteira.adapter.fii.FiiIncomeMainAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -36,11 +36,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class StockIncomesFragment extends BaseFragment implements
-        StockIncomeAdapter.StockAdapterOnClickHandler, LoaderManager.
+public class FiiIncomesMainFragment extends BaseFragment implements
+        FiiIncomeMainAdapter.FiiAdapterOnClickHandler, LoaderManager.
         LoaderCallbacks<Cursor>{
 
-    private static final String LOG_TAG = StockIncomesFragment.class.getSimpleName();
+    private static final String LOG_TAG = FiiIncomesMainFragment.class.getSimpleName();
 
     private IncomeDetailsListener mIncomeDetailsListener;
 
@@ -50,10 +50,9 @@ public class StockIncomesFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private StockIncomeAdapter mStockIncomeAdapter;
+    private FiiIncomeMainAdapter mFiiIncomeMainAdapter;
 
     private String id;
-    private String mSymbol;
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -73,33 +72,27 @@ public class StockIncomesFragment extends BaseFragment implements
             @Override
             public void onReceive(Context context, Intent intent) {
                 // After new current price is get, reload Overview view
-                mStockIncomeAdapter.notifyDataSetChanged();
+                mFiiIncomeMainAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stock_incomes, container, false);
+        View view = inflater.inflate(R.layout.fragment_fii_incomes, container, false);
 
         ButterKnife.bind(this, view);
 
-        // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
-        Intent mainActivityIntent = getActivity().getIntent();
-        mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
         setUserVisibleHint(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mStockIncomeAdapter = new StockIncomeAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockIncomeAdapter);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_INCOME, bundle, this);
+        mFiiIncomeMainAdapter = new FiiIncomeMainAdapter(mContext, this);
+        mRecyclerView.setAdapter(mFiiIncomeMainAdapter);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_INCOME, null, this);
 
         return view;
     }
@@ -129,7 +122,7 @@ public class StockIncomesFragment extends BaseFragment implements
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_item_delete_income:
-                // Show Dialog for user confirmation to delete Stock Income from database
+                // Show Dialog for user confirmation to delete Fii Income from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(R.string.delete_stock_income_title);
 
@@ -137,7 +130,7 @@ public class StockIncomesFragment extends BaseFragment implements
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {
-                                deleteStockIncome(id, mSymbol);
+                                deleteFiiIncome(id, null);
                             }
                         })
                         .setNegativeButton(R.string.delete_cancel, new DialogInterface
@@ -149,10 +142,10 @@ public class StockIncomesFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             case R.id.menu_item_change_jcp:
-                changeIncomeType(id, mSymbol, Constants.IncomeType.JCP);
+                changeIncomeType(id, Constants.IncomeType.JCP);
                 break;
             case R.id.menu_item_change_dividend:
-                changeIncomeType(id, mSymbol, Constants.IncomeType.DIVIDEND);
+                changeIncomeType(id, Constants.IncomeType.DIVIDEND);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");
@@ -163,13 +156,10 @@ public class StockIncomesFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Receives symbol to make query of incomes for specific symbol
-        String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
         CursorLoader Loader = new CursorLoader(mContext,
-                PortfolioContract.StockIncome
-                        .makeUriForStockIncome(symbol),
-                PortfolioContract.StockIncome.STOCK_INCOME_COLUMNS,
+                PortfolioContract.FiiIncome.URI,
+                PortfolioContract.FiiIncome.FII_INCOME_COLUMNS,
                 null, null, sortOrder);
         return Loader;
     }
@@ -185,27 +175,42 @@ public class StockIncomesFragment extends BaseFragment implements
             }
         }
 
-        mStockIncomeAdapter.setCursor(data);
+        mFiiIncomeMainAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockIncomeAdapter.setCursor(null);
+        mFiiIncomeMainAdapter.setCursor(null);
     }
 
     // Change the income of "id" from dividend to JCP or JCP to dividend
-    public void changeIncomeType(String id, String symbol, int type){
-        String selection = PortfolioContract.StockIncome._ID + " = ? AND "
-                + PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
-        String[] selectionArguments = {id, symbol};
+    public void changeIncomeType(String id, int type){
+        // Get symbol for that id
+        String symbol = "";
+        String selectionData = PortfolioContract.FiiIncome._ID + " = ? ";
+        String[] selectionDataArguments = {id};
+        String[] affectedColumn = {PortfolioContract.FiiIncome.COLUMN_SYMBOL};
+        Cursor cursor = mContext.getContentResolver().query(
+                PortfolioContract.FiiIncome.URI,
+                affectedColumn, selectionData, selectionDataArguments, null);
 
-        Cursor queryCursor = mContext.getContentResolver().query(PortfolioContract.StockIncome.URI,
+        if (cursor.getCount() > 0){
+            cursor.moveToFirst();
+            symbol = cursor.getString(0);
+        } else {
+            Log.d(LOG_TAG, "No symbol for for that income");
+        }
+
+        String selection = PortfolioContract.FiiIncome._ID + " = ?";
+        String[] selectionArguments = {id};
+
+        Cursor queryCursor = mContext.getContentResolver().query(PortfolioContract.FiiIncome.URI,
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            double perStock = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK));
-            double quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY));
-            double grossIncome = perStock*quantity;
+            double perFii = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_PER_FII));
+            double quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY));
+            double grossIncome = perFii*quantity;
             double tax = 0;
             double netIncome = 0;
             if (type == Constants.IncomeType.JCP){
@@ -218,25 +223,25 @@ public class StockIncomesFragment extends BaseFragment implements
                 netIncome = grossIncome;
             }
 
-            String updateSelection = PortfolioContract.StockIncome._ID + " = ?";
+            String updateSelection = PortfolioContract.FiiIncome._ID + " = ?";
             String[] updatedSelectionArguments = {id};
 
             ContentValues incomeCV = new ContentValues();
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, grossIncome);
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, netIncome);
-            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, type);
+            incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, grossIncome);
+            incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
+            incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, netIncome);
+            incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TYPE, type);
 
             // Update value on incomes table
             int updatedRows = mContext.getContentResolver().update(
-                    PortfolioContract.StockIncome.URI,
+                    PortfolioContract.FiiIncome.URI,
                     incomeCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                updateStockData(mSymbol, -1, -1);
-                Log.d(LOG_TAG, "updateStockIncomes successfully updated");
+                updateFiiData(symbol, -1, -1);
+                Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
             } else {
-                Log.d(LOG_TAG, "updateStockIncomes failed update");
+                Log.d(LOG_TAG, "updateFiiIncomes failed update");
             }
         } else {
             Log.d(LOG_TAG, "No income found for this ID and Symbol");

@@ -11,6 +11,12 @@
     <dimen name="stock_price">14dp</dimen>
     <dimen name="stock_percentage_image_margin">0dp</dimen>
     <dimen name="stock_percentage_text_margin">10dp</dimen>
+    <dimen name="fii_quantity">16dp</dimen>
+    <dimen name="fii_symbol">18dp</dimen>
+    <dimen name="fii_text">16dp</dimen>
+    <dimen name="fii_price">14dp</dimen>
+    <dimen name="fii_percentage_image_margin">0dp</dimen>
+    <dimen name="fii_percentage_text_margin">10dp</dimen>
     <dimen name="letters_text_width">10dp</dimen>
     <dimen name="letters_text_margin">10dp</dimen>
     <dimen name="stock_percentage_text_size">35dp</dimen>
@@ -19,13 +25,12 @@
     <dimen name="stock_values_width">100dp</dimen>
     <dimen name="stock_percent_width">90dp</dimen>
     <dimen name="stock_symbol_info_size">90dp</dimen>
-
-    <!-- Fii Adapter -->
-    <dimen name="fii_quantity">21dp</dimen>
-    <dimen name="fii_symbol">21dp</dimen>
-    <dimen name="fii_text">16dp</dimen>
-    <dimen name="fii_price">14dp</dimen>
-    <dimen name="fii_percentage_image_margin">20dp</dimen>
+    <dimen name="fii_percentage_text_size">35dp</dimen>
+    <dimen name="fii_value_percentage_width">50dp</dimen>
+    <dimen name="fii_values_margin">10dp</dimen>
+    <dimen name="fii_values_width">100dp</dimen>
+    <dimen name="fii_percent_width">90dp</dimen>
+    <dimen name="fii_symbol_info_size">90dp</dimen>
 
     <!-- Stock Incomes Adapter -->
     <dimen name="stock_income_type">16dp</dimen>
@@ -41,6 +46,21 @@
     <dimen name="stock_detail">15dp</dimen>
     <dimen name="stock_detail_width1">130dp</dimen>
     <dimen name="stock_detail_width2">80dp</dimen>
+
+    <!-- Fii Incomes Adapter -->
+    <dimen name="fii_income_type">16dp</dimen>
+    <dimen name="fii_income_width">150dp</dimen>
+    <dimen name="fii_income_date">16dp</dimen>
+    <dimen name="fii_income_value">15dp</dimen>
+    <dimen name="fii_income_value_marginLeft">5dp</dimen>
+    <dimen name="fii_income_percent">15dp</dimen>
+
+    <!-- Fii Details Adapter -->
+    <dimen name="fii_transaction_type">16dp</dimen>
+    <dimen name="fii_detail_quantity_marginLeft">15dp</dimen>
+    <dimen name="fii_detail">15dp</dimen>
+    <dimen name="fii_detail_width1">130dp</dimen>
+    <dimen name="fii_detail_width2">80dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

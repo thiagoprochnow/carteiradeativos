@@ -6,7 +6,7 @@
     android:id="@+id/fii_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="0dp"
+    android:layout_marginTop="10dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginBottom="10dp"
@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
                 android:textColor="@color/white"
-                android:textAllCaps="true"
                 android:textSize="@dimen/fii_symbol" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,21 +51,20 @@
                     android:id="@+id/fiiQuantityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/stock_quantity_label"
-                    android:textSize="@dimen/stock_symbol"
-                    android:ellipsize="end"
+                    android:text="@string/fii_quantity_label"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
+                    android:textSize="@dimen/fii_quantity"
+                    android:ellipsize="end"
                     android:maxLines="1" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:id="@+id/fiiQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    android:textSize="@dimen/stock_symbol"
                     android:textColor="@color/white"
-                    android:textAllCaps="true"
+                    android:text="100"
+                    android:textSize="@dimen/fii_quantity"
                     android:ellipsize="end"
                     android:maxLines="1" />
                 </LinearLayout>
@@ -77,91 +75,30 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingTop="3dp"
-            android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="5dp">
-
             <LinearLayout
-                android:layout_width="@dimen/stock_symbol_info_size"
+                android:layout_width="110dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/currentPercentImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/current_small"
-                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/currentPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/stock_percentage_text_margin"
-                        android:textSize="@dimen/stock_price"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/objectivePercentImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/objective_small"
-                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/objectivePercent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/stock_price"
-                        android:layout_marginLeft="@dimen/stock_percentage_text_margin" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="@dimen/letters_text_width"
-                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/letters_text_margin">
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_current_label" />
+                    android:text="@string/sold_data_sold_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_bought_label" />
+                    android:text="@string/sold_data_bought_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_appreciation_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_income_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_total_gain_label" />
+                    android:text="@string/sold_data_gain_label" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -170,16 +107,15 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/stock_values_margin">
+                    android:orientation="vertical">
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/currentTotal"
+                        android:id="@+id/sellTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
-                        android:textSize="@dimen/stock_price"
+                        android:textSize="@dimen/fii_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -189,37 +125,17 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/stock_price"
+                        android:textSize="@dimen/fii_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/fiiAppreciation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$1000,00"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalIncome"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$150,00"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalGain"
+                        android:id="@+id/sellGain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
-                        android:textSize="@dimen/stock_price"
+                        android:textSize="@dimen/fii_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>
@@ -227,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                    android:layout_marginLeft="@dimen/fii_percentage_text_margin">
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:layout_width="wrap_content"
@@ -246,29 +162,11 @@
 
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/fiiAppreciationPercent"
+                        android:id="@+id/sellGainPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:text="(158,53%)"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalIncomePercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="(0,0%)"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalGainPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="(0,0%)"
+                        android:text="(15,53%)"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>

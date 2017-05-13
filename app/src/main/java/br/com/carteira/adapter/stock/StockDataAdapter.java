@@ -1,4 +1,4 @@
-package br.com.carteira.adapter;
+package br.com.carteira.adapter.stock;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -111,7 +111,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 double totalGainPercent = totalGain/buyTotal*100;
                 // Get handled values of StockData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                        .SoldStockData.
+                        .StockData.
                         COLUMN_SYMBOL)));
                 viewHolder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                         (PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL))));
