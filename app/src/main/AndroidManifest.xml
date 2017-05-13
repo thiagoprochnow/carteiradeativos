@@ -29,6 +29,7 @@
 
         <service android:name=".api.service.StockIntentService" />
         <service android:name=".api.service.StockIncomeIntentService" />
+        <service android:name=".api.service.FiiIntentService" />
 
         <activity
             android:name=".activity.FormActivity"
@@ -58,6 +59,14 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_STOCK_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.FiiReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_FII_PORTFOLIO" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

@@ -263,15 +263,12 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
             case Constants.IncomeType.INVALID:
                 Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
-            case Constants.IncomeType.DIVIDEND:
-                Log.d(LOG_TAG, "Dividend IncomeType");
-                return mContext.getResources().getString(R.string.dividend_income_type);
-            case Constants.IncomeType.JCP:
-                Log.d(LOG_TAG, "JCP IncomeType");
-                return mContext.getResources().getString(R.string.jcp_income_type);
+            case Constants.IncomeType.FII_INCOME:
+                Log.d(LOG_TAG, "Income IncomeType");
+                return mContext.getResources().getString(R.string.fii_income_type);
             default:
                 Log.d(LOG_TAG, "Default IncomeType");
-                return mContext.getResources().getString(R.string.dividend_income_type);
+                return mContext.getResources().getString(R.string.fii_income_type);
         }
     }
 

@@ -41,7 +41,8 @@
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
-    <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
+    <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
+    <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_current_price">Preço Atual não é valido</string>

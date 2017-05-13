@@ -79,7 +79,7 @@ public class SellFiiFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidFiiSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView);
+        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.FII);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
@@ -125,7 +125,7 @@ public class SellFiiFormFragment extends BaseFormFragment {
                 mInputSymbolView.setError(this.getString(R.string.wrong_fii_code));
             }
             if(!isValidQuantity){
-                mInputQuantityView.setError(this.getString(R.string.wrong_sell_quantity));
+                mInputQuantityView.setError(this.getString(R.string.wrong_fii_sell_quantity));
             }
             if(!isValidSellPrice){
                 mInputSellPriceView.setError(this.getString(R.string.wrong_price));

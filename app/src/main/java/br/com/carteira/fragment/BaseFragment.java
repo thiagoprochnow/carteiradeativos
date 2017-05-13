@@ -383,8 +383,8 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    // Validate if an EditText was set with valid int and that there is enough quantity of stock
-    protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol) {
+    // Validate if an EditText was set with valid int and that there is enough quantity of that investment to sell
+    protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
         // TODO
         Editable editableQuantity = editQuantity.getText();
         int quantity = Integer.parseInt(editableQuantity.toString());
@@ -394,26 +394,50 @@ public abstract class BaseFragment extends Fragment {
         boolean isDigitOnly = TextUtils.isDigitsOnly(editableQuantity.toString());
         boolean isQuantityEnough = false;
 
-        // Prepare query for stock data
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
-        String[] selectionArguments = {symbol};
+        if (type == Constants.ProductType.STOCK) {
+            // Prepare query for stock data
+            String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {symbol};
 
-        Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
-                null, selection, selectionArguments, null);
-        // Gets data quantity to see if bought quantity is enough
-        if(queryCursor.getCount() > 0){
-            queryCursor.moveToFirst();
-            int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
-                    .StockData.COLUMN_QUANTITY_TOTAL));
-            if(boughtQuantity >= quantity){
-                // Bought quantity is bigger then quantity trying to sell
-                isQuantityEnough = true;
-            } else{
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.StockData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                        .StockData.COLUMN_QUANTITY_TOTAL));
+                if (boughtQuantity >= quantity) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
                 return false;
             }
-        } else{
-            return false;
+        } else if (type == Constants.ProductType.FII){
+            // Prepare query for fii data
+            String selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {symbol};
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                        .StockData.COLUMN_QUANTITY_TOTAL));
+                if (boughtQuantity >= quantity) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
         if (!isEditTextEmpty(editQuantity) && isDigitOnly && isQuantityEnough) {
@@ -946,7 +970,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    // Reads the StockTransaction entries and calculates value for FiiData table for this symbol
+    // Reads the FiiTransaction entries and calculates value for FiiData table for this symbol
     public boolean updateFiiData(String symbol, double objective, int type){
 
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
@@ -970,7 +994,6 @@ public abstract class BaseFragment extends Fragment {
             double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
-            int bonificationQuantity = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -984,9 +1007,9 @@ public abstract class BaseFragment extends Fragment {
                 switch (currentType){
                     case Constants.Type.BUY:
                         buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         mediumPrice = buyTotal/buyQuantity;
                         break;
                     case Constants.Type.SELL:
@@ -995,33 +1018,17 @@ public abstract class BaseFragment extends Fragment {
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
-                    case Constants.Type.BONIFICATION:
-                        bonificationQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        break;
-                    case Constants.Type.SPLIT:
-                        buyQuantity = buyQuantity*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        break;
-                    case Constants.Type.GROUPING:
-                        buyQuantity = buyQuantity/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        break;
                     default:
                         Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
-            // Adds the bonification after the buyValue is totally calculated
-            // Bonification cannot influence on the buy value
-            quantityTotal += bonificationQuantity;
             ContentValues fiiDataCV = new ContentValues();
 
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_SYMBOL, symbol);
 
             selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
 
-            // Searches for existing StockData to update value.
+            // Searches for existing FiiData to update value.
             // If dosent exists, creates new one
             Cursor queryDataCursor = mContext.getContentResolver().query(
                     PortfolioContract.FiiData.URI,
@@ -1029,7 +1036,7 @@ public abstract class BaseFragment extends Fragment {
 
             double currentTotal = 0;
             double variation = 0;
-            // Create new StockData for this symbol
+            // Create new FiiData for this symbol
             if (queryDataCursor.getCount() == 0){
                 // Adds data to the database
                 Uri insertedFiiDataUri = mContext.getContentResolver().insert(PortfolioContract.FiiData.URI,
@@ -1046,7 +1053,7 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, FiiDetailsOverview will not update current total and total gain, unless refreshing the View
-                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION){
+                if (type == Constants.Type.DELETE_TRANSACION){
                     queryDataCursor.moveToFirst();
                     double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
@@ -1059,7 +1066,7 @@ public abstract class BaseFragment extends Fragment {
             mServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
             getActivity().startService(mServiceIntent);
 
-            // Query Income table to get total of this stock income
+            // Query Income table to get total of this fii income
             String[] affectedColumn = {"sum("+ PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID+")",
                     "sum("+ PortfolioContract.FiiIncome.COLUMN_TAX+")"};
             selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
@@ -1107,27 +1114,27 @@ public abstract class BaseFragment extends Fragment {
             String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiData._ID)));
 
             // Update
-            // Prepare query to update stock data
+            // Prepare query to update fii data
             String updateSelection = PortfolioContract.FiiData._ID + " = ?";
             String[] updatedSelectionArguments = {_id};
 
-            // Update value on stock data
+            // Update value on fii data
             int updatedRows = mContext.getContentResolver().update(
                     PortfolioContract.FiiData.URI,
                     fiiDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
                 Log.d(LOG_TAG, "updateStockData successfully updated");
-                // Update Stock Portfolio
-                // Send broadcast so StockReceiver can update the rest
+                // Update Fii Portfolio
+                // Send broadcast so FiiReceiver can update the rest
                 updateSoldFiiData(symbol, soldBuyValue);
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateStockData failed update");
+                Log.d(LOG_TAG, "updateFiiData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No StockTransaction found");
+            Log.d(LOG_TAG, "No FiiTransaction found");
             return false;
         }
     }
@@ -1160,9 +1167,9 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         sellMediumPrice = soldTotal/quantityTotal;
-                        Log.d(LOG_TAG, "SELL: QuantityTotal: " + quantityTotal);
-                        Log.d(LOG_TAG, "SELL: SoldTotal: " + quantityTotal);
-                        Log.d(LOG_TAG, "SELL: soldBuyValue: " + soldBuyValue);
+                        Log.d(LOG_TAG, "(FII) SELL: QuantityTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(FII) SELL: SoldTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(FII) SELL: soldBuyValue: " + soldBuyValue);
                         break;
                     default:
                         Log.d(LOG_TAG, "Do nothing");
@@ -1183,7 +1190,7 @@ public abstract class BaseFragment extends Fragment {
                         PortfolioContract.SoldFiiData.URI,
                         null, selection, selectionArguments, null);
 
-                // Create new StockData for this symbol
+                // Create new FiiData for this symbol
                 if (queryDataCursor.getCount() == 0) {
                     // Adds data to the database
                     Uri insertedFiiDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldFiiData.URI,
@@ -1220,7 +1227,7 @@ public abstract class BaseFragment extends Fragment {
 
                 // Update
                 // Prepare query to update fii data
-                String updateSelection = PortfolioContract.SoldStockData._ID + " = ?";
+                String updateSelection = PortfolioContract.SoldFiiData._ID + " = ?";
                 String[] updatedSelectionArguments = {_id};
 
                 // Update value on fii data
@@ -1232,7 +1239,7 @@ public abstract class BaseFragment extends Fragment {
                     Log.d(LOG_TAG, "updateSoldFiiData successfully updated");
                     // Update Fii Portfolio
                     // Send broadcast so FiiReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
                     return true;
                 } else {
                     Log.d(LOG_TAG, "updateSoldFiiData failed update");
@@ -1256,7 +1263,7 @@ public abstract class BaseFragment extends Fragment {
         String selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
         String[] selectionArguments = {symbol, String.valueOf(timestamp)};
 
-        // Check if any income is affected by stock buy/sell
+        // Check if any income is affected by fii buy/sell
         Cursor queryCursor = mContext.getContentResolver().query(
                 PortfolioContract.FiiIncome.URI,
                 null, selection, selectionArguments, null);
@@ -1277,16 +1284,14 @@ public abstract class BaseFragment extends Fragment {
                 String updateSelection = PortfolioContract.FiiIncome._ID + " = ?";
                 String[] updatedSelectionArguments = {_id};
                 ContentValues incomeCV = new ContentValues();
+
                 incomeCV.put(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY, quantity);
                 incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
-                if(incomeType == Constants.IncomeType.DIVIDEND) {
-                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
-                } else {
-                    double tax = receiveTotal * 0.15;
-                    double receiveLiquid = receiveTotal - tax;
-                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
-                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
-                }
+                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
+                double tax = 0;
+                double receiveLiquid = receiveTotal;
+                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
+                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
 
                 // Update value on incomes table
                 int updatedRows = mContext.getContentResolver().update(
@@ -1304,7 +1309,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    // Get stock quantity that will receive the dividend per fii
+    // Get fii quantity that will receive the dividend per fii
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of fiis transactions before the timestamp
     public int getFiiQuantity(String symbol, Long incomeTimestamp){
@@ -1333,7 +1338,7 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
-                        Log.d(LOG_TAG, "getStockQuantity currentType Unknown");
+                        Log.d(LOG_TAG, "getFiiQuantity currentType Unknown");
                 }
             } while (queryCursor.moveToNext());
             return quantityTotal;
