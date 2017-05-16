@@ -81,7 +81,7 @@ public class StockDataFragment extends BaseFragment implements
         mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
-        view.findViewById(R.id.fabStocks).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
