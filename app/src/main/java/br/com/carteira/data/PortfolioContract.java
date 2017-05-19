@@ -48,6 +48,19 @@ public class PortfolioContract {
     public static final String PATH_FII_INCOME = "fii_income";
     public static final String PATH_FII_INCOME_WITH_SYMBOL = "fii_income/*";
 
+    public static final String PATH_CURRENCY_PORTFOLIO = "currency_portfolio";
+
+    public static final String PATH_CURRENCY_DATA = "currency_data";
+    public static final String PATH_CURRENCY_DATA_BULK_UPDATE = "currency_data/update";
+    public static final String PATH_CURRENCY_DATA_BULK_UPDATE_WITH_CURRENT = "currency_data/update/*";
+    public static final String PATH_CURRENCY_DATA_WITH_SYMBOL = "currency_data/*";
+
+    public static final String PATH_SOLD_CURRENCY_DATA = "sold_currency_data";
+    public static final String PATH_SOLD_CURRENCY_DATA_WITH_SYMBOL = "sold_currency_data/*";
+
+    public static final String PATH_CURRENCY_TRANSACTION = "currency_transaction";
+    public static final String PATH_CURRENCY_TRANSACTION_WITH_SYMBOL = "currency_transaction/*";
+
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
 
@@ -479,6 +492,166 @@ public class PortfolioContract {
         }
 
         public static String getFiiIncomeFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole currency portfolio
+    public static final class CurrencyPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_CURRENCY_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "currency_portfolio";
+
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+
+        public static final String[] CURRENCY_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_VARIATION_TOTAL,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL
+        };
+
+        public static Uri makeUriForCurrencyPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildCurrencyPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getCurrencyPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each currency owned, DOLAR, EURO, etc
+    public static final class CurrencyData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_CURRENCY_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
+
+        public static final String TABLE_NAME = "currency_data";
+
+        // Symbol will be currency name, Dolar, Euro, Bitcoin.
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_VARIATION = "variation";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_MEDIUM_PRICE = "medium_price";
+        public static final String COLUMN_CURRENT_PRICE = "current_price";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_STATUS = "status";
+
+        public static final String[] CURRENCY_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_VARIATION,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_MEDIUM_PRICE,
+                COLUMN_CURRENT_PRICE,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_STATUS
+        };
+
+        public static Uri makeUriForCurrencyData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getCurrencyDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each currency sold, DOLAR, EURO, etc
+    public static final class SoldCurrencyData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_SOLD_CURRENCY_DATA).build();
+
+        public static final String TABLE_NAME = "sold_currency_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_SELL_GAIN = "sell_gain";
+        public static final String COLUMN_SELL_MEDIUM_PRICE = "current_price";
+        public static final String COLUMN_SELL_TOTAL = "current_total";
+
+        public static final String[] SOLD_CURRENCY_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_SELL_GAIN,
+                COLUMN_SELL_MEDIUM_PRICE,
+                COLUMN_SELL_TOTAL
+        };
+
+        public static Uri makeUriForSoldCurrencyData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getSoldCurrencyDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each currency buy and sell
+    public static final class CurrencyTransaction implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_CURRENCY_TRANSACTION).build();
+
+        public static final String TABLE_NAME = "currency_transaction";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY = "quantity";
+        public static final String COLUMN_PRICE = "bought_price";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] FII_TRANSACTION_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY,
+                COLUMN_PRICE,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE
+        };
+
+        public static Uri buildTransactionUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForCurrencyTransaction(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getCurrencyTransactionFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

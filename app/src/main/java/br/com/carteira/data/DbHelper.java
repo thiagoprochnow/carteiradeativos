@@ -156,6 +156,52 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + PortfolioContract.FiiIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FiiData.TABLE_NAME + " (" + PortfolioContract.FiiData._ID + "));";
 
+        String builder_currency_portfolio = "CREATE TABLE " + PortfolioContract.CurrencyPortfolio.TABLE_NAME + " (" +
+                PortfolioContract.CurrencyPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                "UNIQUE (" + PortfolioContract.CurrencyPortfolio._ID + ") ON CONFLICT REPLACE);";
+
+        String builder_currency_data = "CREATE TABLE " + PortfolioContract.CurrencyData.TABLE_NAME + " (" +
+                PortfolioContract.CurrencyData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.CurrencyData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_VARIATION + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_MEDIUM_PRICE + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_CURRENT_PRICE + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_STATUS + " INTEGER, " +
+                "UNIQUE (" + PortfolioContract.CurrencyData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+        String builder_sold_currency_data = "CREATE TABLE " + PortfolioContract.SoldCurrencyData.TABLE_NAME + " (" +
+                PortfolioContract.SoldCurrencyData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_SELL_GAIN + " REAL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL + " REAL, " +
+                "UNIQUE (" + PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+        String builder_currency_transaction = "CREATE TABLE " + PortfolioContract.CurrencyTransaction.TABLE_NAME + " (" +
+                PortfolioContract.CurrencyTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_PRICE + " REAL, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_TYPE + " INTEGER, " +
+                " FOREIGN KEY (" + PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.CurrencyData.TABLE_NAME + " (" + PortfolioContract.CurrencyData._ID + "));";
+
         db.execSQL(builder_portfolio);
         db.execSQL(builder_stock_portfolio);
         db.execSQL(builder_stock_data);
@@ -167,6 +213,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_sold_fii_data);
         db.execSQL(builder_fii_transaction);
         db.execSQL(builder_fii_income);
+        db.execSQL(builder_currency_portfolio);
+        db.execSQL(builder_currency_data);
+        db.execSQL(builder_sold_currency_data);
+        db.execSQL(builder_currency_transaction);
 
     }
 
@@ -185,6 +235,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldFiiData.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiTransaction.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiIncome.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyPortfolio.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldCurrencyData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyTransaction.TABLE_NAME);
         onCreate(db);
     }
 }
