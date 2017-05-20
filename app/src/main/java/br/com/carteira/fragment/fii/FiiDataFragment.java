@@ -24,6 +24,7 @@ import android.widget.TextView;
 import br.com.carteira.R;
 import br.com.carteira.adapter.fii.FiiDataAdapter;
 import br.com.carteira.adapter.fii.FiiDataAdapter;
+import br.com.carteira.adapter.stock.StockDataAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -68,6 +69,18 @@ public class FiiDataFragment extends BaseFragment implements
         super.onCreate(savedInstanceState);
         // Set fragment title
         getActivity().setTitle(R.string.title_fii);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mFiiDataAdapter = new FiiDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mFiiDataAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.FII_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_DATA, null, this);
     }
 
     @Override

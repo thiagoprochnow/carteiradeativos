@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
+import br.com.carteira.adapter.stock.StockIncomeAdapter;
 import br.com.carteira.adapter.stock.StockIncomeMainAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -76,6 +77,18 @@ public class StockIncomesMainFragment extends BaseFragment implements
             }
         };
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mStockIncomeMainAdapter = new StockIncomeMainAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockIncomeMainAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.STOCK_INCOME, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_INCOME, null, this);
     }
 
     @Override

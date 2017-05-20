@@ -45,7 +45,7 @@ public class SoldFiiDataFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private SoldFiiDataAdapter mFiiPortfolioAdapter;
+    private SoldFiiDataAdapter mSoldFiiAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
@@ -70,6 +70,18 @@ public class SoldFiiDataFragment extends BaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mSoldFiiAdapter = new SoldFiiDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mSoldFiiAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.SOLD_FII_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_FII_DATA, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fii_data, container, false);
@@ -88,8 +100,8 @@ public class SoldFiiDataFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.FII, "");
             }
         });
-        mFiiPortfolioAdapter = new SoldFiiDataAdapter(mContext, this);
-        mRecyclerView.setAdapter(mFiiPortfolioAdapter);
+        mSoldFiiAdapter = new SoldFiiDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mSoldFiiAdapter);
         registerForContextMenu(mRecyclerView);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_FII_DATA, null, this);
         // Inflate the layout for this fragment
@@ -175,11 +187,11 @@ public class SoldFiiDataFragment extends BaseFragment implements
             }
         }
 
-        mFiiPortfolioAdapter.setCursor(data);
+        mSoldFiiAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mFiiPortfolioAdapter.setCursor(null);
+        mSoldFiiAdapter.setCursor(null);
     }
 }

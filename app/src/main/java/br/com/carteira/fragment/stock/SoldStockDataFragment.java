@@ -45,7 +45,7 @@ public class SoldStockDataFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private SoldStockDataAdapter mStockPortfolioAdapter;
+    private SoldStockDataAdapter mStockSoldStockAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
@@ -70,6 +70,18 @@ public class SoldStockDataFragment extends BaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mStockSoldStockAdapter = new SoldStockDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockSoldStockAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.SOLD_STOCK_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_STOCK_DATA, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stock_data, container, false);
@@ -88,8 +100,8 @@ public class SoldStockDataFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.STOCK, "");
             }
         });
-        mStockPortfolioAdapter = new SoldStockDataAdapter(mContext, this);
-        mRecyclerView.setAdapter(mStockPortfolioAdapter);
+        mStockSoldStockAdapter = new SoldStockDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockSoldStockAdapter);
         registerForContextMenu(mRecyclerView);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_STOCK_DATA, null, this);
         // Inflate the layout for this fragment
@@ -175,11 +187,11 @@ public class SoldStockDataFragment extends BaseFragment implements
             }
         }
 
-        mStockPortfolioAdapter.setCursor(data);
+        mStockSoldStockAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mStockPortfolioAdapter.setCursor(null);
+        mStockSoldStockAdapter.setCursor(null);
     }
 }

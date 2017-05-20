@@ -3,11 +3,13 @@ package br.com.carteira.adapter.fii;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -130,6 +132,19 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewHolder.fiiAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
                 viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+                if(position == mCursor.getCount()){
+                    // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                    int leftDp = 10; // margin in dips
+                    int rightDp = 10; // margin in dips
+                    int bottomDp = 85; // margin in dips
+                    float d = mContext.getResources().getDisplayMetrics().density;
+                    int leftMargin = (int)(leftDp * d); // margin in pixels
+                    int rightMargin = (int)(rightDp * d); // margin in pixels
+                    int bottomMargin = (int)(bottomDp * d); // margin in pixels
+                    params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
+                    viewHolder.fiiCardView.setLayoutParams(params);
+                }
         }
 
     }
@@ -152,6 +167,9 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     class FiiDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+
+        @BindView(R.id.fii_card_view)
+        CardView fiiCardView;
 
         @BindView(R.id.symbol)
         TextView symbol;

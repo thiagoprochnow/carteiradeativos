@@ -70,6 +70,18 @@ public class StockDataFragment extends BaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mStockDataAdapter = new StockDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mStockDataAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.STOCK_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DATA, null, this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stock_data, container, false);

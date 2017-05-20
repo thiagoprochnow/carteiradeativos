@@ -3,6 +3,7 @@ package br.com.carteira.adapter.stock;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -151,15 +153,24 @@ public class StockIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
-                Log.d(LOG_TAG, "IncomeType: " + incomeType);
-                Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
-                Log.d(LOG_TAG, "Date: " + date);
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_SYMBOL)));
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
                 viewHolder.incomeDate.setText(date);
+                if(position == mCursor.getCount()){
+                    // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
+                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                    int leftDp = 10; // margin in dips
+                    int rightDp = 10; // margin in dips
+                    int bottomDp = 85; // margin in dips
+                    float d = mContext.getResources().getDisplayMetrics().density;
+                    int leftMargin = (int)(leftDp * d); // margin in pixels
+                    int rightMargin = (int)(rightDp * d); // margin in pixels
+                    int bottomMargin = (int)(bottomDp * d); // margin in pixels
+                    params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
+                    viewHolder.stockCardView.setLayoutParams(params);
+                }
                 break;
         }
     }
@@ -182,6 +193,9 @@ public class StockIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     class StockIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+
+        @BindView(R.id.stock_card_view)
+        CardView stockCardView;
 
         @BindView(R.id.symbol)
         TextView symbol;
