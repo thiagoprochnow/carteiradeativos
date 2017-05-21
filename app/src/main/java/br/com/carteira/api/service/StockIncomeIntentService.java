@@ -10,6 +10,7 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 
 import br.com.carteira.api.domain.ResponseStockIncome;
+import br.com.carteira.domain.Dividend;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -79,6 +80,10 @@ public class StockIncomeIntentService extends IntentService {
                 Log.d(LOG_TAG, "Response log test:" +
                         "\nquery: " + query +
                         "");
+                for(Dividend a : responseGetStock.getDividendQuotes()){
+                    Log.d(LOG_TAG, "--4> " + a.getDividends());
+                }
+                Log.d(LOG_TAG, "Size: " + responseGetStock.getDividendQuotes().size());
                 // TODO - implement DB logic to update
             }
         } catch (IOException e) {
@@ -111,7 +116,7 @@ public class StockIncomeIntentService extends IntentService {
         if(!startDate.isEmpty())
             resultQuery += "and startDate = \"" + startDate + "\"";
         if(!endDate.isEmpty())
-            resultQuery += "and endDate = \"" + startDate + "\"";
+            resultQuery += "and endDate = \"" + endDate + "\"";
 
         return resultQuery;
     }

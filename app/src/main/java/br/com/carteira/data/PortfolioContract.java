@@ -634,7 +634,7 @@ public class PortfolioContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_TYPE = "type";
 
-        public static final String[] FII_TRANSACTION_COLUMNS = {
+        public static final String[] CURRENCY_TRANSACTION_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY,

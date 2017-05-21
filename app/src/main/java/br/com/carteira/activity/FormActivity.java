@@ -8,6 +8,9 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.currency.BuyCurrencyFormFragment;
+import br.com.carteira.fragment.currency.EditCurrencyFormFragment;
+import br.com.carteira.fragment.currency.SellCurrencyFormFragment;
 import br.com.carteira.fragment.fii.BuyFiiFormFragment;
 import br.com.carteira.fragment.fii.EditFiiFormFragment;
 import br.com.carteira.fragment.fii.FiiIncomeFormFragment;
@@ -49,6 +52,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FII:
                         replaceFragment(new BuyFiiFormFragment());
                         break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new BuyCurrencyFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -62,6 +68,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FII:
                         replaceFragment(new SellFiiFormFragment());
                         break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new SellCurrencyFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -74,6 +83,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.FII:
                         replaceFragment(new EditFiiFormFragment());
+                        break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new EditCurrencyFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

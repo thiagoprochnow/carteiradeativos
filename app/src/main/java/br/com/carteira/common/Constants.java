@@ -33,6 +33,7 @@ public final class Constants {
         public static final int INVALID = -1;
         public static final int STOCK = 0;
         public static final int FII = 1;
+        public static final int CURRENCY = 2;
     }
 
     // This should contains all incomes types in the portfolio
@@ -61,6 +62,7 @@ public final class Constants {
     public static class Receiver{
         public static final String STOCK = "UPDATE_STOCK_PORTFOLIO";
         public static final String FII = "UPDATE_FII_PORTFOLIO";
+        public static final String CURRENCY = "UPDATE_CURRENCY_PORTFOLIO";
     }
 
     // Constants for Loaders IDs
@@ -77,6 +79,11 @@ public final class Constants {
         public static final int FII_INCOME = 7;
         public static final int FII_OVERVIEW = 8;
         public static final int FII_DETAILS = 9;
+
+        public static final int CURRENCY_DATA = 10;
+        public static final int SOLD_CURRENCY_DATA = 11;
+        public static final int CURRENCY_OVERVIEW = 12;
+        public static final int CURRENCY_DETAILS = 13;
     }
 
     // Constants for Providers IDs
@@ -114,5 +121,21 @@ public final class Constants {
 
         public static final int FII_INCOME = 2500;
         public static final int FII_INCOME_FOR_SYMBOL = 2501;
+
+        public static final int CURRENCY_PORTFOLIO = 3100;
+
+        public static final int CURRENCY_DATA = 3200;
+        public static final int CURRENCY_DATA_WITH_SYMBOL = 3201;
+        public static final int CURRENCY_DATA_BULK_UPDATE = 3202;
+        public static final int CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT = 3203;
+
+        public static final int SOLD_CURRENCY_DATA = 3300;
+        public static final int SOLD_CURRENCY_DATA_WITH_SYMBOL = 3301;
+
+        public static final int CURRENCY_TRANSACTION = 3400;
+        public static final int CURRENCY_TRANSACTION_FOR_SYMBOL = 3401;
+
+        public static final int CURRENCY_INCOME = 3500;
+        public static final int CURRENCY_INCOME_FOR_SYMBOL = 3501;
     }
 }

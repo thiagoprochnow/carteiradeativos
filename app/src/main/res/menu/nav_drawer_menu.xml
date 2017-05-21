@@ -27,7 +27,7 @@
 
         <!-- Currency Item Menu -->
         <item
-            android:id="@+id/currency"
+            android:id="@+id/nav_item_currency"
             android:checked="true"
             android:title="@string/title_currency"/>
     </group>

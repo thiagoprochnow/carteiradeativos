@@ -218,6 +218,31 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Delete Currency and all its information from database
+    // This is different then selling a Currency, that will maintain some information
+    public boolean deleteCurrency(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .CurrencyTransaction
+                .makeUriForCurrencyTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.CurrencyData
+                .makeUriForCurrencyData(symbol), null, null);
+
+        int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldCurrencyData
+                .makeUriForSoldCurrencyData(symbol), null, null);
+
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + "Deleted sold data" + deletedSoldData);
+        if (deletedData > 0) {
+            mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+            Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_currency_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     // Delete fii income from table by using its id
     // symbol is used to update Fii Data table
     public boolean deleteFiiIncome(String id, String symbol){
@@ -328,6 +353,80 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete Currency transaction from table by using its id
+    // symbol is used to update Currency Data table
+    public boolean deleteCurrencyTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.CurrencyTransaction._ID + " = ? AND "
+                + PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.CurrencyTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.CurrencyTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update Currency data and Currency income for that symbol
+            updateCurrencyData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from CurrencyData
+
+        String selectionTransaction = PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.CurrencyTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.CurrencyTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the Currency and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteCurrency(symbol);
+            getActivity().finish();
+        }
+
+        // Check if there is any more SELL transaction for this symbol
+        // If not, delete this symbol from SoldCurrencyData
+
+        String sellSelectionTransaction = PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.CurrencyTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.CurrencyTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        // No more Sell transactions, delete SoldCurrencyData
+        if (queryCursor.getCount() == 0){
+            String selectionSoldData = PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + " = ?";
+            String[] selectionArgumentsSoldData = {symbol};
+            int rowsDeleted = mContext.getContentResolver().delete(
+                    PortfolioContract.SoldCurrencyData.URI, selectionSoldData,
+                    selectionArgumentsSoldData);
+            if (rowsDeleted == 1){
+                Log.d(LOG_TAG, "SoldCurrencyData deleted successfully");
+            } else {
+                Log.d(LOG_TAG, "Problem deleting SoldCurrencyData");
+            }
+        }
+
+        return false;
+    }
+
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
         Log.d(LOG_TAG, "InputDate String: " + inputDate);
@@ -383,6 +482,19 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText was set with valid Fii Symbol
+    protected boolean isValidCurrencySymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Fii (EX: EURO)
+        // Pattern pattern = Pattern.compile("^[A-Z]");
+       // if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isEditTextEmpty(symbol)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid int and that there is enough quantity of that investment to sell
     protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
         // TODO
@@ -423,6 +535,28 @@ public abstract class BaseFragment extends Fragment {
 
             Cursor queryCursor = mContext.getContentResolver().query(
                     PortfolioContract.FiiData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                        .StockData.COLUMN_QUANTITY_TOTAL));
+                if (boughtQuantity >= quantity) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else if (type == Constants.ProductType.CURRENCY){
+            // Prepare query for currency data
+            String selection = PortfolioContract.CurrencyData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {symbol};
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.CurrencyData.URI,
                     null, selection, selectionArguments, null);
             // Gets data quantity to see if bought quantity is enough
             if (queryCursor.getCount() > 0) {
@@ -966,6 +1100,289 @@ public abstract class BaseFragment extends Fragment {
             return true;
         } else{
             Log.d(LOG_TAG, "No StockTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the CurrencyTransaction entries and calculates value for CurrencyData table for this symbol
+    public boolean updateCurrencyData(String symbol, double objective, int type){
+
+        String selection = PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.CurrencyTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in CurrencyData
+            int quantityTotal = 0;
+            double buyValue = 0;
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyQuantity = 0;
+            double buyTotal = 0;
+            double receiveIncome = 0;
+            double taxIncome = 0;
+            double mediumPrice = 0;
+            int currentType;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldBuyValue = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        mediumPrice = buyTotal/buyQuantity;
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        buyValue = quantityTotal*mediumPrice;
+                        // Add the value sold times the current medium buy price
+                        soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
+            ContentValues currencyDataCV = new ContentValues();
+
+            currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.CurrencyData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing CurrencyData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.CurrencyData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            double variation = 0;
+            // Create new CurrencyData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Adds data to the database
+                Uri insertedCurrencyDataUri = mContext.getContentResolver().insert(PortfolioContract.CurrencyData.URI,
+                        currencyDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedCurrencyDataUri != null) {
+                    Log.d(LOG_TAG, "Created Currency data");
+                    // Update Currency Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating Currency data");
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, CurrencyDetailsOverview will not update current total and total gain, unless refreshing the View
+                if (type == Constants.Type.DELETE_TRANSACION){
+                    queryDataCursor.moveToFirst();
+                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_PRICE));
+                    currentTotal = currentPrice*quantityTotal;
+                    variation = currentTotal - buyTotal;
+                }
+            }
+
+            //TODO - create service currency
+/*            Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
+                    .class);
+            mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent); */
+/*
+            // Query Income table to get total of this fii income
+            String[] affectedColumn = {"sum("+ PortfolioContract.CurrencyIncome.COLUMN_RECEIVE_LIQUID+")",
+                    "sum("+ PortfolioContract.FiiIncome.COLUMN_TAX+")"};
+            selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FiiIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
+            } else {
+                receiveIncome = 0;
+            }
+*/
+            currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL, buyValue);
+            if (type == Constants.Type.BUY) {
+                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL, currentTotal);
+                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_VARIATION, variation);
+            }
+            currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_MEDIUM_PRICE, mediumPrice);
+
+            if(quantityTotal > 0){
+                // Set Currency as active
+                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_STATUS, Constants.Status.ACTIVE);
+            } else {
+                // Set Currency as sold
+                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_STATUS, Constants.Status.SOLD);
+            }
+            // Searches for existing CurrencyData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.CurrencyData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.CurrencyData._ID)));
+
+            // Update
+            // Prepare query to update Currency data
+            String updateSelection = PortfolioContract.CurrencyData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on Currency data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.CurrencyData.URI,
+                    currencyDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateCurrencyData successfully updated");
+                // Update Currency Portfolio
+                // Send broadcast so CurrencyReceiver can update the rest
+                updateSoldCurrencyData(symbol, soldBuyValue);
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateCurrencyData failed update");
+                return false;
+            }
+        } else{
+            Log.d(LOG_TAG, "No CurrencyTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the CurrencyTransaction entries and calculates value for CurrencyData table for this symbol
+    public boolean updateSoldCurrencyData(String symbol, double soldBuyValue){
+
+        String selection = PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.CurrencyTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in CurrencyData
+            int quantityTotal = 0;
+            double soldTotal = 0;
+            double sellMediumPrice = 0;
+            int currentType;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.SELL:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        sellMediumPrice = soldTotal/quantityTotal;
+                        Log.d(LOG_TAG, "(CURRENCY) SELL: QuantityTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(CURRENCY) SELL: SoldTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(CURRENCY) SELL: soldBuyValue: " + soldBuyValue);
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Do nothing");
+                }
+            } while (STQueryCursor.moveToNext());
+
+            // If there is any sold Currency
+            if (quantityTotal > 0) {
+                ContentValues currencyDataCV = new ContentValues();
+
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL, symbol);
+
+                selection = PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + " = ? ";
+
+                // Searches for existing CurrencyData to update value.
+                // If dosent exists, creates new one
+                Cursor queryDataCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldCurrencyData.URI,
+                        null, selection, selectionArguments, null);
+
+                // Create new CurrencyData for this symbol
+                if (queryDataCursor.getCount() == 0) {
+                    // Adds data to the database
+                    Uri insertedCurrencyDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldCurrencyData.URI,
+
+                            currencyDataCV);
+
+                    // If error occurs to add, shows error message
+                    if (insertedCurrencyDataUri != null) {
+                        Log.d(LOG_TAG, "Created Currency sold data");
+                        // Update Currency Portfolio
+                    } else {
+                        Log.d(LOG_TAG, "Error creating sold Currency data");
+                        return false;
+                    }
+                }
+
+                double sellGain = soldTotal - soldBuyValue;
+                double gainPercent = sellGain/soldBuyValue*100;
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL, soldTotal);
+                currencyDataCV.put(PortfolioContract.SoldCurrencyData.COLUMN_SELL_GAIN, sellGain);
+
+                // Searches for existing CurrencyData to update value.
+                // If dosent exists, creates new one
+                Cursor queryCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldCurrencyData.URI,
+                        null, selection, selectionArguments, null);
+
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.SoldCurrencyData._ID)));
+
+                // Update
+                // Prepare query to update Currency data
+                String updateSelection = PortfolioContract.SoldCurrencyData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on Currency data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.SoldCurrencyData.URI,
+                        currencyDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0) {
+                    Log.d(LOG_TAG, "updateSoldCurrencyData successfully updated");
+                    // Update Currency Portfolio
+                    // Send broadcast so CurrencyReceiver can update the rest
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+                    return true;
+                } else {
+                    Log.d(LOG_TAG, "updateSoldCurrencyData failed update");
+                    return false;
+                }
+            }
+            Log.d(LOG_TAG, "No sold currency yet");
+            return true;
+        } else{
+            Log.d(LOG_TAG, "No CurrencyTransaction found");
             return false;
         }
     }

@@ -9,6 +9,8 @@
     <string name="stock_update_fail">Stock update failed</string>
     <string name="fii_update_success">Fii updated successfuly</string>
     <string name="fii_update_fail">Fii update failed</string>
+    <string name="currency_update_success">Currency updated successfuly</string>
+    <string name="currency_update_fail">Currency update failed</string>
     <string name="form_title_buy">Buy</string>
     <string name="form_title_sell">Sell</string>
     <string name="form_title_objective">Objective</string>
@@ -25,9 +27,11 @@
     <string name="sell_price">Sell Price</string>
     <string name="stock_current_price">Stock Current Price</string>
     <string name="fii_current_price">Fii Current Price</string>
+    <string name="currency_current_price">Currency Current Price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="stock_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="fii_edit_tip">*Leave any field empty to not edit it.</string>
+    <string name="currency_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="buy_date">Buy Date</string>
     <string name="bonification_date">Bonification Date</string>
     <string name="split_date">Stock Split Date</string>
@@ -40,8 +44,10 @@
     <string name="ex_date_fii_income">Ex Income Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
+    <string name="wrong_currency_code">Invalid Currency code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_stock_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
+    <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_current_price">Current Price is not valid</string>
@@ -80,6 +86,14 @@
     <string name="menu_sell">Sell</string>
     <string name="menu_delete">Delete</string>
 
+    <!-- Currency Main Fragment -->
+    <string name="buy_currency_success">Currency added successfully</string>
+    <string name="buy_currency_fail">Error adding Currency</string>
+    <string name="sell_currency_success">Currency sold successfully</string>
+    <string name="sell_currency_fail">Error selling currency</string>
+    <string name="delete_currency_title">Delete curency from your portfolio?</string>
+    <string name="delete_currency_dialog">If you sold the Currency, select "Sell" from the option menu. Deleting the Currency will remove all its data, including all income received.</string>
+
     <!-- Fii Main Fragment -->
     <string name="buy_fii_success">Fii added successfully</string>
     <string name="buy_fii_fail">Error adding Fii</string>
@@ -93,6 +107,11 @@
     <string name="stocks_portfolio">Portfolio</string>
     <string name="stocks_history">History</string>
     <string name="stocks_incomes">Incomes</string>
+
+    <!-- Currency Tab Adapter -->
+    <string name="currency_overview">Overview</string>
+    <string name="currency_portfolio">Portfolio</string>
+    <string name="currency_history">History</string>
 
     <!-- Fii Tab Adapter -->
     <string name="fii_overview">Overview</string>
@@ -118,6 +137,9 @@
     <string name="sold_data_sold_label">Sold Value</string>
     <string name="sold_data_gain_label">Sell Gain</string>
 
+    <!-- Currency Adapter -->
+    <string name="currency_quantity_label">Quantity: </string>
+
     <!-- Fii Adapter -->
     <string name="fii_quantity_label">Quantity: </string>
 
@@ -136,6 +158,9 @@
     <string name="portfolio_appreciation_label">Appreciation</string>
     <string name="portfolio_income_label">Income</string>
     <string name="portfolio_total_gain_label">Gain</string>
+
+    <!-- Currency Portolfio -->
+    <string name="currency_portfolio_label">Currency Portfolio</string>
 
     <!-- Fii Portolfio -->
     <string name="fii_portfolio_label">Fii Portfolio</string>
@@ -198,6 +223,17 @@
     <string name="add_fii_income_success">Income added successfully</string>
     <string name="add_fii_income_fail">Error adding income</string>
 
+    <!-- Currency Main Fragment -->
+    <string name="add_currency_success">Currency added successfully</string>
+    <string name="add_currency_fail">Error adding currency </string>
+
+    <!-- Add currency Form Fragment -->
+    <string name="add_currency_title">Buy Currency</string>
+    <string name="buy_currency_button">Buy</string>
+    <string name="cancel_currency_button">Cancel</string>
+    <string name="currency_symbol">Currency Code</string>
+    <string name="currency_symbol_hint">Ex: Euro</string>
+
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Real Estate Fund added successfully</string>
     <string name="add_fii_fail">Error adding real estate fund </string>
@@ -224,7 +260,9 @@
 
     <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
     <string name="toast_fii_successfully_removed">Fii %s successfully removed</string>
+    <string name="toast_currency_successfully_removed">Currency %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>
     <string name="toast_fii_not_removed">Unable to remove Fii %s</string>
+    <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="no_items_to_display">No items to display</string>
 </resources>

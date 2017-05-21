@@ -57,6 +57,17 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_INCOME, Constants.Provider.FII_INCOME);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FII_INCOME_WITH_SYMBOL,
                 Constants.Provider.FII_INCOME_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_PORTFOLIO, Constants.Provider.CURRENCY_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA, Constants.Provider.CURRENCY_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_BULK_UPDATE, Constants.Provider.FII_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_WITH_SYMBOL, Constants.Provider.CURRENCY_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_CURRENCY_DATA, Constants.Provider.SOLD_CURRENCY_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_CURRENCY_DATA_WITH_SYMBOL, Constants.Provider.SOLD_CURRENCY_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_TRANSACTION, Constants.Provider.CURRENCY_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_TRANSACTION_WITH_SYMBOL,
+                Constants.Provider.CURRENCY_TRANSACTION_FOR_SYMBOL);
         return matcher;
     }
 
@@ -255,6 +266,69 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            // Returns currency portfolio of user
+            case Constants.Provider.CURRENCY_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.CurrencyPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all currency symbols possessed by user
+            case Constants.Provider.CURRENCY_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.CurrencyData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case Constants.Provider.SOLD_CURRENCY_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.SoldCurrencyData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all currencies information possessed by user
+            case Constants.Provider.CURRENCY_TRANSACTION:
+                returnCursor = db.query(
+                        PortfolioContract.CurrencyTransaction.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all currencies information possessed by user for a specific stock symbol
+            case Constants.Provider.CURRENCY_TRANSACTION_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.CurrencyTransaction.TABLE_NAME,
+                        projection,
+                        PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.CurrencyTransaction.getCurrencyTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -416,6 +490,59 @@ public class PortfolioProvider extends ContentProvider {
                         values
                 );
                 returnUri = PortfolioContract.FiiIncome.URI;
+                break;
+            case Constants.Provider.CURRENCY_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.CurrencyPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.CurrencyPortfolio.buildCurrencyPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.CURRENCY_DATA:
+                _id = db.insert(
+                        PortfolioContract.CurrencyData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.CurrencyData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+
+            case Constants.Provider.SOLD_CURRENCY_DATA:
+                _id = db.insert(
+                        PortfolioContract.SoldCurrencyData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.SoldCurrencyData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.CURRENCY_TRANSACTION:
+                _id = db.insert(
+                        PortfolioContract.CurrencyTransaction.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.CurrencyTransaction.buildTransactionUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.CurrencyData.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
                 break;
 
             default:
@@ -667,6 +794,45 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.FII_INCOME:
                 rowsUpdated = db.update(PortfolioContract.FiiIncome.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.CURRENCY_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.CurrencyPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.CURRENCY_DATA:
+                rowsUpdated = db.update(PortfolioContract.CurrencyData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.SOLD_CURRENCY_DATA:
+                rowsUpdated = db.update(PortfolioContract.SoldCurrencyData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+           /* case Constants.Provider.CURRENCY_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkCurrencyUpdade(values);
+                break;
+*/
+            case Constants.Provider.CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT:
+                currentTotal = PortfolioContract.CurrencyTransaction
+                        .getCurrencyTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateStockCurrentPercent(Double.parseDouble(PortfolioContract
+                            .CurrencyTransaction.getCurrencyTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
+
+            case Constants.Provider.CURRENCY_TRANSACTION:
+                rowsUpdated = db.update(PortfolioContract.CurrencyTransaction.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
