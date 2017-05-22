@@ -149,10 +149,6 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
-                Log.d(LOG_TAG, "IncomeType: " + incomeType);
-                Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));
-                Log.d(LOG_TAG, "Date: " + date);
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID))));

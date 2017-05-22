@@ -46,6 +46,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
 
     @Override
     public void onBindViewHolder(FiiPortfolioViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);

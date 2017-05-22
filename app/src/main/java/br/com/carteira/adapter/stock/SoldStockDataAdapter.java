@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
 
     @Override
     public void onBindViewHolder(StockPortfolioViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
