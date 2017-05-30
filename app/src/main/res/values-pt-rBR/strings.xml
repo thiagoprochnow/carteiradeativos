@@ -15,6 +15,7 @@
     <string name="form_title_dividend">Dividendo</string>
     <string name="form_title_jcp">Juros s/ Capital</string>
     <string name="form_title_fii_income">Rendimento</string>
+    <string name="form_title_fixed_income">Rendimento</string>
     <string name="form_title_bonification">Bonificação</string>
     <string name="form_title_split">Desdobramento</string>
     <string name="form_title_grouping">Grupamento</string>
@@ -23,8 +24,9 @@
     <string name="quantity">Quantidade</string>
     <string name="buy_price">Preço de compra</string>
     <string name="sell_price">Preço de venda</string>
-    <string name="stock_current_price">Preço Atual da Ação</string>
-    <string name="fii_current_price">Preço Atual do Fundo Imobiliario</string>
+    <string name="stock_current_price">Preço atual da ação</string>
+    <string name="fii_current_price">Preço atual do fundo imobiliario</string>
+    <string name="fixed_current_price">Valor atual da renda fixa</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="stock_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="fii_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
@@ -40,9 +42,11 @@
     <string name="ex_date_fii_income">Data Ex Rendimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
+    <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
+    <string name="wrong_fixed_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa renda fixa na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_current_price">Preço Atual não é valido</string>
@@ -51,6 +55,7 @@
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
     <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
     <string name="wrong_income_per_fii">Valor inválido recebido por fundo imobiliario</string>
+    <string name="wrong_income_per_fixed">Valor inválido recebido por renda fixa</string>
     <string name="menu_done">Concluir</string>
 
     <!-- Details Fragment -->
@@ -82,12 +87,20 @@
     <string name="menu_delete">Deletar</string>
 
     <!-- Fii Main Fragment -->
-    <string name="buy_fii_success">Fundo Imobiliario adicionado com sucesso</string>
-    <string name="buy_fii_fail">Falha ao adicionar Fundo Imobiliario</string>
-    <string name="sell_fii_success">Fundo Imobiliario vendido com sucesso</string>
-    <string name="sell_fii_fail">Falha ao vender Fundo Imobiliario</string>
+    <string name="buy_fii_success">Fundo imobiliario adicionado com sucesso</string>
+    <string name="buy_fii_fail">Falha ao adicionar fundo imobiliario</string>
+    <string name="sell_fii_success">Fundo imobiliario vendido com sucesso</string>
+    <string name="sell_fii_fail">Falha ao vender fundo imobiliario</string>
     <string name="delete_fii_title">Deletar fundo imobilario da sua carteira?</string>
     <string name="delete_fii_dialog">Se vendeu o fundo imobiliario, escolha "Vender" no menu de opções. Deletar o fundo imobiliario irá remover todos os dados sobre ele, inclusive proventos recebidos.</string>
+
+    <!-- Fixed income Main Fragment -->
+    <string name="buy_fixed_success">Renda fixa adicionada com sucesso</string>
+    <string name="buy_fixed_fail">Falha ao adicionar renda fixa</string>
+    <string name="sell_fixed_success">Renda fixa vendida com sucesso</string>
+    <string name="sell_fixed_fail">Falha ao vender renda fixa</string>
+    <string name="delete_fixed_title">Deletar renda fixa da sua carteira?</string>
+    <string name="delete_fixed_dialog">Se vendeu a renda fixa, escolha "Vender" no menu de opções. Deletar a renda fixa irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
 
     <!-- Stock Tab Adapter -->
     <string name="stocks_overview">Visão Geral</string>
@@ -95,11 +108,17 @@
     <string name="stocks_history">Histórico</string>
     <string name="stocks_incomes">Rendimentos</string>
 
-    <!-- Stock Tab Adapter -->
+    <!-- Fii Tab Adapter -->
     <string name="fii_overview">Visão Geral</string>
     <string name="fii_portfolio">Carteira</string>
     <string name="fii_history">Histórico</string>
     <string name="fii_incomes">Rendimentos</string>
+
+    <!-- Fixed Tab Adapter -->
+    <string name="fixed_overview">Visão Geral</string>
+    <string name="fixed_portfolio">Carteira</string>
+    <string name="fixed_history">Histórico</string>
+    <string name="fixed_incomes">Rendimentos</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -122,6 +141,9 @@
     <!-- Fii Adapter -->
     <string name="fii_quantity_label">Quantidade: </string>
 
+    <!-- Fixed Adapter -->
+    <string name="fixed_quantity_label">Quantidade: </string>
+
     <!-- Stock Summary -->
     <string name="summary_bought_label"><u>C</u>ompra</string>
     <string name="summary_current_label"><u>A</u>tual</string>
@@ -141,11 +163,15 @@
     <!-- Fii Portolfio -->
     <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
 
+    <!-- Fixed Portolfio -->
+    <string name="fixed_portfolio_label">Carteira de Renda Fixa</string>
+
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
     <string name="dividend_income_type">Dividendo</string>
     <string name="jcp_income_type">Juros s/ Capital</string>
     <string name="fii_income_type">Rendimento</string>
+    <string name="fixed_income_type">Rendimento</string>
     <string name="income_overview_bought_label">Compra</string>
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>
@@ -178,6 +204,7 @@
     <!-- Income Details Fragment -->
     <string name="income_per_stock">Recebido por Ação</string>
     <string name="income_per_fii">Recebido por cota</string>
+    <string name="income_per_fixed">Recebido por renda fixa</string>
     <string name="gross_income">Rendimento Bruto</string>
     <string name="tax_income">Imposto Pago</string>
     <string name="net_income">Rendimento Liquido</string>
@@ -192,12 +219,15 @@
     <!-- Dividend Form Fragment -->
     <string name="receive_value">Valor Recebido por Ação</string>
     <string name="receive_value_fii">Valor Recebido por Fundo Imobiliario</string>
+    <string name="receive_value_fixed">Valor Recebido por Renda Fixa</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
     <string name="add_jcp_success">Juros sobre capital adicionado com sucesso</string>
     <string name="add_jcp_fail">Falha ao adicionar juros sobre capital</string>
     <string name="add_fii_income_success">Rendimento adicionado com sucesso</string>
+    <string name="add_fixed_income_success">Rendimento adicionado com sucesso</string>
     <string name="add_fii_income_fail">Falha ao adicionar rendimento</string>
+    <string name="add_fixed_income_fail">Falha ao adicionar rendimento</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
@@ -210,9 +240,16 @@
     <string name="fii_symbol">Código do Fundo Imobiliario</string>
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
+    <!-- Add fixed income Dialog Fragment -->
+    <string name="add_fixed_title">Compra de Renda Fixa</string>
+    <string name="buy_fixed_button">Comprar</string>
+    <string name="cancel_fixed_button">Cancelar</string>
+    <string name="fixed_symbol">Nomenclatura para sua Renda Fica</string>
+    <string name="fixed_symbol_hint">Ex: Tesouro LTN 2017</string>
+
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Carteira Completa</string>
-    <string name="title_fixed_income">Renda Fixa</string>
+    <string name="title_fixed">Renda Fixa</string>
     <string name="title_fii">Fundos Imobiliarios</string>
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
@@ -225,7 +262,9 @@
 
     <string name="toast_stock_successfully_removed">Ação %s removida com sucesso</string>
     <string name="toast_fii_successfully_removed">Fundo Imobiliario %s removido com sucesso</string>
+    <string name="toast_fixed_successfully_removed">Renda Fixa %s removida com sucesso</string>
     <string name="toast_stock_not_removed">Não foi possível remover a ação %s</string>
     <string name="toast_fii_not_removed">Não foi possível remover o Fundo Imobiliario %s</string>
+    <string name="toast_fixed_not_removed">Não foi possível remover a Renda Fixa %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 </resources>

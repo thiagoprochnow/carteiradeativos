@@ -34,6 +34,7 @@ public final class Constants {
         public static final int STOCK = 0;
         public static final int FII = 1;
         public static final int CURRENCY = 2;
+        public static final int FIXED = 3;
     }
 
     // This should contains all incomes types in the portfolio
@@ -44,7 +45,8 @@ public final class Constants {
         public static final int BONIFICATION = 2;
         public static final int GROUPING = 3;
         public static final int SPLIT = 4;
-        public static final int FII_INCOME = 5;
+        public static final int FII = 5;
+        public static final int FIXED = 6;
     }
 
     // Status of the a specific investment
@@ -63,6 +65,7 @@ public final class Constants {
         public static final String STOCK = "UPDATE_STOCK_PORTFOLIO";
         public static final String FII = "UPDATE_FII_PORTFOLIO";
         public static final String CURRENCY = "UPDATE_CURRENCY_PORTFOLIO";
+        public static final String FIXED = "UPDATE_FIXED_INCOME_PORTFOLIO";
     }
 
     // Constants for Loaders IDs
@@ -84,6 +87,12 @@ public final class Constants {
         public static final int SOLD_CURRENCY_DATA = 11;
         public static final int CURRENCY_OVERVIEW = 12;
         public static final int CURRENCY_DETAILS = 13;
+
+        public static final int FIXED_DATA = 14;
+        public static final int SOLD_FIXED_DATA = 15;
+        public static final int FIXED_INCOME = 16;
+        public static final int FIXED_OVERVIEW = 17;
+        public static final int FIXED_DETAILS = 18;
     }
 
     // Constants for Providers IDs
@@ -137,5 +146,21 @@ public final class Constants {
 
         public static final int CURRENCY_INCOME = 3500;
         public static final int CURRENCY_INCOME_FOR_SYMBOL = 3501;
+
+        public static final int FIXED_PORTFOLIO = 4100;
+
+        public static final int FIXED_DATA = 4200;
+        public static final int FIXED_DATA_WITH_SYMBOL = 4201;
+        public static final int FIXED_DATA_BULK_UPDATE = 4202;
+        public static final int FIXED_DATA_BULK_UPDATE_FOR_CURRENT = 4203;
+
+        public static final int SOLD_FIXED_DATA = 4300;
+        public static final int SOLD_FIXED_DATA_WITH_SYMBOL = 4301;
+
+        public static final int FIXED_TRANSACTION = 4400;
+        public static final int FIXED_TRANSACTION_FOR_SYMBOL = 4401;
+
+        public static final int FIXED_INCOME = 4500;
+        public static final int FIXED_INCOME_FOR_SYMBOL = 4501;
     }
 }

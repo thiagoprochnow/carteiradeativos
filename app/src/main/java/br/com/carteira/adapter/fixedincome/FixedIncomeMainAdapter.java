@@ -1,4 +1,4 @@
-package br.com.carteira.adapter.fii;
+package br.com.carteira.adapter.fixedincome;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -24,13 +24,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String LOG_TAG = FiiIncomeMainAdapter.class.getSimpleName();
+public class FixedIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String LOG_TAG = FixedIncomeMainAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
-    private FiiAdapterOnClickHandler mClickHandler;
+    private FixedAdapterOnClickHandler mClickHandler;
 
-    public FiiIncomeMainAdapter(Context context, FiiAdapterOnClickHandler clickHandler) {
+    public FixedIncomeMainAdapter(Context context, FixedAdapterOnClickHandler clickHandler) {
         this.mContext = context;
         this.mClickHandler = clickHandler;
 
@@ -50,13 +50,13 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item;
         switch (viewType){
-            // If it is the first view, return viewholder for FiiIncome overview
+            // If it is the first view, return viewholder for FixedIncome overview
             case 0:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_income_overview, parent, false);
-                return new FiiIncomeOverviewViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fixed_income_overview, parent, false);
+                return new FixedIncomeOverviewViewHolder(item);
             default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fii_incomes_main, parent, false);
-                return new FiiIncomeViewHolder(item);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_fixed_incomes_main, parent, false);
+                return new FixedIncomeViewHolder(item);
         }
     }
 
@@ -66,7 +66,7 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
             case 0:
-                FiiIncomeOverviewViewHolder overviewViewHolder = (FiiIncomeOverviewViewHolder) holder;
+                FixedIncomeOverviewViewHolder overviewViewHolder = (FixedIncomeOverviewViewHolder) holder;
                 if (mCursor.getCount() > 0) {
                     mCursor.moveToFirst();
                     overviewViewHolder.itemView.setVisibility(View.VISIBLE);
@@ -81,26 +81,26 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
                     double grossPercent = 0;
                     double taxPercent = 0;
 
-                    // Check if there is any sold fiis first and add values
+                    // Check if there is any sold fixed income first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
                         do {
                             buyTotal += soldDataCursor.getDouble(
-                                    (soldDataCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL)));
+                                    (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL)));
                         } while (soldDataCursor.moveToNext());
                     }
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
                         do {
-                            // Buy total is the sum of fii in data portfolio and already sold ones
+                            // Buy total is the sum of fixed income in data portfolio and already sold ones
                             buyTotal += dataCursor.getDouble(
-                                    (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL)));
+                                    (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL)));
                             tax += dataCursor.getDouble(
-                                    (dataCursor.getColumnIndex(PortfolioContract.FiiData
+                                    (dataCursor.getColumnIndex(PortfolioContract.FixedData
                                             .COLUMN_INCOME_TAX)));
                             netIncome += dataCursor.getDouble(
-                                    (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_INCOME)));
+                                    (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_INCOME)));
                         } while (dataCursor.moveToNext());
                         grossIncome = netIncome + tax;
                         netPercent = netIncome/buyTotal*100;
@@ -139,28 +139,28 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Fii Data found");
+                        Log.d(LOG_TAG, "(Income) No Fixed Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
                 }
                 break;
             default:
-                FiiIncomeViewHolder viewHolder = (FiiIncomeViewHolder) holder;
+                FixedIncomeViewHolder viewHolder = (FixedIncomeViewHolder) holder;
                 mCursor.moveToPosition(position-1);
                 // TODO: Below values are stored in DB as REALs.
                 // We'll need to format them to currency number format.
-                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE)));
+                Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
                 Log.d(LOG_TAG, "IncomeType: " + incomeType);
                 Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID))));
+                        (PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID))));
                 Log.d(LOG_TAG, "Date: " + date);
-                viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_SYMBOL)));
+                viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_SYMBOL)));
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID))));
+                        (PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID))));
                 viewHolder.incomeDate.setText(date);
                 if(position == mCursor.getCount()){
                     // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
@@ -173,7 +173,7 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
                     int rightMargin = (int)(rightDp * d); // margin in pixels
                     int bottomMargin = (int)(bottomDp * d); // margin in pixels
                     params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
-                    viewHolder.fiiCardView.setLayoutParams(params);
+                    viewHolder.fixedCardView.setLayoutParams(params);
                 }
                 break;
         }
@@ -190,16 +190,16 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    public interface FiiAdapterOnClickHandler {
+    public interface FixedAdapterOnClickHandler {
         void onClick(String symbol, int type);
         void onCreateContextMenu(ContextMenu menu, View v,
                                  ContextMenu.ContextMenuInfo menuInfo, String id, int type);
     }
 
-    class FiiIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+    class FixedIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
 
-        @BindView(R.id.fii_card_view)
-        CardView fiiCardView;
+        @BindView(R.id.fixed_card_view)
+        CardView fixedCardView;
 
         @BindView(R.id.symbol)
         TextView symbol;
@@ -214,7 +214,7 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
         TextView incomeValue;
 
 
-        FiiIncomeViewHolder(View itemView) {
+        FixedIncomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -225,8 +225,8 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.FiiIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.FixedIncome._ID);
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_TYPE));
             mClickHandler.onClick(mCursor.getString(idColumn), type);
         }
 
@@ -235,13 +235,13 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
                                            ContextMenu.ContextMenuInfo menuInfo){
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.FiiIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
+            int idColumn = mCursor.getColumnIndex(PortfolioContract.FixedIncome._ID);
+            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_TYPE));
             mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 
-    class FiiIncomeOverviewViewHolder extends RecyclerView.ViewHolder {
+    class FixedIncomeOverviewViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
@@ -265,7 +265,7 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
         TextView netIncomePercent;
 
 
-        FiiIncomeOverviewViewHolder(View itemView) {
+        FixedIncomeOverviewViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -281,7 +281,7 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
             case Constants.IncomeType.INVALID:
                 Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
-            case Constants.IncomeType.FII:
+            case Constants.IncomeType.FIXED:
                 Log.d(LOG_TAG, "Income IncomeType");
                 return mContext.getResources().getString(R.string.fii_income_type);
             default:
@@ -291,16 +291,16 @@ public class FiiIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private Cursor getDataCursor(){
-        // Searches for existing FiiData
+        // Searches for existing FixedData
         return mContext.getContentResolver().query(
-                PortfolioContract.FiiData.URI,
+                PortfolioContract.FixedData.URI,
                 null, null, null, null);
     }
 
     private Cursor getSoldDataCursor(){
-        // Searches for existing SoldFiiData
+        // Searches for existing SoldFixedData
         return mContext.getContentResolver().query(
-                PortfolioContract.SoldFiiData.URI,
+                PortfolioContract.SoldFixedData.URI,
                 null, null, null, null);
     }
 }

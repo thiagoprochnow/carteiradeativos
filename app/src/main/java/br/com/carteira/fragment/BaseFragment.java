@@ -243,6 +243,34 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Delete fixed income and all its information from database
+    // This is different then selling a fixed income, that will maintain some information
+    public boolean deleteFixed(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .FixedTransaction
+                .makeUriForFixedTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.FixedData
+                .makeUriForFixedData(symbol), null, null);
+
+        int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldFixedData
+                .makeUriForSoldFixedData(symbol), null, null);
+        // Cannot check if deletedIncome > 0, because fii may not have any income to delete
+        // Which is not an error
+        int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.FixedIncome
+                .makeUriForFixedIncome(symbol), null, null);
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
+        if (deletedData > 0) {
+            mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
+            Toast.makeText(mContext, getString(R.string.toast_fixed_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_fixed_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     // Delete fii income from table by using its id
     // symbol is used to update Fii Data table
     public boolean deleteFiiIncome(String id, String symbol){
@@ -273,6 +301,41 @@ public abstract class BaseFragment extends Fragment {
             // Update stock data for that symbol
             boolean updateFiiData = updateFiiData(symbol, -1, -1);
             if (updateFiiData)
+                return true;
+        }
+        return false;
+    }
+
+    // Delete fixed income income from table by using its id
+    // symbol is used to update Fixed Data table
+    public boolean deleteFixedIncome(String id, String symbol){
+        String selection = PortfolioContract.FixedIncome._ID + " = ? AND "
+                + PortfolioContract.FixedIncome.COLUMN_SYMBOL + " = ?";
+        if (symbol == null){
+            String selectionData = PortfolioContract.FixedIncome._ID + " = ? ";
+            String[] selectionDataArguments = {id};
+            String[] affectedColumn = {PortfolioContract.FixedIncome.COLUMN_SYMBOL};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PortfolioContract.FixedIncome.URI,
+                    affectedColumn, selectionData, selectionDataArguments, null);
+
+            if (cursor.getCount() > 0){
+                cursor.moveToFirst();
+                symbol = cursor.getString(0);
+            } else {
+                Log.d(LOG_TAG, "No symbol for for that income");
+            }
+        }
+        String[] selectionArguments = {id, symbol};
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.FixedIncome.URI,
+                selection, selectionArguments);
+        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
+        if (deletedResult > 0){
+            // Update stock data for that symbol
+            boolean updateFixedData = updateFixedData(symbol, -1, -1);
+            if (updateFixedData)
                 return true;
         }
         return false;
@@ -427,6 +490,81 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete fixed transaction from table by using its id
+    // symbol is used to update fixed Data table
+    public boolean deleteFixedTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.FixedTransaction._ID + " = ? AND "
+                + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.FixedTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update fixed data and fixed incomes for that symbol
+            updateFixedIncomes(symbol, timestamp);
+            updateFixedData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from FixedData
+
+        String selectionTransaction = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FixedTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the fixed income and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteFixed(symbol);
+            getActivity().finish();
+        }
+
+        // Check if there is any more SELL transaction for this symbol
+        // If not, delete this symbol from SoldFixedData
+
+        String sellSelectionTransaction = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FixedTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        // No more Sell transactions, delete SoldFixedData
+        if (queryCursor.getCount() == 0){
+            String selectionSoldData = PortfolioContract.SoldFixedData.COLUMN_SYMBOL + " = ?";
+            String[] selectionArgumentsSoldData = {symbol};
+            int rowsDeleted = mContext.getContentResolver().delete(
+                    PortfolioContract.SoldFixedData.URI, selectionSoldData,
+                    selectionArgumentsSoldData);
+            if (rowsDeleted == 1){
+                Log.d(LOG_TAG, "SoldFixedData deleted successfully");
+            } else {
+                Log.d(LOG_TAG, "Problem deleting SoldFixedData");
+            }
+        }
+
+        return false;
+    }
+
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
         Log.d(LOG_TAG, "InputDate String: " + inputDate);
@@ -495,6 +633,18 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText was set with valid Fii Symbol
+    protected boolean isValidFixedSymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Fixed income (Only letters and numbers)
+        Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid int and that there is enough quantity of that investment to sell
     protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
         // TODO
@@ -540,7 +690,7 @@ public abstract class BaseFragment extends Fragment {
             if (queryCursor.getCount() > 0) {
                 queryCursor.moveToFirst();
                 int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
-                        .StockData.COLUMN_QUANTITY_TOTAL));
+                        .FiiData.COLUMN_QUANTITY_TOTAL));
                 if (boughtQuantity >= quantity) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
@@ -562,7 +712,29 @@ public abstract class BaseFragment extends Fragment {
             if (queryCursor.getCount() > 0) {
                 queryCursor.moveToFirst();
                 int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
-                        .StockData.COLUMN_QUANTITY_TOTAL));
+                        .CurrencyData.COLUMN_QUANTITY_TOTAL));
+                if (boughtQuantity >= quantity) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else if (type == Constants.ProductType.FIXED){
+            // Prepare query for currency data
+            String selection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {symbol};
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FixedData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                        .FixedData.COLUMN_QUANTITY_TOTAL));
                 if (boughtQuantity >= quantity) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
@@ -1556,7 +1728,7 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    // Reads the FiiTransaction entries and calculates value for FiiData table for this symbol
+    // Reads the FiiTransaction entries and calculates value for SoldFiiData table for this symbol
     public boolean updateSoldFiiData(String symbol, double soldBuyValue){
 
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
@@ -1756,6 +1928,378 @@ public abstract class BaseFragment extends Fragment {
                         break;
                     default:
                         Log.d(LOG_TAG, "getFiiQuantity currentType Unknown");
+                }
+            } while (queryCursor.moveToNext());
+            return quantityTotal;
+        } else{
+            Log.d(LOG_TAG, "");
+            return 0;
+        }
+    }
+
+    // Reads the FixedTransaction entries and calculates value for FixedData table for this symbol
+    public boolean updateFixedData(String symbol, double objective, int type){
+
+        String selection = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in FixedData
+            int quantityTotal = 0;
+            double buyValue = 0;
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyQuantity = 0;
+            double buyTotal = 0;
+            double receiveIncome = 0;
+            double taxIncome = 0;
+            double mediumPrice = 0;
+            int currentType;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldBuyValue = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_PRICE));
+                        mediumPrice = buyTotal/buyQuantity;
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        buyValue = quantityTotal*mediumPrice;
+                        // Add the value sold times the current medium buy price
+                        soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
+            ContentValues fixedDataCV = new ContentValues();
+
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing FixedData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FixedData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            double variation = 0;
+            // Create new FixedData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Adds data to the database
+                Uri insertedFixedDataUri = mContext.getContentResolver().insert(PortfolioContract.FixedData.URI,
+                        fixedDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedFixedDataUri != null) {
+                    Log.d(LOG_TAG, "Created fixed income data");
+                    // Update Fixed income Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating fixed income data");
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, FixedDetailsOverview will not update current total and total gain, unless refreshing the View
+                if (type == Constants.Type.DELETE_TRANSACION){
+                    queryDataCursor.moveToFirst();
+                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_PRICE));
+                    currentTotal = currentPrice*quantityTotal;
+                    variation = currentTotal - buyTotal;
+                }
+            }
+
+            // Query Income table to get total of this fixed income
+            String[] affectedColumn = {"sum("+ PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID+")",
+                    "sum("+ PortfolioContract.FixedIncome.COLUMN_TAX+")"};
+            selection = PortfolioContract.FixedIncome.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FixedIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
+            } else {
+                receiveIncome = 0;
+            }
+
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL, buyValue);
+            if (type == Constants.Type.BUY) {
+                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL, currentTotal);
+                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_VARIATION, variation);
+            }
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_INCOME, receiveIncome);
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_INCOME_TAX, taxIncome);
+            fixedDataCV.put(PortfolioContract.FixedData.COLUMN_MEDIUM_PRICE, mediumPrice);
+
+            if(quantityTotal > 0){
+                // Set fixed income as active
+                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.ACTIVE);
+            } else {
+                // Set fixed income as sold
+                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.SOLD);
+            }
+            // Searches for existing FixedData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FixedData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FixedData._ID)));
+
+            // Update
+            // Prepare query to update fixed income data
+            String updateSelection = PortfolioContract.FixedData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on fixed income data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.FixedData.URI,
+                    fixedDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateStockData successfully updated");
+                // Update Sold Fixed Data
+                updateSoldFixedData(symbol, soldBuyValue);
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateFixedData failed update");
+                return false;
+            }
+        } else{
+            Log.d(LOG_TAG, "No FixedTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the FixedTransaction entries and calculates value for SoldFixedData table for this symbol
+    public boolean updateSoldFixedData(String symbol, double soldBuyValue){
+
+        String selection = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in FixedData
+            int quantityTotal = 0;
+            double soldTotal = 0;
+            double sellMediumPrice = 0;
+            int currentType;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.SELL:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        sellMediumPrice = soldTotal/quantityTotal;
+                        Log.d(LOG_TAG, "(FIXED) SELL: QuantityTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(FIXED) SELL: SoldTotal: " + quantityTotal);
+                        Log.d(LOG_TAG, "(FIXED) SELL: soldBuyValue: " + soldBuyValue);
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Do nothing");
+                }
+            } while (STQueryCursor.moveToNext());
+
+            // If there is any sold fixed income
+            if (quantityTotal > 0) {
+                ContentValues fixedDataCV = new ContentValues();
+
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_SYMBOL, symbol);
+
+                selection = PortfolioContract.SoldFixedData.COLUMN_SYMBOL + " = ? ";
+
+                // Searches for existing FixedData to update value.
+                // If dosent exists, creates new one
+                Cursor queryDataCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldFixedData.URI,
+                        null, selection, selectionArguments, null);
+
+                // Create new FixedData for this symbol
+                if (queryDataCursor.getCount() == 0) {
+                    // Adds data to the database
+                    Uri insertedFixedDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldFixedData.URI,
+
+                            fixedDataCV);
+
+                    // If error occurs to add, shows error message
+                    if (insertedFixedDataUri != null) {
+                        Log.d(LOG_TAG, "Created fixed sold data");
+                        // Update Fixed Income Portfolio
+                    } else {
+                        Log.d(LOG_TAG, "Error creating sold fixed data");
+                        return false;
+                    }
+                }
+
+                double sellGain = soldTotal - soldBuyValue;
+                double gainPercent = sellGain/soldBuyValue*100;
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL, soldTotal);
+                fixedDataCV.put(PortfolioContract.SoldFixedData.COLUMN_SELL_GAIN, sellGain);
+
+                // Searches for existing FixedData to update value.
+                // If dosent exists, creates new one
+                Cursor queryCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldFixedData.URI,
+                        null, selection, selectionArguments, null);
+
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.SoldFixedData._ID)));
+
+                // Update
+                // Prepare query to update fixed data
+                String updateSelection = PortfolioContract.SoldFixedData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on fixed data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.SoldFixedData.URI,
+                        fixedDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0) {
+                    Log.d(LOG_TAG, "updateSoldFixedData successfully updated");
+                    // Update Fixed Income Portfolio
+                    // Send broadcast so FixedReceiver can update the rest
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
+                    return true;
+                } else {
+                    Log.d(LOG_TAG, "updateSoldFixedData failed update");
+                    return false;
+                }
+            }
+            Log.d(LOG_TAG, "No sold fixed income yet");
+            return true;
+        } else{
+            Log.d(LOG_TAG, "No FixedTransaction found");
+            return false;
+        }
+    }
+
+    // By using the timestamp of bought/sold fixed incomes, function will check if any added income
+    // is affected by this buy/sell fixed incomes.
+    // If any income is affected, it will update income line with new value by using
+    // getFixedQuantity function for each affected line
+    public void updateFixedIncomes(String symbol, long timestamp){
+        // Prepare query for checking affected incomes
+        String selection = PortfolioContract.FixedIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.FixedIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
+        String[] selectionArguments = {symbol, String.valueOf(timestamp)};
+
+        // Check if any income is affected by fixed buy/sell
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            // Sum that will be returned and updated on FixedData table by updateFixedData()
+            double sumReceiveTotal = 0;
+            do{
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FixedIncome._ID)));
+                long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int quantity = getFixedQuantity(symbol, incomeTimestamp);
+                double perFixed = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_PER_FIXED)));
+                int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.FixedIncome.COLUMN_TYPE)));
+                double receiveTotal = quantity * perFixed;
+
+                // Prepare query to update fixed quantity applied for that dividend
+                // and the total income received
+                String updateSelection = PortfolioContract.FixedIncome._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+                ContentValues incomeCV = new ContentValues();
+
+                incomeCV.put(PortfolioContract.FixedIncome.COLUMN_AFFECTED_QUANTITY, quantity);
+                incomeCV.put(PortfolioContract.FixedIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
+                incomeCV.put(PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
+                double tax = 0;
+                double receiveLiquid = receiveTotal;
+                incomeCV.put(PortfolioContract.FixedIncome.COLUMN_TAX, tax);
+                incomeCV.put(PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
+
+                // Update value on incomes table
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.FixedIncome.URI,
+                        incomeCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "updateFixedIncomes successfully updated");
+                } else {
+                    Log.d(LOG_TAG, "updateFixedIncomes failed update");
+                }
+            } while (queryCursor.moveToNext());
+        } else {
+            Log.d(LOG_TAG, "No incomes affected by buy/sell fixed income");
+        }
+    }
+
+    // Get  quantity that will receive the income per fixed income
+    // symbol is to query by specific symbol only
+    // income timestamp is to query only the quantity of fixed transactions before the timestamp
+    public int getFixedQuantity(String symbol, Long incomeTimestamp){
+        // Return column should be only quantity of fixed income
+        String selection = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " < ?";
+        String[] selectionArguments = {symbol,String.valueOf(incomeTimestamp)};
+        String sortOrder = PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        // Check if the symbol exists in the db
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FixedTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
+            int quantityTotal = 0;
+            int currentType = 0;
+            do {
+                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "getFixedQuantity currentType Unknown");
                 }
             } while (queryCursor.moveToNext());
             return quantityTotal;

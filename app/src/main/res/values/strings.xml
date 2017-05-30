@@ -17,6 +17,7 @@
     <string name="form_title_dividend">Dividend</string>
     <string name="form_title_jcp">Interest on Capital</string>
     <string name="form_title_fii_income">Income</string>
+    <string name="form_title_fixed_income">Income</string>
     <string name="form_title_bonification">Bonification</string>
     <string name="form_title_split">Split</string>
     <string name="form_title_grouping">Grouping</string>
@@ -25,9 +26,10 @@
     <string name="quantity">Quantity</string>
     <string name="buy_price">Buy Price</string>
     <string name="sell_price">Sell Price</string>
-    <string name="stock_current_price">Stock Current Price</string>
+    <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>
-    <string name="currency_current_price">Currency Current Price</string>
+    <string name="fixed_current_price">Fixed income current price</string>
+    <string name="currency_current_price">Currency current price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="stock_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="fii_edit_tip">*Leave any field empty to not edit it.</string>
@@ -44,9 +46,12 @@
     <string name="ex_date_fii_income">Ex Income Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
+    <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
     <string name="wrong_currency_code">Invalid Currency code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_stock_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
+    <string name="wrong_fii_sell_quantity">Quantity should be a number and need to have enough fii bought</string>
+    <string name="wrong_fixed_sell_quantity">Quantity should be a number and need to have enough fixed income bought</string>
     <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
@@ -56,6 +61,7 @@
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="wrong_income_per_fii">Wrong value received per fii</string>
+    <string name="wrong_income_per_fixed">Wrong value received per fixed income</string>
     <string name="menu_done">Done</string>
 
     <!-- Details Fragment -->
@@ -91,8 +97,8 @@
     <string name="buy_currency_fail">Error adding Currency</string>
     <string name="sell_currency_success">Currency sold successfully</string>
     <string name="sell_currency_fail">Error selling currency</string>
-    <string name="delete_currency_title">Delete curency from your portfolio?</string>
-    <string name="delete_currency_dialog">If you sold the Currency, select "Sell" from the option menu. Deleting the Currency will remove all its data, including all income received.</string>
+    <string name="delete_currency_title">Delete currency from your portfolio?</string>
+    <string name="delete_currency_dialog">If you sold the Currency, select "Sell" from the option menu. Deleting the Currency will remove all its data.</string>
 
     <!-- Fii Main Fragment -->
     <string name="buy_fii_success">Fii added successfully</string>
@@ -101,6 +107,14 @@
     <string name="sell_fii_fail">Error selling fii</string>
     <string name="delete_fii_title">Delete fii from your portfolio?</string>
     <string name="delete_fii_dialog">If you sold the Fii, select "Sell" from the option menu. Deleting the Fii will remove all its data, including all income received.</string>
+
+    <!-- Fixed Main Fragment -->
+    <string name="buy_fixed_success">Fixed income added successfully</string>
+    <string name="buy_fixed_fail">Error adding fixed income</string>
+    <string name="sell_fixed_success">Fixed income sold successfully</string>
+    <string name="sell_fixed_fail">Error selling fixed income</string>
+    <string name="delete_fixed_title">Delete fixed income from your portfolio?</string>
+    <string name="delete_fixed_dialog">If you sold the fixed income, select "Sell" from the option menu. Deleting the fixed income will remove all its data, including all income received.</string>
 
     <!-- Stock Tab Adapter -->
     <string name="stocks_overview">Overview</string>
@@ -118,6 +132,12 @@
     <string name="fii_portfolio">Portfolio</string>
     <string name="fii_history">History</string>
     <string name="fii_incomes">Incomes</string>
+
+    <!-- Fii Tab Adapter -->
+    <string name="fixed_overview">Overview</string>
+    <string name="fixed_portfolio">Portfolio</string>
+    <string name="fixed_history">History</string>
+    <string name="fixed_incomes">Incomes</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -143,6 +163,9 @@
     <!-- Fii Adapter -->
     <string name="fii_quantity_label">Quantity: </string>
 
+    <!-- Fixed Adapter -->
+    <string name="fixed_quantity_label">Quantity: </string>
+
     <!-- Stock Summary -->
     <string name="summary_bought_label"><u>B</u>ought</string>
     <string name="summary_current_label"><u>C</u>urrent</string>
@@ -165,11 +188,15 @@
     <!-- Fii Portolfio -->
     <string name="fii_portfolio_label">Fii Portfolio</string>
 
+    <!-- Fixed Portolfio -->
+    <string name="fixed_portfolio_label">Fixed Income Portfolio</string>
+
     <!-- Income Adapter -->
     <string name="income_overview_label">Overview</string>
     <string name="dividend_income_type">Dividend</string>
     <string name="jcp_income_type">Interest on Capital</string>
     <string name="fii_income_type">Income</string>
+    <string name="fixed_income_type">Income</string>
     <string name="income_overview_bought_label">Bought</string>
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>
@@ -202,6 +229,7 @@
     <!-- Income Details Fragment -->
     <string name="income_per_stock">Received per Stock</string>
     <string name="income_per_fii">Received per quote</string>
+    <string name="income_per_fixed">Received per fixed income</string>
     <string name="gross_income">Gross Income</string>
     <string name="tax_income">Paid Tax</string>
     <string name="net_income">Net Income</string>
@@ -216,12 +244,15 @@
     <!-- Form Fragment -->
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
+    <string name="receive_value_fixed">Received Value per Fixed Income</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
     <string name="add_jcp_success">Interest on capital added successfully</string>
     <string name="add_jcp_fail">Error adding interest on capital</string>
     <string name="add_fii_income_success">Income added successfully</string>
+    <string name="add_fixed_income_success">Income added successfully</string>
     <string name="add_fii_income_fail">Error adding income</string>
+    <string name="add_fixed_income_fail">Error adding income</string>
 
     <!-- Currency Main Fragment -->
     <string name="add_currency_success">Currency added successfully</string>
@@ -245,9 +276,16 @@
     <string name="fii_symbol">Real State Fund Code</string>
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
+    <!-- Add fixed income Form Fragment -->
+    <string name="add_fixed_title">Buy Fixed Income</string>
+    <string name="buy_fixed_button">Buy</string>
+    <string name="cancel_fixed_button">Cancel</string>
+    <string name="fixed_symbol">Type the label of the fixed income</string>
+    <string name="fixed_symbol_hint">Ex: Tesouro LTN 2017</string>
+
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Complete Portfolio</string>
-    <string name="title_fixed_income">Fixed Income</string>
+    <string name="title_fixed">Fixed Income</string>
     <string name="title_fii">Real State Fund</string>
     <string name="title_stocks">Stocks</string>
     <string name="title_currency">Currencies</string>
@@ -260,9 +298,11 @@
 
     <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
     <string name="toast_fii_successfully_removed">Fii %s successfully removed</string>
+    <string name="toast_fixed_successfully_removed">Fixed income %s successfully removed</string>
     <string name="toast_currency_successfully_removed">Currency %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>
     <string name="toast_fii_not_removed">Unable to remove Fii %s</string>
+    <string name="toast_fixed_not_removed">Unable to remove fixed income %s</string>
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="no_items_to_display">No items to display</string>
 </resources>

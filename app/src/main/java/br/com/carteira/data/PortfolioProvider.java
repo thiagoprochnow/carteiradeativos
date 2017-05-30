@@ -68,6 +68,20 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_TRANSACTION, Constants.Provider.CURRENCY_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_TRANSACTION_WITH_SYMBOL,
                 Constants.Provider.CURRENCY_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_PORTFOLIO, Constants.Provider.FIXED_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA, Constants.Provider.FIXED_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA_BULK_UPDATE, Constants.Provider.FIXED_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.FIXED_DATA_BULK_UPDATE_FOR_CURRENT);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA_WITH_SYMBOL, Constants.Provider.FIXED_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FIXED_DATA, Constants.Provider.SOLD_FIXED_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FIXED_DATA_WITH_SYMBOL, Constants.Provider.SOLD_FIXED_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION, Constants.Provider.FIXED_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION_WITH_SYMBOL,
+                Constants.Provider.FIXED_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_INCOME, Constants.Provider.FIXED_INCOME);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_INCOME_WITH_SYMBOL,
+                Constants.Provider.FIXED_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -328,6 +342,90 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            // Returns fixed income portfolio of user
+            case Constants.Provider.FIXED_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.FixedPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all fixed income symbols possessed by user
+            case Constants.Provider.FIXED_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.FixedData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case Constants.Provider.SOLD_FIXED_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.SoldFixedData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all fiis information possessed by user
+            case Constants.Provider.FIXED_TRANSACTION:
+                returnCursor = db.query(
+                        PortfolioContract.FixedTransaction.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all fixed income information possessed by user for a specific stock symbol
+            case Constants.Provider.FIXED_TRANSACTION_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.FixedTransaction.TABLE_NAME,
+                        projection,
+                        PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.FixedTransaction.getFixedTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.FIXED_INCOME:
+                returnCursor = db.query(
+                        PortfolioContract.FixedIncome.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.FIXED_INCOME_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.FixedIncome.TABLE_NAME,
+                        projection,
+                        PortfolioContract.FixedIncome.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.FixedIncome.getFixedIncomeFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
 
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
@@ -545,6 +643,69 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+            case Constants.Provider.FIXED_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.FixedPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FixedPortfolio.buildFixedPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FIXED_DATA:
+                _id = db.insert(
+                        PortfolioContract.FixedData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FixedData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+
+            case Constants.Provider.SOLD_FIXED_DATA:
+                _id = db.insert(
+                        PortfolioContract.SoldFixedData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.SoldFixedData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FIXED_TRANSACTION:
+                _id = db.insert(
+                        PortfolioContract.FixedTransaction.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FixedTransaction.buildTransactionUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.FixedData.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.FIXED_INCOME:
+                db.insert(
+                        PortfolioContract.FixedIncome.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.FixedIncome.URI;
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -685,6 +846,67 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.FIXED_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.FixedData.getFixedDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FixedData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FixedData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_FIXED_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.SoldFixedData.getSoldFixedDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldFixedData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.SoldFixedData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_FIXED_DATA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldFixedData.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+            case Constants.Provider.FIXED_TRANSACTION:
+                rowsDeleted = db.delete(
+                        PortfolioContract.FixedTransaction.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.FIXED_TRANSACTION_FOR_SYMBOL:
+                symbol = PortfolioContract.FixedTransaction.getFixedTransactionFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FixedTransaction.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.FIXED_INCOME:
+                rowsDeleted = db.delete(
+                        PortfolioContract.FixedIncome.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.FIXED_INCOME_FOR_SYMBOL:
+                // TODO: Needs to change, otherwise it will always delete all incomes of that fixed income symbol
+                symbol = PortfolioContract.FixedIncome.getFixedIncomeFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FixedIncome.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FixedIncome.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -779,7 +1001,7 @@ public class PortfolioProvider extends ContentProvider {
                 currentTotal = PortfolioContract.FiiTransaction
                         .getFiiTransactionFromUri(uri);
                 if (currentTotal != null) {
-                    rowsUpdated = this.updateStockCurrentPercent(Double.parseDouble(PortfolioContract
+                    rowsUpdated = this.updateFiiCurrentPercent(Double.parseDouble(PortfolioContract
                             .FiiTransaction.getFiiTransactionFromUri(uri)));
                 }else{
                     rowsUpdated = 0;
@@ -824,7 +1046,7 @@ public class PortfolioProvider extends ContentProvider {
                 currentTotal = PortfolioContract.CurrencyTransaction
                         .getCurrencyTransactionFromUri(uri);
                 if (currentTotal != null) {
-                    rowsUpdated = this.updateStockCurrentPercent(Double.parseDouble(PortfolioContract
+                    rowsUpdated = this.updateCurrencyCurrentPercent(Double.parseDouble(PortfolioContract
                             .CurrencyTransaction.getCurrencyTransactionFromUri(uri)));
                 }else{
                     rowsUpdated = 0;
@@ -833,6 +1055,51 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.CURRENCY_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.CurrencyTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FIXED_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.FixedPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FIXED_DATA:
+                rowsUpdated = db.update(PortfolioContract.FixedData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.SOLD_FIXED_DATA:
+                rowsUpdated = db.update(PortfolioContract.SoldFixedData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FIXED_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkFixedUpdade(values);
+                break;
+
+            case Constants.Provider.FIXED_DATA_BULK_UPDATE_FOR_CURRENT:
+                currentTotal = PortfolioContract.FixedTransaction
+                        .getFixedTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateFixedCurrentPercent(Double.parseDouble(PortfolioContract
+                            .FixedTransaction.getFixedTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
+
+            case Constants.Provider.FIXED_TRANSACTION:
+                rowsUpdated = db.update(PortfolioContract.FixedTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.FIXED_INCOME:
+                rowsUpdated = db.update(PortfolioContract.FixedIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
@@ -882,6 +1149,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.FiiTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.FIXED_TRANSACTION:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.FixedTransaction.TABLE_NAME,
                                 null,
                                 value
                         );
@@ -1038,6 +1324,75 @@ public class PortfolioProvider extends ContentProvider {
     }
 
     /**
+     * This function is responsible for update the value several values of the Fixed income of table
+     * FixedData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkFixedUpdade(ContentValues contValues) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int quantity;
+        double currentPrice;
+        double totalBuy;
+        double incomeTotal;
+        double currentTotal;
+        double variation;
+        double totalGain;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update fixed income data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.FixedData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentPrice = Double.parseDouble(contValues.get(key).toString());
+                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                            .FixedData.COLUMN_QUANTITY_TOTAL));
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .FixedData.COLUMN_BUY_VALUE_TOTAL));
+                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.FixedData.COLUMN_INCOME));
+                    currentTotal = quantity * currentPrice;
+                    variation = currentTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy;
+
+                    ContentValues fixedCV = new ContentValues();
+                    fixedCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_PRICE,
+                            contValues.get(key).toString());
+                    fixedCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    fixedCV.put(PortfolioContract.FixedData.COLUMN_VARIATION, variation);
+                    fixedCV.put(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN, totalGain);
+
+                    returnCount += this.update(
+                            PortfolioContract.FixedData.URI,
+                            fixedCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "FixedData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.FixedData.URI, null);
+        return returnCount;
+    }
+
+    /**
      * This function is responsible for update the value Current Percent of all the Stocks in the
      * table StockData according to the Current Total passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
@@ -1171,4 +1526,137 @@ public class PortfolioProvider extends ContentProvider {
         return returnCount;
     }
 
+    /**
+     * This function is responsible for update the value Current Percent of all the Currency in the
+     * table CurrencyData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateCurrencyCurrentPercent(double currentTotal) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.CurrencyData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.CurrencyData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues currencyDataCV = new ContentValues();
+                    currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update stock data
+                    String updateSelection = PortfolioContract.CurrencyData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.CurrencyData.URI,
+                            currencyDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No CurrencyData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.CurrencyData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value Current Percent of all the Fixed Income in the
+     * table FixedData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateFixedCurrentPercent(double currentTotal) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.FixedData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.FixedData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues fixedDataCV = new ContentValues();
+                    fixedDataCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update fixed income data
+                    String updateSelection = PortfolioContract.FixedData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.FixedData.URI,
+                            fixedDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No FixedData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.FixedData.URI, null);
+        return returnCount;
+    }
 }

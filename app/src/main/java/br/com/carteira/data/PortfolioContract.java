@@ -61,6 +61,22 @@ public class PortfolioContract {
     public static final String PATH_CURRENCY_TRANSACTION = "currency_transaction";
     public static final String PATH_CURRENCY_TRANSACTION_WITH_SYMBOL = "currency_transaction/*";
 
+    public static final String PATH_FIXED_PORTFOLIO = "fixed_portfolio";
+
+    public static final String PATH_FIXED_DATA = "fixed_data";
+    public static final String PATH_FIXED_DATA_BULK_UPDATE = "fixed_data/update";
+    public static final String PATH_FIXED_DATA_BULK_UPDATE_WITH_CURRENT = "fixed_data/update/*";
+    public static final String PATH_FIXED_DATA_WITH_SYMBOL = "fixed_data/*";
+
+    public static final String PATH_SOLD_FIXED_DATA = "sold_fixed_data";
+    public static final String PATH_SOLD_FIXED_DATA_WITH_SYMBOL = "sold_fixed_data/*";
+
+    public static final String PATH_FIXED_TRANSACTION = "fixed_transaction";
+    public static final String PATH_FIXED_TRANSACTION_WITH_SYMBOL = "fixed_transaction/*";
+
+    public static final String PATH_FIXED_INCOME = "fixed_income";
+    public static final String PATH_FIXED_INCOME_WITH_SYMBOL = "fixed_income/*";
+
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
 
@@ -652,6 +668,207 @@ public class PortfolioContract {
         }
 
         public static String getCurrencyTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole fixed income portfolio
+    public static final class FixedPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FIXED_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "fixed_portfolio";
+
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+
+        public static final String[] FIXED_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_VARIATION_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL
+        };
+
+        public static Uri makeUriForFixedPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildFixedPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFiiPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fixed income owned.
+    public static final class FixedData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FIXED_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
+
+        public static final String TABLE_NAME = "fixed_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_INCOME = "income_total";
+        public static final String COLUMN_INCOME_TAX = "income_tax";
+        public static final String COLUMN_VARIATION = "variation";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_MEDIUM_PRICE = "medium_price";
+        public static final String COLUMN_CURRENT_PRICE = "current_price";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_STATUS = "status";
+
+        public static final String[] FIXED_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_INCOME,
+                COLUMN_INCOME_TAX,
+                COLUMN_VARIATION,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_MEDIUM_PRICE,
+                COLUMN_CURRENT_PRICE,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_STATUS
+        };
+
+        public static Uri makeUriForFixedData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFixedDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fixed income sold
+    public static final class SoldFixedData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_SOLD_FIXED_DATA).build();
+
+        public static final String TABLE_NAME = "sold_fixed_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY_TOTAL = "quantity_total";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "value_total";
+        public static final String COLUMN_SELL_GAIN = "sell_gain";
+        public static final String COLUMN_SELL_MEDIUM_PRICE = "current_price";
+        public static final String COLUMN_SELL_TOTAL = "current_total";
+
+        public static final String[] SOLD_FIXED_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY_TOTAL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_SELL_GAIN,
+                COLUMN_SELL_MEDIUM_PRICE,
+                COLUMN_SELL_TOTAL
+        };
+
+        public static Uri makeUriForSoldFixedData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getSoldFixedDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fixed income buy and sell
+    public static final class FixedTransaction implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FIXED_TRANSACTION).build();
+
+        public static final String TABLE_NAME = "fixed_transaction";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_QUANTITY = "quantity";
+        public static final String COLUMN_PRICE = "bought_price";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] FIXED_TRANSACTION_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_QUANTITY,
+                COLUMN_PRICE,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE
+        };
+
+        public static Uri buildTransactionUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForFixedTransaction(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getFixedTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of fixed income incomes
+    public static final class FixedIncome implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FIXED_INCOME).build();
+
+        public static final String TABLE_NAME = "fixed_incomes";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TYPE = "income_type";
+        public static final String COLUMN_PER_FIXED = "per_fixed";
+        public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
+        public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
+        public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
+
+        public static final String[] FIXED_INCOME_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TYPE,
+                COLUMN_PER_FIXED,
+                COLUMN_EXDIVIDEND_TIMESTAMP,
+                COLUMN_RECEIVE_TOTAL,
+                COLUMN_TAX,
+                COLUMN_RECEIVE_LIQUID,
+                COLUMN_AFFECTED_QUANTITY
+        };
+
+        public static Uri makeUriForFixedIncome(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getFixedIncomeFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

@@ -28,8 +28,8 @@ import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.currency.CurrencyTabFragment;
 import br.com.carteira.fragment.fii.FiiTabFragment;
-import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
+import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.IncomeDetailsListener;
 import br.com.carteira.listener.ProductListener;
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case R.id.nav_item_fixed_income:
                 Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
-                replaceFragment(new FixedIncomeMainFragment());
+                replaceFragment(new FixedTabFragment());
                 break;
             case R.id.nav_item_stocks:
                 Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
@@ -226,6 +226,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
                 break;
@@ -250,6 +258,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case Constants.ProductType.CURRENCY:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -285,6 +299,13 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FIXED:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
@@ -309,6 +330,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case Constants.ProductType.CURRENCY:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -370,9 +397,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;
-            case Constants.IncomeType.FII_INCOME:
+            case Constants.IncomeType.FII:
                 // Sends id of clicked income to income details acitivity
-                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

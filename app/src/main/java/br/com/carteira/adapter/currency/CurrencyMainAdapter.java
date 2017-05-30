@@ -263,7 +263,7 @@ public class CurrencyMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case Constants.IncomeType.INVALID:
                 Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
-            case Constants.IncomeType.FII_INCOME:
+            case Constants.IncomeType.FII:
                 Log.d(LOG_TAG, "Income IncomeType");
                 return mContext.getResources().getString(R.string.fii_income_type);
             default:

@@ -1,0 +1,163 @@
+package br.com.carteira.fragment.fixedincome;
+
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import br.com.carteira.R;
+import br.com.carteira.adapter.fixedincome.FixedDetailAdapter;
+import br.com.carteira.common.Constants;
+import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.BaseFragment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+
+public class FixedDetailsFragment extends BaseFragment implements
+        FixedDetailAdapter.FixedAdapterOnClickHandler, LoaderManager.
+        LoaderCallbacks<Cursor>{
+
+    private static final String LOG_TAG = FixedDetailsFragment.class.getSimpleName();
+
+    private View mView;
+
+    @BindView(R.id.detailsRecyclerView)
+    protected RecyclerView mRecyclerView;
+
+    @BindView(R.id.empty_list_text)
+    protected TextView mEmptyListTextView;
+
+    private String id;
+    private String mSymbol;
+
+    private FixedDetailAdapter mFixedDetailAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // After new current price is get, reload Overview view
+                mFixedDetailAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FIXED));
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.fragment_fixed_details, container, false);
+
+        ButterKnife.bind(this, mView);
+
+        // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
+        Intent mainActivityIntent = getActivity().getIntent();
+        mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
+        getActivity().setTitle(mSymbol);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setHasFixedSize(true);
+
+        mFixedDetailAdapter = new FixedDetailAdapter(mContext, this);
+        mRecyclerView.setAdapter(mFixedDetailAdapter);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FIXED_DETAILS, bundle, this);
+
+        return mView;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id, int type) {
+        MenuInflater inflater = getActivity().getMenuInflater();
+        this.id = id;
+        inflater.inflate(R.menu.detail_item_menu, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_item_delete_detail:
+                // Show Dialog for user confirmation to delete Fixed income Operation from database
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle(R.string.delete_stock_detail_title);
+
+                builder.setMessage(R.string.delete_stock_detail_dialog)
+                        .setPositiveButton(R.string.delete_confirm, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                deleteFixedTransaction(id, mSymbol);
+                            }
+                        })
+                        .setNegativeButton(R.string.delete_cancel, new DialogInterface
+                                .OnClickListener() {
+                            public void onClick(DialogInterface dialog, int onClickId) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+                break;
+            default:
+                Log.d(LOG_TAG, "Wrong menu Id");
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        // Receives symbol to make query of detail for specific symbol
+        String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
+        String sortOrder = PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " ASC";
+        CursorLoader Loader = new CursorLoader(mContext,
+                PortfolioContract.FixedTransaction
+                        .makeUriForFixedTransaction(symbol),
+                PortfolioContract.FixedTransaction.FIXED_TRANSACTION_COLUMNS,
+                null, null, sortOrder);
+        return Loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        if (data != null && mEmptyListTextView != null) {
+            if (data.getCount() != 0) {
+                mEmptyListTextView.setVisibility(View.GONE);
+            } else {
+                mEmptyListTextView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        mFixedDetailAdapter.setCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mFixedDetailAdapter.setCursor(null);
+    }
+}

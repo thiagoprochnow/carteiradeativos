@@ -4,7 +4,7 @@
     <dimen name="card_view_corner_radius">2dp</dimen>
     <dimen name="card_view_elevation">3dp</dimen>
 
-    <!-- Stock/Fii Adapter -->
+    <!-- Stock/Fii/Currency/Fixed Adapter -->
     <dimen name="stock_quantity">16dp</dimen>
     <dimen name="stock_symbol">18dp</dimen>
     <dimen name="stock_text">16dp</dimen>
@@ -23,6 +23,12 @@
     <dimen name="currency_price">14dp</dimen>
     <dimen name="currency_percentage_image_margin">0dp</dimen>
     <dimen name="currency_percentage_text_margin">10dp</dimen>
+    <dimen name="fixed_quantity">16dp</dimen>
+    <dimen name="fixed_symbol">18dp</dimen>
+    <dimen name="fixed_text">16dp</dimen>
+    <dimen name="fixed_price">14dp</dimen>
+    <dimen name="fixed_percentage_image_margin">0dp</dimen>
+    <dimen name="fixed_percentage_text_margin">10dp</dimen>
     <dimen name="letters_text_width">10dp</dimen>
     <dimen name="letters_text_margin">10dp</dimen>
     <dimen name="stock_percentage_text_size">35dp</dimen>
@@ -43,6 +49,12 @@
     <dimen name="currency_values_width">100dp</dimen>
     <dimen name="currency_percent_width">90dp</dimen>
     <dimen name="currency_symbol_info_size">90dp</dimen>
+    <dimen name="fixed_percentage_text_size">35dp</dimen>
+    <dimen name="fixed_value_percentage_width">50dp</dimen>
+    <dimen name="fixed_values_margin">10dp</dimen>
+    <dimen name="fixed_values_width">100dp</dimen>
+    <dimen name="fixed_percent_width">90dp</dimen>
+    <dimen name="fixed_symbol_info_size">90dp</dimen>
 
     <!-- Stock Incomes Adapter -->
     <dimen name="stock_income_type">16dp</dimen>
@@ -80,6 +92,21 @@
     <dimen name="currency_detail">15dp</dimen>
     <dimen name="currency_detail_width1">130dp</dimen>
     <dimen name="currency_detail_width2">80dp</dimen>
+
+    <!-- Fixed Income Incomes Adapter -->
+    <dimen name="fixed_income_type">16dp</dimen>
+    <dimen name="fixed_income_width">150dp</dimen>
+    <dimen name="fixed_income_date">16dp</dimen>
+    <dimen name="fixed_income_value">15dp</dimen>
+    <dimen name="fixed_income_value_marginLeft">5dp</dimen>
+    <dimen name="fixed_income_percent">15dp</dimen>
+
+    <!-- Fixed Income Details Adapter -->
+    <dimen name="fixed_transaction_type">16dp</dimen>
+    <dimen name="fixed_detail_quantity_marginLeft">15dp</dimen>
+    <dimen name="fixed_detail">15dp</dimen>
+    <dimen name="fixed_detail_width1">130dp</dimen>
+    <dimen name="fixed_detail_width2">80dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
