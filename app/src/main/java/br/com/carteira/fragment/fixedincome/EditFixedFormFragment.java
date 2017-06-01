@@ -104,10 +104,10 @@ public class EditFixedFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (updatedRows > 0 || updatedCurrentRows > 0) {
-                Toast.makeText(mContext, R.string.fii_update_success, Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, R.string.fixed_update_success, Toast.LENGTH_LONG).show();
                 return true;
             }
-            Toast.makeText(mContext, R.string.fii_update_fail, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.fixed_update_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
             if (TextUtils.isEmpty(mInputObjectiveView.getText().toString()) &&

@@ -9,9 +9,9 @@ import android.net.Uri;
 
 import br.com.carteira.data.PortfolioContract;
 
-public class StockReceiver extends BroadcastReceiver {
+public class FixedReceiver extends BroadcastReceiver {
 
-    private static final String LOG_TAG = StockReceiver.class.getSimpleName();
+    private static final String LOG_TAG = FixedReceiver.class.getSimpleName();
 
     private Context mContext;
 
@@ -20,27 +20,27 @@ public class StockReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context c, Intent intent){
         mContext = c;
-        updateStockPortfolio();
+        updateFixedPortfolio();
     }
 
-    // Reads all of Stock Data value and sets the calculation on StockPortfolio table
-    // Dosent need any data because it will not query for a specific stock, but for all of them.
-    public void updateStockPortfolio(){
+    // Reads all of Fixed Data value and sets the calculation on FixedPortfolio table
+    // Dosent need any data because it will not query for a specific fixed income, but for all of them.
+    public void updateFixedPortfolio(){
 
         double buyTotal = 0;
         double totalGain = 0;
         double variationTotal = 0;
         double sellTotal = 0;
         // Return column should be the sum of buy total, sell total, sell gain
-        String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL +"), " +
-                "sum("+PortfolioContract.SoldStockData.COLUMN_SELL_GAIN +")"};
+        String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
+                "sum("+ PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL +"), " +
+                "sum("+PortfolioContract.SoldFixedData.COLUMN_SELL_GAIN +")"};
 
         Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.SoldStockData.URI,
+                PortfolioContract.SoldFixedData.URI,
                 soldAffectedColumn, null, null, null);
 
-        // Adds the value of the already sold stock to the portfolio
+        // Adds the value of the already sold fixed income to the portfolio
         if (queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
             buyTotal = queryCursor.getDouble(0);
@@ -50,15 +50,15 @@ public class StockReceiver extends BroadcastReceiver {
         }
 
         // Return column should be the sum of value total, income total, value gain
-        String[] affectedColumn = {"sum("+ PortfolioContract.StockData.COLUMN_VARIATION +"), " +
-                "sum("+ PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.StockData.COLUMN_NET_INCOME +"), " +
-                "sum("+ PortfolioContract.StockData.COLUMN_CURRENT_TOTAL +"), " +
-                "sum("+PortfolioContract.StockData.COLUMN_TOTAL_GAIN +")"};
+        String[] affectedColumn = {"sum("+ PortfolioContract.FixedData.COLUMN_VARIATION +"), " +
+                "sum("+ PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
+                "sum("+ PortfolioContract.FixedData.COLUMN_INCOME +"), " +
+                "sum("+ PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL +"), " +
+                "sum("+PortfolioContract.FixedData.COLUMN_TOTAL_GAIN +")"};
 
         // Check if the symbol exists in the db
         queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.StockData.URI,
+                PortfolioContract.FixedData.URI,
                 affectedColumn, null, null, null);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
@@ -71,38 +71,38 @@ public class StockReceiver extends BroadcastReceiver {
             double incomePercent = incomeTotal/buyTotal*100;
             double totalGainPercent = totalGain/buyTotal*100;
 
-            // Values to be inserted or updated on StockPortfolio table
+            // Values to be inserted or updated on FixedPortfolio table
             ContentValues portfolioCV = new ContentValues();
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL, variationTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL, buyTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN, totalGain);
-            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_VARIATION_TOTAL, variationTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_BUY_TOTAL, buyTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_TOTAL_GAIN, totalGain);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
 
-            // Query for the only stock portfolio, if dosent exist, creates one
+            // Query for the only fixed portfolio, if dosent exist, creates one
             Cursor portfolioQueryCursor = mContext.getContentResolver().query(
-                    PortfolioContract.StockPortfolio.URI,
+                    PortfolioContract.FixedPortfolio.URI,
                     null, null, null, null);
             // If exists, updates value, else create a new field and add values
             if(portfolioQueryCursor.getCount() > 0){
                 portfolioQueryCursor.moveToFirst();
-                String _id = String.valueOf(portfolioQueryCursor.getInt(portfolioQueryCursor.getColumnIndex(PortfolioContract.StockPortfolio._ID)));
-                // Prepare query to update stock data
-                String updateSelection = PortfolioContract.StockPortfolio._ID + " = ?";
+                String _id = String.valueOf(portfolioQueryCursor.getInt(portfolioQueryCursor.getColumnIndex(PortfolioContract.FixedPortfolio._ID)));
+                // Prepare query to update fixed data
+                String updateSelection = PortfolioContract.FixedPortfolio._ID + " = ?";
                 String[] updatedSelectionArguments = {_id};
-                // Update value on stock data
+                // Update value on fixed portfolio
                 int updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.StockPortfolio.URI,
+                        PortfolioContract.FixedPortfolio.URI,
                         portfolioCV, updateSelection, updatedSelectionArguments);
 
             } else {
                 // Creates table and add values
-                Uri insertedStockPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.StockPortfolio.URI,
+                Uri insertedFixedPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.FixedPortfolio.URI,
                         portfolioCV);
             }
             // Prepare URI with Current Total to bulkupdate the Current Percent
-            Uri updateCurrentURI = PortfolioContract.StockData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
+            Uri updateCurrentURI = PortfolioContract.FixedData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
         }

@@ -2028,6 +2028,9 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
+            // Send to update Fixed Income Portfolio and show overview
+            mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
+
             // Query Income table to get total of this fixed income
             String[] affectedColumn = {"sum("+ PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID+")",
                     "sum("+ PortfolioContract.FixedIncome.COLUMN_TAX+")"};

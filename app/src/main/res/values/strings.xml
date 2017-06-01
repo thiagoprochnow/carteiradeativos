@@ -8,7 +8,9 @@
     <string name="stock_update_success">Stock updated successfuly</string>
     <string name="stock_update_fail">Stock update failed</string>
     <string name="fii_update_success">Fii updated successfuly</string>
+    <string name="fixed_update_success">Fixed income updated successfuly</string>
     <string name="fii_update_fail">Fii update failed</string>
+    <string name="fixed_update_fail">Fixed income update failed</string>
     <string name="currency_update_success">Currency updated successfuly</string>
     <string name="currency_update_fail">Currency update failed</string>
     <string name="form_title_buy">Buy</string>

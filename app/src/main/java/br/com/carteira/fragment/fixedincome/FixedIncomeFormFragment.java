@@ -156,6 +156,8 @@ public class FixedIncomeFormFragment extends BaseFormFragment {
                     updateCV, selection, selectionArguments);
 
             if (updateQueryCursor == 1){
+                // Send to update Fixed Income Portfolio and show overview
+                mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 return true;
             }
         }

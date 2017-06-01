@@ -70,6 +70,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".receiver.FixedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_FIXED_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

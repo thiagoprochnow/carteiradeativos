@@ -8,7 +8,9 @@
     <string name="stock_update_success">Ação atualizada com sucesso</string>
     <string name="stock_update_fail">Atualização da ação falhou</string>
     <string name="fii_update_success">Fundo Imobiliario atualizado com sucesso</string>
+    <string name="fixed_update_success">Renda fixa atualizada com sucesso</string>
     <string name="fii_update_fail">Atualização do fundo imobiliario falhou</string>
+    <string name="fixed_update_fail">Atualização da renda fixa falhou</string>
     <string name="form_title_buy">Comprar</string>
     <string name="form_title_sell">Vender</string>
     <string name="form_title_objective">Objetivo</string>

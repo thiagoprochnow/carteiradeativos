@@ -117,15 +117,15 @@ public class SellFixedFormFragment extends BaseFormFragment {
                     return true;
                 }
             }
-            Toast.makeText(mContext, R.string.sell_fii_fail, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.sell_fixed_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
             // If validation fails, show validation error message
             if(!isValidSymbol){
-                mInputSymbolView.setError(this.getString(R.string.wrong_fii_code));
+                mInputSymbolView.setError(this.getString(R.string.wrong_fixed_code));
             }
             if(!isValidQuantity){
-                mInputQuantityView.setError(this.getString(R.string.wrong_fii_sell_quantity));
+                mInputQuantityView.setError(this.getString(R.string.wrong_fixed_sell_quantity));
             }
             if(!isValidSellPrice){
                 mInputSellPriceView.setError(this.getString(R.string.wrong_price));

@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.fii.FiiIncomeAdapter;
 import br.com.carteira.adapter.fixedincome.FixedIncomeAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -116,13 +115,11 @@ public class FixedIncomesFragment extends BaseFragment implements
         MenuInflater inflater = getActivity().getMenuInflater();
         this.id = id;
         inflater.inflate(R.menu.income_item_menu, menu);
-        if (type == Constants.IncomeType.JCP){
-            menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
-            menu.findItem(R.id.menu_item_change_dividend).setVisible(true);
-        } else {
-            menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
-            menu.findItem(R.id.menu_item_change_jcp).setVisible(true);
-        }
+
+        // Fixed income does not need income change, only stock does
+        menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
+        menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
+
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -148,12 +145,6 @@ public class FixedIncomesFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
-                break;
-            case R.id.menu_item_change_jcp:
-                changeIncomeType(id, mSymbol, Constants.IncomeType.JCP);
-                break;
-            case R.id.menu_item_change_dividend:
-                changeIncomeType(id, mSymbol, Constants.IncomeType.DIVIDEND);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");

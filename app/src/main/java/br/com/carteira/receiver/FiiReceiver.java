@@ -89,7 +89,7 @@ public class FiiReceiver extends BroadcastReceiver {
                 portfolioQueryCursor.moveToFirst();
                 String _id = String.valueOf(portfolioQueryCursor.getInt(portfolioQueryCursor.getColumnIndex(PortfolioContract.FiiPortfolio._ID)));
                 // Prepare query to update fii data
-                String updateSelection = PortfolioContract.FiiData._ID + " = ?";
+                String updateSelection = PortfolioContract.FiiPortfolio._ID + " = ?";
                 String[] updatedSelectionArguments = {_id};
                 // Update value on fii data
                 int updatedRows = mContext.getContentResolver().update(
@@ -98,7 +98,7 @@ public class FiiReceiver extends BroadcastReceiver {
 
             } else {
                 // Creates table and add values
-                Uri insertedFiiDataUri = mContext.getContentResolver().insert(PortfolioContract.FiiPortfolio.URI,
+                Uri insertedFiiPortfolioUri = mContext.getContentResolver().insert(PortfolioContract.FiiPortfolio.URI,
                         portfolioCV);
             }
             // Prepare URI with Current Total to bulkupdate the Current Percent

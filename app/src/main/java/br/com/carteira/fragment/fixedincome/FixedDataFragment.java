@@ -145,7 +145,7 @@ public class FixedDataFragment extends BaseFragment implements
             case R.id.menu_item_delete:
                 // Show Dialog for user confirmation to delete Fixed incom from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_fii_title);
+                builder.setTitle(R.string.delete_fixed_title);
 
                 builder.setMessage(R.string.delete_fixed_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface

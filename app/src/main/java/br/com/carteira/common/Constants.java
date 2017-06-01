@@ -65,7 +65,7 @@ public final class Constants {
         public static final String STOCK = "UPDATE_STOCK_PORTFOLIO";
         public static final String FII = "UPDATE_FII_PORTFOLIO";
         public static final String CURRENCY = "UPDATE_CURRENCY_PORTFOLIO";
-        public static final String FIXED = "UPDATE_FIXED_INCOME_PORTFOLIO";
+        public static final String FIXED = "UPDATE_FIXED_PORTFOLIO";
     }
 
     // Constants for Loaders IDs

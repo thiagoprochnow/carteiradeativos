@@ -283,10 +283,10 @@ public class FixedIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return "invalid";
             case Constants.IncomeType.FIXED:
                 Log.d(LOG_TAG, "Income IncomeType");
-                return mContext.getResources().getString(R.string.fii_income_type);
+                return mContext.getResources().getString(R.string.fixed_income_type);
             default:
                 Log.d(LOG_TAG, "Default IncomeType");
-                return mContext.getResources().getString(R.string.fii_income_type);
+                return mContext.getResources().getString(R.string.fixed_income_type);
         }
     }
 
