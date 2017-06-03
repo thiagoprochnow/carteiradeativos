@@ -246,8 +246,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.FixedTransaction.COLUMN_QUANTITY + " INTEGER, " +
                 PortfolioContract.FixedTransaction.COLUMN_PRICE + " REAL, " +
+                PortfolioContract.FixedTransaction.COLUMN_TOTAL + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.FixedTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.FixedTransaction.COLUMN_PRODUCT_TYPE + " INTEGER, " +
+                PortfolioContract.FixedTransaction.COLUMN_RENTABILITY_TYPE + " INTEGER, " +
                 " FOREIGN KEY (" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
 

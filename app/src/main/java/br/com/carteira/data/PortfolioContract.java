@@ -812,16 +812,22 @@ public class PortfolioContract {
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_PRICE = "bought_price";
+        public static final String COLUMN_TOTAL = "bought_total";
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_PRODUCT_TYPE = "product_type";
+        public static final String COLUMN_RENTABILITY_TYPE = "rentability_type";
 
         public static final String[] FIXED_TRANSACTION_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_QUANTITY,
                 COLUMN_PRICE,
+                COLUMN_TOTAL,
                 COLUMN_TIMESTAMP,
-                COLUMN_TYPE
+                COLUMN_TYPE,
+                COLUMN_PRODUCT_TYPE,
+                COLUMN_RENTABILITY_TYPE
         };
 
         public static Uri buildTransactionUri(long id) {

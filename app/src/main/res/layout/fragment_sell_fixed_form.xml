@@ -22,32 +22,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/fixed_symbol_hint"
-            android:maxLength="20"/>
+            android:maxLength="10"/>
 
         <TextView
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/quantity"/>
+            android:text="@string/fixed_sell_value"/>
 
         <EditText
             android:fontFamily="sans-serif-light"
-            android:id="@+id/inputQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"/>
-
-        <TextView
-            android:fontFamily="sans-serif-light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/sell_price"/>
-
-        <EditText
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/inputSellPrice"
+            android:id="@+id/inputSellTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"/>

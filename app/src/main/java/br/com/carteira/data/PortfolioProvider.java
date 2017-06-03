@@ -1332,8 +1332,6 @@ public class PortfolioProvider extends ContentProvider {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        int quantity;
-        double currentPrice;
         double totalBuy;
         double incomeTotal;
         double currentTotal;
@@ -1356,14 +1354,11 @@ public class PortfolioProvider extends ContentProvider {
                 if (queryCursor.getCount() > 0) {
                     queryCursor.moveToFirst();
 
-                    currentPrice = Double.parseDouble(contValues.get(key).toString());
-                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
-                            .FixedData.COLUMN_QUANTITY_TOTAL));
+                    currentTotal = Double.parseDouble(contValues.get(key).toString());
                     totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .FixedData.COLUMN_BUY_VALUE_TOTAL));
                     incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
                             (PortfolioContract.FixedData.COLUMN_INCOME));
-                    currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
                     totalGain = currentTotal + incomeTotal - totalBuy;
 

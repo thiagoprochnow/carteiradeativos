@@ -68,6 +68,27 @@ public final class Constants {
         public static final String FIXED = "UPDATE_FIXED_PORTFOLIO";
     }
 
+    // FixedIncome Types
+    public static class FixedType{
+        public static final int INVALID = -1;
+        public static final int TREASURY = 0;
+        public static final int CDB = 1;
+        public static final int LCI = 2;
+        public static final int LCA = 3;
+        public static final int DEBENTURE = 4;
+        public static final int LC = 5;
+        public static final int CRI = 6;
+        public static final int CRA = 7;
+    }
+
+    // FixedIncome Types
+    public static class FixedRentabilityType{
+        public static final int INVALID = -1;
+        public static final int PRE = 0;
+        public static final int POS = 1;
+        public static final int INDEX = 2;
+    }
+
     // Constants for Loaders IDs
     public static class Loaders{
         public static final int INVALID = -1;

@@ -30,7 +30,7 @@
     <string name="sell_price">Sell Price</string>
     <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>
-    <string name="fixed_current_price">Fixed income current price</string>
+    <string name="fixed_current_total">Fixed income current total</string>
     <string name="currency_current_price">Currency current price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="stock_edit_tip">*Leave any field empty to not edit it.</string>
@@ -56,8 +56,10 @@
     <string name="wrong_fixed_sell_quantity">Quantity should be a number and need to have enough fixed income bought</string>
     <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
     <string name="wrong_price">Price should be a number</string>
+    <string name="wrong_total">Total should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
-    <string name="wrong_current_price">Current Price is not valid</string>
+    <string name="wrong_current_price">Current price is not valid</string>
+    <string name="wrong_current_total">Current total is not valid</string>
     <string name="wrong_date">Invalid date</string>
     <string name="future_date">Date cannot be in the future</string>
     <string name="wrong_inputs">One or more of the fields are empty or wrong, please check inputed values</string>
@@ -282,8 +284,23 @@
     <string name="add_fixed_title">Buy Fixed Income</string>
     <string name="buy_fixed_button">Buy</string>
     <string name="cancel_fixed_button">Cancel</string>
+    <string name="fixed_type">Type of the fixed income</string>
+    <string name="fixed_rentability_type">Rentability type of the fixed income</string>
     <string name="fixed_symbol">Type the label of the fixed income</string>
-    <string name="fixed_symbol_hint">Ex: Tesouro LTN 2017</string>
+    <string name="fixed_symbol_hint">Ex: LTN 2017</string>
+    <string name="fixed_type_treasury">Treasury</string>
+    <string name="fixed_type_cdb">CDB</string>
+    <string name="fixed_type_lci">LCI</string>
+    <string name="fixed_type_lca">LCA</string>
+    <string name="fixed_type_debenture">Debenture</string>
+    <string name="fixed_type_lc">LC</string>
+    <string name="fixed_type_cri">CRI</string>
+    <string name="fixed_type_cra">CRA</string>
+    <string name="fixed_rentability_type_pos">Post</string>
+    <string name="fixed_rentability_type_pre">Pre</string>
+    <string name="fixed_rentability_type_index">Indexed</string>
+    <string name="fixed_buy_value">Buy total value</string>
+    <string name="fixed_sell_value">Sell total value</string>
 
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Complete Portfolio</string>

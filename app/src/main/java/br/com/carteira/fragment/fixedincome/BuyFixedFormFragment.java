@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -30,10 +32,11 @@ public class BuyFixedFormFragment extends BaseFormFragment {
     private View mView;
 
     private EditText mInputSymbolView;
-    private EditText mInputQuantityView;
-    private EditText mInputBuyPriceView;
+    private EditText mInputBuyTotalView;
     private EditText mInputObjectiveView;
     private EditText mInputDateView;
+    private Spinner mSpinnerType;
+    private Spinner mSpinnerRentabilityType;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -54,10 +57,32 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         mView = inflater.inflate(R.layout.fragment_buy_fixed_form, container, false);
         getActivity().setTitle(R.string.form_title_buy);
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
-        mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
-        mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
+        mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        mSpinnerType = (Spinner) mView.findViewById(R.id.fixedTypeSpinner);
+        mSpinnerRentabilityType = (Spinner) mView.findViewById(R.id.fixedRentabilityTypeSpinner);
+
+        String[] items = new String[]{
+                getFixedType(Constants.FixedType.TREASURY),
+                getFixedType(Constants.FixedType.CDB),
+                getFixedType(Constants.FixedType.LCI),
+                getFixedType(Constants.FixedType.LCA),
+                getFixedType(Constants.FixedType.DEBENTURE),
+                getFixedType(Constants.FixedType.LC),
+                getFixedType(Constants.FixedType.CRI),
+                getFixedType(Constants.FixedType.CRA)
+        };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+        mSpinnerType.setAdapter(adapter);
+
+        items = new String[]{
+                getFixedRentabilityType(Constants.FixedRentabilityType.POS),
+                getFixedRentabilityType(Constants.FixedRentabilityType.PRE),
+                getFixedRentabilityType(Constants.FixedRentabilityType.INDEX)
+        };
+        adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
+        mSpinnerRentabilityType.setAdapter(adapter);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -74,7 +99,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
         // Adding input filters
         mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterPercentage("0", "100")});
-        mInputBuyPriceView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
+        mInputBuyTotalView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -83,31 +108,36 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidFixedSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidInt(mInputQuantityView);
-        boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
+        boolean isValidBuyTotal = isValidDouble(mInputBuyTotalView);
         boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fixed income
-        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidBuyTotal && isValidObjective && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
-            double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
+            double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
             double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
+
+            // By selected position we know which one was selected
+            int fixedTypeId = mSpinnerType.getSelectedItemPosition();
+            int fixedTypeRentabilityId = mSpinnerRentabilityType.getSelectedItemPosition();
 
             ContentValues fixedCV = new ContentValues();
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, inputQuantity);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, buyPrice);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, 0);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, 0);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, buyTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.BUY);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRODUCT_TYPE, fixedTypeId);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_RENTABILITY_TYPE, fixedTypeRentabilityId);
+
             // Adds to the database
             Uri insertedFixedTransactionUri = mContext.getContentResolver().insert(PortfolioContract
                     .FixedTransaction.URI,
@@ -132,11 +162,8 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             if(!isValidSymbol){
                 mInputSymbolView.setError(this.getString(R.string.wrong_fixed_code));
             }
-            if(!isValidQuantity){
-                mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
-            }
-            if(!isValidBuyPrice){
-                mInputBuyPriceView.setError(this.getString(R.string.wrong_price));
+            if(!isValidBuyTotal){
+                mInputBuyTotalView.setError(this.getString(R.string.wrong_total));
             }
             if(!isValidObjective){
                 mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));

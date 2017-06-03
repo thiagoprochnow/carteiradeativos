@@ -28,7 +28,7 @@
     <string name="sell_price">Preço de venda</string>
     <string name="stock_current_price">Preço atual da ação</string>
     <string name="fii_current_price">Preço atual do fundo imobiliario</string>
-    <string name="fixed_current_price">Valor atual da renda fixa</string>
+    <string name="fixed_current_total">Total atual da renda fixa</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
     <string name="stock_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="fii_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
@@ -50,8 +50,10 @@
     <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
     <string name="wrong_fixed_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa renda fixa na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
+    <string name="wrong_total">Total deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
-    <string name="wrong_current_price">Preço Atual não é valido</string>
+    <string name="wrong_current_price">Preço atual não é valido</string>
+    <string name="wrong_current_total">Total atual não é valido</string>
     <string name="wrong_date">Data inválida</string>
     <string name="future_date">Data não pode ser no futuro</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
@@ -235,19 +237,34 @@
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
     <string name="add_fii_fail">Falha ao adicionar fundo imobiliario</string>
 
-    <!-- Add fii Dialog Fragment -->
+    <!-- Add fii Form Fragment -->
     <string name="add_fii_title">Compra de Fundo Imobiliario</string>
     <string name="buy_fii_button">Comprar</string>
     <string name="cancel_fii_button">Cancelar</string>
     <string name="fii_symbol">Código do Fundo Imobiliario</string>
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
-    <!-- Add fixed income Dialog Fragment -->
+    <!-- Add fixed income Form Fragment -->
     <string name="add_fixed_title">Compra de Renda Fixa</string>
     <string name="buy_fixed_button">Comprar</string>
     <string name="cancel_fixed_button">Cancelar</string>
-    <string name="fixed_symbol">Nomenclatura para sua Renda Fica</string>
-    <string name="fixed_symbol_hint">Ex: Tesouro LTN 2017</string>
+    <string name="fixed_type">Tipo de Renda Fixa</string>
+    <string name="fixed_rentability_type">Tipo de rentabilidade da Renda Fixa</string>
+    <string name="fixed_symbol">Nomenclatura para sua Renda Fixa</string>
+    <string name="fixed_symbol_hint">Ex: LTN 2017</string>
+    <string name="fixed_type_treasury">Tesouro</string>
+    <string name="fixed_type_cdb">CDB</string>
+    <string name="fixed_type_lci">LCI</string>
+    <string name="fixed_type_lca">LCA</string>
+    <string name="fixed_type_debenture">Debenture</string>
+    <string name="fixed_type_lc">LC</string>
+    <string name="fixed_type_cri">CRI</string>
+    <string name="fixed_type_cra">CRA</string>
+    <string name="fixed_rentability_type_pos">Pós</string>
+    <string name="fixed_rentability_type_pre">Pré</string>
+    <string name="fixed_rentability_type_index">Indexado</string>
+    <string name="fixed_buy_value">Valor total comprado</string>
+    <string name="fixed_sell_value">Valor total vendido</string>
 
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Carteira Completa</string>

@@ -29,8 +29,7 @@ public class SellFixedFormFragment extends BaseFormFragment {
     private View mView;
 
     private EditText mInputSymbolView;
-    private EditText mInputQuantityView;
-    private EditText mInputSellPriceView;
+    private EditText mInputSellTotalView;
     private EditText mInputDateView;
 
     @Override
@@ -52,8 +51,7 @@ public class SellFixedFormFragment extends BaseFormFragment {
         mView = inflater.inflate(R.layout.fragment_sell_fixed_form, container, false);
         getActivity().setTitle(R.string.form_title_sell);
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
-        mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
-        mInputSellPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
+        mInputSellTotalView = (EditText) mView.findViewById(R.id.inputSellTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
 
         // Gets symbol received from selected CardView on intent
@@ -70,7 +68,7 @@ public class SellFixedFormFragment extends BaseFormFragment {
         mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
 
         // Adding input filters
-        mInputSellPriceView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
+        mInputSellTotalView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -79,16 +77,14 @@ public class SellFixedFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidFixedSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.FIXED);
-        boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
+        boolean isValidSellTotal = isValidSellFixed(mInputSellTotalView, mInputSymbolView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the fixed income
-        if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidSellTotal && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
-            double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
+            double sellTotal = Double.parseDouble(mInputSellTotalView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -98,8 +94,9 @@ public class SellFixedFormFragment extends BaseFormFragment {
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, inputQuantity);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, sellPrice);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, 0);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, 0);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, sellTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.SELL);
             // Adds to the database
@@ -124,11 +121,8 @@ public class SellFixedFormFragment extends BaseFormFragment {
             if(!isValidSymbol){
                 mInputSymbolView.setError(this.getString(R.string.wrong_fixed_code));
             }
-            if(!isValidQuantity){
-                mInputQuantityView.setError(this.getString(R.string.wrong_fixed_sell_quantity));
-            }
-            if(!isValidSellPrice){
-                mInputSellPriceView.setError(this.getString(R.string.wrong_price));
+            if(!isValidSellTotal){
+                mInputSellTotalView.setError(this.getString(R.string.wrong_total));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

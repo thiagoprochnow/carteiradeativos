@@ -26,7 +26,7 @@ public class EditFixedFormFragment extends BaseFormFragment {
     private View mView;
     private String mSymbol;
     private EditText mInputObjectiveView;
-    private EditText mInputCurrentPriceView;
+    private EditText mInputCurrentTotalView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,7 +46,7 @@ public class EditFixedFormFragment extends BaseFormFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_edit_fixed_form, container, false);
         mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
-        mInputCurrentPriceView = (EditText) mView.findViewById(R.id.inputCurrentPrice);
+        mInputCurrentTotalView = (EditText) mView.findViewById(R.id.inputCurrentTotal);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -63,12 +63,12 @@ public class EditFixedFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidObjective = isValidDouble(mInputObjectiveView);
-        boolean isValidCurrentPrice = isValidDouble(mInputCurrentPriceView);
+        boolean isValidCurrentTotal = isValidDouble(mInputCurrentTotalView);
 
         // If all validations pass, try to update the fixed income objective
-        if (isValidObjective || isValidCurrentPrice) {
+        if (isValidObjective || isValidCurrentTotal) {
             boolean isEmptyObjective = TextUtils.isEmpty(mInputObjectiveView.getText().toString());
-            boolean isEmptyCurrentPrice = TextUtils.isEmpty(mInputCurrentPriceView.getText().toString());
+            boolean isEmptyCurrentTotal = TextUtils.isEmpty(mInputCurrentTotalView.getText().toString());
 
             ContentValues fixedCV = new ContentValues();
 
@@ -87,14 +87,14 @@ public class EditFixedFormFragment extends BaseFormFragment {
             }
             // Update current price
             int updatedCurrentRows = 0;
-            if (!isEmptyCurrentPrice){
-                ContentValues currentPriceCV = new ContentValues();
-                double currentPrice = Double.parseDouble(mInputCurrentPriceView.getText().toString());
-                currentPriceCV.put(mSymbol, currentPrice);
+            if (!isEmptyCurrentTotal){
+                ContentValues currentTotalCV = new ContentValues();
+                double currentTotal = Double.parseDouble(mInputCurrentTotalView.getText().toString());
+                currentTotalCV.put(mSymbol, currentTotal);
                 // Update values on fixed data
                 updatedCurrentRows = mContext.getContentResolver().update(
                         PortfolioContract.FixedData.BULK_UPDATE_URI,
-                        currentPriceCV, null, null);
+                        currentTotalCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on FixedPortfolio
                     mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
@@ -111,15 +111,15 @@ public class EditFixedFormFragment extends BaseFormFragment {
             return false;
         } else {
             if (TextUtils.isEmpty(mInputObjectiveView.getText().toString()) &&
-                    TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
+                    TextUtils.isEmpty(mInputCurrentTotalView.getText().toString())){
                 return true;
             }
             // If validation fails, show validation error message
             if(!isValidObjective && !TextUtils.isEmpty(mInputObjectiveView.getText().toString())){
                 mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
-            if(!isValidCurrentPrice && !TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
-                mInputCurrentPriceView.setError(this.getString(R.string.wrong_current_price));
+            if(!isValidCurrentTotal && !TextUtils.isEmpty(mInputCurrentTotalView.getText().toString())){
+                mInputCurrentTotalView.setError(this.getString(R.string.wrong_current_total));
             }
         }
         return false;
