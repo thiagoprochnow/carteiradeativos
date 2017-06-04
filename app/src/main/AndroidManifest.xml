@@ -30,6 +30,7 @@
         <service android:name=".api.service.StockIntentService" />
         <service android:name=".api.service.StockIncomeIntentService" />
         <service android:name=".api.service.FiiIntentService" />
+        <service android:name=".api.service.CurrencyIntentService" />
 
         <activity
             android:name=".activity.FormActivity"
@@ -78,6 +79,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <receiver
+        android:name=".receiver.CurrencyReceiver"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="UPDATE_CURRENCY_PORTFOLIO" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </receiver>
+
     </application>
 
 </manifest>

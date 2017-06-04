@@ -59,7 +59,7 @@ public class PortfolioProvider extends ContentProvider {
                 Constants.Provider.FII_INCOME_FOR_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_PORTFOLIO, Constants.Provider.CURRENCY_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA, Constants.Provider.CURRENCY_DATA);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_BULK_UPDATE, Constants.Provider.FII_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_BULK_UPDATE, Constants.Provider.CURRENCY_DATA_BULK_UPDATE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_BULK_UPDATE_WITH_CURRENT,
                 Constants.Provider.CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CURRENCY_DATA_WITH_SYMBOL, Constants.Provider.CURRENCY_DATA_WITH_SYMBOL);
@@ -1038,10 +1038,10 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
-           /* case Constants.Provider.CURRENCY_DATA_BULK_UPDATE:
+            case Constants.Provider.CURRENCY_DATA_BULK_UPDATE:
                 rowsUpdated = this.bulkCurrencyUpdade(values);
                 break;
-*/
+
             case Constants.Provider.CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT:
                 currentTotal = PortfolioContract.CurrencyTransaction
                         .getCurrencyTransactionFromUri(uri);
@@ -1320,6 +1320,73 @@ public class PortfolioProvider extends ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(PortfolioContract.FiiData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value several values of the Currency of table
+     * CurrencyData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkCurrencyUpdade(ContentValues contValues) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int quantity;
+        double currentPrice;
+        double totalBuy;
+        double incomeTotal;
+        double currentTotal;
+        double variation;
+        double totalGain;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.CurrencyData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update stock data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.CurrencyData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentPrice = Double.parseDouble(contValues.get(key).toString());
+                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                            .CurrencyData.COLUMN_QUANTITY_TOTAL));
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .CurrencyData.COLUMN_BUY_VALUE_TOTAL));
+                    currentTotal = quantity * currentPrice;
+                    variation = currentTotal - totalBuy;
+                    totalGain = currentTotal - totalBuy;
+
+                    ContentValues currencyCV = new ContentValues();
+                    currencyCV.put(PortfolioContract.CurrencyData.COLUMN_CURRENT_PRICE,
+                            contValues.get(key).toString());
+                    currencyCV.put(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    currencyCV.put(PortfolioContract.CurrencyData.COLUMN_VARIATION, variation);
+                    currencyCV.put(PortfolioContract.CurrencyData.COLUMN_TOTAL_GAIN, totalGain);
+
+                    returnCount += this.update(
+                            PortfolioContract.CurrencyData.URI,
+                            currencyCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "CurrencyData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.CurrencyData.URI, null);
         return returnCount;
     }
 

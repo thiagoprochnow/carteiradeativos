@@ -11,11 +11,16 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
@@ -28,7 +33,14 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
     private static final String LOG_TAG = SellCurrencyFormFragment.class.getSimpleName();
     private View mView;
 
-    private EditText mInputSymbolView;
+    HashMap<String, String> currencyMap = new HashMap<String, String>() {{
+        put("Dollar","USD");
+        put("Euro","EUR");
+        put("USD", "Dollar");
+        put("EUR","Euro");
+    }};
+
+    private Spinner mInputSymbolView;
     private EditText mInputQuantityView;
     private EditText mInputSellPriceView;
     private EditText mInputDateView;
@@ -51,17 +63,25 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_sell_currency_form, container, false);
         getActivity().setTitle(R.string.form_title_sell);
-        mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
+        mInputSymbolView = (Spinner) mView.findViewById(R.id.inputSymbolSpinner);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputSellPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
         mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+                R.array.currency_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        mInputSymbolView.setAdapter(adapter);
+
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
         String intentSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        // Place selling currency symbol on field
+
         if(intentSymbol != null && !intentSymbol.isEmpty()){
-            mInputSymbolView.setText(intentSymbol);
+            List<String> myArrayList = Arrays.asList(getResources().getStringArray(R.array.currency_array));
+            mInputSymbolView.setSelection(myArrayList.indexOf(currencyMap.get(intentSymbol)));
         }
 
         // Adding current date to Buy Date field and set Listener to the Spinner
@@ -77,16 +97,18 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
     // Validate inputted values and add the Currency to the portfolio
     private boolean sellCurrency() {
 
+        // Aux because common ValidSellQuantity receives a Edit text not a String
+        EditText editTextAux = new EditText(mContext);
+        editTextAux.setText(currencyMap.get(mInputSymbolView.getSelectedItem().toString()));
         // Validate for each inputted value
-        boolean isValidSymbol = isValidCurrencySymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.CURRENCY);
+        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, editTextAux, Constants.ProductType.CURRENCY);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the Currency
-        if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
-            String inputSymbol = mInputSymbolView.getText().toString();
+        if (isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
+            String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value
@@ -119,10 +141,6 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
             Toast.makeText(mContext, R.string.sell_currency_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
-            // If validation fails, show validation error message
-            if(!isValidSymbol){
-                mInputSymbolView.setError(this.getString(R.string.wrong_currency_code));
-            }
             if(!isValidQuantity){
                 mInputQuantityView.setError(this.getString(R.string.wrong_currency_sell_quantity));
             }

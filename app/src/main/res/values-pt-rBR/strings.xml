@@ -11,6 +11,8 @@
     <string name="fixed_update_success">Renda fixa atualizada com sucesso</string>
     <string name="fii_update_fail">Atualização do fundo imobiliario falhou</string>
     <string name="fixed_update_fail">Atualização da renda fixa falhou</string>
+    <string name="currency_update_success">Moeda atualizada com sucesso</string>
+    <string name="currency_update_fail">Atualização de moeda falhou</string>
     <string name="form_title_buy">Comprar</string>
     <string name="form_title_sell">Vender</string>
     <string name="form_title_objective">Objetivo</string>
@@ -27,6 +29,8 @@
     <string name="buy_price">Preço de compra</string>
     <string name="sell_price">Preço de venda</string>
     <string name="stock_current_price">Preço atual da ação</string>
+    <string name="currency_current_price">Preço atual da moeda</string>
+    <string name="currency_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="fii_current_price">Preço atual do fundo imobiliario</string>
     <string name="fixed_current_total">Total atual da renda fixa</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
@@ -49,6 +53,7 @@
     <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
     <string name="wrong_fixed_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa renda fixa na carteira</string>
+    <string name="wrong_currency_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa moeda na carteirat</string>
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_total">Total deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
@@ -69,6 +74,14 @@
     <string name="menu_item_split">Desdobramento</string>
     <string name="menu_item_grouping">Grupamento</string>
     <string name="menu_item_income">Rendimentos</string>
+
+    <!-- Currency Main Fragment -->
+    <string name="buy_currency_success">Moeda adicionada com sucesso</string>
+    <string name="buy_currency_fail">Erro ao adicionar moeda.</string>
+    <string name="sell_currency_success">Moeda vendida com sucesso</string>
+    <string name="sell_currency_fail">Erro ao vender moeda</string>
+    <string name="delete_currency_title">Deletar essa moeda do seu portfolio?</string>
+    <string name="delete_currency_dialog">Se vendeu moeda, escolha "Vender" no menu de opções. Deletar a moeda irá remover todos os dados sobre ele, inclusive moedas recebidas.</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Ação adicionada com sucesso</string>
@@ -112,6 +125,11 @@
     <string name="stocks_history">Histórico</string>
     <string name="stocks_incomes">Rendimentos</string>
 
+    <!-- Currency Tab Adapter -->
+    <string name="currency_overview">Visão Geral</string>
+    <string name="currency_portfolio">Carteira</string>
+    <string name="currency_history">Histórico</string>
+
     <!-- Fii Tab Adapter -->
     <string name="fii_overview">Visão Geral</string>
     <string name="fii_portfolio">Carteira</string>
@@ -145,6 +163,9 @@
     <!-- Fii Adapter -->
     <string name="fii_quantity_label">Quantidade: </string>
 
+    <!-- Currency Adapter -->
+    <string name="currency_quantity_label">Quantidade: </string>
+
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantidade: </string>
 
@@ -166,6 +187,9 @@
 
     <!-- Fii Portolfio -->
     <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
+
+    <!-- Currency Portolfio -->
+    <string name="currency_portfolio_label">Carteira de Moedas</string>
 
     <!-- Fixed Portolfio -->
     <string name="fixed_portfolio_label">Carteira de Renda Fixa</string>
@@ -233,6 +257,17 @@
     <string name="add_fii_income_fail">Falha ao adicionar rendimento</string>
     <string name="add_fixed_income_fail">Falha ao adicionar rendimento</string>
 
+    <!-- Currency Main Fragment -->
+    <string name="add_currency_success">Moeda adicionada com sucesso</string>
+    <string name="add_currency_fail">Falha ao adicionar moeda</string>
+
+    <!-- Add currency Form Fragment -->
+    <string name="add_currency_title">Compra de Moeda</string>
+    <string name="buy_currency_button">Comprar</string>
+    <string name="cancel_currency_button">Cancelar</string>
+    <string name="currency_symbol">Código Moeda</string>
+    <string name="currency_symbol_hint">Ex: Euro</string>
+
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
     <string name="add_fii_fail">Falha ao adicionar fundo imobiliario</string>
@@ -282,8 +317,10 @@
     <string name="toast_stock_successfully_removed">Ação %s removida com sucesso</string>
     <string name="toast_fii_successfully_removed">Fundo Imobiliario %s removido com sucesso</string>
     <string name="toast_fixed_successfully_removed">Renda Fixa %s removida com sucesso</string>
+    <string name="toast_currency_successfully_removed">Moeda %s removida com sucesso</string>
     <string name="toast_stock_not_removed">Não foi possível remover a ação %s</string>
     <string name="toast_fii_not_removed">Não foi possível remover o Fundo Imobiliario %s</string>
     <string name="toast_fixed_not_removed">Não foi possível remover a Renda Fixa %s</string>
+    <string name="toast_currency_not_removed">Não foi possível remover a Moeda %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 </resources>

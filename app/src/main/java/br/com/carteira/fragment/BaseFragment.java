@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.CurrencyIntentService;
 import br.com.carteira.api.service.FiiIntentService;
 import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
@@ -1392,28 +1393,11 @@ public abstract class BaseFragment extends Fragment {
             }
 
             //TODO - create service currency
-/*            Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
+            Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
                     .class);
             mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent); */
-/*
-            // Query Income table to get total of this fii income
-            String[] affectedColumn = {"sum("+ PortfolioContract.CurrencyIncome.COLUMN_RECEIVE_LIQUID+")",
-                    "sum("+ PortfolioContract.FiiIncome.COLUMN_TAX+")"};
-            selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
+            getActivity().startService(mServiceIntent);
 
-            Cursor incomeQueryCursor = mContext.getContentResolver().query(
-                    PortfolioContract.FiiIncome.URI,
-                    affectedColumn, selection, selectionArguments, null);
-
-            if (incomeQueryCursor.getCount() > 0){
-                incomeQueryCursor.moveToFirst();
-                receiveIncome = incomeQueryCursor.getDouble(0);
-                taxIncome = incomeQueryCursor.getDouble(1);
-            } else {
-                receiveIncome = 0;
-            }
-*/
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL, buyValue);
             if (type == Constants.Type.BUY) {
