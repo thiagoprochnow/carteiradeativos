@@ -81,6 +81,15 @@ public class CurrencyDataFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
+        // Floating Action Button setup
+        getActivity().findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // This will call the FormActivity with the correct form fragment
+                mFormProductListener.onBuyProduct(Constants.ProductType.CURRENCY, "");
+            }
+        });
+
         mCurrencyDataAdapter = new CurrencyDataAdapter(mContext, this);
         mRecyclerView.setAdapter(mCurrencyDataAdapter);
         registerForContextMenu(mRecyclerView);
