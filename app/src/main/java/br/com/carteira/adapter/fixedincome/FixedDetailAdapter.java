@@ -77,7 +77,6 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Cursor dataCursor = getDataCursor(symbol);
                     Cursor soldDataCursor = getSoldDataCursor(symbol);
 
-                    double soldPrice = 0;
                     double soldTotal = 0;
                     double gainTotal = 0;
                     double buyTotal = 0;
@@ -86,8 +85,6 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // Check if there is any sold fixeds first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
-                        soldPrice = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_SELL_MEDIUM_PRICE)));
                         soldTotal = soldDataCursor.getDouble(
                                 (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL)));
                         buyTotal = soldDataCursor.getDouble(
@@ -117,16 +114,10 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                         }
 
-                        viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.FixedData
-                                        .COLUMN_CURRENT_PRICE)))));
-                        viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.currentTotal.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL)))));
                         viewOverviewHolder.mediumTotal.setText(formatter.format(buyTotal));
                         viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
-                        viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
                         Log.d(LOG_TAG, "No Fixed Data found for symbol: " + symbol);
@@ -210,15 +201,6 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class FixedDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
-
-        @BindView(R.id.currentPrice)
-        TextView currentPrice;
-
-        @BindView(R.id.mediumPrice)
-        TextView mediumPrice;
-
-        @BindView(R.id.soldPrice)
-        TextView soldPrice;
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;

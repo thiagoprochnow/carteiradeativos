@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,31 +87,22 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 // Set text colors according to positive or negative values
                 if (fixedAppreciation >= 0){
                     viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.fixedAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
                 } else {
                     viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.fixedAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
 
                 if (totalIncome >= 0){
                     viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
                 } else {
                     viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
 
                 if (totalGain >= 0){
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
                 } else {
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
                 double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL));
-                double variationPercent = fixedAppreciation/buyTotal*100;
-                double netIncomePercent = totalIncome/buyTotal*100;
-                double totalGainPercent = totalGain/buyTotal*100;
                 // Get handled values of FixedData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .FixedData.
@@ -127,9 +119,6 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         + "%");
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-                viewHolder.fixedAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
-                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
-                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 if(position == mCursor.getCount()){
                     // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
                     FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -192,15 +181,6 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.totalGain)
         TextView totalGain;
-
-        @BindView(R.id.fixedAppreciationPercent)
-        TextView fixedAppreciationPercent;
-
-        @BindView(R.id.totalIncomePercent)
-        TextView totalIncomePercent;
-
-        @BindView(R.id.totalGainPercent)
-        TextView totalGainPercent;
 
         public FixedDataViewHolder(View itemView) {
             super(itemView);

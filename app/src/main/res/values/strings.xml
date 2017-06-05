@@ -217,6 +217,8 @@
     <string name="details_current">Current</string>
     <string name="details_sold">Medium Sell</string>
     <string name="details_medium_price">Medium Buy</string>
+    <string name="details_sold_fixed">Sell</string>
+    <string name="details_buy_fixed">Buy</string>
     <string name="details_gain">Gain</string>
     <string name="details_price">Price</string>
     <string name="details_total">Total</string>
@@ -304,6 +306,7 @@
 
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Complete Portfolio</string>
+    <string name="title_treasury">Treasury</string>
     <string name="title_fixed">Fixed Income</string>
     <string name="title_fii">Real State Fund</string>
     <string name="title_stocks">Stocks</string>

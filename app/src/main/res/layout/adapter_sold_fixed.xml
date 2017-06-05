@@ -41,33 +41,6 @@
                 android:text="DUMY4"
                 android:textColor="@color/white"
                 android:textSize="@dimen/fixed_symbol" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="right">
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/fixedQuantityLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fixed_quantity_label"
-                    android:textColor="@color/white"
-                    android:textAllCaps="true"
-                    android:textSize="@dimen/fixed_quantity"
-                    android:ellipsize="end"
-                    android:maxLines="1" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/fixedQuantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="100"
-                    android:textSize="@dimen/fixed_quantity"
-                    android:ellipsize="end"
-                    android:maxLines="1" />
-                </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

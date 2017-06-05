@@ -122,7 +122,7 @@ public class SellFixedFormFragment extends BaseFormFragment {
                 mInputSymbolView.setError(this.getString(R.string.wrong_fixed_code));
             }
             if(!isValidSellTotal){
-                mInputSellTotalView.setError(this.getString(R.string.wrong_total));
+                mInputSellTotalView.setError(this.getString(R.string.wrong_fixed_sell_quantity));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

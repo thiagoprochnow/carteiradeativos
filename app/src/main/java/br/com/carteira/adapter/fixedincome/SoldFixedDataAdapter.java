@@ -69,8 +69,6 @@ public class SoldFixedDataAdapter extends RecyclerView.Adapter<SoldFixedDataAdap
         holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldFixedData.
                 COLUMN_SYMBOL)));
-        holder.fixedQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
-                (PortfolioContract.SoldFixedData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL)))));
@@ -116,9 +114,6 @@ public class SoldFixedDataAdapter extends RecyclerView.Adapter<SoldFixedDataAdap
 
         @BindView(R.id.symbol)
         TextView symbol;
-
-        @BindView(R.id.fixedQuantity)
-        TextView fixedQuantity;
 
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;

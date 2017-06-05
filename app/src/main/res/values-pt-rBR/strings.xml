@@ -216,6 +216,8 @@
     <string name="details_current">Atual</string>
     <string name="details_sold">Média Venda</string>
     <string name="details_medium_price">Média Compra</string>
+    <string name="details_sold_fixed">Venda</string>
+    <string name="details_buy_fixed">Compra</string>
     <string name="details_gain">Ganho</string>
     <string name="details_price">Preço</string>
     <string name="details_total">Total</string>
@@ -303,6 +305,7 @@
 
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Carteira Completa</string>
+    <string name="title_treasury">Tesouro</string>
     <string name="title_fixed">Renda Fixa</string>
     <string name="title_fii">Fundos Imobiliarios</string>
     <string name="title_stocks">Ações</string>
