@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.fii.FiiTabFragment;
+import br.com.carteira.fragment.fixedincome.FixedDetailsFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.listener.ProductListener;
@@ -46,7 +47,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     break;
                 case Constants.ProductType.FIXED:
                     // TODO: replaceFragment(new FiiIncomesFragment());
-                    replaceFragment(new FixedTabFragment());
+                    replaceFragment(new FixedDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -73,9 +74,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 return true;
             case Constants.ProductType.FII:
                 getMenuInflater().inflate(R.menu.fii_details_menu, menu);
-                return true;
-            case Constants.ProductType.FIXED:
-                getMenuInflater().inflate(R.menu.fixed_details_menu, menu);
                 return true;
             default:
                 return true;
@@ -113,10 +111,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
                 startActivity(intent);
                 break;
-            case R.id.menu_item_fixed_income:
-                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
-                startActivity(intent);
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -143,12 +137,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case Constants.IncomeType.FII:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
-                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
-                startActivity(intent);
-                break;
-            case Constants.IncomeType.FIXED:
-                // Sends id of clicked income to income details acitivity
-                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

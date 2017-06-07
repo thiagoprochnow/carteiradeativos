@@ -35,8 +35,6 @@ public class BuyFixedFormFragment extends BaseFormFragment {
     private EditText mInputBuyTotalView;
     private EditText mInputObjectiveView;
     private EditText mInputDateView;
-    private Spinner mSpinnerType;
-    private Spinner mSpinnerRentabilityType;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -60,29 +58,6 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
-        mSpinnerType = (Spinner) mView.findViewById(R.id.fixedTypeSpinner);
-        mSpinnerRentabilityType = (Spinner) mView.findViewById(R.id.fixedRentabilityTypeSpinner);
-
-        String[] items = new String[]{
-                getFixedType(Constants.FixedType.TREASURY),
-                getFixedType(Constants.FixedType.CDB),
-                getFixedType(Constants.FixedType.LCI),
-                getFixedType(Constants.FixedType.LCA),
-                getFixedType(Constants.FixedType.DEBENTURE),
-                getFixedType(Constants.FixedType.LC),
-                getFixedType(Constants.FixedType.CRI),
-                getFixedType(Constants.FixedType.CRA)
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
-        mSpinnerType.setAdapter(adapter);
-
-        items = new String[]{
-                getFixedRentabilityType(Constants.FixedRentabilityType.POS),
-                getFixedRentabilityType(Constants.FixedRentabilityType.PRE),
-                getFixedRentabilityType(Constants.FixedRentabilityType.INDEX)
-        };
-        adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, items);
-        mSpinnerRentabilityType.setAdapter(adapter);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -122,21 +97,13 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
 
-            // By selected position we know which one was selected
-            int fixedTypeId = mSpinnerType.getSelectedItemPosition();
-            int fixedTypeRentabilityId = mSpinnerRentabilityType.getSelectedItemPosition();
-
             ContentValues fixedCV = new ContentValues();
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, 0);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, 0);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, buyTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.BUY);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRODUCT_TYPE, fixedTypeId);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_RENTABILITY_TYPE, fixedTypeRentabilityId);
 
             // Adds to the database
             Uri insertedFixedTransactionUri = mContext.getContentResolver().insert(PortfolioContract
@@ -147,7 +114,6 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             if (insertedFixedTransactionUri != null) {
                 Log.d(LOG_TAG, "Added fixed transaction " + inputSymbol);
                 // Updates each fixed income table with new value: Income, Data, FixedPortfolio, CompletePortfolio
-                updateFixedIncomes(inputSymbol, timestamp);
                 boolean updateFixedData = updateFixedData(inputSymbol, inputObjective, Constants
                         .Type.BUY);
                 if (updateFixedData) {

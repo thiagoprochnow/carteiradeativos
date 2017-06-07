@@ -74,14 +74,9 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA_BULK_UPDATE_WITH_CURRENT,
                 Constants.Provider.FIXED_DATA_BULK_UPDATE_FOR_CURRENT);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_DATA_WITH_SYMBOL, Constants.Provider.FIXED_DATA_WITH_SYMBOL);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FIXED_DATA, Constants.Provider.SOLD_FIXED_DATA);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_FIXED_DATA_WITH_SYMBOL, Constants.Provider.SOLD_FIXED_DATA_WITH_SYMBOL);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION, Constants.Provider.FIXED_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION_WITH_SYMBOL,
                 Constants.Provider.FIXED_TRANSACTION_FOR_SYMBOL);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_INCOME, Constants.Provider.FIXED_INCOME);
-        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_INCOME_WITH_SYMBOL,
-                Constants.Provider.FIXED_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -367,17 +362,6 @@ public class PortfolioProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case Constants.Provider.SOLD_FIXED_DATA:
-                returnCursor = db.query(
-                        PortfolioContract.SoldFixedData.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
             // Returns all fiis information possessed by user
             case Constants.Provider.FIXED_TRANSACTION:
                 returnCursor = db.query(
@@ -397,30 +381,6 @@ public class PortfolioProvider extends ContentProvider {
                         projection,
                         PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ?",
                         new String[]{PortfolioContract.FixedTransaction.getFixedTransactionFromUri(uri)},
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-
-            case Constants.Provider.FIXED_INCOME:
-                returnCursor = db.query(
-                        PortfolioContract.FixedIncome.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-
-            case Constants.Provider.FIXED_INCOME_FOR_SYMBOL:
-                returnCursor = db.query(
-                        PortfolioContract.FixedIncome.TABLE_NAME,
-                        projection,
-                        PortfolioContract.FixedIncome.COLUMN_SYMBOL + " = ?",
-                        new String[]{PortfolioContract.FixedIncome.getFixedIncomeFromUri(uri)},
                         null,
                         null,
                         sortOrder
@@ -670,19 +630,6 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
 
-            case Constants.Provider.SOLD_FIXED_DATA:
-                _id = db.insert(
-                        PortfolioContract.SoldFixedData.TABLE_NAME,
-                        null,
-                        values
-                );
-                if(_id > 0) {
-                    returnUri = PortfolioContract.SoldFixedData.buildDataUri(_id);
-                }else{
-                    throw new UnsupportedOperationException("Unknown URI:" + uri);
-                }
-                break;
-
             case Constants.Provider.FIXED_TRANSACTION:
                 _id = db.insert(
                         PortfolioContract.FixedTransaction.TABLE_NAME,
@@ -695,15 +642,6 @@ public class PortfolioProvider extends ContentProvider {
                 }else{
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }
-                break;
-
-            case Constants.Provider.FIXED_INCOME:
-                db.insert(
-                        PortfolioContract.FixedIncome.TABLE_NAME,
-                        null,
-                        values
-                );
-                returnUri = PortfolioContract.FixedIncome.URI;
                 break;
 
             default:
@@ -855,22 +793,6 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
-            case Constants.Provider.SOLD_FIXED_DATA_WITH_SYMBOL:
-                symbol = PortfolioContract.SoldFixedData.getSoldFixedDataFromUri(uri);
-                rowsDeleted = db.delete(
-                        PortfolioContract.SoldFixedData.TABLE_NAME,
-                        '"' + symbol + '"' + " =" + PortfolioContract.SoldFixedData.COLUMN_SYMBOL,
-                        selectionArgs
-                );
-                break;
-
-            case Constants.Provider.SOLD_FIXED_DATA:
-                rowsDeleted = db.delete(
-                        PortfolioContract.SoldFixedData.TABLE_NAME,
-                        selection,
-                        selectionArgs
-                );
-                break;
             case Constants.Provider.FIXED_TRANSACTION:
                 rowsDeleted = db.delete(
                         PortfolioContract.FixedTransaction.TABLE_NAME,
@@ -885,24 +807,6 @@ public class PortfolioProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         PortfolioContract.FixedTransaction.TABLE_NAME,
                         '"' + symbol + '"' + " =" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL,
-                        selectionArgs
-                );
-                break;
-
-            case Constants.Provider.FIXED_INCOME:
-                rowsDeleted = db.delete(
-                        PortfolioContract.FixedIncome.TABLE_NAME,
-                        selection,
-                        selectionArgs
-                );
-                break;
-
-            case Constants.Provider.FIXED_INCOME_FOR_SYMBOL:
-                // TODO: Needs to change, otherwise it will always delete all incomes of that fixed income symbol
-                symbol = PortfolioContract.FixedIncome.getFixedIncomeFromUri(uri);
-                rowsDeleted = db.delete(
-                        PortfolioContract.FixedIncome.TABLE_NAME,
-                        '"' + symbol + '"' + " =" + PortfolioContract.FixedIncome.COLUMN_SYMBOL,
                         selectionArgs
                 );
                 break;
@@ -1071,12 +975,6 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
-            case Constants.Provider.SOLD_FIXED_DATA:
-                rowsUpdated = db.update(PortfolioContract.SoldFixedData.TABLE_NAME, values,
-                        selection,
-                        selectionArgs);
-                break;
-
             case Constants.Provider.FIXED_DATA_BULK_UPDATE:
                 rowsUpdated = this.bulkFixedUpdade(values);
                 break;
@@ -1094,12 +992,6 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.FIXED_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.FixedTransaction.TABLE_NAME, values,
-                        selection,
-                        selectionArgs);
-                break;
-
-            case Constants.Provider.FIXED_INCOME:
-                rowsUpdated = db.update(PortfolioContract.FixedIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
@@ -1424,16 +1316,11 @@ public class PortfolioProvider extends ContentProvider {
                     currentTotal = Double.parseDouble(contValues.get(key).toString());
                     totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .FixedData.COLUMN_BUY_VALUE_TOTAL));
-                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
-                            (PortfolioContract.FixedData.COLUMN_INCOME));
                     variation = currentTotal - totalBuy;
-                    totalGain = currentTotal + incomeTotal - totalBuy;
+                    totalGain = currentTotal - totalBuy;
 
                     ContentValues fixedCV = new ContentValues();
-                    fixedCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_PRICE,
-                            contValues.get(key).toString());
                     fixedCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL, currentTotal);
-                    fixedCV.put(PortfolioContract.FixedData.COLUMN_VARIATION, variation);
                     fixedCV.put(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN, totalGain);
 
                     returnCount += this.update(

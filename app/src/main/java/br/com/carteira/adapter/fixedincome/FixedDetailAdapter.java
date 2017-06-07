@@ -75,36 +75,21 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_SYMBOL));
 
                     Cursor dataCursor = getDataCursor(symbol);
-                    Cursor soldDataCursor = getSoldDataCursor(symbol);
 
-                    double soldTotal = 0;
                     double gainTotal = 0;
                     double buyTotal = 0;
-                    double quantity = 0;
-
-                    // Check if there is any sold fixeds first and add values
-                    if (soldDataCursor.getCount() > 0){
-                        soldDataCursor.moveToFirst();
-                        soldTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL)));
-                        buyTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL)));
-                        gainTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_SELL_GAIN)));
-                        quantity = soldDataCursor.getInt(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldFixedData.COLUMN_QUANTITY_TOTAL)));
-                    }
+                    double soldTotal = 0;
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
                         // Buy total is the sum of fixed income in data portfolio and already sold ones
-                        buyTotal += dataCursor.getDouble(
+                        buyTotal = dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL)));
-                        quantity += dataCursor.getInt(
-                                (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_QUANTITY_TOTAL)));
+                        soldTotal = dataCursor.getDouble(
+                                (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL)));
                         // Gain total is sum of gain from variation and sold fixed income
-                        gainTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_VARIATION)));
+                        gainTotal = dataCursor.getDouble(
+                                (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN)));
 
                         if (gainTotal >= 0){
                             viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -116,9 +101,9 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         viewOverviewHolder.currentTotal.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL)))));
-                        viewOverviewHolder.mediumTotal.setText(formatter.format(buyTotal));
-                        viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
+                        viewOverviewHolder.buyTotal.setText(formatter.format(buyTotal));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
+                        viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
                     } else{
                         Log.d(LOG_TAG, "No Fixed Data found for symbol: " + symbol);
                     }
@@ -133,20 +118,10 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_QUANTITY));
-                double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_PRICE));
-                // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
-                if (price > 0) {
-                    String totalValue = formatter.format(price * quantity);
-                    String priceText = formatter.format(price);
-                    viewHolder.price.setText(priceText);
-                    viewHolder.totalValue.setText(totalValue);
-                }
-                String quantityText = String.valueOf(quantity);
-
-                viewHolder.transactionType.setText(type);
+                String totalValue = formatter.format(mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL)));
+                viewHolder.totalValue.setText(totalValue);
                 viewHolder.transactionDate.setText(date);
-                viewHolder.quantity.setText(quantityText);
+                viewHolder.transactionType.setText(type);
         }
     }
 
@@ -172,12 +147,6 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @BindView(R.id.transactionDate)
         TextView transactionDate;
-
-        @BindView(R.id.quantity)
-        TextView quantity;
-
-        @BindView(R.id.price)
-        TextView price;
 
         @BindView(R.id.totalValue)
         TextView totalValue;
@@ -205,8 +174,8 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.mediumTotal)
-        TextView mediumTotal;
+        @BindView(R.id.buyTotal)
+        TextView buyTotal;
 
         @BindView(R.id.soldTotal)
         TextView soldTotal;
@@ -250,17 +219,6 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
                 PortfolioContract.FixedData.URI,
-                null, selection, selectionArguments, null);
-    }
-
-    private Cursor getSoldDataCursor(String symbol){
-        String selection = PortfolioContract.SoldFixedData.COLUMN_SYMBOL + " = ? ";
-        String[] selectionArguments = {symbol};
-
-        // Searches for existing FixedData to update value.
-        // If dosent exists, creates new one
-        return mContext.getContentResolver().query(
-                PortfolioContract.SoldFixedData.URI,
                 null, selection, selectionArguments, null);
     }
 }

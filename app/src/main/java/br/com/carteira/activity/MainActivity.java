@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
                 break;
+            case R.id.nav_item_treasury:
+                Log.d(LOG_TAG, "Loaded Treasury Fragment from menu");
+                break;
             case R.id.nav_item_fixed_income:
                 Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
                 replaceFragment(new FixedTabFragment());

@@ -8,9 +8,7 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.fragment.fixedincome.FixedDataFragment;
-import br.com.carteira.fragment.fixedincome.FixedIncomesMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedOverviewFragment;
-import br.com.carteira.fragment.fixedincome.SoldFixedDataFragment;
 
 
 public class FixedTabAdapter extends FragmentPagerAdapter {
@@ -23,7 +21,7 @@ public class FixedTabAdapter extends FragmentPagerAdapter {
     }
     @Override
     public int getCount(){
-        return 4;
+        return 2;
     }
 
     @Override
@@ -31,12 +29,8 @@ public class FixedTabAdapter extends FragmentPagerAdapter {
         if(position == 0){
             return mContext.getString(R.string.fixed_overview);
         }
-         else if(position == 1){
-            return mContext.getString(R.string.fixed_portfolio);
-        } else if(position == 2){
-            return mContext.getString(R.string.fixed_history);
-        }
-        return mContext.getString(R.string.fixed_incomes);
+
+        return mContext.getString(R.string.fixed_portfolio);
     }
 
     @Override
@@ -45,15 +39,9 @@ public class FixedTabAdapter extends FragmentPagerAdapter {
             Log.d(LOG_TAG, "Loading FixedOverviewFragment()");
             return new FixedOverviewFragment();
         }
-        else if (position == 1){
+        else {
             Log.d(LOG_TAG, "Loading FixedDataFragment()");
             return new FixedDataFragment();
-        } else if (position == 2) {
-            Log.d(LOG_TAG, "Loading SoldFixedDataFragment()");
-            return new SoldFixedDataFragment();
-        } else {
-            Log.d(LOG_TAG, "Loading FixedIncomesMainFragment()");
-            return new FixedIncomesMainFragment();
         }
     }
 }

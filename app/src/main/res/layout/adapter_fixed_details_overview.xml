@@ -121,7 +121,7 @@
                     android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
-                    android:id="@+id/mediumTotal"
+                    android:id="@+id/buyTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="R$150,00"

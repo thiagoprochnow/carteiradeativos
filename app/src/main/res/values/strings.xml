@@ -139,7 +139,7 @@
 
     <!-- Fii Tab Adapter -->
     <string name="fixed_overview">Overview</string>
-    <string name="fixed_portfolio">Portfolio</string>
+    <string name="fixed_portfolio">Aplications</string>
     <string name="fixed_history">History</string>
     <string name="fixed_incomes">Incomes</string>
 
@@ -151,6 +151,7 @@
     <string name="operation">Operation</string>
     <string name="stock_quantity_label">Quantity: </string>
     <string name="data_bought_label"><u>B</u></string>
+    <string name="data_sold_label"><u>S</u></string>
     <string name="data_current_label"><u>C</u></string>
     <string name="data_appreciation_label"><u>A</u></string>
     <string name="data_income_label"><u>I</u></string>
@@ -170,9 +171,10 @@
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantity: </string>
 
-    <!-- Stock Summary -->
+    <!-- Summary -->
     <string name="summary_bought_label"><u>B</u>ought</string>
     <string name="summary_current_label"><u>C</u>urrent</string>
+    <string name="summary_sold_label"><u>S</u>old</string>
     <string name="summary_appreciation_label"><u>A</u>ppreciation</string>
     <string name="summary_income_label"><u>I</u>ncome</string>
     <string name="summary_total_gain_label"><u>G</u>ain</string>
@@ -289,7 +291,7 @@
     <string name="fixed_type">Type of the fixed income</string>
     <string name="fixed_rentability_type">Rentability type of the fixed income</string>
     <string name="fixed_symbol">Type the label of the fixed income</string>
-    <string name="fixed_symbol_hint">Ex: LTN 2017</string>
+    <string name="fixed_symbol_hint">Ex: CDB Santander 1</string>
     <string name="fixed_type_treasury">Treasury</string>
     <string name="fixed_type_cdb">CDB</string>
     <string name="fixed_type_lci">LCI</string>

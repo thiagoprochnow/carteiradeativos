@@ -223,7 +223,7 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.mediumTotal)
+        @BindView(R.id.buyTotal)
         TextView mediumTotal;
 
         @BindView(R.id.soldTotal)

@@ -76,26 +76,12 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 // If it is one of the FixedData adapter views
                 mCursor.moveToPosition(position-1);
                 FixedDataViewHolder viewHolder = (FixedDataViewHolder) holder;
-                double fixedAppreciation = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FixedData.COLUMN_VARIATION));
-                double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FixedData.COLUMN_INCOME));
-                double totalGain = fixedAppreciation + totalIncome;
+                double totalGain = mCursor.getDouble(
+                        mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN));
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
                 // Set text colors according to positive or negative values
-                if (fixedAppreciation >= 0){
-                    viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
-
-                if (totalIncome >= 0){
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
 
                 if (totalGain >= 0){
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -103,21 +89,21 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
                 double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL));
+                double sellTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL));
                 // Get handled values of FixedData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .FixedData.
                         COLUMN_SYMBOL)));
+                viewHolder.soldTotal.setText(String.format(formatter.format(sellTotal)));
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT))) + "%");
 
-                viewHolder.fixedAppreciation.setText(String.format(formatter.format(fixedAppreciation)));
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT)))
                         + "%");
-                viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 if(position == mCursor.getCount()){
                     // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
@@ -161,6 +147,9 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @BindView(R.id.symbol)
         TextView symbol;
 
+        @BindView(R.id.soldTotal)
+        TextView soldTotal;
+
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
 
@@ -170,14 +159,8 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @BindView(R.id.objectivePercent)
         TextView objectivePercent;
 
-        @BindView(R.id.fixedAppreciation)
-        TextView fixedAppreciation;
-
         @BindView(R.id.currentPercent)
         TextView currentPercent;
-
-        @BindView(R.id.totalIncome)
-        TextView totalIncome;
 
         @BindView(R.id.totalGain)
         TextView totalGain;

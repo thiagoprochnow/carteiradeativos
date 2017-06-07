@@ -217,54 +217,24 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_fixed_data = "CREATE TABLE " + PortfolioContract.FixedData.TABLE_NAME + " (" +
                 PortfolioContract.FixedData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.FixedData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.FixedData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
                 PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
-                PortfolioContract.FixedData.COLUMN_INCOME + " REAL, " +
-                PortfolioContract.FixedData.COLUMN_INCOME_TAX + " REAL, " +
-                PortfolioContract.FixedData.COLUMN_VARIATION + " REAL, " +
+                PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.FixedData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FixedData.COLUMN_NET_GAIN + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT + " REAL, " +
-                PortfolioContract.FixedData.COLUMN_MEDIUM_PRICE + " REAL, " +
-                PortfolioContract.FixedData.COLUMN_CURRENT_PRICE + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_STATUS + " INTEGER, " +
                 "UNIQUE (" + PortfolioContract.FixedData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
-        String builder_sold_fixed_data = "CREATE TABLE " + PortfolioContract.SoldFixedData.TABLE_NAME + " (" +
-                PortfolioContract.SoldFixedData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.SoldFixedData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.SoldFixedData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
-                PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
-                PortfolioContract.SoldFixedData.COLUMN_SELL_GAIN + " REAL, " +
-                PortfolioContract.SoldFixedData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
-                PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL + " REAL, " +
-                "UNIQUE (" + PortfolioContract.SoldFixedData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
-
         String builder_fixed_transaction = "CREATE TABLE " + PortfolioContract.FixedTransaction.TABLE_NAME + " (" +
                 PortfolioContract.FixedTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.FixedTransaction.COLUMN_QUANTITY + " INTEGER, " +
-                PortfolioContract.FixedTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_TOTAL + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.FixedTransaction.COLUMN_TYPE + " INTEGER, " +
-                PortfolioContract.FixedTransaction.COLUMN_PRODUCT_TYPE + " INTEGER, " +
-                PortfolioContract.FixedTransaction.COLUMN_RENTABILITY_TYPE + " INTEGER, " +
                 " FOREIGN KEY (" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + ") REFERENCES "
-                + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
-
-        String builder_fixed_income = "CREATE TABLE " + PortfolioContract.FixedIncome.TABLE_NAME + " (" +
-                PortfolioContract.FixedIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.FixedIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.FixedIncome.COLUMN_TYPE + " INTEGER NOT NULL, " +
-                PortfolioContract.FixedIncome.COLUMN_PER_FIXED + " REAL, " +
-                PortfolioContract.FixedIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
-                PortfolioContract.FixedIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
-                PortfolioContract.FixedIncome.COLUMN_TAX + " REAL, " +
-                PortfolioContract.FixedIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
-                PortfolioContract.FixedIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
-                " FOREIGN KEY (" + PortfolioContract.FixedIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
 
         db.execSQL(builder_portfolio);
@@ -284,9 +254,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_currency_transaction);
         db.execSQL(builder_fixed_portfolio);
         db.execSQL(builder_fixed_data);
-        db.execSQL(builder_sold_fixed_data);
         db.execSQL(builder_fixed_transaction);
-        db.execSQL(builder_fixed_income);
 
     }
 
@@ -311,9 +279,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyTransaction.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedPortfolio.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldFixedData.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedIncome.TABLE_NAME);
         onCreate(db);
     }
 }

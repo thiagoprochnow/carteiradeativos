@@ -138,7 +138,7 @@
 
     <!-- Fixed Tab Adapter -->
     <string name="fixed_overview">Visão Geral</string>
-    <string name="fixed_portfolio">Carteira</string>
+    <string name="fixed_portfolio">Aplicações</string>
     <string name="fixed_history">Histórico</string>
     <string name="fixed_incomes">Rendimentos</string>
 
@@ -150,6 +150,7 @@
     <string name="operation">Operação</string>
     <string name="stock_quantity_label">Quantidade: </string>
     <string name="data_bought_label"><u>C</u></string>
+    <string name="data_sold_label"><u>V</u></string>
     <string name="data_current_label"><u>A</u></string>
     <string name="data_appreciation_label"><u>V</u></string>
     <string name="data_income_label"><u>R</u></string>
@@ -169,16 +170,17 @@
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantidade: </string>
 
-    <!-- Stock Summary -->
+    <!-- Summary -->
     <string name="summary_bought_label"><u>C</u>ompra</string>
     <string name="summary_current_label"><u>A</u>tual</string>
     <string name="summary_appreciation_label"><u>V</u>alorização</string>
+    <string name="summary_sold_label"><u>V</u>endido</string>
     <string name="summary_income_label"><u>R</u>endimentos</string>
     <string name="summary_total_gain_label"><u>G</u>anho</string>
 
     <!-- Stock Portolfio -->
     <string name="stock_portfolio_label">Carteira de Ações</string>
-    <string name="portfolio_bought_label">Compra</string>
+    <string name="portfolio_bought_label">Comprado</string>
     <string name="portfolio_current_label">Atual</string>
     <string name="portfolio_sold_label">Vendido</string>
     <string name="portfolio_appreciation_label">Valorização</string>
@@ -216,7 +218,7 @@
     <string name="details_current">Atual</string>
     <string name="details_sold">Média Venda</string>
     <string name="details_medium_price">Média Compra</string>
-    <string name="details_sold_fixed">Venda</string>
+    <string name="details_sold_fixed">Vendido</string>
     <string name="details_buy_fixed">Compra</string>
     <string name="details_gain">Ganho</string>
     <string name="details_price">Preço</string>
@@ -288,7 +290,7 @@
     <string name="fixed_type">Tipo de Renda Fixa</string>
     <string name="fixed_rentability_type">Tipo de rentabilidade da Renda Fixa</string>
     <string name="fixed_symbol">Nomenclatura para sua Renda Fixa</string>
-    <string name="fixed_symbol_hint">Ex: LTN 2017</string>
+    <string name="fixed_symbol_hint">Ex: CDB Santander 1</string>
     <string name="fixed_type_treasury">Tesouro</string>
     <string name="fixed_type_cdb">CDB</string>
     <string name="fixed_type_lci">LCI</string>

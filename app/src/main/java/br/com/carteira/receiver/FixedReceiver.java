@@ -29,56 +29,32 @@ public class FixedReceiver extends BroadcastReceiver {
 
         double buyTotal = 0;
         double totalGain = 0;
-        double variationTotal = 0;
         double sellTotal = 0;
-        // Return column should be the sum of buy total, sell total, sell gain
-        String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldFixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.SoldFixedData.COLUMN_SELL_TOTAL +"), " +
-                "sum("+PortfolioContract.SoldFixedData.COLUMN_SELL_GAIN +")"};
-
-        Cursor queryCursor = mContext.getContentResolver().query(
-                PortfolioContract.SoldFixedData.URI,
-                soldAffectedColumn, null, null, null);
-
-        // Adds the value of the already sold fixed income to the portfolio
-        if (queryCursor.getCount() > 0){
-            queryCursor.moveToFirst();
-            buyTotal = queryCursor.getDouble(0);
-            sellTotal = queryCursor.getDouble(1);
-            variationTotal = queryCursor.getDouble(2);
-            totalGain = queryCursor.getDouble(2);
-        }
 
         // Return column should be the sum of value total, income total, value gain
-        String[] affectedColumn = {"sum("+ PortfolioContract.FixedData.COLUMN_VARIATION +"), " +
-                "sum("+ PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
-                "sum("+ PortfolioContract.FixedData.COLUMN_INCOME +"), " +
+        String[] affectedColumn = {"sum("+ PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL +"), " +
-                "sum("+PortfolioContract.FixedData.COLUMN_TOTAL_GAIN +")"};
+                "sum("+PortfolioContract.FixedData.COLUMN_TOTAL_GAIN +"), " +
+                "sum("+PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL +")"};
 
         // Check if the symbol exists in the db
-        queryCursor = mContext.getContentResolver().query(
+        Cursor queryCursor = mContext.getContentResolver().query(
                 PortfolioContract.FixedData.URI,
                 affectedColumn, null, null, null);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            variationTotal += queryCursor.getDouble(0);
-            buyTotal += queryCursor.getDouble(1);
-            double incomeTotal = queryCursor.getDouble(2);
-            mCurrentTotal += queryCursor.getDouble(3);
-            totalGain += queryCursor.getDouble(4);
-            double variationPercent = variationTotal/buyTotal*100;
-            double incomePercent = incomeTotal/buyTotal*100;
+            buyTotal += queryCursor.getDouble(0);
+            mCurrentTotal += queryCursor.getDouble(1);
+            totalGain += queryCursor.getDouble(2);
+            sellTotal += queryCursor.getDouble(3);
             double totalGainPercent = totalGain/buyTotal*100;
 
             // Values to be inserted or updated on FixedPortfolio table
             ContentValues portfolioCV = new ContentValues();
-            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_VARIATION_TOTAL, variationTotal);
             portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_BUY_TOTAL, buyTotal);
-            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
-            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
             portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_TOTAL_GAIN, totalGain);
             portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
+            portfolioCV.put(PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
 
             // Query for the only fixed portfolio, if dosent exist, creates one
             Cursor portfolioQueryCursor = mContext.getContentResolver().query(

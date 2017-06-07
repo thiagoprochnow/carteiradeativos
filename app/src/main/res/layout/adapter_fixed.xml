@@ -117,17 +117,12 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/data_sold_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/data_bought_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_appreciation_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_income_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
@@ -156,31 +151,21 @@
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
+                        android:id="@+id/soldTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$3345,62"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/boughtTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/fixedAppreciation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$1000,00"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalIncome"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$150,00"
                         android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>

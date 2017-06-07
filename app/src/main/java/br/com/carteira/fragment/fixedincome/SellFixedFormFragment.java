@@ -94,8 +94,6 @@ public class SellFixedFormFragment extends BaseFormFragment {
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_QUANTITY, 0);
-            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_PRICE, 0);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, sellTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.SELL);
@@ -107,7 +105,6 @@ public class SellFixedFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedFixedTransactionUri != null) {
                 // Rescan incomes tables to check if added fixed income changed their receive values.
-                updateFixedIncomes(inputSymbol, timestamp);
                 boolean updateFixedData = updateFixedData(inputSymbol, -1, Constants.Type.SELL);
                 if (updateFixedData){
                     Toast.makeText(mContext, R.string.sell_fixed_success, Toast.LENGTH_LONG).show();

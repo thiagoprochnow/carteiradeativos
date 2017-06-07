@@ -61,30 +61,12 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 FixedOverviewViewHolder viewHolder = (FixedOverviewViewHolder) holder;
                 mCursor.moveToPosition(position);
 
-                double totalAppreciation = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FixedPortfolio.COLUMN_VARIATION_TOTAL));
-                double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FixedPortfolio.COLUMN_INCOME_TOTAL));
-                double totalGain = totalAppreciation + totalIncome;
+                double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.FixedPortfolio.COLUMN_TOTAL_GAIN));
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
                 // Set text colors according to positive or negative values
-                if (totalAppreciation >= 0){
-                    viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.fixedAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.fixedAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.fixedAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
-
-                if (totalIncome >= 0){
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
 
                 if (totalGain >= 0){
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -95,19 +77,13 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedPortfolio.COLUMN_BUY_TOTAL));
-                double fixedAppreciationPercent = totalAppreciation/buyTotal*100;
                 double totalGainPercent = totalGain/buyTotal*100;
-                double incomePercent = totalIncome/buyTotal*100;
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL)))));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedPortfolio.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.fixedAppreciation.setText(String.format(formatter.format(totalAppreciation)));
-                viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-                viewHolder.fixedAppreciationPercent.setText("(" + String.format("%.2f", fixedAppreciationPercent) + "%)");
-                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", incomePercent) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
             default:
@@ -137,20 +113,8 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.fixedAppreciation)
-        TextView fixedAppreciation;
-
-        @BindView(R.id.totalIncome)
-        TextView totalIncome;
-
         @BindView(R.id.totalGain)
         TextView totalGain;
-
-        @BindView(R.id.fixedAppreciationPercent)
-        TextView fixedAppreciationPercent;
-
-        @BindView(R.id.totalIncomePercent)
-        TextView totalIncomePercent;
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;

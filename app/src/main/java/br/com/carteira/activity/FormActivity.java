@@ -17,7 +17,6 @@ import br.com.carteira.fragment.fii.FiiIncomeFormFragment;
 import br.com.carteira.fragment.fii.SellFiiFormFragment;
 import br.com.carteira.fragment.fixedincome.BuyFixedFormFragment;
 import br.com.carteira.fragment.fixedincome.EditFixedFormFragment;
-import br.com.carteira.fragment.fixedincome.FixedIncomeFormFragment;
 import br.com.carteira.fragment.fixedincome.SellFixedFormFragment;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
@@ -137,10 +136,6 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.FII:
                     Log.d(LOG_TAG, "FII Form Fragment");
                     replaceFragment(new FiiIncomeFormFragment());
-                    break;
-                case Constants.IncomeType.FIXED:
-                    Log.d(LOG_TAG, "Fixed Form Fragment");
-                    replaceFragment(new FixedIncomeFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

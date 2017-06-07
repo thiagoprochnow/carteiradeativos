@@ -223,7 +223,7 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.mediumTotal)
+        @BindView(R.id.buyTotal)
         TextView mediumTotal;
 
         @BindView(R.id.soldTotal)

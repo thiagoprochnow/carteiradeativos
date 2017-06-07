@@ -223,7 +223,7 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.mediumTotal)
+        @BindView(R.id.buyTotal)
         TextView mediumTotal;
 
         @BindView(R.id.soldTotal)

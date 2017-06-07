@@ -71,14 +71,13 @@ public final class Constants {
     // FixedIncome Types
     public static class FixedType{
         public static final int INVALID = -1;
-        public static final int TREASURY = 0;
-        public static final int CDB = 1;
-        public static final int LCI = 2;
-        public static final int LCA = 3;
-        public static final int DEBENTURE = 4;
-        public static final int LC = 5;
-        public static final int CRI = 6;
-        public static final int CRA = 7;
+        public static final int CDB = 0;
+        public static final int LCI = 1;
+        public static final int LCA = 2;
+        public static final int DEBENTURE = 3;
+        public static final int LC = 4;
+        public static final int CRI = 5;
+        public static final int CRA = 6;
     }
 
     // FixedIncome Types

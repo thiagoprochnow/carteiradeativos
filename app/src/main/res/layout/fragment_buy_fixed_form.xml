@@ -14,32 +14,6 @@
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/fixed_type"/>
-
-        <Spinner
-            android:id="@+id/fixedTypeSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-
-        <TextView
-            android:fontFamily="sans-serif-light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/fixed_rentability_type"/>
-
-        <Spinner
-            android:id="@+id/fixedRentabilityTypeSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-
-        <TextView
-            android:fontFamily="sans-serif-light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/fixed_symbol"/>
 
         <EditText
@@ -48,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/fixed_symbol_hint"
-            android:maxLength="10"/>
+            android:maxLength="20"/>
 
         <TextView
             android:fontFamily="sans-serif-light"
