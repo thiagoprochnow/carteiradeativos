@@ -85,11 +85,14 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (totalGain >= 0){
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
                 } else {
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
                 double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL));
                 double sellTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL));
+                double totalGainPercent = totalGain/buyTotal*100;
                 // Get handled values of FixedData with current symbol
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .FixedData.
@@ -100,7 +103,7 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT))) + "%");
-
+                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT)))
                         + "%");
@@ -164,6 +167,9 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.totalGain)
         TextView totalGain;
+
+        @BindView(R.id.totalGainPercent)
+        TextView totalGainPercent;
 
         public FixedDataViewHolder(View itemView) {
             super(itemView);

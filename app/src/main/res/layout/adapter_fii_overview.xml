@@ -103,8 +103,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/currentTotal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$3345,62"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -112,8 +112,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/soldTotal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$3345,62"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -121,8 +121,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/boughtTotal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$2345,62"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -130,8 +130,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/fiiAppreciation"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$1000,00"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -139,8 +139,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/totalIncome"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$150,00"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -148,8 +148,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/totalGain"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="R$1150,00"
                         android:gravity="right"
                         android:ellipsize="end"
@@ -162,30 +162,30 @@
                     android:layout_marginLeft="@dimen/fii_percentage_text_margin">
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/fiiAppreciationPercent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="0,0%"
                         android:ellipsize="end"
@@ -193,8 +193,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/totalIncomePercent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="0,0%"
                         android:ellipsize="end"
@@ -202,8 +202,8 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/totalGainPercent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="0,0%"
                         android:ellipsize="end"

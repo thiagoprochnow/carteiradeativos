@@ -219,7 +219,7 @@
     <string name="details_sold">Média Venda</string>
     <string name="details_medium_price">Média Compra</string>
     <string name="details_sold_fixed">Vendido</string>
-    <string name="details_buy_fixed">Compra</string>
+    <string name="details_buy_fixed">Comprado</string>
     <string name="details_gain">Ganho</string>
     <string name="details_price">Preço</string>
     <string name="details_total">Total</string>

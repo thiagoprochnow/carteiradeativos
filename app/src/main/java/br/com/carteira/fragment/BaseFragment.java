@@ -1933,7 +1933,6 @@ public abstract class BaseFragment extends Fragment {
                     null, selection, selectionArguments, null);
 
             double currentTotal = 0;
-            double variation = 0;
             // Create new FixedData for this symbol
             if (queryDataCursor.getCount() == 0){
                 // Current total will be the same as buyTotal at first
@@ -1956,7 +1955,6 @@ public abstract class BaseFragment extends Fragment {
                 // If not, FixedDetailsOverview will not update current total and total gain, unless refreshing the View
                 queryDataCursor.moveToFirst();
                 currentTotal = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL));
-                variation = currentTotal - buyTotal;
             }
 
             // Subtract sold value from currentTotal if is selling fixed income

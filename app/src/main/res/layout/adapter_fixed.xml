@@ -180,6 +180,42 @@
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalGainPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(0,0%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
