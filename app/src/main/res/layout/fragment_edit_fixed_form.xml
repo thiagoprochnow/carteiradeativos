@@ -22,7 +22,7 @@
             android:id="@+id/inputCurrentTotal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="5"
+            android:maxLength="30"
             android:inputType="numberDecimal"/>
 
         <TextView
