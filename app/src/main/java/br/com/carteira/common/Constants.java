@@ -28,6 +28,16 @@ public final class Constants {
         public static final int DELETE_TRANSACION = 6;
     }
 
+    // Value id for the clicked item in the data adapters
+    public static class AdapterClickable{
+        public static final int INVALID = -1;
+        public static final int MAIN = 0;
+        public static final int ADD = 1;
+        public static final int EDIT = 2;
+        public static final int SELL = 3;
+        public static final int DELETE = 4;
+    }
+
     // This should contains all product types in the portfolio
     public static class ProductType {
         public static final int INVALID = -1;
@@ -109,8 +119,6 @@ public final class Constants {
         public static final int CURRENCY_DETAILS = 13;
 
         public static final int FIXED_DATA = 14;
-        public static final int SOLD_FIXED_DATA = 15;
-        public static final int FIXED_INCOME = 16;
         public static final int FIXED_OVERVIEW = 17;
         public static final int FIXED_DETAILS = 18;
     }
@@ -164,9 +172,6 @@ public final class Constants {
         public static final int CURRENCY_TRANSACTION = 3400;
         public static final int CURRENCY_TRANSACTION_FOR_SYMBOL = 3401;
 
-        public static final int CURRENCY_INCOME = 3500;
-        public static final int CURRENCY_INCOME_FOR_SYMBOL = 3501;
-
         public static final int FIXED_PORTFOLIO = 4100;
 
         public static final int FIXED_DATA = 4200;
@@ -174,13 +179,7 @@ public final class Constants {
         public static final int FIXED_DATA_BULK_UPDATE = 4202;
         public static final int FIXED_DATA_BULK_UPDATE_FOR_CURRENT = 4203;
 
-        public static final int SOLD_FIXED_DATA = 4300;
-        public static final int SOLD_FIXED_DATA_WITH_SYMBOL = 4301;
-
         public static final int FIXED_TRANSACTION = 4400;
         public static final int FIXED_TRANSACTION_FOR_SYMBOL = 4401;
-
-        public static final int FIXED_INCOME = 4500;
-        public static final int FIXED_INCOME_FOR_SYMBOL = 4501;
     }
 }

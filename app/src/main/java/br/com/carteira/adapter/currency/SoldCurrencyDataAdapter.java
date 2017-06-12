@@ -8,12 +8,15 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +46,7 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
     }
 
     @Override
-    public void onBindViewHolder(CurrencyPortfolioViewHolder holder, int position) {
+    public void onBindViewHolder(CurrencyPortfolioViewHolder holder, final int position) {
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
@@ -73,6 +76,51 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
                 mCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL)))));
         holder.sellGain.setText(String.format(formatter.format(sellGain)));
         holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
+
+        holder.currencyCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.MAIN);
+            }
+        });
+
+        holder.menuAdd.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
+            }
+        });
+
+        holder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+            }
+        });
+
+        holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.SELL);
+            }
+        });
+
+        holder.menuDelete.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.DELETE);
+            }
+        });
     }
 
     @Override
@@ -86,12 +134,10 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
 
 
     public interface CurrencyAdapterOnClickHandler {
-        void onClick(String symbol);
-        void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String symbol);
+        void onClick(String symbol, int id);
     }
 
-    class CurrencyPortfolioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    class CurrencyPortfolioViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.symbol)
         TextView symbol;
@@ -111,28 +157,24 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
         @BindView(R.id.sellGainPercent)
         TextView sellGainPercent;
 
+        @BindView(R.id.currencyCardViewClickable)
+        LinearLayout currencyCardViewClickable;
+
+        @BindView(R.id.menuAdd)
+        ImageView menuAdd;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
+
+        @BindView(R.id.menuSell)
+        ImageView menuSell;
+
+        @BindView(R.id.menuDelete)
+        ImageView menuDelete;
 
         CurrencyPortfolioViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL);
-            mClickHandler.onClick(mCursor.getString(symbolColumn));
-        }
-
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo){
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL);
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(symbolColumn));
         }
     }
 }

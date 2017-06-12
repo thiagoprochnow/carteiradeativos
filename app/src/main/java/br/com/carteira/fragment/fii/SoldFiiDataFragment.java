@@ -109,41 +109,25 @@ public class SoldFiiDataFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(String symbol) {
-        // Launch details activity for clicked fii
-        Log.d(LOG_TAG, ": "+symbol);
-        mFormProductListener.onProductDetails(Constants.ProductType.FII, symbol);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                             ContextMenu.ContextMenuInfo menuInfo, String symbol){
-        MenuInflater inflater = getActivity().getMenuInflater();
-        this.symbol = symbol;
-        inflater.inflate(R.menu.sold_fii_item_menu, menu);
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-
-            case R.id.sold_menu_item_buy:
+    public void onClick(final String symbol, int id) {
+        switch (id){
+            case Constants.AdapterClickable.MAIN:
+                // Launch details activity for clicked fii
+                mFormProductListener.onProductDetails(Constants.ProductType.FII, symbol);
+                break;
+            case Constants.AdapterClickable.ADD:
                 // This will call the FormActivity with the correct form fragment
                 mFormProductListener.onBuyProduct(Constants.ProductType.FII, symbol);
                 break;
-
-            case R.id.sold_menu_item_edit:
+            case Constants.AdapterClickable.EDIT:
                 mFormProductListener.onEditProduct(Constants.ProductType.FII, symbol);
                 break;
-
-            case R.id.sold_menu_item_sell:
+            case Constants.AdapterClickable.SELL:
                 // This will call the FormActivity with the correct form fragment
                 mFormProductListener.onSellProduct(Constants.ProductType.FII, symbol);
                 break;
-
-            case R.id.sold_menu_item_delete:
-                // Show Dialog for user confirmation to delete FII from database
+            case Constants.AdapterClickable.DELETE:
+                // Show Dialog for user confirmation to delete fii from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(R.string.delete_fii_title);
 
@@ -162,8 +146,9 @@ public class SoldFiiDataFragment extends BaseFragment implements
                         });
                 builder.create().show();
                 break;
+            default:
+                Log.d(LOG_TAG, "Invalid id for onClick");
         }
-        return super.onContextItemSelected(item);
     }
 
     @Override

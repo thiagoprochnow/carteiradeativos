@@ -23,200 +23,241 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/header_title"
-            android:paddingTop="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="3dp">
-            <TextView
-                android:fontFamily="sans-serif-light"
-                android:id="@+id/symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DUMY4"
-                android:textColor="@color/white"
-                android:textAllCaps="true"
-                android:textSize="@dimen/fixed_symbol" />
-        </LinearLayout>
-
+        android:orientation="vertical"
+        android:paddingBottom="5dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp">
-
+            android:orientation="vertical"
+            android:id="@+id/fixedCardViewClickable">
             <LinearLayout
-                android:layout_width="@dimen/stock_symbol_info_size"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/currentPercentImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/current_small"
-                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/currentPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/stock_percentage_text_margin"
-                        android:textSize="@dimen/stock_price"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/objectivePercentImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/objective_small"
-                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/objectivePercent"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/stock_price"
-                        android:layout_marginLeft="@dimen/stock_percentage_text_margin" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="@dimen/letters_text_width"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/letters_text_margin">
+                android:orientation="horizontal"
+                android:background="@color/header_title"
+                android:paddingTop="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="3dp">
                 <TextView
                     android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
+                    android:id="@+id/symbol"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_current_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_sold_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_bought_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/data_total_gain_label" />
+                    android:text="DUMY4"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fixed_symbol" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:gravity="right">
+                android:paddingTop="3dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp">
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/stock_symbol_info_size"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/stock_percentage_text_margin">
+
+                        <ImageView
+                            android:id="@+id/currentPercentImage"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/current_small"
+                            android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
+
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/currentPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/stock_percentage_text_margin"
+                            android:textSize="@dimen/stock_price"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/stock_percentage_text_margin">
+
+                        <ImageView
+                            android:id="@+id/objectivePercentImage"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/objective_small"
+                            android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
+
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/objectivePercent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/stock_price"
+                            android:layout_marginLeft="@dimen/stock_percentage_text_margin" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/letters_text_width"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/stock_values_margin">
+                    android:layout_marginLeft="@dimen/letters_text_margin">
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/currentTotal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$3345,62"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:text="@string/data_current_label" />
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/soldTotal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$3345,62"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:text="@string/data_sold_label" />
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/boughtTotal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$1.345,62"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:text="@string/data_bought_label" />
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalGain"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$1150,00"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:text="@string/data_total_gain_label" />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/stock_percentage_text_margin">
-                    <TextView
-                        android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="right">
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/stock_values_margin">
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/currentTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="R$3345,62"
+                            android:textSize="@dimen/stock_price"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/soldTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="R$3345,62"
+                            android:textSize="@dimen/stock_price"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/boughtTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="R$1.345,62"
+                            android:textSize="@dimen/stock_price"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/totalGain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:text="R$1150,00"
+                            android:textSize="@dimen/stock_price"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalGainPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="(0,0%)"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                        <TextView
+                            android:fontFamily="sans-serif-light"
+                            android:id="@+id/totalGainPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:text="(0,0%)"
+                            android:ellipsize="end"
+                            android:maxLines="1"/>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+            <View android:background="@color/darkGray"
+                android:layout_width = "match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:gravity="right">
+
+            <ImageView
+                android:id="@+id/menuAdd"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/add_icon_small"
+                android:layout_marginRight="9dp"/>
+            <ImageView
+                android:id="@+id/menuSell"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/sell_icon_small"
+                android:layout_marginRight="10dp"/>
+            <ImageView
+                android:id="@+id/menuEdit"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@drawable/edit_icon_small"
+                android:layout_marginRight="8dp"/>
+            <ImageView
+                android:id="@+id/menuDelete"
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:src="@drawable/delete_icon_small"
+                android:layout_marginRight="10dp"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

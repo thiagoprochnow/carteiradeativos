@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.currency.CurrencyDetailsFragment;
 import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.fixedincome.FixedDetailsFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
@@ -48,6 +49,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 case Constants.ProductType.FIXED:
                     // TODO: replaceFragment(new FiiIncomesFragment());
                     replaceFragment(new FixedDetailsFragment());
+                    break;
+                case Constants.ProductType.CURRENCY:
+                    // TODO: replaceFragment(new FiiIncomesFragment());
+                    replaceFragment(new CurrencyDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

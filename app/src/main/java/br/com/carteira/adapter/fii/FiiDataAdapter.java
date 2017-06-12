@@ -10,12 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import br.com.carteira.R;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +61,7 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         switch (holder.getItemViewType()) {
             case 0:
                 FiiSummaryViewHolder summaryViewHolder = (FiiSummaryViewHolder) holder;
@@ -145,6 +148,51 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
                     viewHolder.fiiCardView.setLayoutParams(params);
                 }
+
+                viewHolder.fiiCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position-1);
+                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
+                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.MAIN);
+                    }
+                });
+
+                viewHolder.menuAdd.setOnClickListener(new ImageView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position-1);
+                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
+                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
+                    }
+                });
+
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position-1);
+                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
+                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                    }
+                });
+
+                viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position-1);
+                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
+                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.SELL);
+                    }
+                });
+
+                viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position-1);
+                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
+                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.DELETE);
+                    }
+                });
         }
 
     }
@@ -161,12 +209,10 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public interface FiiAdapterOnClickHandler {
-        void onClick(String symbol);
-        void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String symbol);
+        void onClick(String symbol, int id);
     }
 
-    class FiiDataViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+    class FiiDataViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.fii_card_view)
         CardView fiiCardView;
@@ -207,27 +253,24 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;
 
+        @BindView(R.id.fiiCardViewClickable)
+        LinearLayout fiiCardViewClickable;
+
+        @BindView(R.id.menuAdd)
+        ImageView menuAdd;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
+
+        @BindView(R.id.menuSell)
+        ImageView menuSell;
+
+        @BindView(R.id.menuDelete)
+        ImageView menuDelete;
+
         public FiiDataViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition-1);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
-            mClickHandler.onClick(mCursor.getString(symbolColumn));
-        }
-
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo){
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition-1);
-            int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(symbolColumn));
         }
     }
 
