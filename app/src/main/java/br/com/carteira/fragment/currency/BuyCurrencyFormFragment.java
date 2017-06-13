@@ -45,7 +45,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
     private Spinner mInputSymbolView;
     private EditText mInputQuantityView;
     private EditText mInputBuyPriceView;
-    private EditText mInputObjectiveView;
     private EditText mInputDateView;
 
     @Override
@@ -69,7 +68,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
         mInputSymbolView = (Spinner) mView.findViewById(R.id.inputSymbolSpinner);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
-        mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
@@ -94,7 +92,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
         mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
 
         // Adding input filters
-        mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterPercentage("0", "100")});
         mInputBuyPriceView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
@@ -105,16 +102,14 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
         // Validate for each inputted value
         boolean isValidQuantity = isValidInt(mInputQuantityView);
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
-        boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the currency
-        if (isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate && !isFutureDate) {
+        if (isValidQuantity && isValidBuyPrice&& !isFutureDate) {
             String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
-            double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -138,7 +133,7 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
                 Log.d(LOG_TAG, "Added currency transaction " + inputSymbol);
                 // Updates each currency table with new value: Income, Data, CurrencyPortfolio, CompletePortfolio
                // updateCurrencyIncomes(inputSymbol, timestamp);
-                boolean updateCurrencyData = updateCurrencyData(inputSymbol, inputObjective, Constants
+                boolean updateCurrencyData = updateCurrencyData(inputSymbol, Constants
                         .Type.BUY);
                 if (updateCurrencyData) {
                     Toast.makeText(mContext, R.string.buy_currency_success, Toast.LENGTH_LONG).show();
@@ -154,9 +149,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyPrice){
                 mInputBuyPriceView.setError(this.getString(R.string.wrong_price));
-            }
-            if(!isValidObjective){
-                mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

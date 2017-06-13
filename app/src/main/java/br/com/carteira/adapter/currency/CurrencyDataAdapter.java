@@ -121,8 +121,6 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_OBJECTIVE_PERCENT))) + "%");
 
                 viewHolder.currencyAppreciation.setText(String.format(formatter.format(currencyAppreciation)));
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
@@ -210,9 +208,6 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
-
-        @BindView(R.id.objectivePercent)
-        TextView objectivePercent;
 
         @BindView(R.id.currencyAppreciation)
         TextView currencyAppreciation;

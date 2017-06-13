@@ -403,7 +403,7 @@ public abstract class BaseFragment extends Fragment {
 
         if (deletedResult > 0){
             // Update Currency data and Currency income for that symbol
-            updateCurrencyData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+            updateCurrencyData(symbol, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -1243,7 +1243,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the CurrencyTransaction entries and calculates value for CurrencyData table for this symbol
-    public boolean updateCurrencyData(String symbol, double objective, int type){
+    public boolean updateCurrencyData(String symbol, int type){
 
         String selection = PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -1341,9 +1341,6 @@ public abstract class BaseFragment extends Fragment {
 
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if (type == Constants.Type.BUY) {
-                currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
             if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
                 currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL, currentTotal);
                 currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_VARIATION, variation);

@@ -132,7 +132,7 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedCurrencyTransactionUri != null) {
                 // Rescan incomes tables to check if added Currency changed their receive values.
-                boolean updateCurrencyData = updateCurrencyData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateCurrencyData = updateCurrencyData(inputSymbol, Constants.Type.SELL);
                 if (updateCurrencyData){
                     Toast.makeText(mContext, R.string.sell_currency_success, Toast.LENGTH_LONG).show();
                     return true;

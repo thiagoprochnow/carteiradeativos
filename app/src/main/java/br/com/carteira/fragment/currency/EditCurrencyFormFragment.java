@@ -25,7 +25,6 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
     private static final String LOG_TAG = EditCurrencyFormFragment.class.getSimpleName();
     private View mView;
     private String mSymbol;
-    private EditText mInputObjectiveView;
     private EditText mInputCurrentPriceView;
 
     @Override
@@ -45,7 +44,6 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_edit_currency_form, container, false);
-        mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputCurrentPriceView = (EditText) mView.findViewById(R.id.inputCurrentPrice);
 
         // Gets symbol received from selected CardView on intent
@@ -53,38 +51,18 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
         mSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         getActivity().setTitle(mSymbol
         );
-        // Adding input filters
-        mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
-    // Validate inputted values and edit the Currency objective on the portfolio
+    // Validate inputted values
     private boolean updateCurrency() {
 
         // Validate for each inputted value
-        boolean isValidObjective = isValidDouble(mInputObjectiveView);
         boolean isValidCurrentPrice = isValidDouble(mInputCurrentPriceView);
 
-        // If all validations pass, try to update the Currency objective
-        if (isValidObjective || isValidCurrentPrice) {
-            boolean isEmptyObjective = TextUtils.isEmpty(mInputObjectiveView.getText().toString());
+        if (isValidCurrentPrice) {
             boolean isEmptyCurrentPrice = TextUtils.isEmpty(mInputCurrentPriceView.getText().toString());
 
-            ContentValues currencyCV = new ContentValues();
-
-            // Update objective
-            int updatedRows = 0;
-            if (!isEmptyObjective) {
-                double objective = Double.parseDouble(mInputObjectiveView.getText().toString());
-                currencyCV.put(PortfolioContract.CurrencyData.COLUMN_OBJECTIVE_PERCENT, objective);
-                String updateSelection = PortfolioContract.CurrencyData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {mSymbol};
-
-                // Update objective on Currency data table
-                updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.CurrencyData.URI,
-                        currencyCV, updateSelection, updatedSelectionArguments);
-            }
             // Update current price
             int updatedCurrentRows = 0;
             if (!isEmptyCurrentPrice){
@@ -103,20 +81,15 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
             }
 
             // If error occurs to add, shows error message
-            if (updatedRows > 0 || updatedCurrentRows > 0) {
+            if ( updatedCurrentRows > 0) {
                 Toast.makeText(mContext, R.string.currency_update_success, Toast.LENGTH_LONG).show();
                 return true;
             }
             Toast.makeText(mContext, R.string.currency_update_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
-            if (TextUtils.isEmpty(mInputObjectiveView.getText().toString()) &&
-                    TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
+            if (TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
                 return true;
-            }
-            // If validation fails, show validation error message
-            if(!isValidObjective && !TextUtils.isEmpty(mInputObjectiveView.getText().toString())){
-                mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
             if(!isValidCurrentPrice && !TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
                 mInputCurrentPriceView.setError(this.getString(R.string.wrong_current_price));
