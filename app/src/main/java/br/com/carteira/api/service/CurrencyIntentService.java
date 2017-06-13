@@ -4,6 +4,7 @@ package br.com.carteira.api.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.TaskParams;
@@ -11,6 +12,7 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 
 import br.com.carteira.api.domain.ResponseCurrency;
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.domain.Currency;
 import retrofit2.Call;
@@ -129,5 +131,12 @@ public class CurrencyIntentService extends IntentService {
             }
         }
         return resultQuery;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
     }
 }
