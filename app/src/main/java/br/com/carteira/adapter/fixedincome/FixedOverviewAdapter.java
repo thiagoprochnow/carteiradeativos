@@ -77,7 +77,10 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedPortfolio.COLUMN_BUY_TOTAL));
-                double totalGainPercent = totalGain/buyTotal*100;
+                double totalGainPercent = 0;
+                if (buyTotal != 0 ) {
+                    totalGainPercent = totalGain / buyTotal * 100;
+                }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL)))));

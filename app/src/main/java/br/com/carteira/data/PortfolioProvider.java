@@ -811,6 +811,50 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.CURRENCY_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.CurrencyData.getCurrencyDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.CurrencyData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.CurrencyData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_CURRENCY_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.SoldCurrencyData.getSoldCurrencyDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldCurrencyData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_CURRENCY_DATA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldCurrencyData.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+            case Constants.Provider.CURRENCY_TRANSACTION:
+                rowsDeleted = db.delete(
+                        PortfolioContract.CurrencyTransaction.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.CURRENCY_TRANSACTION_FOR_SYMBOL:
+                symbol = PortfolioContract.CurrencyTransaction.getCurrencyTransactionFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.CurrencyTransaction.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1060,6 +1104,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.FixedTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.CURRENCY_TRANSACTION:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.CurrencyTransaction.TABLE_NAME,
                                 null,
                                 value
                         );

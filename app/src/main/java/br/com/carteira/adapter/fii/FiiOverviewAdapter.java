@@ -95,9 +95,14 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FiiPortfolio.COLUMN_BUY_TOTAL));
-                double fiiAppreciationPercent = totalAppreciation/buyTotal*100;
-                double totalGainPercent = totalGain/buyTotal*100;
-                double incomePercent = totalIncome/buyTotal*100;
+                double fiiAppreciationPercent = 0;
+                double totalGainPercent = 0;
+                double incomePercent = 0;
+                if(buyTotal != 0) {
+                    fiiAppreciationPercent = totalAppreciation / buyTotal * 100;
+                    totalGainPercent = totalGain / buyTotal * 100;
+                    incomePercent = totalIncome / buyTotal * 100;
+                }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FiiPortfolio.COLUMN_SOLD_TOTAL)))));
