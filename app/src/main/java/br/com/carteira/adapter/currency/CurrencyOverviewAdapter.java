@@ -63,8 +63,6 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 double totalAppreciation = mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.CurrencyPortfolio.COLUMN_VARIATION_TOTAL));
-              //  double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-             //           (PortfolioContract.CurrencyPortfolio.COLUMN_INCOME_TOTAL));
                 double totalGain = totalAppreciation;
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
@@ -78,14 +76,6 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     viewHolder.currencyAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
 
-               /* if (totalIncome >= 0){
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }*/
-
                 if (totalGain >= 0){
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -95,19 +85,22 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.CurrencyPortfolio.COLUMN_BUY_TOTAL));
-                double currencyAppreciationPercent = totalAppreciation/buyTotal*100;
-                double totalGainPercent = totalGain/buyTotal*100;
-                //double incomePercent = totalIncome/buyTotal*100;
+
+                double currencyAppreciationPercent = 0;
+                double totalGainPercent = 0;
+                if (buyTotal != 0) {
+                    currencyAppreciationPercent = totalAppreciation / buyTotal * 100;
+                    totalGainPercent = totalGain / buyTotal * 100;
+                }
+
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.CurrencyPortfolio.COLUMN_SOLD_TOTAL)))));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.CurrencyPortfolio.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.currencyAppreciation.setText(String.format(formatter.format(totalAppreciation)));
-               // viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 viewHolder.currencyAppreciationPercent.setText("(" + String.format("%.2f", currencyAppreciationPercent) + "%)");
-               // viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", incomePercent) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
             default:
@@ -140,17 +133,11 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         @BindView(R.id.currencyAppreciation)
         TextView currencyAppreciation;
 
-        @BindView(R.id.totalIncome)
-        TextView totalIncome;
-
         @BindView(R.id.totalGain)
         TextView totalGain;
 
         @BindView(R.id.currencyAppreciationPercent)
         TextView currencyAppreciationPercent;
-
-        @BindView(R.id.totalIncomePercent)
-        TextView totalIncomePercent;
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;
