@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.CurrencyIntentService;
+import br.com.carteira.api.service.FiiIntentService;
 import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
@@ -41,6 +43,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
     protected DrawerLayout mDrawerLayout;
 
+    boolean mStockReceiver = false;
+    boolean mFiiReceiver = false;
+    boolean mCurrencyReceiver = false;
+
     private Menu mMenu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,14 +62,59 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             replaceFragment(new PortfolioMainFragment());
         }
 
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        BroadcastReceiver receiverStock = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // Ends progress bar on menu when portfolio is updated
-                mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                if (mCurrencyReceiver && mFiiReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mStockReceiver = true;
+                }
             }
         };
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverStock, new IntentFilter(Constants.Receiver.STOCK));
+
+        BroadcastReceiver receiverFii = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mCurrencyReceiver && mStockReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mFiiReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFii, new IntentFilter(Constants.Receiver.FII));
+
+        BroadcastReceiver receiverCurrency = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mFiiReceiver && mStockReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mCurrencyReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrency, new IntentFilter(Constants.Receiver.CURRENCY));
     }
 
 
@@ -352,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     // Refresh the portfolio by getting the values from their respective services and updating on the tables
     public void refreshPortfolio(){
 
+        //Stock Refresh
         Intent mStockServiceIntent = new Intent(this, StockIntentService
                 .class);
 
@@ -379,7 +431,69 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             startService(mStockServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely
-            mMenu.findItem(R.id.menu_refresh).setActionView(null);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        }
+
+        //Fii Refresh
+        Intent mFiiServiceIntent = new Intent(this, FiiIntentService
+                .class);
+
+        String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.FiiData.URI, affectedColumn2,
+                null, null, null);
+
+        // For each symbol found on FiiData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            startService(mFiiServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+        }
+
+        //Currency Refresh
+        Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
+                .class);
+
+        String[] affectedColumn3 = {PortfolioContract.CurrencyData.COLUMN_SYMBOL};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.CurrencyData.URI, affectedColumn3,
+                null, null, null);
+
+        // For each symbol found on CurrencyData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
+            startService(mCurrencyServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
         }
     }
 
