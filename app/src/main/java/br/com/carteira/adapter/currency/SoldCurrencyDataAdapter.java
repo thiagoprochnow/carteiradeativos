@@ -3,11 +3,13 @@ package br.com.carteira.adapter.currency;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,6 +79,22 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
         holder.sellGain.setText(String.format(formatter.format(sellGain)));
         holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
 
+        if(position == mCursor.getCount()-1){
+            // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            int leftDp = 10; // margin in dips
+            int topDp = 10; // margin in dips
+            int rightDp = 10; // margin in dips
+            int bottomDp = 85; // margin in dips
+            float d = mContext.getResources().getDisplayMetrics().density;
+            int leftMargin = (int)(leftDp * d); // margin in pixels
+            int topMargin = (int)(topDp * d); // margin in pixels
+            int rightMargin = (int)(rightDp * d); // margin in pixels
+            int bottomMargin = (int)(bottomDp * d); // margin in pixels
+            params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+            holder.currencyCardView.setLayoutParams(params);
+        }
+
         holder.currencyCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -138,6 +156,9 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
     }
 
     class CurrencyPortfolioViewHolder extends RecyclerView.ViewHolder{
+
+        @BindView(R.id.currency_card_view)
+        CardView currencyCardView;
 
         @BindView(R.id.symbol)
         TextView symbol;

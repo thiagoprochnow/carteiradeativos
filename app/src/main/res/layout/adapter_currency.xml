@@ -160,11 +160,6 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_income_label" />
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/data_total_gain_label" />
             </LinearLayout>
             <LinearLayout
@@ -209,16 +204,6 @@
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalIncome"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:text="R$150,00"
-                        android:textSize="@dimen/stock_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
                         android:id="@+id/totalGain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -256,15 +241,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:text="(158,53%)"
-                        android:ellipsize="end"
-                        android:maxLines="1"/>
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/totalIncomePercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:text="(0,0%)"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView

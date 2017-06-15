@@ -38,8 +38,10 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
     HashMap<String, String> currencyMap = new HashMap<String, String>() {{
         put("Dollar","USD");
         put("Euro","EUR");
+        put("Bitcoin","BTC");
         put("USD", "Dollar");
         put("EUR","Euro");
+        put("BTC","Bitcoin");
     }};
 
     private Spinner mInputSymbolView;

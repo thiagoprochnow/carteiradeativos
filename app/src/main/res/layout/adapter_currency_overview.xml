@@ -116,7 +116,7 @@
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/boughtTotal"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="R$2345,62"
                         android:gravity="right"

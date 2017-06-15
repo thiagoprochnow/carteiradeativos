@@ -3,5 +3,6 @@
     <string-array name="currency_array">
         <item>Dollar</item>
         <item>Euro</item>
+        <item>Bitcoin</item>
     </string-array>
 </resources>

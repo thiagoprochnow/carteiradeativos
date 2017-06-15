@@ -48,12 +48,6 @@
             android:gravity="center" />
         <TextView
             android:fontFamily="sans-serif-light"
-            android:layout_width="85dp"
-            android:layout_height="wrap_content"
-            android:text="@string/summary_income_label"
-            android:gravity="center" />
-        <TextView
-            android:fontFamily="sans-serif-light"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="@string/summary_total_gain_label"

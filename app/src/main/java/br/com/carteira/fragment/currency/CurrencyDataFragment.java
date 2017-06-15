@@ -50,6 +50,18 @@ public class CurrencyDataFragment extends BaseFragment implements
 
     private String symbol;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mCurrencyDataAdapter = new CurrencyDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mCurrencyDataAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.CURRENCY_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.CURRENCY_DATA, null, this);
+    }
+
     // TODO: Precisamos ver uma maneira de otimizar o onAttach. Não vamos colocar em todos XMainFragment
     // Tem que ter um jeito de ficar apenas no BaseFragment
     public void onAttach(Context context) {

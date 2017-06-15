@@ -13,10 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,10 +42,22 @@ public class SoldCurrencyDataFragment extends BaseFragment implements
     @BindView(R.id.empty_list_text)
     protected TextView mEmptyListTextView;
 
-    private SoldCurrencyDataAdapter mCurrencyPortfolioAdapter;
+    private SoldCurrencyDataAdapter mSoldCurrencyAdapter;
     private ProductListener mFormProductListener;
 
     private String symbol;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Clears old adapter and recreates it
+        // This is important because of issue that bottom margin of last item was not cleared
+        // when a new item was inserted, then we had last view and the one before with altered bottom margin
+        mSoldCurrencyAdapter = new SoldCurrencyDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mSoldCurrencyAdapter);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.SOLD_CURRENCY_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_CURRENCY_DATA, null, this);
+    }
 
     // TODO: Precisamos ver uma maneira de otimizar o onAttach. Não vamos colocar em todos XMainFragment
     // Tem que ter um jeito de ficar apenas no BaseFragment
@@ -88,8 +97,8 @@ public class SoldCurrencyDataFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.CURRENCY, "");
             }
         });
-        mCurrencyPortfolioAdapter = new SoldCurrencyDataAdapter(mContext, this);
-        mRecyclerView.setAdapter(mCurrencyPortfolioAdapter);
+        mSoldCurrencyAdapter = new SoldCurrencyDataAdapter(mContext, this);
+        mRecyclerView.setAdapter(mSoldCurrencyAdapter);
         registerForContextMenu(mRecyclerView);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.SOLD_CURRENCY_DATA, null, this);
         // Inflate the layout for this fragment
@@ -160,11 +169,11 @@ public class SoldCurrencyDataFragment extends BaseFragment implements
             }
         }
 
-        mCurrencyPortfolioAdapter.setCursor(data);
+        mSoldCurrencyAdapter.setCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mCurrencyPortfolioAdapter.setCursor(null);
+        mSoldCurrencyAdapter.setCursor(null);
     }
 }
