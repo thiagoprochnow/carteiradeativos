@@ -102,7 +102,7 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
     private boolean addCurrency() {
 
         // Validate for each inputted value
-        boolean isValidQuantity = isValidInt(mInputQuantityView);
+        boolean isValidQuantity = isValidDouble(mInputQuantityView);
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
@@ -110,7 +110,7 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
         // If all validations pass, try to add the currency
         if (isValidQuantity && isValidBuyPrice&& !isFutureDate) {
             String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();

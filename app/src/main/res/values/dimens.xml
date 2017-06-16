@@ -68,7 +68,7 @@
     <dimen name="stock_transaction_type">16dp</dimen>
     <dimen name="stock_detail_quantity_marginLeft">15dp</dimen>
     <dimen name="stock_detail">15dp</dimen>
-    <dimen name="stock_detail_width1">130dp</dimen>
+    <dimen name="stock_detail_width1">115dp</dimen>
     <dimen name="stock_detail_width2">80dp</dimen>
 
     <!-- Fii Incomes Adapter -->
@@ -83,14 +83,14 @@
     <dimen name="fii_transaction_type">16dp</dimen>
     <dimen name="fii_detail_quantity_marginLeft">15dp</dimen>
     <dimen name="fii_detail">15dp</dimen>
-    <dimen name="fii_detail_width1">130dp</dimen>
+    <dimen name="fii_detail_width1">115dp</dimen>
     <dimen name="fii_detail_width2">80dp</dimen>
 
     <!-- Currency Details Adapter -->
     <dimen name="currency_transaction_type">16dp</dimen>
     <dimen name="currency_detail_quantity_marginLeft">15dp</dimen>
     <dimen name="currency_detail">15dp</dimen>
-    <dimen name="currency_detail_width1">130dp</dimen>
+    <dimen name="currency_detail_width1">115dp</dimen>
     <dimen name="currency_detail_width2">80dp</dimen>
 
     <!-- Fixed Income Incomes Adapter -->

@@ -170,7 +170,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_currency_data = "CREATE TABLE " + PortfolioContract.CurrencyData.TABLE_NAME + " (" +
                 PortfolioContract.CurrencyData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.CurrencyData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL + " REAL, " +
                 PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.CurrencyData.COLUMN_VARIATION + " REAL, " +
                 PortfolioContract.CurrencyData.COLUMN_TOTAL_GAIN + " REAL, " +
@@ -185,7 +185,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_sold_currency_data = "CREATE TABLE " + PortfolioContract.SoldCurrencyData.TABLE_NAME + " (" +
                 PortfolioContract.SoldCurrencyData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL + " REAL, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
@@ -195,7 +195,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_currency_transaction = "CREATE TABLE " + PortfolioContract.CurrencyTransaction.TABLE_NAME + " (" +
                 PortfolioContract.CurrencyTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY + " REAL, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_TYPE + " INTEGER, " +

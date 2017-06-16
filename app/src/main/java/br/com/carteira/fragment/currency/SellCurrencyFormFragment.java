@@ -111,7 +111,7 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
         // If all validations pass, try to sell the Currency
         if (isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
             String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();

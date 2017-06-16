@@ -48,21 +48,11 @@
                     android:orientation="horizontal">
                     <TextView
                         android:fontFamily="sans-serif-light"
-                        android:id="@+id/operationLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/operation"
-                        android:textSize="@dimen/stock_detail"
-                        android:ellipsize="end"
-                        android:maxLines="1" />
-                    <TextView
-                        android:fontFamily="sans-serif-light"
                         android:id="@+id/quantity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="100"
                         android:textSize="@dimen/stock_detail"
-                        android:layout_marginLeft="@dimen/stock_detail_quantity_marginLeft"
                         android:ellipsize="end"
                         android:maxLines="1" />
                 </LinearLayout>

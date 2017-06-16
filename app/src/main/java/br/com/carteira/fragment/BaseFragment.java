@@ -592,9 +592,18 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
         // TODO
         Editable editableQuantity = editQuantity.getText();
-        int quantity = 0;
-        if (!editableQuantity.toString().isEmpty()) {
-            quantity = Integer.parseInt(editableQuantity.toString());
+        double quantity = 0;
+        int quantity2 = 0;
+        if (type == Constants.ProductType.CURRENCY){
+            quantity = 0;
+            if (!editableQuantity.toString().isEmpty()) {
+                quantity = Double.parseDouble(editableQuantity.toString());
+            }
+        } else {
+            quantity2 = 0;
+            if (!editableQuantity.toString().isEmpty()) {
+                quantity2 = Integer.parseInt(editableQuantity.toString());
+            }
         }
         String symbol = editSymbol.getText().toString();
 
@@ -615,7 +624,7 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
                         .StockData.COLUMN_QUANTITY_TOTAL));
-                if (boughtQuantity >= quantity) {
+                if (boughtQuantity >= quantity2) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
                 } else {
@@ -637,7 +646,7 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
                         .FiiData.COLUMN_QUANTITY_TOTAL));
-                if (boughtQuantity >= quantity) {
+                if (boughtQuantity >= quantity2) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
                 } else {
@@ -657,7 +666,7 @@ public abstract class BaseFragment extends Fragment {
             // Gets data quantity to see if bought quantity is enough
             if (queryCursor.getCount() > 0) {
                 queryCursor.moveToFirst();
-                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                double boughtQuantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .CurrencyData.COLUMN_QUANTITY_TOTAL));
                 if (boughtQuantity >= quantity) {
                     // Bought quantity is bigger then quantity trying to sell
@@ -1256,7 +1265,7 @@ public abstract class BaseFragment extends Fragment {
         if(STQueryCursor.getCount() > 0){
             STQueryCursor.moveToFirst();
             // Final values to be inserted in CurrencyData
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             double buyValue = 0;
             // Buy quantity and total is to calculate correct medium buy price
             // Medium price is only for buys
@@ -1278,17 +1287,17 @@ public abstract class BaseFragment extends Fragment {
                 // Does correct operation to values depending on Transaction type
                 switch (currentType){
                     case Constants.Type.BUY:
-                        buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
-                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
-                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        buyQuantity += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        buyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         mediumPrice = buyTotal/buyQuantity;
                         break;
                     case Constants.Type.SELL:
-                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        quantityTotal -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
                         buyValue = quantityTotal*mediumPrice;
                         // Add the value sold times the current medium buy price
-                        soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        soldBuyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
                     default:
                         Log.d(LOG_TAG, "currentType Unknown");
@@ -1404,7 +1413,7 @@ public abstract class BaseFragment extends Fragment {
         if(STQueryCursor.getCount() > 0){
             STQueryCursor.moveToFirst();
             // Final values to be inserted in CurrencyData
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             double soldTotal = 0;
             double sellMediumPrice = 0;
             int currentType;
@@ -1415,8 +1424,8 @@ public abstract class BaseFragment extends Fragment {
                 // Does correct operation to values depending on Transaction type
                 switch (currentType){
                     case Constants.Type.SELL:
-                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
-                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         sellMediumPrice = soldTotal/quantityTotal;
                         break;
                     default:

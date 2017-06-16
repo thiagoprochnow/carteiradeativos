@@ -107,7 +107,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .CurrencyData.
                         COLUMN_SYMBOL)));
-                viewHolder.currencyQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
+                viewHolder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
