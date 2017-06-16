@@ -9,8 +9,10 @@
     <string name="stock_update_fail">Stock update failed</string>
     <string name="fii_update_success">Fii updated successfuly</string>
     <string name="fixed_update_success">Fixed income updated successfuly</string>
+    <string name="treasury_update_success">Treasury updated successfuly</string>
     <string name="fii_update_fail">Fii update failed</string>
     <string name="fixed_update_fail">Fixed income update failed</string>
+    <string name="treasury_update_fail">Treasury update failed</string>
     <string name="currency_update_success">Currency updated successfuly</string>
     <string name="currency_update_fail">Currency update failed</string>
     <string name="form_title_buy">Buy</string>
@@ -20,6 +22,7 @@
     <string name="form_title_jcp">Interest on Capital</string>
     <string name="form_title_fii_income">Income</string>
     <string name="form_title_fixed_income">Income</string>
+    <string name="form_title_treasury_income">Income</string>
     <string name="form_title_bonification">Bonification</string>
     <string name="form_title_split">Split</string>
     <string name="form_title_grouping">Grouping</string>
@@ -31,11 +34,13 @@
     <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>
     <string name="fixed_current_total">Fixed income current total</string>
+    <string name="treasury_current_price">Treasury Current Price</string>
     <string name="currency_current_price">Currency current price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
     <string name="stock_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="fii_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="currency_edit_tip">*Leave any field empty to not edit it.</string>
+    <string name="treasury_edit_tip">*Leave any field empty to not edit it.</string>
     <string name="buy_date">Buy Date</string>
     <string name="bonification_date">Bonification Date</string>
     <string name="split_date">Stock Split Date</string>
@@ -46,15 +51,18 @@
     <string name="ex_date">Ex Dividend Date</string>
     <string name="ex_date_jcp">Ex Interest on Capital Date</string>
     <string name="ex_date_fii_income">Ex Income Date</string>
+    <string name="ex_date_treasury_income">Ex Income Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
+    <string name="wrong_treasury_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
     <string name="wrong_currency_code">Invalid Currency code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_stock_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
     <string name="wrong_fii_sell_quantity">Quantity should be a number and need to have enough fii bought</string>
     <string name="wrong_fixed_sell_quantity">Quantity should be a number and need to have enough fixed income bought</string>
     <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
+    <string name="wrong_treasury_sell_quantity">Quantity should be a number and need to have enough treasury bought</string>
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_total">Total should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
@@ -66,6 +74,7 @@
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="wrong_income_per_fii">Wrong value received per fii</string>
     <string name="wrong_income_per_fixed">Wrong value received per fixed income</string>
+    <string name="wrong_income_per_treasury">Wrong value received per treasury</string>
     <string name="menu_done">Done</string>
 
     <!-- Details Fragment -->
@@ -120,6 +129,15 @@
     <string name="delete_fixed_title">Delete fixed income from your portfolio?</string>
     <string name="delete_fixed_dialog">If you sold the fixed income, select "Sell" from the option menu. Deleting the fixed income will remove all its data, including all income received.</string>
 
+    <!-- Treasury Main Fragment -->
+    <string name="buy_treasury_success">Treasury added successfully</string>
+    <string name="buy_treasury_fail">Error adding Treasury</string>
+    <string name="sell_treasury_success">Treasury sold successfully</string>
+    <string name="sell_treasury_fail">Error selling treasury</string>
+    <string name="delete_treasury_title">Delete treasury from your portfolio?</string>
+    <string name="delete_treasury_dialog">If you sold the Treasury, select "Sell" from the option menu. Deleting the Treasury will remove all its data, including all income received.</string>
+
+
     <!-- Stock Tab Adapter -->
     <string name="stocks_overview">Overview</string>
     <string name="stocks_portfolio">Portfolio</string>
@@ -137,11 +155,17 @@
     <string name="fii_history">History</string>
     <string name="fii_incomes">Incomes</string>
 
-    <!-- Fii Tab Adapter -->
+    <!-- Fixed Tab Adapter -->
     <string name="fixed_overview">Overview</string>
     <string name="fixed_portfolio">Aplications</string>
     <string name="fixed_history">History</string>
     <string name="fixed_incomes">Incomes</string>
+
+    <!-- Treasury Tab Adapter -->
+    <string name="treasury_overview">Overview</string>
+    <string name="treasury_portfolio">Portfolio</string>
+    <string name="treasury_history">History</string>
+    <string name="treasury_incomes">Incomes</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -171,6 +195,9 @@
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantity: </string>
 
+    <!-- Treasury Adapter -->
+    <string name="treasury_quantity_label">Quantity: </string>
+
     <!-- Summary -->
     <string name="summary_bought_label"><u>B</u>ought</string>
     <string name="summary_current_label"><u>C</u>urrent</string>
@@ -197,12 +224,16 @@
     <!-- Fixed Portolfio -->
     <string name="fixed_portfolio_label">Fixed Income Portfolio</string>
 
+    <!-- Treasury Portolfio -->
+    <string name="treasury_portfolio_label">Treasury Portfolio</string>
+
     <!-- Income Adapter -->
     <string name="income_overview_label">Overview</string>
     <string name="dividend_income_type">Dividend</string>
     <string name="jcp_income_type">Interest on Capital</string>
     <string name="fii_income_type">Income</string>
     <string name="fixed_income_type">Income</string>
+    <string name="treasury_income_type">Income</string>
     <string name="income_overview_bought_label">Bought</string>
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>
@@ -238,6 +269,7 @@
     <string name="income_per_stock">Received per Stock</string>
     <string name="income_per_fii">Received per quote</string>
     <string name="income_per_fixed">Received per fixed income</string>
+    <string name="income_per_treasury">Received per quote</string>
     <string name="gross_income">Gross Income</string>
     <string name="tax_income">Paid Tax</string>
     <string name="net_income">Net Income</string>
@@ -253,14 +285,17 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
     <string name="receive_value_fixed">Received Value per Fixed Income</string>
+    <string name="receive_value_treasury">Received Value per Treasury</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
     <string name="add_jcp_success">Interest on capital added successfully</string>
     <string name="add_jcp_fail">Error adding interest on capital</string>
     <string name="add_fii_income_success">Income added successfully</string>
     <string name="add_fixed_income_success">Income added successfully</string>
+    <string name="add_treasury_income_success">Income added successfully</string>
     <string name="add_fii_income_fail">Error adding income</string>
     <string name="add_fixed_income_fail">Error adding income</string>
+    <string name="add_treasury_income_fail">Error adding income</string>
 
     <!-- Currency Main Fragment -->
     <string name="add_currency_success">Currency added successfully</string>
@@ -306,6 +341,13 @@
     <string name="fixed_buy_value">Buy total value</string>
     <string name="fixed_sell_value">Sell total value</string>
 
+    <!-- Add treasury Form Fragment -->
+    <string name="add_treasury_title">Buy Treasury</string>
+    <string name="buy_treasury_button">Buy</string>
+    <string name="cancel_treasury_button">Cancel</string>
+    <string name="treasury_symbol">Treasury Label</string>
+    <string name="treasury_symbol_hint">Ex: NTNB 2021</string>
+
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Complete Portfolio</string>
     <string name="title_treasury">Treasury</string>
@@ -324,9 +366,11 @@
     <string name="toast_fii_successfully_removed">Fii %s successfully removed</string>
     <string name="toast_fixed_successfully_removed">Fixed income %s successfully removed</string>
     <string name="toast_currency_successfully_removed">Currency %s successfully removed</string>
+    <string name="toast_treasury_successfully_removed">Treasury %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>
     <string name="toast_fii_not_removed">Unable to remove Fii %s</string>
     <string name="toast_fixed_not_removed">Unable to remove fixed income %s</string>
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
+    <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
     <string name="no_items_to_display">No items to display</string>
 </resources>

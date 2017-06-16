@@ -77,6 +77,20 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION, Constants.Provider.FIXED_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FIXED_TRANSACTION_WITH_SYMBOL,
                 Constants.Provider.FIXED_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_PORTFOLIO, Constants.Provider.TREASURY_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_DATA, Constants.Provider.TREASURY_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_DATA_BULK_UPDATE, Constants.Provider.TREASURY_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.TREASURY_DATA_BULK_UPDATE_FOR_CURRENT);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_DATA_WITH_SYMBOL, Constants.Provider.TREASURY_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_TREASURY_DATA, Constants.Provider.SOLD_TREASURY_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_SOLD_TREASURY_DATA_WITH_SYMBOL, Constants.Provider.SOLD_TREASURY_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_TRANSACTION, Constants.Provider.TREASURY_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_TRANSACTION_WITH_SYMBOL,
+                Constants.Provider.TREASURY_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_INCOME, Constants.Provider.TREASURY_INCOME);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_INCOME_WITH_SYMBOL,
+                Constants.Provider.TREASURY_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -362,7 +376,7 @@ public class PortfolioProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            // Returns all fiis information possessed by user
+            // Returns all fixed information possessed by user
             case Constants.Provider.FIXED_TRANSACTION:
                 returnCursor = db.query(
                         PortfolioContract.FixedTransaction.TABLE_NAME,
@@ -381,6 +395,91 @@ public class PortfolioProvider extends ContentProvider {
                         projection,
                         PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ?",
                         new String[]{PortfolioContract.FixedTransaction.getFixedTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns treasury portfolio of user
+            case Constants.Provider.TREASURY_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all treasury symbols possessed by user
+            case Constants.Provider.TREASURY_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case Constants.Provider.SOLD_TREASURY_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.SoldTreasuryData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all treasurys information possessed by user
+            case Constants.Provider.TREASURY_TRANSACTION:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all treasury information possessed by user for a specific stock symbol
+            case Constants.Provider.TREASURY_TRANSACTION_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                        projection,
+                        PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.TreasuryTransaction.getTreasuryTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.TREASURY_INCOME:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryIncome.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.TREASURY_INCOME_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.TreasuryIncome.TABLE_NAME,
+                        projection,
+                        PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.TreasuryIncome.getTreasuryIncomeFromUri(uri)},
                         null,
                         null,
                         sortOrder
@@ -644,6 +743,69 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+            case Constants.Provider.TREASURY_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.TreasuryPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.TreasuryPortfolio.buildTreasuryPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.TREASURY_DATA:
+                _id = db.insert(
+                        PortfolioContract.TreasuryData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.TreasuryData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+
+            case Constants.Provider.SOLD_TREASURY_DATA:
+                _id = db.insert(
+                        PortfolioContract.SoldTreasuryData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.SoldTreasuryData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.TREASURY_TRANSACTION:
+                _id = db.insert(
+                        PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.TreasuryTransaction.buildTransactionUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.TreasuryData.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.TREASURY_INCOME:
+                db.insert(
+                        PortfolioContract.TreasuryIncome.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.TreasuryIncome.URI;
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -854,6 +1016,66 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.TREASURY_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.TreasuryData.getTreasuryDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.TreasuryData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.TreasuryData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_TREASURY_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.SoldTreasuryData.getSoldTreasuryDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldTreasuryData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.SOLD_TREASURY_DATA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.SoldTreasuryData.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+            case Constants.Provider.TREASURY_TRANSACTION:
+                rowsDeleted = db.delete(
+                        PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.TREASURY_TRANSACTION_FOR_SYMBOL:
+                symbol = PortfolioContract.TreasuryTransaction.getTreasuryTransactionFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.TREASURY_INCOME:
+                rowsDeleted = db.delete(
+                        PortfolioContract.TreasuryIncome.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.TREASURY_INCOME_FOR_SYMBOL:
+                // TODO: Needs to change, otherwise it will always delete all incomes of that treasury symbol
+                symbol = PortfolioContract.TreasuryIncome.getTreasuryIncomeFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.TreasuryIncome.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
 
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
@@ -897,7 +1119,7 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
             case Constants.Provider.STOCK_DATA_BULK_UPDATE:
-                rowsUpdated = this.bulkStockUpdade(values);
+                rowsUpdated = this.bulkStockUpdate(values);
                 break;
 
             case Constants.Provider.STOCK_DATA_BULK_UPDATE_FOR_CURRENT:
@@ -942,7 +1164,7 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
             case Constants.Provider.FII_DATA_BULK_UPDATE:
-                rowsUpdated = this.bulkFiiUpdade(values);
+                rowsUpdated = this.bulkFiiUpdate(values);
                 break;
 
             case Constants.Provider.FII_DATA_BULK_UPDATE_FOR_CURRENT:
@@ -987,7 +1209,7 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
             case Constants.Provider.CURRENCY_DATA_BULK_UPDATE:
-                rowsUpdated = this.bulkCurrencyUpdade(values);
+                rowsUpdated = this.bulkCurrencyUpdate(values);
                 break;
 
             case Constants.Provider.CURRENCY_DATA_BULK_UPDATE_FOR_CURRENT:
@@ -1020,7 +1242,7 @@ public class PortfolioProvider extends ContentProvider {
                 break;
 
             case Constants.Provider.FIXED_DATA_BULK_UPDATE:
-                rowsUpdated = this.bulkFixedUpdade(values);
+                rowsUpdated = this.bulkFixedUpdate(values);
                 break;
 
             case Constants.Provider.FIXED_DATA_BULK_UPDATE_FOR_CURRENT:
@@ -1036,6 +1258,52 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.FIXED_TRANSACTION:
                 rowsUpdated = db.update(PortfolioContract.FixedTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+
+            case Constants.Provider.TREASURY_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.TreasuryPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.TREASURY_DATA:
+                rowsUpdated = db.update(PortfolioContract.TreasuryData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.SOLD_TREASURY_DATA:
+                rowsUpdated = db.update(PortfolioContract.SoldTreasuryData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.TREASURY_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkTreasuryUpdate(values);
+                break;
+
+            case Constants.Provider.TREASURY_DATA_BULK_UPDATE_FOR_CURRENT:
+                currentTotal = PortfolioContract.TreasuryTransaction
+                        .getTreasuryTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateTreasuryCurrentPercent(Double.parseDouble(PortfolioContract
+                            .TreasuryTransaction.getTreasuryTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
+
+            case Constants.Provider.TREASURY_TRANSACTION:
+                rowsUpdated = db.update(PortfolioContract.TreasuryTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.TREASURY_INCOME:
+                rowsUpdated = db.update(PortfolioContract.TreasuryIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
@@ -1135,6 +1403,25 @@ public class PortfolioProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
 
+            case Constants.Provider.TREASURY_TRANSACTION:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
             default:
                 return super.bulkInsert(uri, values);
         }
@@ -1145,7 +1432,7 @@ public class PortfolioProvider extends ContentProvider {
      * StockData according to the Symbols/CurrentPrice passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
-    private int bulkStockUpdade(ContentValues contValues) {
+    private int bulkStockUpdate(ContentValues contValues) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -1214,7 +1501,7 @@ public class PortfolioProvider extends ContentProvider {
      * FiiData according to the Symbols/CurrentPrice passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
-    private int bulkFiiUpdade(ContentValues contValues) {
+    private int bulkFiiUpdate(ContentValues contValues) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -1283,7 +1570,7 @@ public class PortfolioProvider extends ContentProvider {
      * CurrencyData according to the Symbols/CurrentPrice passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
-    private int bulkCurrencyUpdade(ContentValues contValues) {
+    private int bulkCurrencyUpdate(ContentValues contValues) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -1350,7 +1637,7 @@ public class PortfolioProvider extends ContentProvider {
      * FixedData according to the Symbols/CurrentPrice passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
-    private int bulkFixedUpdade(ContentValues contValues) {
+    private int bulkFixedUpdate(ContentValues contValues) {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -1401,6 +1688,75 @@ public class PortfolioProvider extends ContentProvider {
         }
 
         getContext().getContentResolver().notifyChange(PortfolioContract.FixedData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value several values of the Treasury of table
+     * TreasuryData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkTreasuryUpdate(ContentValues contValues) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        int quantity;
+        double currentPrice;
+        double totalBuy;
+        double incomeTotal;
+        double currentTotal;
+        double variation;
+        double totalGain;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update stock data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.TreasuryData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentPrice = Double.parseDouble(contValues.get(key).toString());
+                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                            .TreasuryData.COLUMN_QUANTITY_TOTAL));
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .TreasuryData.COLUMN_BUY_VALUE_TOTAL));
+                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.TreasuryData.COLUMN_INCOME));
+                    currentTotal = quantity * currentPrice;
+                    variation = currentTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy;
+
+                    ContentValues treasuryCV = new ContentValues();
+                    treasuryCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE,
+                            contValues.get(key).toString());
+                    treasuryCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    treasuryCV.put(PortfolioContract.TreasuryData.COLUMN_VARIATION, variation);
+                    treasuryCV.put(PortfolioContract.TreasuryData.COLUMN_TOTAL_GAIN, totalGain);
+
+                    returnCount += this.update(
+                            PortfolioContract.TreasuryData.URI,
+                            treasuryCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "TreasuryData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.TreasuryData.URI, null);
         return returnCount;
     }
 
@@ -1669,6 +2025,73 @@ public class PortfolioProvider extends ContentProvider {
             db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(PortfolioContract.FixedData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value Current Percent of all the Treasury in the
+     * table TreasuryData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateTreasuryCurrentPercent(double currentTotal) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.TreasuryData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.TreasuryData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues treasuryDataCV = new ContentValues();
+                    treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update stock data
+                    String updateSelection = PortfolioContract.TreasuryData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.TreasuryData.URI,
+                            treasuryDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No TreasuryData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.TreasuryData.URI, null);
         return returnCount;
     }
 }

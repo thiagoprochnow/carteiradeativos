@@ -267,6 +267,34 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Delete treasury and all its information from database
+    // This is different then selling a treasury, that will maintain some information
+    public boolean deleteTreasury(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .TreasuryTransaction
+                .makeUriForTreasuryTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.TreasuryData
+                .makeUriForTreasuryData(symbol), null, null);
+
+        int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldTreasuryData
+                .makeUriForSoldTreasuryData(symbol), null, null);
+        // Cannot check if deletedIncome > 0, because treasury may not have any income to delete
+        // Which is not an error
+        int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.TreasuryIncome
+                .makeUriForTreasuryIncome(symbol), null, null);
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
+        if (deletedData > 0) {
+            mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+            Toast.makeText(mContext, getString(R.string.toast_treasury_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_treasury_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     // Delete fii income from table by using its id
     // symbol is used to update Fii Data table
     public boolean deleteFiiIncome(String id, String symbol){
@@ -297,6 +325,41 @@ public abstract class BaseFragment extends Fragment {
             // Update stock data for that symbol
             boolean updateFiiData = updateFiiData(symbol, -1, -1);
             if (updateFiiData)
+                return true;
+        }
+        return false;
+    }
+
+    // Delete treasury income from table by using its id
+    // symbol is used to update Treasury Data table
+    public boolean deleteTreasuryIncome(String id, String symbol){
+        String selection = PortfolioContract.TreasuryIncome._ID + " = ? AND "
+                + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + " = ?";
+        if (symbol == null){
+            String selectionData = PortfolioContract.TreasuryIncome._ID + " = ? ";
+            String[] selectionDataArguments = {id};
+            String[] affectedColumn = {PortfolioContract.TreasuryIncome.COLUMN_SYMBOL};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PortfolioContract.TreasuryIncome.URI,
+                    affectedColumn, selectionData, selectionDataArguments, null);
+
+            if (cursor.getCount() > 0){
+                cursor.moveToFirst();
+                symbol = cursor.getString(0);
+            } else {
+                Log.d(LOG_TAG, "No symbol for for that income");
+            }
+        }
+        String[] selectionArguments = {id, symbol};
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.TreasuryIncome.URI,
+                selection, selectionArguments);
+        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
+        if (deletedResult > 0){
+            // Update stock data for that symbol
+            boolean updateTreasuryData = updateTreasuryData(symbol, -1, -1);
+            if (updateTreasuryData)
                 return true;
         }
         return false;
@@ -508,6 +571,81 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete treasury transaction from table by using its id
+    // symbol is used to update Treasury Data table
+    public boolean deleteTreasuryTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.TreasuryTransaction._ID + " = ? AND "
+                + PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.TreasuryTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update treasury data and treasury income for that symbol
+            updateTreasuryIncomes(symbol, timestamp);
+            updateTreasuryData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from TreasuryData
+
+        String selectionTransaction = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.TreasuryTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the treasury and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteTreasury(symbol);
+            getActivity().finish();
+        }
+
+        // Check if there is any more SELL transaction for this symbol
+        // If not, delete this symbol from SoldTreasuryData
+
+        String sellSelectionTransaction = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.TreasuryTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        // No more Sell transactions, delete SoldTreasuryData
+        if (queryCursor.getCount() == 0){
+            String selectionSoldData = PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL + " = ?";
+            String[] selectionArgumentsSoldData = {symbol};
+            int rowsDeleted = mContext.getContentResolver().delete(
+                    PortfolioContract.SoldTreasuryData.URI, selectionSoldData,
+                    selectionArgumentsSoldData);
+            if (rowsDeleted == 1){
+                Log.d(LOG_TAG, "SoldTreasuryData deleted successfully");
+            } else {
+                Log.d(LOG_TAG, "Problem deleting SoldTreasuryData");
+            }
+        }
+
+        return false;
+    }
+
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
         Log.d(LOG_TAG, "InputDate String: " + inputDate);
@@ -580,6 +718,18 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidFixedSymbol(EditText symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Fixed income (Only letters and numbers)
+        Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid Treasury Symbol
+    protected boolean isValidTreasurySymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Treasury income (Only letters and numbers)
         Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
         if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
@@ -669,6 +819,28 @@ public abstract class BaseFragment extends Fragment {
                 double boughtQuantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .CurrencyData.COLUMN_QUANTITY_TOTAL));
                 if (boughtQuantity >= quantity) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else if (type == Constants.ProductType.TREASURY){
+            // Prepare query for treasury data
+            String selection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ? ";
+            String[] selectionArguments = {symbol};
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.TreasuryData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                int boughtQuantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                        .TreasuryData.COLUMN_QUANTITY_TOTAL));
+                if (boughtQuantity >= quantity2) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
                 } else {
@@ -2053,20 +2225,372 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public String getFixedRentabilityType(int typeId){
-        switch (typeId){
-            case Constants.FixedType.INVALID:
-                Log.d(LOG_TAG, "Invalid FixedType");
-                return "invalid";
-            case Constants.FixedType.CDB:
-                Log.d(LOG_TAG, "CDB FixedType");
-                return mContext.getResources().getString(R.string.fixed_rentability_type_pre);
-            case Constants.FixedType.LCI:
-                Log.d(LOG_TAG, "LCI FixedType");
-                return mContext.getResources().getString(R.string.fixed_rentability_type_index);
-            default:
-                Log.d(LOG_TAG, "Default FixedType");
-                return mContext.getResources().getString(R.string.fixed_rentability_type_pos);
+    // Reads the TreasuryTransaction entries and calculates value for TreasuryData table for this symbol
+    public boolean updateTreasuryData(String symbol, double objective, int type){
+
+        String selection = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in TreasuryData
+            int quantityTotal = 0;
+            double buyValue = 0;
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyQuantity = 0;
+            double buyTotal = 0;
+            double receiveIncome = 0;
+            double taxIncome = 0;
+            double mediumPrice = 0;
+            int currentType;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldBuyValue = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        mediumPrice = buyTotal/buyQuantity;
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        buyValue = quantityTotal*mediumPrice;
+                        // Add the value sold times the current medium buy price
+                        soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
+            ContentValues treasuryDataCV = new ContentValues();
+
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing TreasuryData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.TreasuryData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            double variation = 0;
+            // Create new TreasuryData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Adds data to the database
+                Uri insertedTreasuryDataUri = mContext.getContentResolver().insert(PortfolioContract.TreasuryData.URI,
+                        treasuryDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedTreasuryDataUri != null) {
+                    Log.d(LOG_TAG, "Created treasury data");
+                    // Update Treasury Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating treasury data");
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, TreasuryDetailsOverview will not update current total and total gain, unless refreshing the View
+                if (type == Constants.Type.DELETE_TRANSACION){
+                    queryDataCursor.moveToFirst();
+                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE));
+                    currentTotal = currentPrice*quantityTotal;
+                    variation = currentTotal - buyTotal;
+                }
+            }
+
+            // Query Income table to get total of this treasury income
+            String[] affectedColumn = {"sum("+ PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID+")",
+                    "sum("+ PortfolioContract.TreasuryIncome.COLUMN_TAX+")"};
+            selection = PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.TreasuryIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
+            } else {
+                receiveIncome = 0;
+            }
+
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL, buyValue);
+            if (type == Constants.Type.BUY) {
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_OBJECTIVE_PERCENT, objective);
+            }
+            if ((type == Constants.Type.DELETE_TRANSACION) && queryDataCursor.getCount() > 0){
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL, currentTotal);
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_VARIATION, variation);
+            }
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_INCOME, receiveIncome);
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_INCOME_TAX, taxIncome);
+            treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_MEDIUM_PRICE, mediumPrice);
+
+            if(quantityTotal > 0){
+                // Set treasury as active
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_STATUS, Constants.Status.ACTIVE);
+            } else {
+                // Set treasury as sold
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_STATUS, Constants.Status.SOLD);
+            }
+            // Searches for existing TreasuryData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.TreasuryData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryData._ID)));
+
+            // Update
+            // Prepare query to update treasury data
+            String updateSelection = PortfolioContract.TreasuryData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on treasury data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.TreasuryData.URI,
+                    treasuryDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                Log.d(LOG_TAG, "updateStockData successfully updated");
+                // Update Treasury Portfolio
+                // Send broadcast so TreasuryReceiver can update the rest
+                updateSoldTreasuryData(symbol, soldBuyValue);
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateTreasuryData failed update");
+                return false;
+            }
+        } else{
+            Log.d(LOG_TAG, "No TreasuryTransaction found");
+            return false;
+        }
+    }
+
+    // Reads the TreasuryTransaction entries and calculates value for SoldTreasuryData table for this symbol
+    public boolean updateSoldTreasuryData(String symbol, double soldBuyValue){
+
+        String selection = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in TreasuryData
+            int quantityTotal = 0;
+            double soldTotal = 0;
+            double sellMediumPrice = 0;
+            int currentType;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_TYPE));
+                double price = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_PRICE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.SELL:
+                        quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+                        sellMediumPrice = soldTotal/quantityTotal;
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "Do nothing");
+                }
+            } while (STQueryCursor.moveToNext());
+
+            // If there is any sold treasury
+            if (quantityTotal > 0) {
+                ContentValues treasuryDataCV = new ContentValues();
+
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL, symbol);
+
+                selection = PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL + " = ? ";
+
+                // Searches for existing TreasuryData to update value.
+                // If dosent exists, creates new one
+                Cursor queryDataCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldTreasuryData.URI,
+                        null, selection, selectionArguments, null);
+
+                // Create new TreasuryData for this symbol
+                if (queryDataCursor.getCount() == 0) {
+                    // Adds data to the database
+                    Uri insertedTreasuryDataUri = mContext.getContentResolver().insert(PortfolioContract.SoldTreasuryData.URI,
+
+                            treasuryDataCV);
+
+                    // If error occurs to add, shows error message
+                    if (insertedTreasuryDataUri != null) {
+                        Log.d(LOG_TAG, "Created treasury sold data");
+                        // Update Treasury Portfolio
+                    } else {
+                        Log.d(LOG_TAG, "Error creating sold treasury data");
+                        return false;
+                    }
+                }
+
+                double sellGain = soldTotal - soldBuyValue;
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_QUANTITY_TOTAL, quantityTotal);
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_SELL_TOTAL, soldTotal);
+                treasuryDataCV.put(PortfolioContract.SoldTreasuryData.COLUMN_SELL_GAIN, sellGain);
+
+                // Searches for existing TreasuryData to update value.
+                // If dosent exists, creates new one
+                Cursor queryCursor = mContext.getContentResolver().query(
+                        PortfolioContract.SoldTreasuryData.URI,
+                        null, selection, selectionArguments, null);
+
+                queryCursor.moveToFirst();
+
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.SoldTreasuryData._ID)));
+
+                // Update
+                // Prepare query to update treasury data
+                String updateSelection = PortfolioContract.SoldTreasuryData._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+
+                // Update value on treasury data
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.SoldTreasuryData.URI,
+                        treasuryDataCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0) {
+                    Log.d(LOG_TAG, "updateSoldTreasuryData successfully updated");
+                    // Update Treasury Portfolio
+                    // Send broadcast so TreasuryReceiver can update the rest
+                    mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+                    return true;
+                } else {
+                    Log.d(LOG_TAG, "updateSoldTreasuryData failed update");
+                    return false;
+                }
+            }
+            Log.d(LOG_TAG, "No sold treasury yet");
+            return true;
+        } else{
+            Log.d(LOG_TAG, "No TreasuryTransaction found");
+            return false;
+        }
+    }
+
+    // By using the timestamp of bought/sold treasury, function will check if any added income
+    // is affected by this buy/sell treasury.
+    // If any income is affected, it will update income line with new value by using
+    // getTreasuryQuantity function for each affected line
+    public void updateTreasuryIncomes(String symbol, long timestamp){
+        // Prepare query for checking affected incomes
+        String selection = PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + " = ? AND " + PortfolioContract.TreasuryIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " > ?";
+        String[] selectionArguments = {symbol, String.valueOf(timestamp)};
+
+        // Check if any income is affected by treasury buy/sell
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            // Sum that will be returned and updated on TreasuryData table by updateTreasuryData()
+            double sumReceiveTotal = 0;
+            do{
+                String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID)));
+                long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int quantity = getTreasuryQuantity(symbol, incomeTimestamp);
+                double perTreasury = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_PER_TREASURY)));
+                int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE)));
+                double receiveTotal = quantity * perTreasury;
+
+                // Prepare query to update treasury quantity applied for that dividend
+                // and the total income received
+                String updateSelection = PortfolioContract.TreasuryIncome._ID + " = ?";
+                String[] updatedSelectionArguments = {_id};
+                ContentValues incomeCV = new ContentValues();
+
+                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY, quantity);
+                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
+                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
+                double tax = 0;
+                double receiveLiquid = receiveTotal;
+                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_TAX, tax);
+                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
+
+                // Update value on incomes table
+                int updatedRows = mContext.getContentResolver().update(
+                        PortfolioContract.TreasuryIncome.URI,
+                        incomeCV, updateSelection, updatedSelectionArguments);
+                // Log update success/fail result
+                if (updatedRows > 0){
+                    Log.d(LOG_TAG, "updateTreasuryIncomes successfully updated");
+                } else {
+                    Log.d(LOG_TAG, "updateTreasuryIncomes failed update");
+                }
+            } while (queryCursor.moveToNext());
+        } else {
+            Log.d(LOG_TAG, "No incomes affected by buy/sell treasury");
+        }
+    }
+
+    // Get treasury quantity that will receive the dividend per treasury
+    // symbol is to query by specific symbol only
+    // income timestamp is to query only the quantity of treasury transactions before the timestamp
+    public int getTreasuryQuantity(String symbol, Long incomeTimestamp){
+        // Return column should be only quantity of treasury
+        String selection = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " < ?";
+        String[] selectionArguments = {symbol,String.valueOf(incomeTimestamp)};
+        String sortOrder = PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        // Check if the symbol exists in the db
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.TreasuryTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+        if(queryCursor.getCount() > 0) {
+            queryCursor.moveToFirst();
+            int quantityTotal = 0;
+            int currentType = 0;
+            do {
+                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SELL:
+                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "getTreasuryQuantity currentType Unknown");
+                }
+            } while (queryCursor.moveToNext());
+            return quantityTotal;
+        } else{
+            Log.d(LOG_TAG, "");
+            return 0;
         }
     }
 }

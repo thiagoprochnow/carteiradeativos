@@ -42,6 +42,10 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                     setTitle(R.string.fii_income_type);
                     replaceFragment(new FiiIncomeDetailsFragment());
                     break;
+                case Constants.IncomeType.TREASURY:
+                    setTitle(R.string.fii_income_type);
+                    replaceFragment(new FiiIncomeDetailsFragment());
+                    break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");
                     finish();

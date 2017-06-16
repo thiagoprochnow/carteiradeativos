@@ -33,6 +33,7 @@ import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
+import br.com.carteira.fragment.treasury.TreasuryTabFragment;
 import br.com.carteira.listener.IncomeDetailsListener;
 import br.com.carteira.listener.ProductListener;
 
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case R.id.nav_item_treasury:
                 Log.d(LOG_TAG, "Loaded Treasury Fragment from menu");
+                replaceFragment(new TreasuryTabFragment());
                 break;
             case R.id.nav_item_fixed_income:
                 Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
@@ -288,6 +290,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
                 startActivity(intent);
                 break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
                 break;
@@ -318,6 +328,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -360,6 +376,13 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.TREASURY:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
@@ -390,6 +413,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -523,6 +552,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case Constants.IncomeType.FIXED:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.TREASURY:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

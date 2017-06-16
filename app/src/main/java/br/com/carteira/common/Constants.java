@@ -45,6 +45,7 @@ public final class Constants {
         public static final int FII = 1;
         public static final int CURRENCY = 2;
         public static final int FIXED = 3;
+        public static final int TREASURY = 4;
     }
 
     // This should contains all incomes types in the portfolio
@@ -57,6 +58,7 @@ public final class Constants {
         public static final int SPLIT = 4;
         public static final int FII = 5;
         public static final int FIXED = 6;
+        public static final int TREASURY = 7;
     }
 
     // Status of the a specific investment
@@ -76,6 +78,7 @@ public final class Constants {
         public static final String FII = "UPDATE_FII_PORTFOLIO";
         public static final String CURRENCY = "UPDATE_CURRENCY_PORTFOLIO";
         public static final String FIXED = "UPDATE_FIXED_PORTFOLIO";
+        public static final String TREASURY = "UPDATE_TREASURY_PORTFOLIO";
     }
 
     // FixedIncome Types
@@ -88,14 +91,6 @@ public final class Constants {
         public static final int LC = 4;
         public static final int CRI = 5;
         public static final int CRA = 6;
-    }
-
-    // FixedIncome Types
-    public static class FixedRentabilityType{
-        public static final int INVALID = -1;
-        public static final int PRE = 0;
-        public static final int POS = 1;
-        public static final int INDEX = 2;
     }
 
     // Constants for Loaders IDs
@@ -121,6 +116,12 @@ public final class Constants {
         public static final int FIXED_DATA = 14;
         public static final int FIXED_OVERVIEW = 17;
         public static final int FIXED_DETAILS = 18;
+
+        public static final int TREASURY_DATA = 19;
+        public static final int SOLD_TREASURY_DATA = 20;
+        public static final int TREASURY_INCOME = 21;
+        public static final int TREASURY_OVERVIEW = 22;
+        public static final int TREASURY_DETAILS = 23;
     }
 
     // Constants for Providers IDs
@@ -181,5 +182,21 @@ public final class Constants {
 
         public static final int FIXED_TRANSACTION = 4400;
         public static final int FIXED_TRANSACTION_FOR_SYMBOL = 4401;
+
+        public static final int TREASURY_PORTFOLIO = 5100;
+
+        public static final int TREASURY_DATA = 5200;
+        public static final int TREASURY_DATA_WITH_SYMBOL = 5201;
+        public static final int TREASURY_DATA_BULK_UPDATE = 5202;
+        public static final int TREASURY_DATA_BULK_UPDATE_FOR_CURRENT = 5203;
+
+        public static final int SOLD_TREASURY_DATA = 5300;
+        public static final int SOLD_TREASURY_DATA_WITH_SYMBOL = 5301;
+
+        public static final int TREASURY_TRANSACTION = 5400;
+        public static final int TREASURY_TRANSACTION_FOR_SYMBOL = 5401;
+
+        public static final int TREASURY_INCOME = 5500;
+        public static final int TREASURY_INCOME_FOR_SYMBOL = 5501;
     }
 }

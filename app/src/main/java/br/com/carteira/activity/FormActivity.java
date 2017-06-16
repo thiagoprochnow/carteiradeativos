@@ -25,6 +25,9 @@ import br.com.carteira.fragment.stock.GroupingFormFragment;
 import br.com.carteira.fragment.stock.JCPDividendFormFragment;
 import br.com.carteira.fragment.stock.SellStockFormFragment;
 import br.com.carteira.fragment.stock.SplitFormFragment;
+import br.com.carteira.fragment.treasury.BuyTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.EditTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.SellTreasuryFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.
@@ -61,6 +64,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FIXED:
                         replaceFragment(new BuyFixedFormFragment());
                         break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new BuyTreasuryFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -80,6 +86,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FIXED:
                         replaceFragment(new SellFixedFormFragment());
                         break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new SellTreasuryFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -98,6 +107,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedFormFragment());
+                        break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new EditTreasuryFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

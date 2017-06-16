@@ -15,6 +15,7 @@ import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.fixedincome.FixedDetailsFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
+import br.com.carteira.fragment.treasury.TreasuryDetailsFragment;
 import br.com.carteira.listener.ProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
 
@@ -43,16 +44,16 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     replaceFragment(new StockTabFragment());
                     break;
                 case Constants.ProductType.FII:
-                    // TODO: replaceFragment(new FiiIncomesFragment());
                     replaceFragment(new FiiTabFragment());
                     break;
                 case Constants.ProductType.FIXED:
-                    // TODO: replaceFragment(new FiiIncomesFragment());
                     replaceFragment(new FixedDetailsFragment());
                     break;
                 case Constants.ProductType.CURRENCY:
-                    // TODO: replaceFragment(new FiiIncomesFragment());
                     replaceFragment(new CurrencyDetailsFragment());
+                    break;
+                case Constants.ProductType.TREASURY:
+                    replaceFragment(new TreasuryDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -78,6 +79,9 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 getMenuInflater().inflate(R.menu.stock_details_menu, menu);
                 return true;
             case Constants.ProductType.FII:
+                getMenuInflater().inflate(R.menu.fii_details_menu, menu);
+                return true;
+            case Constants.ProductType.TREASURY:
                 getMenuInflater().inflate(R.menu.fii_details_menu, menu);
                 return true;
             default:
@@ -116,6 +120,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
                 startActivity(intent);
                 break;
+            case R.id.menu_item_treasury_income:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -142,6 +150,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case Constants.IncomeType.FII:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.TREASURY:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;
