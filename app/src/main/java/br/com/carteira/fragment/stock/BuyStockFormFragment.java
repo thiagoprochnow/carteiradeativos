@@ -32,7 +32,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
     private EditText mInputSymbolView;
     private EditText mInputQuantityView;
     private EditText mInputBuyPriceView;
-    private EditText mInputObjectiveView;
     private EditText mInputDateView;
 
     @Override
@@ -56,7 +55,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
-        mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
         // Gets symbol received from selected CardView on intent
@@ -73,7 +71,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
         mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
 
         // Adding input filters
-        mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterPercentage("0", "100")});
         mInputBuyPriceView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
@@ -85,16 +82,14 @@ public class BuyStockFormFragment extends BaseFormFragment {
         boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
         boolean isValidQuantity = isValidInt(mInputQuantityView);
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
-        boolean isValidObjective = isValidPercent(mInputObjectiveView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the stock
-        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidObjective && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
-            double inputObjective = Double.parseDouble(mInputObjectiveView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -117,7 +112,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
                 Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, inputObjective, Constants
+                boolean updateStockData = updateStockData(inputSymbol, Constants
                         .Type.BUY);
                 if (updateStockData) {
                     Toast.makeText(mContext, R.string.buy_stock_success, Toast.LENGTH_LONG).show();
@@ -136,9 +131,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyPrice){
                 mInputBuyPriceView.setError(this.getString(R.string.wrong_price));
-            }
-            if(!isValidObjective){
-                mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

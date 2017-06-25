@@ -233,7 +233,7 @@ public class StockIncomesFragment extends BaseFragment implements
                     incomeCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                updateStockData(mSymbol, -1, -1);
+                updateStockData(mSymbol, -1);
                 Log.d(LOG_TAG, "updateStockIncomes successfully updated");
             } else {
                 Log.d(LOG_TAG, "updateStockIncomes failed update");

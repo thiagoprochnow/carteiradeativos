@@ -105,7 +105,7 @@ public class SellFixedFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedFixedTransactionUri != null) {
                 // Rescan incomes tables to check if added fixed income changed their receive values.
-                boolean updateFixedData = updateFixedData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateFixedData = updateFixedData(inputSymbol, Constants.Type.SELL);
                 if (updateFixedData){
                     Toast.makeText(mContext, R.string.sell_fixed_success, Toast.LENGTH_LONG).show();
                     return true;

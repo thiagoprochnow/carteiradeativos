@@ -25,7 +25,6 @@ public class EditFiiFormFragment extends BaseFormFragment {
     private static final String LOG_TAG = EditFiiFormFragment.class.getSimpleName();
     private View mView;
     private String mSymbol;
-    private EditText mInputObjectiveView;
     private EditText mInputCurrentPriceView;
 
     @Override
@@ -45,7 +44,6 @@ public class EditFiiFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_edit_fii_form, container, false);
-        mInputObjectiveView = (EditText) mView.findViewById(R.id.inputObjective);
         mInputCurrentPriceView = (EditText) mView.findViewById(R.id.inputCurrentPrice);
 
         // Gets symbol received from selected CardView on intent
@@ -54,7 +52,6 @@ public class EditFiiFormFragment extends BaseFormFragment {
         getActivity().setTitle(mSymbol
         );
         // Adding input filters
-        mInputObjectiveView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -62,29 +59,16 @@ public class EditFiiFormFragment extends BaseFormFragment {
     private boolean updateFii() {
 
         // Validate for each inputted value
-        boolean isValidObjective = isValidDouble(mInputObjectiveView);
         boolean isValidCurrentPrice = isValidDouble(mInputCurrentPriceView);
 
         // If all validations pass, try to update the fii objective
-        if (isValidObjective || isValidCurrentPrice) {
-            boolean isEmptyObjective = TextUtils.isEmpty(mInputObjectiveView.getText().toString());
+        if (isValidCurrentPrice) {
             boolean isEmptyCurrentPrice = TextUtils.isEmpty(mInputCurrentPriceView.getText().toString());
 
             ContentValues fiiCV = new ContentValues();
 
             // Update objective
             int updatedRows = 0;
-            if (!isEmptyObjective) {
-                double objective = Double.parseDouble(mInputObjectiveView.getText().toString());
-                fiiCV.put(PortfolioContract.FiiData.COLUMN_OBJECTIVE_PERCENT, objective);
-                String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {mSymbol};
-
-                // Update objective on fii data table
-                updatedRows = mContext.getContentResolver().update(
-                        PortfolioContract.FiiData.URI,
-                        fiiCV, updateSelection, updatedSelectionArguments);
-            }
             // Update current price
             int updatedCurrentRows = 0;
             if (!isEmptyCurrentPrice){
@@ -110,14 +94,10 @@ public class EditFiiFormFragment extends BaseFormFragment {
             Toast.makeText(mContext, R.string.fii_update_fail, Toast.LENGTH_LONG).show();
             return false;
         } else {
-            if (TextUtils.isEmpty(mInputObjectiveView.getText().toString()) &&
-                    TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
+            if (TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
                 return true;
             }
             // If validation fails, show validation error message
-            if(!isValidObjective && !TextUtils.isEmpty(mInputObjectiveView.getText().toString())){
-                mInputObjectiveView.setError(this.getString(R.string.wrong_percentual_objective));
-            }
             if(!isValidCurrentPrice && !TextUtils.isEmpty(mInputCurrentPriceView.getText().toString())){
                 mInputCurrentPriceView.setError(this.getString(R.string.wrong_current_price));
             }

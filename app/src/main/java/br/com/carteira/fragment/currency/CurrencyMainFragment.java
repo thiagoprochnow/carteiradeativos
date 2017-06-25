@@ -229,7 +229,7 @@ public class CurrencyMainFragment extends BaseFragment implements
                     incomeCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0) {
-                updateFiiData(symbol, -1, -1);
+                updateFiiData(symbol, -1);
                 Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
             } else {
                 Log.d(LOG_TAG, "updateFiiIncomes failed update");

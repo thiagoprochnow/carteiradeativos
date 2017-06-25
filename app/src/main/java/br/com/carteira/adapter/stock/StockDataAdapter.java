@@ -125,8 +125,6 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT))) + "%");
 
                 viewHolder.stockAppreciation.setText(String.format(formatter.format(stockAppreciation)));
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
@@ -231,9 +229,6 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
-
-        @BindView(R.id.objectivePercent)
-        TextView objectivePercent;
 
         @BindView(R.id.stockAppreciation)
         TextView stockAppreciation;

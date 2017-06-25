@@ -111,7 +111,7 @@ public class SellStockFormFragment extends BaseFormFragment {
             if (insertedStockTransactionUri != null) {
                 // Rescan incomes tables to check if added stock changed their receive values.
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateStockData = updateStockData(inputSymbol, Constants.Type.SELL);
                 if (updateStockData){
                     Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_LONG).show();
                     return true;

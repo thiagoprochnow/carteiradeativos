@@ -111,7 +111,7 @@ public class SellTreasuryFormFragment extends BaseFormFragment {
             if (insertedTreasuryTransactionUri != null) {
                 // Rescan incomes tables to check if added treasury changed their receive values.
                 updateTreasuryIncomes(inputSymbol, timestamp);
-                boolean updateTreasuryData = updateTreasuryData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateTreasuryData = updateTreasuryData(inputSymbol, Constants.Type.SELL);
                 if (updateTreasuryData){
                     Toast.makeText(mContext, R.string.sell_treasury_success, Toast.LENGTH_LONG).show();
                     return true;

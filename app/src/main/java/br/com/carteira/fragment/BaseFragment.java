@@ -110,7 +110,7 @@ public abstract class BaseFragment extends Fragment {
         Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update stock data for that symbol
-            boolean updateStockData = updateStockData(symbol, -1, -1);
+            boolean updateStockData = updateStockData(symbol, -1);
             if (updateStockData)
                 return true;
         }
@@ -144,7 +144,7 @@ public abstract class BaseFragment extends Fragment {
         if (deletedResult > 0){
             // Update stock data and stock income for that symbol
             updateStockIncomes(symbol, timestamp);
-            updateStockData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+            updateStockData(symbol, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -323,7 +323,7 @@ public abstract class BaseFragment extends Fragment {
         Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update stock data for that symbol
-            boolean updateFiiData = updateFiiData(symbol, -1, -1);
+            boolean updateFiiData = updateFiiData(symbol, -1);
             if (updateFiiData)
                 return true;
         }
@@ -358,7 +358,7 @@ public abstract class BaseFragment extends Fragment {
         Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update stock data for that symbol
-            boolean updateTreasuryData = updateTreasuryData(symbol, -1, -1);
+            boolean updateTreasuryData = updateTreasuryData(symbol, -1);
             if (updateTreasuryData)
                 return true;
         }
@@ -392,7 +392,7 @@ public abstract class BaseFragment extends Fragment {
         if (deletedResult > 0){
             // Update fii data and fii income for that symbol
             updateFiiIncomes(symbol, timestamp);
-            updateFiiData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+            updateFiiData(symbol, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -540,7 +540,7 @@ public abstract class BaseFragment extends Fragment {
 
         if (deletedResult > 0){
             // Update fixed data for that symbol
-            updateFixedData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+            updateFixedData(symbol, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -598,7 +598,7 @@ public abstract class BaseFragment extends Fragment {
         if (deletedResult > 0){
             // Update treasury data and treasury income for that symbol
             updateTreasuryIncomes(symbol, timestamp);
-            updateTreasuryData(symbol, -1, Constants.Type.DELETE_TRANSACION);
+            updateTreasuryData(symbol, Constants.Type.DELETE_TRANSACION);
         }
 
         // Check if there is any more transaction for this symbol
@@ -1124,7 +1124,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the StockTransaction entries and calculates value for StockData table for this symbol
-    public boolean updateStockData(String symbol, double objective, int type){
+    public boolean updateStockData(String symbol, int type){
 
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -1255,9 +1255,7 @@ public abstract class BaseFragment extends Fragment {
 
             stockDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if (type == Constants.Type.BUY) {
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
+
             if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
@@ -1683,7 +1681,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the FiiTransaction entries and calculates value for FiiData table for this symbol
-    public boolean updateFiiData(String symbol, double objective, int type){
+    public boolean updateFiiData(String symbol, int type){
 
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -1797,9 +1795,6 @@ public abstract class BaseFragment extends Fragment {
 
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if (type == Constants.Type.BUY) {
-                fiiDataCV.put(PortfolioContract.FiiData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
             if ((type == Constants.Type.DELETE_TRANSACION) && queryDataCursor.getCount() > 0){
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL, currentTotal);
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_VARIATION, variation);
@@ -2057,7 +2052,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the FixedTransaction entries and calculates value for FixedData table for this symbol
-    public boolean updateFixedData(String symbol, double objective, int type){
+    public boolean updateFixedData(String symbol, int type){
 
         String selection = PortfolioContract.FixedTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -2147,9 +2142,6 @@ public abstract class BaseFragment extends Fragment {
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL, buyTotal);
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL, soldTotal);
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN, totalGain);
-            if (type == Constants.Type.BUY) {
-                fixedDataCV.put(PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
             if ((type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 fixedDataCV.put(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL, currentTotal);
             }
@@ -2226,7 +2218,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the TreasuryTransaction entries and calculates value for TreasuryData table for this symbol
-    public boolean updateTreasuryData(String symbol, double objective, int type){
+    public boolean updateTreasuryData(String symbol, int type){
 
         String selection = PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -2335,9 +2327,6 @@ public abstract class BaseFragment extends Fragment {
 
             treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if (type == Constants.Type.BUY) {
-                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_OBJECTIVE_PERCENT, objective);
-            }
             if ((type == Constants.Type.DELETE_TRANSACION) && queryDataCursor.getCount() > 0){
                 treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL, currentTotal);
                 treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_VARIATION, variation);

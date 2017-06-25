@@ -123,8 +123,6 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_OBJECTIVE_PERCENT))) + "%");
 
                 viewHolder.fiiAppreciation.setText(String.format(formatter.format(fiiAppreciation)));
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
@@ -228,9 +226,6 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
-
-        @BindView(R.id.objectivePercent)
-        TextView objectivePercent;
 
         @BindView(R.id.fiiAppreciation)
         TextView fiiAppreciation;

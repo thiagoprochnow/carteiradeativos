@@ -122,8 +122,6 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_OBJECTIVE_PERCENT))) + "%");
 
                 viewHolder.treasuryAppreciation.setText(String.format(formatter.format(treasuryAppreciation)));
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
@@ -227,9 +225,6 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
-
-        @BindView(R.id.objectivePercent)
-        TextView objectivePercent;
 
         @BindView(R.id.treasuryAppreciation)
         TextView treasuryAppreciation;

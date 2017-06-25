@@ -111,7 +111,7 @@ public class SellFiiFormFragment extends BaseFormFragment {
             if (insertedFiiTransactionUri != null) {
                 // Rescan incomes tables to check if added fii changed their receive values.
                 updateFiiIncomes(inputSymbol, timestamp);
-                boolean updateFiiData = updateFiiData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateFiiData = updateFiiData(inputSymbol, Constants.Type.SELL);
                 if (updateFiiData){
                     Toast.makeText(mContext, R.string.sell_fii_success, Toast.LENGTH_LONG).show();
                     return true;

@@ -104,8 +104,6 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL)))));
-                viewHolder.objectivePercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_OBJECTIVE_PERCENT))) + "%");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT)))
@@ -202,9 +200,6 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.currentTotal)
         TextView currentTotal;
-
-        @BindView(R.id.objectivePercent)
-        TextView objectivePercent;
 
         @BindView(R.id.currentPercent)
         TextView currentPercent;

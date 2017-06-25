@@ -242,7 +242,7 @@ public class TreasuryIncomesMainFragment extends BaseFragment implements
                     incomeCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                updateTreasuryData(symbol, -1, -1);
+                updateTreasuryData(symbol, -1);
                 Log.d(LOG_TAG, "updateTreasuryIncomes successfully updated");
             } else {
                 Log.d(LOG_TAG, "updateTreasuryIncomes failed update");
