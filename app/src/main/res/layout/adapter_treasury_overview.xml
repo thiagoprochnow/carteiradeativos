@@ -83,7 +83,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/portfolio_income_label" />
+                    android:text="@string/treasury_portfolio_income_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"

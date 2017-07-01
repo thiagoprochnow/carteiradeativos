@@ -228,6 +228,7 @@
 
     <!-- Treasury Portolfio -->
     <string name="treasury_portfolio_label">Carteira de Tesouro</string>
+    <string name="treasury_portfolio_income_label">Cupons</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
