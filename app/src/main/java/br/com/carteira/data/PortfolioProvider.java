@@ -1700,7 +1700,7 @@ public class PortfolioProvider extends ContentProvider {
 
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        int quantity;
+        double quantity;
         double currentPrice;
         double totalBuy;
         double incomeTotal;
@@ -1725,7 +1725,7 @@ public class PortfolioProvider extends ContentProvider {
                     queryCursor.moveToFirst();
 
                     currentPrice = Double.parseDouble(contValues.get(key).toString());
-                    quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract
+                    quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .TreasuryData.COLUMN_QUANTITY_TOTAL));
                     totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .TreasuryData.COLUMN_BUY_VALUE_TOTAL));

@@ -252,7 +252,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_treasury_data = "CREATE TABLE " + PortfolioContract.TreasuryData.TABLE_NAME + " (" +
                 PortfolioContract.TreasuryData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.TreasuryData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_INCOME + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_INCOME_TAX + " REAL, " +
@@ -269,7 +269,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_sold_treasury_data = "CREATE TABLE " + PortfolioContract.SoldTreasuryData.TABLE_NAME + " (" +
                 PortfolioContract.SoldTreasuryData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.SoldTreasuryData.COLUMN_QUANTITY_TOTAL + " INTEGER, " +
+                PortfolioContract.SoldTreasuryData.COLUMN_QUANTITY_TOTAL + " REAL, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
@@ -279,7 +279,7 @@ public class DbHelper extends SQLiteOpenHelper {
         String builder_treasury_transaction = "CREATE TABLE " + PortfolioContract.TreasuryTransaction.TABLE_NAME + " (" +
                 PortfolioContract.TreasuryTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-                PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY + " INTEGER, " +
+                PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY + " REAL, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_TYPE + " INTEGER, " +
@@ -295,7 +295,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
-                PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
+                PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.TreasuryData.TABLE_NAME + " (" + PortfolioContract.TreasuryData._ID + "));";
 

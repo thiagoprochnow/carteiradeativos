@@ -29,7 +29,10 @@
 
     <!-- Form Fragment -->
     <string name="quantity">Quantity</string>
+    <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Buy Price</string>
+    <string name="treasury_buy_price">Unit buy price</string>
+    <string name="treasury_buy_price_hint">Price paid for each 1.00</string>
     <string name="sell_price">Sell Price</string>
     <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>

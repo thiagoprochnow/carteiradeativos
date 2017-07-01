@@ -91,7 +91,7 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 (soldDataCursor.getColumnIndex(PortfolioContract.SoldTreasuryData.COLUMN_BUY_VALUE_TOTAL)));
                         gainTotal = soldDataCursor.getDouble(
                                 (soldDataCursor.getColumnIndex(PortfolioContract.SoldTreasuryData.COLUMN_SELL_GAIN)));
-                        quantity = soldDataCursor.getInt(
+                        quantity = soldDataCursor.getDouble(
                                 (soldDataCursor.getColumnIndex(PortfolioContract.SoldTreasuryData.COLUMN_QUANTITY_TOTAL)));
                     }
 
@@ -100,7 +100,7 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         // Buy total is the sum of treasury in data portfolio and already sold ones
                         buyTotal += dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL)));
-                        quantity += dataCursor.getInt(
+                        quantity += dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL)));
                         // Gain total is sum of gain from variation and sold treasury
                         gainTotal += dataCursor.getDouble(
@@ -139,7 +139,7 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
+                double quantity = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
                 double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_PRICE));
                 // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
                 if (price > 0) {
@@ -148,7 +148,7 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     viewHolder.price.setText(priceText);
                     viewHolder.totalValue.setText(totalValue);
                 }
-                String quantityText = String.valueOf(quantity);
+                String quantityText = String.format("%.2f", quantity);
 
                 viewHolder.transactionType.setText(type);
                 viewHolder.transactionDate.setText(date);

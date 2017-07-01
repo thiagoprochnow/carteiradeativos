@@ -80,7 +80,7 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidTreasurySymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidInt(mInputQuantityView);
+        boolean isValidQuantity = isValidDouble(mInputQuantityView);
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
@@ -88,7 +88,7 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
         // If all validations pass, try to add the treasury
         if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();

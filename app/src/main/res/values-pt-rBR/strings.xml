@@ -29,7 +29,10 @@
 
     <!-- Dialog Fragment -->
     <string name="quantity">Quantidade</string>
+    <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Preço de compra</string>
+    <string name="treasury_buy_price">Preço unitário de compra</string>
+    <string name="treasury_buy_price_hint">Preço pago por cada 1.00</string>
     <string name="sell_price">Preço de venda</string>
     <string name="stock_current_price">Preço atual da ação</string>
     <string name="currency_current_price">Preço atual da moeda</string>

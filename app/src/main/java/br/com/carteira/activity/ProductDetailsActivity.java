@@ -16,6 +16,7 @@ import br.com.carteira.fragment.fixedincome.FixedDetailsFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.fragment.treasury.TreasuryDetailsFragment;
+import br.com.carteira.fragment.treasury.TreasuryTabFragment;
 import br.com.carteira.listener.ProductListener;
 import br.com.carteira.listener.IncomeDetailsListener;
 
@@ -53,7 +54,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     replaceFragment(new CurrencyDetailsFragment());
                     break;
                 case Constants.ProductType.TREASURY:
-                    replaceFragment(new TreasuryDetailsFragment());
+                    replaceFragment(new TreasuryTabFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

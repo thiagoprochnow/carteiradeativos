@@ -31,28 +31,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/quantity"/>
+            android:text="@string/quantity" />
 
         <EditText
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:inputType="numberDecimal"
+            android:hint="@string/treaury_quantity_hint"/>
 
         <TextView
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/buy_price"/>
+            android:text="@string/treasury_buy_price" />
 
         <EditText
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputBuyPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:hint="@string/treasury_buy_price_hint"/>
 
         <TextView
             android:fontFamily="sans-serif-light"

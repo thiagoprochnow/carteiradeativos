@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
@@ -117,7 +118,7 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                         .TreasuryData.
                         COLUMN_SYMBOL)));
-                viewHolder.treasuryQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
+                viewHolder.treasuryQuantity.setText(String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL))));
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(

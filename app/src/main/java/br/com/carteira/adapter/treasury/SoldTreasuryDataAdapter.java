@@ -71,7 +71,7 @@ public class SoldTreasuryDataAdapter extends RecyclerView.Adapter<SoldTreasuryDa
         holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldTreasuryData.
                 COLUMN_SYMBOL)));
-        holder.treasuryQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
+        holder.treasuryQuantity.setText(String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.SoldTreasuryData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
