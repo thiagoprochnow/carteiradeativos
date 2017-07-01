@@ -2139,8 +2139,6 @@ public abstract class BaseFragment extends Fragment {
             }
 
             double totalGain = currentTotal + soldTotal - buyTotal;
-            // Send to update Fixed Income Portfolio and show overview
-            mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
 
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL, buyTotal);
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_SELL_VALUE_TOTAL, soldTotal);
@@ -2175,8 +2173,7 @@ public abstract class BaseFragment extends Fragment {
             // Log update success/fail result
             if (updatedRows > 0){
                 Log.d(LOG_TAG, "updateStockData successfully updated");
-                // Update Sold Fixed Data
-                mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
+
                 return true;
             } else {
                 Log.d(LOG_TAG, "updateFixedData failed update");
@@ -2369,6 +2366,8 @@ public abstract class BaseFragment extends Fragment {
                 Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
+                // Send to update Fixed Income Portfolio and show overview
+                mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 updateSoldTreasuryData(symbol, soldBuyValue);
                 return true;
             } else {

@@ -80,13 +80,21 @@
             </intent-filter>
         </receiver>
         <receiver
-        android:name=".receiver.CurrencyReceiver"
-        android:exported="false">
-        <intent-filter>
-            <action android:name="UPDATE_CURRENCY_PORTFOLIO" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </receiver>
+            android:name=".receiver.CurrencyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_CURRENCY_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.TreasuryReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_TREASURY_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
