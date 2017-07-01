@@ -54,7 +54,7 @@
     <string name="ex_date">Data Ex Dividendo</string>
     <string name="ex_date_jcp">Data Ex Juros s/ Capital</string>
     <string name="ex_date_fii_income">Data Ex Rendimento</string>
-    <string name="ex_date_treasury_income">Data Ex Rendimento</string>
+    <string name="ex_date_treasury_income">Data Recebimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
@@ -85,7 +85,8 @@
     <string name="menu_item_bonification">Bonificação</string>
     <string name="menu_item_split">Desdobramento</string>
     <string name="menu_item_grouping">Grupamento</string>
-    <string name="menu_item_income">Rendimentos</string>
+    <string name="menu_item_income">Rendimento</string>
+    <string name="menu_item_treasury">Cupom Semestral</string>
 
     <!-- Currency Main Fragment -->
     <string name="buy_currency_success">Moeda adicionada com sucesso</string>
@@ -166,7 +167,7 @@
     <string name="treasury_overview">Visão Geral</string>
     <string name="treasury_portfolio">Carteira</string>
     <string name="treasury_history">Histórico</string>
-    <string name="treasury_incomes">Rendimentos</string>
+    <string name="treasury_incomes">Cupons</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -234,7 +235,7 @@
     <string name="jcp_income_type">Juros s/ Capital</string>
     <string name="fii_income_type">Rendimento</string>
     <string name="fixed_income_type">Rendimento</string>
-    <string name="treasury_income_type">Treasury</string>
+    <string name="treasury_income_type">Cupom Semestral</string>
     <string name="income_overview_bought_label">Compra</string>
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>
@@ -286,7 +287,7 @@
     <string name="receive_value">Valor Recebido por Ação</string>
     <string name="receive_value_fii">Valor Recebido por Fundo Imobiliario</string>
     <string name="receive_value_fixed">Valor Recebido por Renda Fixa</string>
-    <string name="receive_value_treasury">Valor Recebido por papel</string>
+    <string name="receive_value_treasury">Valor total recebido no cupom</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
     <string name="add_jcp_success">Juros sobre capital adicionado com sucesso</string>

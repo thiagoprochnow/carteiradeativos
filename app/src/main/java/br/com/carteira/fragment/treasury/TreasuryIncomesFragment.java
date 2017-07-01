@@ -196,20 +196,9 @@ public class TreasuryIncomesFragment extends BaseFragment implements
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            double perTreasury = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_PER_TREASURY));
-            double quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY));
-            double grossIncome = perTreasury*quantity;
-            double tax = 0;
-            double netIncome = 0;
-            if (type == Constants.IncomeType.JCP){
-                // Change to JCP
-                tax = grossIncome*0.15;
-                netIncome = grossIncome-tax;
-            } else {
-                // Change to Dividend
-                tax = 0;
-                netIncome = grossIncome;
-            }
+            double grossIncome = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL)));
+            double tax = grossIncome*0.15;
+            double netIncome = grossIncome-tax;
 
             String updateSelection = PortfolioContract.TreasuryIncome._ID + " = ?";
             String[] updatedSelectionArguments = {id};

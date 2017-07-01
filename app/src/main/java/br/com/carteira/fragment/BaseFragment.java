@@ -2511,9 +2511,7 @@ public abstract class BaseFragment extends Fragment {
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID)));
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                double quantity = getTreasuryQuantity(symbol, incomeTimestamp);
-                double perTreasury = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_PER_TREASURY)));
-                double receiveTotal = quantity * perTreasury;
+                double receiveTotal = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL)));
 
                 // Prepare query to update treasury quantity applied for that dividend
                 // and the total income received
@@ -2521,11 +2519,9 @@ public abstract class BaseFragment extends Fragment {
                 String[] updatedSelectionArguments = {_id};
                 ContentValues incomeCV = new ContentValues();
 
-                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY, quantity);
                 incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL, receiveTotal);
-                incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID, receiveTotal);
-                double tax = 0;
-                double receiveLiquid = receiveTotal;
+                double tax = receiveTotal*0.15;
+                double receiveLiquid = receiveTotal - tax;
                 incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_TAX, tax);
                 incomeCV.put(PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID, receiveLiquid);
 

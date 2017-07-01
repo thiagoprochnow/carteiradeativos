@@ -54,7 +54,7 @@
     <string name="ex_date">Ex Dividend Date</string>
     <string name="ex_date_jcp">Ex Interest on Capital Date</string>
     <string name="ex_date_fii_income">Ex Income Date</string>
-    <string name="ex_date_treasury_income">Ex Income Date</string>
+    <string name="ex_date_treasury_income">Receive Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
@@ -86,7 +86,7 @@
     <string name="menu_item_bonification">Bonification</string>
     <string name="menu_item_split">Split</string>
     <string name="menu_item_grouping">Grouping</string>
-    <string name="menu_item_income">Incomes</string>
+    <string name="menu_item_income">Semiannual Coupon</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Stock added successfully</string>
@@ -168,7 +168,7 @@
     <string name="treasury_overview">Overview</string>
     <string name="treasury_portfolio">Portfolio</string>
     <string name="treasury_history">History</string>
-    <string name="treasury_incomes">Incomes</string>
+    <string name="treasury_incomes">Coupons</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -236,7 +236,7 @@
     <string name="jcp_income_type">Interest on Capital</string>
     <string name="fii_income_type">Income</string>
     <string name="fixed_income_type">Income</string>
-    <string name="treasury_income_type">Income</string>
+    <string name="treasury_income_type">Semiannual Coupon</string>
     <string name="income_overview_bought_label">Bought</string>
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>
@@ -288,7 +288,7 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
     <string name="receive_value_fixed">Received Value per Fixed Income</string>
-    <string name="receive_value_treasury">Received Value per Treasury</string>
+    <string name="receive_value_treasury">Total received value on coupon</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
     <string name="add_jcp_success">Interest on capital added successfully</string>

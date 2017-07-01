@@ -83,7 +83,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 getMenuInflater().inflate(R.menu.fii_details_menu, menu);
                 return true;
             case Constants.ProductType.TREASURY:
-                getMenuInflater().inflate(R.menu.fii_details_menu, menu);
+                getMenuInflater().inflate(R.menu.treasury_details_menu, menu);
                 return true;
             default:
                 return true;

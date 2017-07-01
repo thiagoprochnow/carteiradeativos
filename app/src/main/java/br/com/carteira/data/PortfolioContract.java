@@ -974,23 +974,19 @@ public class PortfolioContract {
 
         public static final String COLUMN_SYMBOL = "symbol";
         public static final String COLUMN_TYPE = "income_type";
-        public static final String COLUMN_PER_TREASURY = "per_treasury";
         public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
         public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
-        public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
 
         public static final String[] TREASURY_INCOME_COLUMNS = {
                 _ID,
                 COLUMN_SYMBOL,
                 COLUMN_TYPE,
-                COLUMN_PER_TREASURY,
                 COLUMN_EXDIVIDEND_TIMESTAMP,
                 COLUMN_RECEIVE_TOTAL,
                 COLUMN_TAX,
-                COLUMN_RECEIVE_LIQUID,
-                COLUMN_AFFECTED_QUANTITY
+                COLUMN_RECEIVE_LIQUID
         };
 
         public static Uri makeUriForTreasuryIncome(String symbol) {

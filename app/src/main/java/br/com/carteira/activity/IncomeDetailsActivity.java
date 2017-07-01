@@ -10,6 +10,7 @@ import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.fii.FiiIncomeDetailsFragment;
 import br.com.carteira.fragment.stock.StockIncomeDetailsFragment;
+import br.com.carteira.fragment.treasury.TreasuryIncomeDetailsFragment;
 import br.com.carteira.listener.ProductListener;
 
 public class IncomeDetailsActivity extends AppCompatActivity {
@@ -43,8 +44,8 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                     replaceFragment(new FiiIncomeDetailsFragment());
                     break;
                 case Constants.IncomeType.TREASURY:
-                    setTitle(R.string.fii_income_type);
-                    replaceFragment(new FiiIncomeDetailsFragment());
+                    setTitle(R.string.treasury_income_type);
+                    replaceFragment(new TreasuryIncomeDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");

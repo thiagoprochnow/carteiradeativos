@@ -28,7 +28,7 @@ public class TreasuryDetailsTabAdapter extends FragmentPagerAdapter {
         if(position == 0){
             return mContext.getString(R.string.operations);
         }
-        return mContext.getString(R.string.incomes);
+        return mContext.getString(R.string.treasury_incomes);
     }
 
     @Override

@@ -290,12 +290,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_TYPE + " INTEGER NOT NULL, " +
-                PortfolioContract.TreasuryIncome.COLUMN_PER_TREASURY + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
-                PortfolioContract.TreasuryIncome.COLUMN_AFFECTED_QUANTITY + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.TreasuryData.TABLE_NAME + " (" + PortfolioContract.TreasuryData._ID + "));";
 

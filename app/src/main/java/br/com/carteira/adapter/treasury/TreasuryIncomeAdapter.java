@@ -149,10 +149,6 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
-                Log.d(LOG_TAG, "IncomeType: " + incomeType);
-                Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID))));
-                Log.d(LOG_TAG, "Date: " + date);
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID))));
@@ -257,12 +253,12 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             case Constants.IncomeType.INVALID:
                 Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
-            case Constants.IncomeType.DIVIDEND:
+            case Constants.IncomeType.TREASURY:
                 Log.d(LOG_TAG, "Income IncomeType");
-                return mContext.getResources().getString(R.string.fii_income_type);
+                return mContext.getResources().getString(R.string.treasury_income_type);
             default:
                 Log.d(LOG_TAG, "Default IncomeType");
-                return mContext.getResources().getString(R.string.fii_income_type);
+                return mContext.getResources().getString(R.string.treasury_income_type);
         }
     }
 

@@ -28,6 +28,7 @@ import br.com.carteira.fragment.stock.SplitFormFragment;
 import br.com.carteira.fragment.treasury.BuyTreasuryFormFragment;
 import br.com.carteira.fragment.treasury.EditTreasuryFormFragment;
 import br.com.carteira.fragment.treasury.SellTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.TreasuryIncomeFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.
@@ -148,6 +149,10 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.FII:
                     Log.d(LOG_TAG, "FII Form Fragment");
                     replaceFragment(new FiiIncomeFormFragment());
+                    break;
+                case Constants.IncomeType.TREASURY:
+                    Log.d(LOG_TAG, "Treasury Form Fragment");
+                    replaceFragment(new TreasuryIncomeFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
