@@ -1967,7 +1967,6 @@ public class PortfolioProvider extends ContentProvider {
      * This action is done in only one transaction in order to not create a lot of I/O requests
      */
     private int updateFixedCurrentPercent(double currentTotal) {
-
         final SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         db.beginTransaction();

@@ -49,150 +49,128 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item;
-        switch (viewType){
-            // If it is the first view, return viewholder for TreasuryPortfolio overview
-            case 0:
-                item = LayoutInflater.from(mContext).inflate(R.layout.treasury_summary, parent, false);
-                return new TreasurySummaryViewHolder(item);
-            default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_treasury, parent, false);
-                return new TreasuryDataViewHolder(item);
-        }
+        item = LayoutInflater.from(mContext).inflate(R.layout.adapter_treasury, parent, false);
+        return new TreasuryDataViewHolder(item);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        switch (holder.getItemViewType()) {
-            case 0:
-                TreasurySummaryViewHolder summaryViewHolder = (TreasurySummaryViewHolder) holder;
-                // If it is the first view, return viewholder for TreasuryPortfolio overview
-                if (mCursor != null && summaryViewHolder != null) {
-                    if (mCursor.getCount() != 0) {
-                        summaryViewHolder.itemView.setVisibility(View.VISIBLE);
-                    } else {
-                        summaryViewHolder.itemView.setVisibility(View.GONE);
-                    }
-                }
-                break;
-            default:
-                // If it is one of the TreasuryData adapter views
-                mCursor.moveToPosition(position-1);
-                TreasuryDataViewHolder viewHolder = (TreasuryDataViewHolder) holder;
-                double treasuryAppreciation = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.TreasuryData.COLUMN_VARIATION));
-                double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.TreasuryData.COLUMN_INCOME));
-                double totalGain = treasuryAppreciation + totalIncome;
-                Locale locale = new Locale("pt", "BR");
-                NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+        // If it is one of the TreasuryData adapter views
+        mCursor.moveToPosition(position);
+        TreasuryDataViewHolder viewHolder = (TreasuryDataViewHolder) holder;
+        double treasuryAppreciation = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.TreasuryData.COLUMN_VARIATION));
+        double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.TreasuryData.COLUMN_INCOME));
+        double totalGain = treasuryAppreciation + totalIncome;
+        Locale locale = new Locale("pt", "BR");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
-                // Set text colors according to positive or negative values
-                if (treasuryAppreciation >= 0){
-                    viewHolder.treasuryAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.treasuryAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.treasuryAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.treasuryAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
-
-                if (totalIncome >= 0){
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
-
-                if (totalGain >= 0){
-                    viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                } else {
-                    viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                    viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                }
-                double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL));
-                double variationPercent = treasuryAppreciation/buyTotal*100;
-                double netIncomePercent = totalIncome/buyTotal*100;
-                double totalGainPercent = totalGain/buyTotal*100;
-                // Get handled values of TreasuryData with current symbol
-                viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                        .TreasuryData.
-                        COLUMN_SYMBOL)));
-                viewHolder.treasuryQuantity.setText(String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL))));
-                viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
-                viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL)))));
-
-                viewHolder.treasuryAppreciation.setText(String.format(formatter.format(treasuryAppreciation)));
-                viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
-                        mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PERCENT)))
-                        + "%");
-                viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
-                viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-                viewHolder.treasuryAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
-                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
-                viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
-                if(position == mCursor.getCount()){
-                    // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
-                    FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                    int leftDp = 10; // margin in dips
-                    int rightDp = 10; // margin in dips
-                    int bottomDp = 85; // margin in dips
-                    float d = mContext.getResources().getDisplayMetrics().density;
-                    int leftMargin = (int)(leftDp * d); // margin in pixels
-                    int rightMargin = (int)(rightDp * d); // margin in pixels
-                    int bottomMargin = (int)(bottomDp * d); // margin in pixels
-                    params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
-                    viewHolder.treasuryCardView.setLayoutParams(params);
-                }
-
-                viewHolder.treasuryCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mCursor.moveToPosition(position-1);
-                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
-                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.MAIN);
-                    }
-                });
-
-                viewHolder.menuAdd.setOnClickListener(new ImageView.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mCursor.moveToPosition(position-1);
-                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
-                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
-                    }
-                });
-
-                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mCursor.moveToPosition(position-1);
-                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
-                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-                    }
-                });
-
-                viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mCursor.moveToPosition(position-1);
-                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
-                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.SELL);
-                    }
-                });
-
-                viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        mCursor.moveToPosition(position-1);
-                        int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
-                        mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.DELETE);
-                    }
-                });
+        // Set text colors according to positive or negative values
+        if (treasuryAppreciation >= 0){
+            viewHolder.treasuryAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            viewHolder.treasuryAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            viewHolder.treasuryAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            viewHolder.treasuryAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
+        if (totalIncome >= 0){
+            viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
+
+        if (totalGain >= 0){
+            viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
+        double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_BUY_VALUE_TOTAL));
+        double variationPercent = treasuryAppreciation/buyTotal*100;
+        double netIncomePercent = totalIncome/buyTotal*100;
+        double totalGainPercent = totalGain/buyTotal*100;
+        // Get handled values of TreasuryData with current symbol
+        viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+                .TreasuryData.
+                COLUMN_SYMBOL)));
+        viewHolder.treasuryQuantity.setText(String.format("%.2f",mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.TreasuryData.COLUMN_QUANTITY_TOTAL))));
+        viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
+        viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL)))));
+
+        viewHolder.treasuryAppreciation.setText(String.format(formatter.format(treasuryAppreciation)));
+        viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PERCENT)))
+                + "%");
+        viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+        viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+        viewHolder.treasuryAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
+        viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
+        viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+        if(position == mCursor.getCount()-1){
+            // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            int leftDp = 10; // margin in dips
+            int rightDp = 10; // margin in dips
+            int bottomDp = 85; // margin in dips
+            float d = mContext.getResources().getDisplayMetrics().density;
+            int leftMargin = (int)(leftDp * d); // margin in pixels
+            int rightMargin = (int)(rightDp * d); // margin in pixels
+            int bottomMargin = (int)(bottomDp * d); // margin in pixels
+            params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
+            viewHolder.treasuryCardView.setLayoutParams(params);
+        }
+
+        viewHolder.treasuryCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.MAIN);
+            }
+        });
+
+        viewHolder.menuAdd.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
+            }
+        });
+
+        viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+            }
+        });
+
+        viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.SELL);
+            }
+        });
+
+        viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mCursor.moveToPosition(position);
+                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_SYMBOL);
+                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.DELETE);
+            }
+        });
     }
 
     @Override
@@ -200,7 +178,6 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int count = 0;
         if (mCursor != null) {
             count = mCursor.getCount();
-            count++;
         }
         return count;
     }
@@ -266,13 +243,6 @@ public class TreasuryDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TreasuryDataViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-    }
-
-    class TreasurySummaryViewHolder extends RecyclerView.ViewHolder{
-
-        public TreasurySummaryViewHolder(View itemView){
-            super(itemView);
         }
     }
 }

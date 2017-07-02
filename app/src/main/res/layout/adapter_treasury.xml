@@ -6,10 +6,10 @@
     android:id="@+id/treasury_card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="0dp"
+    android:layout_marginTop="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="5dp"
     app:cardElevation="2dp"
     app:cardCornerRadius="3dp"
     app:cardPreventCornerOverlap="false"
@@ -87,45 +87,9 @@
             android:paddingBottom="5dp">
 
             <LinearLayout
-                android:layout_width="@dimen/stock_symbol_info_size"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/currentPercentImage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/current_small"
-                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-light"
-                        android:id="@+id/currentPercent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/stock_percentage_text_margin"
-                        android:textSize="@dimen/stock_price"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="@dimen/stock_percentage_text_margin"
-                    android:layout_weight="1">
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="@dimen/letters_text_width"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/letters_text_margin">
+                android:orientation="vertical">
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
@@ -145,7 +109,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_income_label" />
+                    android:text="@string/data_treasury_income_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
@@ -270,6 +234,40 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="@dimen/stock_symbol_info_size"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="left"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/currentPercentImage"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/current_small"
+                        android:layout_marginLeft="@dimen/stock_percentage_image_margin" />
+
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/currentPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/stock_percentage_text_margin"
+                        android:textSize="@dimen/stock_price"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -302,5 +300,6 @@
                     android:src="@drawable/delete_icon_small"
                     android:layout_marginRight="10dp"/>
             </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

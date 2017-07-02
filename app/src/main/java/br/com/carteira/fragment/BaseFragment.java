@@ -2172,8 +2172,10 @@ public abstract class BaseFragment extends Fragment {
                     fixedDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
+                // Send broadcast so FixedReceiver can update the rest
+                // Send to update Fixed Income Portfolio and show overview
+                mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 Log.d(LOG_TAG, "updateStockData successfully updated");
-
                 return true;
             } else {
                 Log.d(LOG_TAG, "updateFixedData failed update");

@@ -176,12 +176,13 @@
     <string name="operations">Operações</string>
     <string name="operation">Operação</string>
     <string name="stock_quantity_label">Quantidade: </string>
-    <string name="data_bought_label"><u>C</u></string>
-    <string name="data_sold_label"><u>V</u></string>
-    <string name="data_current_label"><u>A</u></string>
-    <string name="data_appreciation_label"><u>V</u></string>
-    <string name="data_income_label"><u>R</u></string>
-    <string name="data_total_gain_label"><u>G</u></string>
+    <string name="data_bought_label">Comprado</string>
+    <string name="data_sold_label">Vendido</string>
+    <string name="data_current_label">Atual</string>
+    <string name="data_appreciation_label">Valorização</string>
+    <string name="data_income_label">Rendimentos</string>
+    <string name="data_treasury_income_label">Cupons</string>
+    <string name="data_total_gain_label">Ganho</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>
@@ -199,14 +200,6 @@
 
     <!-- Treasury Adapter -->
     <string name="treasury_quantity_label">Quantidade: </string>
-
-    <!-- Summary -->
-    <string name="summary_bought_label"><u>C</u>ompra</string>
-    <string name="summary_current_label"><u>A</u>tual</string>
-    <string name="summary_appreciation_label"><u>V</u>alorização</string>
-    <string name="summary_sold_label"><u>V</u>endido</string>
-    <string name="summary_income_label"><u>R</u>endimentos</string>
-    <string name="summary_total_gain_label"><u>G</u>anho</string>
 
     <!-- Stock Portolfio -->
     <string name="stock_portfolio_label">Carteira de Ações</string>
