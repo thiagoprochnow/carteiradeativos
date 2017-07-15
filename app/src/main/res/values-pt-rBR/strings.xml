@@ -203,6 +203,7 @@
 
     <!-- Stock Portolfio -->
     <string name="stock_portfolio_label">Carteira de Ações</string>
+    <string name="portfolio_other_label">Outros</string>
     <string name="portfolio_bought_label">Comprado</string>
     <string name="portfolio_current_label">Atual</string>
     <string name="portfolio_sold_label">Vendido</string>

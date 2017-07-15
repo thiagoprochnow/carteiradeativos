@@ -57,8 +57,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return new StockDetailViewHolder(item);
             //item = LayoutInflater.from(mContext).inflate(R.layout.adapter_stock, parent, false);
             //return new StockDataViewHolder(item);
-
-
         }
     }
 
