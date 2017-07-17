@@ -94,12 +94,14 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             int leftDp = 10; // margin in dips
             int rightDp = 10; // margin in dips
+            int topDp = 10; // margin in dips
             int bottomDp = 85; // margin in dips
             float d = mContext.getResources().getDisplayMetrics().density;
             int leftMargin = (int)(leftDp * d); // margin in pixels
             int rightMargin = (int)(rightDp * d); // margin in pixels
+            int topMargin = (int) (topDp * d); // margin in pixels
             int bottomMargin = (int)(bottomDp * d); // margin in pixels
-            params.setMargins(leftMargin, 0, rightMargin, bottomMargin);
+            params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
             viewHolder.fixedCardView.setLayoutParams(params);
         }
         viewHolder.fixedCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){

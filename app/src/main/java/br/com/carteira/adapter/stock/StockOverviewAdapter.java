@@ -35,6 +35,7 @@ import java.util.Locale;
 
 import br.com.carteira.R;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.utils.MyPercentFormatter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -147,13 +148,16 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                         String symbol = dataCursor.getString(1);
                         // Check if already reach others field
                         // Show each pie data order in asc form
-                        if (dataCursor.getPosition() < 8){
-                            entries.add(new PieEntry(currentPercent, symbol));
-                        } else {
-                            // Check if is last stock data
-                            otherPercent += currentPercent;
-                            if (dataCursor.getPosition() == dataCursor.getCount()-1){
-                                entries.add(new PieEntry(otherPercent, mContext.getResources().getString(R.string.portfolio_other_label)));
+                        // Do not show sold stocks
+                        if (currentPercent > 0) {
+                            if (dataCursor.getPosition() < 8) {
+                                entries.add(new PieEntry(currentPercent, symbol));
+                            } else {
+                                // Check if is last stock data
+                                otherPercent += currentPercent;
+                                if (dataCursor.getPosition() == dataCursor.getCount() - 1) {
+                                    entries.add(new PieEntry(otherPercent, mContext.getResources().getString(R.string.portfolio_other_label)));
+                                }
                             }
                         }
                     } while (dataCursor.moveToNext());
@@ -163,7 +167,6 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     chartHolder.pieChart.setDrawHoleEnabled(true);
                     chartHolder.pieChart.setHoleColor(mContext.getResources().getColor(R.color.activity_main_background));
                     PieDataSet dataSet = new PieDataSet(entries, "");
-
                     chartHolder.pieChart.setHoleRadius(58f);
                     chartHolder.pieChart.setTransparentCircleRadius(61f);
                     chartHolder.pieChart.setOnChartValueSelectedListener(chartHolder);
@@ -181,7 +184,7 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     data.setValueTextSize(12f);
                     data.setValueTextColor(Color.BLACK);
                     // Set as Percent
-                    data.setValueFormatter(new PercentFormatter());
+                    data.setValueFormatter(new MyPercentFormatter());
                     //Hides labels
                     chartHolder.pieChart.setDrawEntryLabels(false);
                     // Hide Description
@@ -199,7 +202,7 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         int count = 0;
-        if (mCursor != null) {
+        if (mCursor != null && mCursor.getCount() > 0) {
             count = mCursor.getCount();
             count++;
         }
