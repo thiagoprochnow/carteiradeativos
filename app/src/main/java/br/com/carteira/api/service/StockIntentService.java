@@ -5,17 +5,21 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.util.logging.Handler;
 
 import br.com.carteira.api.domain.ResponseStock;
 import br.com.carteira.api.domain.ResponseStocks;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.domain.Stock;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -33,6 +37,7 @@ public class StockIntentService extends IntentService {
 
     private boolean mSuccess = false;
     private String mSymbol;
+    Handler mHandler;
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
@@ -86,7 +91,8 @@ public class StockIntentService extends IntentService {
                 Response<ResponseStock> response = call.execute();
                 ResponseStock responseGetStock = response.body();
 
-                if(responseGetStock.getStockQuotes() != null) {
+                if(responseGetStock.getStockQuotes() != null &&
+                        responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
                     Log.d(LOG_TAG, "Response log test:" +
                             "\nquery: " + query +
                             "\nsymbol: " + responseGetStock.getStockQuotes().get(0).getSymbol() +
@@ -103,17 +109,13 @@ public class StockIntentService extends IntentService {
 
                     // Prepare the data of the current price to update the StockData table
                     ContentValues stockDataCV = new ContentValues();
-                    stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PRICE,
+                    stockDataCV.put(tableSymbol,
                             responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly());
 
-                    // Prepare query to update stock data
-                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
-                    String[] updatedSelectionArguments = {tableSymbol};
-                    mSymbol = tableSymbol;
                     // Update value on stock data
                     int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.URI,
-                            stockDataCV, updateSelection, updatedSelectionArguments);
+                            PortfolioContract.StockData.BULK_UPDATE_URI,
+                            stockDataCV, null, null);
                     // Log update success/fail result
                     if (updatedRows > 0) {
                         Log.d(LOG_TAG, "updateStockData successfully updated");
@@ -126,12 +128,21 @@ public class StockIntentService extends IntentService {
                 Response<ResponseStocks> response = call.execute();
                 ResponseStocks responseGetStocks = response.body();
                 if(responseGetStocks.getStockQuotes() != null) {
-                    Log.d(LOG_TAG, "Response log test:" +
-                            "\nquery: " + query +
-                            "\nsymbol: " + responseGetStocks.getStockQuotes().get(1).getSymbol() +
-                            "\nname: " + responseGetStocks.getStockQuotes().get(1).getName() +
-                            "\nlastPrice: " + responseGetStocks.getStockQuotes().get(1).getLastTradePriceOnly() +
-                            "");
+                    String tableSymbol = "";
+                    ContentValues stockDataCV = new ContentValues();
+                    for(Stock stock : responseGetStocks.getStockQuotes()) {
+                        // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
+                        tableSymbol = stock.getSymbol();
+                        if ((tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
+                            tableSymbol = tableSymbol.substring(0, tableSymbol.length() - 3);
+                        }
+                        stockDataCV.put(tableSymbol,
+                                stock.getLastTradePriceOnly());
+                    }
+
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.BULK_UPDATE_URI,
+                            stockDataCV, null, null);
                 }
             }
 
@@ -146,15 +157,16 @@ public class StockIntentService extends IntentService {
 
     private String buildQuery(String[] symbols) {
         String resultQuery = "";
+
         if (symbols.length == 1) {
 
-            resultQuery = "\"" + symbols[0] + "\"";
+            resultQuery = "\"" + symbols[0] + ".SA" + "\"";
         } else {
             for (String symbol : symbols) {
                 if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + "\"";
+                    resultQuery = "\"" + symbol + ".SA" + "\"";
                 } else {
-                    resultQuery += ",\"" + symbol + "\"";
+                    resultQuery += ",\"" + symbol + ".SA" + "\"";
                 }
             }
 
@@ -166,53 +178,7 @@ public class StockIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Updates the StockData values
-            String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
-            String[] selectionArguments = {mSymbol};
-
-            Cursor queryCursor = this.getContentResolver().query(
-                    PortfolioContract.StockData.URI,
-                    null, selection, selectionArguments, null);
-
-            if (queryCursor.getCount() > 0){
-                queryCursor.moveToFirst();
-
-                // Prepare new values to update StockData table
-                int quantity = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL));
-                double currentPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
-                double totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
-                double incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TOTAL));
-                double currentTotal = quantity*currentPrice;
-                double variation = currentTotal - totalBuy;
-                double totalGain = currentTotal + incomeTotal - totalBuy;
-                double incomeTotalPercent = incomeTotal/totalBuy*100;
-                double variationPercent= variation/totalBuy*100;
-                double totalGainPercent = totalGain/totalBuy*100;
-
-                ContentValues stockDataCV = new ContentValues();
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN, totalGain);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TOTAL_PERCENT, incomeTotalPercent);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION_PERCENT, variationPercent);
-                stockDataCV.put(PortfolioContract.StockData.COLUMN_TOTAL_GAIN_PERCENT, totalGainPercent);
-
-                // Update value on stock data
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.StockData.URI,
-                        stockDataCV, selection, selectionArguments);
-
-                // Log update success/fail result
-                if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateStockData successfully updated");
-                    // Send broadcast so StockReceiver can update the rest
-                    this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
-                } else {
-                    Log.d(LOG_TAG, "updateStockData failed update");
-                }
-
-            } else{
-                Log.d(LOG_TAG, "StockData was not found for symbol: " + mSymbol);
-            }
+        this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
     }
 }

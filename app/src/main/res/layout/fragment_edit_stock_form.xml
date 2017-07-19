@@ -11,18 +11,26 @@
         android:orientation="vertical">
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Subhead"
+            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
-            android:text="@string/percentual_objective"/>
+            android:text="@string/stock_current_price"/>
 
         <EditText
-            android:id="@+id/inputObjective"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputCurrentPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLength="5"
+            android:maxLength="10"
             android:inputType="numberDecimal"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/stock_edit_tip"/>
 
     </LinearLayout>
 </ScrollView>

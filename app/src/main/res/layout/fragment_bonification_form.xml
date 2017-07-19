@@ -10,6 +10,7 @@
         android:layout_margin="@dimen/fragment_form_margin"
         android:orientation="vertical">
         <TextView
+            android:fontFamily="sans-serif-light"
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,12 +18,14 @@
             android:text="@string/quantity"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
 
         <TextView
+            android:fontFamily="sans-serif-light"
             style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,6 +33,7 @@
             android:text="@string/bonification_date"/>
 
         <EditText
+            android:fontFamily="sans-serif-light"
             android:id="@+id/inputBonificationDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

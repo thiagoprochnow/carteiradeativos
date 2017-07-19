@@ -8,6 +8,16 @@ import android.util.Log;
 
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
+import br.com.carteira.fragment.currency.BuyCurrencyFormFragment;
+import br.com.carteira.fragment.currency.EditCurrencyFormFragment;
+import br.com.carteira.fragment.currency.SellCurrencyFormFragment;
+import br.com.carteira.fragment.fii.BuyFiiFormFragment;
+import br.com.carteira.fragment.fii.EditFiiFormFragment;
+import br.com.carteira.fragment.fii.FiiIncomeFormFragment;
+import br.com.carteira.fragment.fii.SellFiiFormFragment;
+import br.com.carteira.fragment.fixedincome.BuyFixedFormFragment;
+import br.com.carteira.fragment.fixedincome.EditFixedFormFragment;
+import br.com.carteira.fragment.fixedincome.SellFixedFormFragment;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
 import br.com.carteira.fragment.stock.EditStockFormFragment;
@@ -15,6 +25,10 @@ import br.com.carteira.fragment.stock.GroupingFormFragment;
 import br.com.carteira.fragment.stock.JCPDividendFormFragment;
 import br.com.carteira.fragment.stock.SellStockFormFragment;
 import br.com.carteira.fragment.stock.SplitFormFragment;
+import br.com.carteira.fragment.treasury.BuyTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.EditTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.SellTreasuryFormFragment;
+import br.com.carteira.fragment.treasury.TreasuryIncomeFormFragment;
 
 
 /* This is the Activity that will hold all form fragment.
@@ -43,7 +57,16 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new BuyStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
-                        // TODO: replaceFragment(new BuyFiiFormFragment());
+                        replaceFragment(new BuyFiiFormFragment());
+                        break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new BuyCurrencyFormFragment());
+                        break;
+                    case Constants.ProductType.FIXED:
+                        replaceFragment(new BuyFixedFormFragment());
+                        break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new BuyTreasuryFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -56,7 +79,16 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new SellStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
-                        // TODO: replaceFragment(new SellFiiFormFragment());
+                        replaceFragment(new SellFiiFormFragment());
+                        break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new SellCurrencyFormFragment());
+                        break;
+                    case Constants.ProductType.FIXED:
+                        replaceFragment(new SellFixedFormFragment());
+                        break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new SellTreasuryFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -69,6 +101,16 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new EditStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
+                        replaceFragment(new EditFiiFormFragment());
+                        break;
+                    case Constants.ProductType.CURRENCY:
+                        replaceFragment(new EditCurrencyFormFragment());
+                        break;
+                    case Constants.ProductType.FIXED:
+                        replaceFragment(new EditFixedFormFragment());
+                        break;
+                    case Constants.ProductType.TREASURY:
+                        replaceFragment(new EditTreasuryFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
@@ -103,6 +145,14 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.GROUPING:
                     Log.d(LOG_TAG, "Grouping Form Fragment");
                     replaceFragment(new GroupingFormFragment());
+                    break;
+                case Constants.IncomeType.FII:
+                    Log.d(LOG_TAG, "FII Form Fragment");
+                    replaceFragment(new FiiIncomeFormFragment());
+                    break;
+                case Constants.IncomeType.TREASURY:
+                    Log.d(LOG_TAG, "Treasury Form Fragment");
+                    replaceFragment(new TreasuryIncomeFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

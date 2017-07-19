@@ -28,6 +28,9 @@
             android:exported="false" />
 
         <service android:name=".api.service.StockIntentService" />
+        <service android:name=".api.service.StockIncomeIntentService" />
+        <service android:name=".api.service.FiiIntentService" />
+        <service android:name=".api.service.CurrencyIntentService" />
 
         <activity
             android:name=".activity.FormActivity"
@@ -38,14 +41,16 @@
         </activity>
         <activity
             android:name=".activity.ProductDetailsActivity"
-            android:parentActivityName=".activity.MainActivity">
+            android:parentActivityName=".activity.MainActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.IncomeDetailsActivity"
-            android:parentActivityName=".activity.ProductDetailsActivity">
+            android:parentActivityName=".activity.ProductDetailsActivity"
+            android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.ProductDetailsActivity" />
@@ -58,6 +63,39 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".receiver.FiiReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_FII_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.FixedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_FIXED_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.CurrencyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_CURRENCY_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.TreasuryReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_TREASURY_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

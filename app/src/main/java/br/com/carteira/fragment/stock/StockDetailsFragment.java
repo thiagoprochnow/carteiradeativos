@@ -1,13 +1,17 @@
 package br.com.carteira.fragment.stock;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.StockDetailAdapter;
+import br.com.carteira.adapter.stock.StockDetailAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -47,14 +50,21 @@ public class StockDetailsFragment extends BaseFragment implements
 
     private String id;
     private String mSymbol;
-    // Loader IDs
-    private static final int DETAIL_LOADER = 3;
 
     private StockDetailAdapter mStockDetailAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // After new current price is get, reload Overview view
+                mStockDetailAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
     }
 
     @Override
@@ -69,14 +79,14 @@ public class StockDetailsFragment extends BaseFragment implements
         mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
-
+        getActivity().setTitle(mSymbol);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
         mStockDetailAdapter = new StockDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockDetailAdapter);
-        getActivity().getSupportLoaderManager().initLoader(DETAIL_LOADER, bundle, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DETAILS, bundle, this);
 
         return mView;
     }

@@ -1,36 +1,54 @@
 package br.com.carteira.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import br.com.carteira.R;
+import br.com.carteira.api.service.CurrencyIntentService;
+import br.com.carteira.api.service.FiiIntentService;
+import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
-import br.com.carteira.fragment.currency.CurrencyMainFragment;
-import br.com.carteira.fragment.fii.FiiMainFragment;
-import br.com.carteira.fragment.fixedincome.FixedIncomeMainFragment;
+import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.currency.CurrencyTabFragment;
+import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
-import br.com.carteira.fragment.stock.StockMainFragment;
+import br.com.carteira.fragment.fixedincome.FixedTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
+import br.com.carteira.fragment.treasury.TreasuryTabFragment;
+import br.com.carteira.listener.IncomeDetailsListener;
 import br.com.carteira.listener.ProductListener;
 
 // Main app Activity
-public class MainActivity extends AppCompatActivity implements ProductListener {
+public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     protected DrawerLayout mDrawerLayout;
 
+    boolean mStockReceiver = false;
+    boolean mFiiReceiver = false;
+    boolean mCurrencyReceiver = false;
+
+    private Menu mMenu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +62,69 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
             Log.d(LOG_TAG, "Loaded PortfolioMainFragment onCreate");
             replaceFragment(new PortfolioMainFragment());
         }
+
+        BroadcastReceiver receiverStock = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mCurrencyReceiver && mFiiReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mStockReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverStock, new IntentFilter(Constants.Receiver.STOCK));
+
+        BroadcastReceiver receiverFii = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mCurrencyReceiver && mStockReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mFiiReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFii, new IntentFilter(Constants.Receiver.FII));
+
+        BroadcastReceiver receiverCurrency = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mFiiReceiver && mStockReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mCurrencyReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrency, new IntentFilter(Constants.Receiver.CURRENCY));
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        mMenu = menu;
+        return true;
     }
 
     @Override
@@ -98,9 +179,13 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
                 break;
+            case R.id.nav_item_treasury:
+                Log.d(LOG_TAG, "Loaded Treasury Fragment from menu");
+                replaceFragment(new TreasuryTabFragment());
+                break;
             case R.id.nav_item_fixed_income:
                 Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
-                replaceFragment(new FixedIncomeMainFragment());
+                replaceFragment(new FixedTabFragment());
                 break;
             case R.id.nav_item_stocks:
                 Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
@@ -108,11 +193,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 break;
             case R.id.nav_item_fii:
                 Log.d(LOG_TAG, "Loaded FII Fragment from menu");
-                replaceFragment(new FiiMainFragment());
+                replaceFragment(new FiiTabFragment());
                 break;
-            case R.id.currency:
+            case R.id.nav_item_currency:
                 Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
-                replaceFragment(new CurrencyMainFragment());
+                replaceFragment(new CurrencyTabFragment());
                 break;
         }
     }
@@ -125,6 +210,13 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                     openDrawer();
                     return true;
                 }
+            case R.id.menu_refresh:
+                ProgressBar spinner = new ProgressBar(this);
+                spinner.getIndeterminateDrawable().setColorFilter(
+                        ContextCompat.getColor(this,R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                item.setActionView(spinner);
+                refreshPortfolio();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -174,6 +266,38 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 }
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
+            case Constants.ProductType.CURRENCY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
                 break;
@@ -186,6 +310,30 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
         switch (productType) {
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.CURRENCY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -207,6 +355,34 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FII:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.CURRENCY:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                // Sends symbol of clicked stock to details acitivity
+                Log.d(LOG_TAG, ": "+itemId);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
@@ -223,8 +399,170 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.CURRENCY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
             default:
                 Log.d(LOG_TAG, "(onEditProduct) Could not launch the FormActivity.");
+                break;
+        }
+    }
+
+    // Refresh the portfolio by getting the values from their respective services and updating on the tables
+    public void refreshPortfolio(){
+
+        //Stock Refresh
+        Intent mStockServiceIntent = new Intent(this, StockIntentService
+                .class);
+
+        String[] affectedColumn = {PortfolioContract.StockData.COLUMN_SYMBOL};
+
+        Cursor queryCursor = this.getContentResolver().query(
+                PortfolioContract.StockData.URI, affectedColumn,
+                null, null, null);
+
+        // For each symbol found on StockData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
+            startService(mStockServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        }
+
+        //Fii Refresh
+        Intent mFiiServiceIntent = new Intent(this, FiiIntentService
+                .class);
+
+        String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.FiiData.URI, affectedColumn2,
+                null, null, null);
+
+        // For each symbol found on FiiData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            startService(mFiiServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+        }
+
+        //Currency Refresh
+        Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
+                .class);
+
+        String[] affectedColumn3 = {PortfolioContract.CurrencyData.COLUMN_SYMBOL};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.CurrencyData.URI, affectedColumn3,
+                null, null, null);
+
+        // For each symbol found on CurrencyData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            Log.d(LOG_TAG, symbol);
+            mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
+            startService(mCurrencyServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        }
+    }
+
+    @Override
+    public void onIncomeDetails(int incomeType, String id){
+        Intent intent = new Intent(this, IncomeDetailsActivity.class);
+        Log.d(LOG_TAG, "ID: " + id);
+        switch (incomeType) {
+            case Constants.IncomeType.DIVIDEND:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.JCP:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FII:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FIXED:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.TREASURY:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            default:
+                Log.d(LOG_TAG, "Could not launch the IncomeDetailsActivity.");
                 break;
         }
     }

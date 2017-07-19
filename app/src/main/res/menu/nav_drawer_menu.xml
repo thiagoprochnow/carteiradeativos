@@ -9,9 +9,15 @@
 
         <!-- Fixed Income Item Menu -->
         <item
+            android:id="@+id/nav_item_treasury"
+            android:checked="true"
+            android:title="@string/title_treasury"/>
+
+        <!-- Fixed Income Item Menu -->
+        <item
             android:id="@+id/nav_item_fixed_income"
             android:checked="true"
-            android:title="@string/title_fixed_income"/>
+            android:title="@string/title_fixed"/>
 
         <!-- Stocks Item Menu -->
         <item
@@ -27,7 +33,7 @@
 
         <!-- Currency Item Menu -->
         <item
-            android:id="@+id/currency"
+            android:id="@+id/nav_item_currency"
             android:checked="true"
             android:title="@string/title_currency"/>
     </group>

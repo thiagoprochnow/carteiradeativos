@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import br.com.carteira.R;
 import br.com.carteira.activity.MainActivity;
-import br.com.carteira.adapter.StockDetailsTabAdapter;
-import br.com.carteira.adapter.StockTabAdapter;
+import br.com.carteira.adapter.stock.StockDetailsTabAdapter;
+import br.com.carteira.adapter.stock.StockTabAdapter;
 import br.com.carteira.fragment.BaseFragment;
 
 public class StockTabFragment extends BaseFragment {
@@ -25,14 +25,18 @@ public class StockTabFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.fragment_stock_tab, container, false);
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.stockViewPager);
+        View view;
+        ViewPager viewPager;
         String activityName = getActivity().getClass().getSimpleName();
         // Check if it is a Tab for StockData tabs or StockDetails tabs
         if (activityName.equals(MainActivity.class.getSimpleName())){
+            view = inflater.inflate(R.layout.fragment_stock_tab, container, false);
+            viewPager = (ViewPager) view.findViewById(R.id.stockViewPager);
             Log.d(LOG_TAG, "StockTabAdapter");
             viewPager.setAdapter(new StockTabAdapter(mContext, getChildFragmentManager()));
         } else {
+            view = inflater.inflate(R.layout.fragment_stock_details_tab, container, false);
+            viewPager = (ViewPager) view.findViewById(R.id.stockViewPager);
             Log.d(LOG_TAG, "StockDetailsTabAdapter");
             viewPager.setAdapter(new StockDetailsTabAdapter(mContext, getChildFragmentManager()));
         }

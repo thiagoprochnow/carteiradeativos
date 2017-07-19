@@ -1,15 +1,49 @@
 <resources>
     <string name="app_name">Carteira</string>
 
+    <!-- Main Activity -->
+    <string name="refresh_done">Carteira atualizada com sucesso</string>
+
     <!-- Form Activity -->
-    <string name="objective_update_success">Objetivo atualizado com sucesso</string>
-    <string name="objective_update_fail">Atualização do objetivo falhou</string>
+    <string name="stock_update_success">Ação atualizada com sucesso</string>
+    <string name="stock_update_fail">Atualização da ação falhou</string>
+    <string name="fii_update_success">Fundo Imobiliario atualizado com sucesso</string>
+    <string name="fixed_update_success">Renda fixa atualizada com sucesso</string>
+    <string name="treasury_update_success">Tesouro atualizado com sucesso</string>
+    <string name="fii_update_fail">Atualização do fundo imobiliario falhou</string>
+    <string name="fixed_update_fail">Atualização da renda fixa falhou</string>
+    <string name="treasury_update_fail">Atualização do tesouro falhou</string>
+    <string name="currency_update_success">Moeda atualizada com sucesso</string>
+    <string name="currency_update_fail">Atualização de moeda falhou</string>
+    <string name="form_title_buy">Comprar</string>
+    <string name="form_title_sell">Vender</string>
+    <string name="form_title_objective">Objetivo</string>
+    <string name="form_title_dividend">Dividendo</string>
+    <string name="form_title_jcp">Juros s/ Capital</string>
+    <string name="form_title_fii_income">Rendimento</string>
+    <string name="form_title_fixed_income">Rendimento</string>
+    <string name="form_title_treasury_income">Rendimento</string>
+    <string name="form_title_bonification">Bonificação</string>
+    <string name="form_title_split">Desdobramento</string>
+    <string name="form_title_grouping">Grupamento</string>
 
     <!-- Dialog Fragment -->
     <string name="quantity">Quantidade</string>
+    <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Preço de compra</string>
+    <string name="treasury_buy_price">Preço unitário de compra</string>
+    <string name="treasury_buy_price_hint">Preço pago por cada 1.00</string>
     <string name="sell_price">Preço de venda</string>
+    <string name="stock_current_price">Preço atual da ação</string>
+    <string name="currency_current_price">Preço atual da moeda</string>
+    <string name="currency_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
+    <string name="fii_current_price">Preço atual do fundo imobiliario</string>
+    <string name="fixed_current_total">Total atual da renda fixa</string>
+    <string name="treasury_current_price">Preço atual do papel</string>
     <string name="percentual_objective">Objetivo do papel na carteira (EX: 20%)</string>
+    <string name="stock_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
+    <string name="fii_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
+    <string name="treasury_edit_tip">*Deixe qualquer campo em branco se não quiser editar.</string>
     <string name="buy_date">Data da compra</string>
     <string name="bonification_date">Data da bonificação</string>
     <string name="split_date">Data do Desdobramento</string>
@@ -18,15 +52,31 @@
     <string name="split_grouping_to">para</string>
     <string name="sell_date">Data da venda</string>
     <string name="ex_date">Data Ex Dividendo</string>
+    <string name="ex_date_jcp">Data Ex Juros s/ Capital</string>
+    <string name="ex_date_fii_income">Data Ex Rendimento</string>
+    <string name="ex_date_treasury_income">Data Recebimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
+    <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
+    <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
+    <string name="wrong_treasury_code">Nomenclatura do papel errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
-    <string name="wrong_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
+    <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
+    <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
+    <string name="wrong_fixed_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa renda fixa na carteira</string>
+    <string name="wrong_currency_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa moeda na carteirat</string>
+    <string name="wrong_treasury_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse papel na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
+    <string name="wrong_total">Total deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
+    <string name="wrong_current_price">Preço atual não é valido</string>
+    <string name="wrong_current_total">Total atual não é valido</string>
     <string name="wrong_date">Data inválida</string>
     <string name="future_date">Data não pode ser no futuro</string>
     <string name="wrong_inputs">Algum campo está vazio ou errado, por favor verifique</string>
     <string name="wrong_income_per_stock">Valor inválido recebido por ação</string>
+    <string name="wrong_income_per_fii">Valor inválido recebido por fundo imobiliario</string>
+    <string name="wrong_income_per_fixed">Valor inválido recebido por renda fixa</string>
+    <string name="wrong_income_per_treasury">Valor inválido recebido por papel</string>
     <string name="menu_done">Concluir</string>
 
     <!-- Details Fragment -->
@@ -35,9 +85,19 @@
     <string name="menu_item_bonification">Bonificação</string>
     <string name="menu_item_split">Desdobramento</string>
     <string name="menu_item_grouping">Grupamento</string>
+    <string name="menu_item_income">Rendimento</string>
+    <string name="menu_item_treasury">Cupom Semestral</string>
+
+    <!-- Currency Main Fragment -->
+    <string name="buy_currency_success">Moeda adicionada com sucesso</string>
+    <string name="buy_currency_fail">Erro ao adicionar moeda.</string>
+    <string name="sell_currency_success">Moeda vendida com sucesso</string>
+    <string name="sell_currency_fail">Erro ao vender moeda</string>
+    <string name="delete_currency_title">Deletar essa moeda do seu portfolio?</string>
+    <string name="delete_currency_dialog">Se vendeu moeda, escolha "Vender" no menu de opções. Deletar a moeda irá remover todos os dados sobre ele, inclusive moedas recebidas.</string>
 
     <!-- Stock Main Fragment -->
-    <string name="buy_stock_success">Ação adicionado com sucesso</string>
+    <string name="buy_stock_success">Ação adicionada com sucesso</string>
     <string name="buy_stock_fail">Falha ao adicionar ação</string>
     <string name="bonification_success">Bonificação adicionada com sucesso</string>
     <string name="bonification_fail">Falha ao adicionar bonificação</string>
@@ -48,18 +108,66 @@
     <string name="sell_stock_success">Ação vendida com sucesso</string>
     <string name="sell_stock_fail">Falha ao vender ação</string>
     <string name="delete_stock_title">Deletar ação da sua carteira?</string>
-    <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar a ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
+    <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar essa ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
     <string name="delete_confirm">Deletar</string>
     <string name="delete_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
-    <string name="menu_edit_objective">Editar Objetivo</string>
     <string name="menu_sell">Vender</string>
     <string name="menu_delete">Deletar</string>
 
+    <!-- Fii Main Fragment -->
+    <string name="buy_fii_success">Fundo imobiliario adicionado com sucesso</string>
+    <string name="buy_fii_fail">Falha ao adicionar fundo imobiliario</string>
+    <string name="sell_fii_success">Fundo imobiliario vendido com sucesso</string>
+    <string name="sell_fii_fail">Falha ao vender fundo imobiliario</string>
+    <string name="delete_fii_title">Deletar fundo imobilario da sua carteira?</string>
+    <string name="delete_fii_dialog">Se vendeu o fundo imobiliario, escolha "Vender" no menu de opções. Deletar esse fundo imobiliario irá remover todos os dados sobre ele, inclusive proventos recebidos.</string>
+
+    <!-- Fixed income Main Fragment -->
+    <string name="buy_fixed_success">Renda fixa adicionada com sucesso</string>
+    <string name="buy_fixed_fail">Falha ao adicionar renda fixa</string>
+    <string name="sell_fixed_success">Renda fixa vendida com sucesso</string>
+    <string name="sell_fixed_fail">Falha ao vender renda fixa</string>
+    <string name="delete_fixed_title">Deletar renda fixa da sua carteira?</string>
+    <string name="delete_fixed_dialog">Se vendeu a renda fixa, escolha "Vender" no menu de opções. Deletar essa renda fixa irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
+
+    <!-- Treasury Main Fragment -->
+    <string name="buy_treasury_success">Tesouro adicionado com sucesso</string>
+    <string name="buy_treasury_fail">Falha ao adicionar tesouro</string>
+    <string name="sell_treasury_success">Tesouro vendido com sucesso</string>
+    <string name="sell_treasury_fail">Falha ao vender tesouro</string>
+    <string name="delete_treasury_title">Deletar tesouro da sua carteira?</string>
+    <string name="delete_treasury_dialog">Se vendeu o papel, escolha "Vender" no menu de opções. Deletar esse papel irá remover todos os dados sobre ele, inclusive proventos recebidos.</string>
+
     <!-- Stock Tab Adapter -->
+    <string name="stocks_overview">Visão Geral</string>
     <string name="stocks_portfolio">Carteira</string>
     <string name="stocks_history">Histórico</string>
+    <string name="stocks_incomes">Rendimentos</string>
+
+    <!-- Currency Tab Adapter -->
+    <string name="currency_overview">Visão Geral</string>
+    <string name="currency_portfolio">Carteira</string>
+    <string name="currency_history">Histórico</string>
+
+    <!-- Fii Tab Adapter -->
+    <string name="fii_overview">Visão Geral</string>
+    <string name="fii_portfolio">Carteira</string>
+    <string name="fii_history">Histórico</string>
+    <string name="fii_incomes">Rendimentos</string>
+
+    <!-- Fixed Tab Adapter -->
+    <string name="fixed_overview">Visão Geral</string>
+    <string name="fixed_portfolio">Aplicações</string>
+    <string name="fixed_history">Histórico</string>
+    <string name="fixed_incomes">Rendimentos</string>
+
+    <!-- Treasury Tab Adapter -->
+    <string name="treasury_overview">Visão Geral</string>
+    <string name="treasury_portfolio">Carteira</string>
+    <string name="treasury_history">Histórico</string>
+    <string name="treasury_incomes">Cupons</string>
 
     <!-- Stock Adapter -->
     <string name="current_percent_label">Percent:</string>
@@ -68,10 +176,67 @@
     <string name="operations">Operações</string>
     <string name="operation">Operação</string>
     <string name="stock_quantity_label">Quantidade: </string>
+    <string name="data_bought_label">Comprado</string>
+    <string name="data_sold_label">Vendido</string>
+    <string name="data_current_label">Atual</string>
+    <string name="data_appreciation_label">Valorização</string>
+    <string name="data_income_label">Rendimentos</string>
+    <string name="data_treasury_income_label">Cupons</string>
+    <string name="data_total_gain_label">Ganho</string>
 
-    <!-- Stock Income Adapter -->
+    <!-- Sold Stock Adapter -->
+    <string name="sold_data_bought_label">Comprado</string>
+    <string name="sold_data_sold_label">Vendido</string>
+    <string name="sold_data_gain_label">Ganho</string>
+
+    <!-- Fii Adapter -->
+    <string name="fii_quantity_label">Quantidade: </string>
+
+    <!-- Currency Adapter -->
+    <string name="currency_quantity_label">Quantidade: </string>
+
+    <!-- Fixed Adapter -->
+    <string name="fixed_quantity_label">Quantidade: </string>
+
+    <!-- Treasury Adapter -->
+    <string name="treasury_quantity_label">Quantidade: </string>
+
+    <!-- Stock Portolfio -->
+    <string name="stock_portfolio_label">Carteira de Ações</string>
+    <string name="portfolio_other_label">Outros</string>
+    <string name="portfolio_bought_label">Comprado</string>
+    <string name="portfolio_current_label">Atual</string>
+    <string name="portfolio_sold_label">Vendido</string>
+    <string name="portfolio_appreciation_label">Valorização</string>
+    <string name="portfolio_income_label">Rendimentos</string>
+    <string name="portfolio_total_gain_label">Ganho</string>
+
+    <!-- Fii Portolfio -->
+    <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
+
+    <!-- Currency Portolfio -->
+    <string name="currency_portfolio_label">Carteira de Moedas</string>
+
+    <!-- Fixed Portolfio -->
+    <string name="fixed_portfolio_label">Carteira de Renda Fixa</string>
+
+    <!-- Treasury Portolfio -->
+    <string name="treasury_portfolio_label">Carteira de Tesouro</string>
+    <string name="treasury_portfolio_income_label">Cupons</string>
+
+    <!-- Income Adapter -->
+    <string name="income_overview_label">Visão Geral</string>
     <string name="dividend_income_type">Dividendo</string>
     <string name="jcp_income_type">Juros s/ Capital</string>
+    <string name="fii_income_type">Rendimento</string>
+    <string name="fixed_income_type">Rendimento</string>
+    <string name="treasury_income_type">Cupom Semestral</string>
+    <string name="income_overview_bought_label">Compra</string>
+    <string name="income_overview_net_label">Liquido</string>
+    <string name="income_overview_tax_label">Imposto</string>
+    <string name="income_overview_gross_label">Bruto</string>
+    <string name="income_change_jcp">Transformar em JCP</string>
+    <string name="income_change_dividend">Transformar em Dividendo</string>
 
     <!-- Stock Detail Adapter -->
     <string name="stock_buy">Compra</string>
@@ -79,6 +244,14 @@
     <string name="stock_bonification">Bonificação</string>
     <string name="stock_split">Desdobramento</string>
     <string name="stock_grouping">Grupamento</string>
+    <string name="details_current">Atual</string>
+    <string name="details_sold">Média Venda</string>
+    <string name="details_medium_price">Média Compra</string>
+    <string name="details_sold_fixed">Vendido</string>
+    <string name="details_buy_fixed">Comprado</string>
+    <string name="details_gain">Ganho</string>
+    <string name="details_price">Preço</string>
+    <string name="details_total">Total</string>
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
@@ -89,6 +262,15 @@
     <string name="delete_stock_detail_title">Deletar essa operação do seu portfolio?</string>
     <string name="delete_stock_detail_dialog">Tem certeza que deseja deletar essa operação do seu portfolio?</string>
 
+    <!-- Income Details Fragment -->
+    <string name="income_per_stock">Recebido por Ação</string>
+    <string name="income_per_fii">Recebido por cota</string>
+    <string name="income_per_fixed">Recebido por renda fixa</string>
+    <string name="income_per_treasury">Recebido por papel</string>
+    <string name="gross_income">Rendimento Bruto</string>
+    <string name="tax_income">Imposto Pago</string>
+    <string name="net_income">Rendimento Liquido</string>
+
     <!-- Buy Stock Form Fragment -->
     <string name="add_stock_title">Compra de Ação</string>
     <string name="buy_stock_button">Comprar</string>
@@ -98,25 +280,75 @@
 
     <!-- Dividend Form Fragment -->
     <string name="receive_value">Valor Recebido por Ação</string>
+    <string name="receive_value_fii">Valor Recebido por Fundo Imobiliario</string>
+    <string name="receive_value_fixed">Valor Recebido por Renda Fixa</string>
+    <string name="receive_value_treasury">Valor total recebido no cupom</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>
     <string name="add_jcp_success">Juros sobre capital adicionado com sucesso</string>
     <string name="add_jcp_fail">Falha ao adicionar juros sobre capital</string>
+    <string name="add_fii_income_success">Rendimento adicionado com sucesso</string>
+    <string name="add_fixed_income_success">Rendimento adicionado com sucesso</string>
+    <string name="add_treasury_income_success">Cupom adicionado com sucesso</string>
+    <string name="add_fii_income_fail">Falha ao adicionar rendimento</string>
+    <string name="add_fixed_income_fail">Falha ao adicionar rendimento</string>
+    <string name="add_treasury_income_fail">Falha ao adicionar cupom</string>
+
+    <!-- Currency Main Fragment -->
+    <string name="add_currency_success">Moeda adicionada com sucesso</string>
+    <string name="add_currency_fail">Falha ao adicionar moeda</string>
+
+    <!-- Add currency Form Fragment -->
+    <string name="add_currency_title">Compra de Moeda</string>
+    <string name="buy_currency_button">Comprar</string>
+    <string name="cancel_currency_button">Cancelar</string>
+    <string name="currency_symbol">Código Moeda</string>
+    <string name="currency_symbol_hint">Ex: Euro</string>
 
     <!-- Fii Main Fragment -->
     <string name="add_fii_success">Fundo Imobiliario adicionado com sucesso</string>
     <string name="add_fii_fail">Falha ao adicionar fundo imobiliario</string>
 
-    <!-- Add fii Dialog Fragment -->
+    <!-- Add fii Form Fragment -->
     <string name="add_fii_title">Compra de Fundo Imobiliario</string>
     <string name="buy_fii_button">Comprar</string>
     <string name="cancel_fii_button">Cancelar</string>
     <string name="fii_symbol">Código do Fundo Imobiliario</string>
     <string name="fii_symbol_hint">Ex: HTMX11B</string>
 
+    <!-- Add fixed income Form Fragment -->
+    <string name="add_fixed_title">Compra de Renda Fixa</string>
+    <string name="buy_fixed_button">Comprar</string>
+    <string name="cancel_fixed_button">Cancelar</string>
+    <string name="fixed_type">Tipo de Renda Fixa</string>
+    <string name="fixed_rentability_type">Tipo de rentabilidade da Renda Fixa</string>
+    <string name="fixed_symbol">Nomenclatura para sua Renda Fixa</string>
+    <string name="fixed_symbol_hint">Ex: CDB Santander 1</string>
+    <string name="fixed_type_treasury">Tesouro</string>
+    <string name="fixed_type_cdb">CDB</string>
+    <string name="fixed_type_lci">LCI</string>
+    <string name="fixed_type_lca">LCA</string>
+    <string name="fixed_type_debenture">Debenture</string>
+    <string name="fixed_type_lc">LC</string>
+    <string name="fixed_type_cri">CRI</string>
+    <string name="fixed_type_cra">CRA</string>
+    <string name="fixed_rentability_type_pos">Pós</string>
+    <string name="fixed_rentability_type_pre">Pré</string>
+    <string name="fixed_rentability_type_index">Indexado</string>
+    <string name="fixed_buy_value">Valor total comprado</string>
+    <string name="fixed_sell_value">Valor total vendido</string>
+
+    <!-- Add treasury Form Fragment -->
+    <string name="add_treasury_title">Compra de Tesouro</string>
+    <string name="buy_treasury_button">Comprar</string>
+    <string name="cancel_treasury_button">Cancelar</string>
+    <string name="treasury_symbol">Nomenclatura para seu papel do Tesouro</string>
+    <string name="treasury_symbol_hint">Ex: NTNB 2021</string>
+
     <!-- Item Navigational Drawer -->
     <string name="title_complete_portfolio">Carteira Completa</string>
-    <string name="title_fixed_income">Renda Fixa</string>
+    <string name="title_treasury">Tesouro</string>
+    <string name="title_fixed">Renda Fixa</string>
     <string name="title_fii">Fundos Imobiliarios</string>
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
@@ -128,6 +360,14 @@
     <string name="title_activity_add_new_stock_form">Adicionar Ação</string>
 
     <string name="toast_stock_successfully_removed">Ação %s removida com sucesso</string>
+    <string name="toast_fii_successfully_removed">Fundo Imobiliario %s removido com sucesso</string>
+    <string name="toast_fixed_successfully_removed">Renda Fixa %s removida com sucesso</string>
+    <string name="toast_currency_successfully_removed">Moeda %s removida com sucesso</string>
+    <string name="toast_treasury_successfully_removed">Tesouro %s removido com sucesso</string>
     <string name="toast_stock_not_removed">Não foi possível remover a ação %s</string>
+    <string name="toast_fii_not_removed">Não foi possível remover o Fundo Imobiliario %s</string>
+    <string name="toast_fixed_not_removed">Não foi possível remover a Renda Fixa %s</string>
+    <string name="toast_currency_not_removed">Não foi possível remover a Moeda %s</string>
+    <string name="toast_treasury_not_removed">Não foi possível remover o Tesouro %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 </resources>

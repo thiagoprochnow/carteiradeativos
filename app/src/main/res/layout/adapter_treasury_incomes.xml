@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/treasury_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="5dp"
+    app:contentPadding="10dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="3dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="false"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="0dp"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@android:color/transparent"
+    android:textSize="@dimen/treasury_text">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="@dimen/treasury_income_width"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/incomeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Juros s/ Capital"
+                    android:textSize="@dimen/treasury_income_type"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/incomeDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="dd/MM/yyyy"
+                    android:textSize="@dimen/treasury_income_date"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:gravity="right">
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/incomeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R$100,00"
+                    android:textSize="@dimen/treasury_income_value"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:layout_marginLeft="@dimen/treasury_income_value_marginLeft"
+                    android:gravity="right" />
+            </LinearLayout>
+        </LinearLayout>
+        <View android:background="@color/darkGray"
+            android:layout_width = "match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

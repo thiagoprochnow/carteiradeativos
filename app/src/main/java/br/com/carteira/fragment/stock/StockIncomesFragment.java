@@ -1,14 +1,18 @@
 package br.com.carteira.fragment.stock;
 
 
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.support.v4.app.LoaderManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.carteira.R;
-import br.com.carteira.adapter.StockIncomeAdapter;
+import br.com.carteira.adapter.stock.StockIncomeAdapter;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.BaseFragment;
@@ -50,8 +54,6 @@ public class StockIncomesFragment extends BaseFragment implements
 
     private String id;
     private String mSymbol;
-    // Loader IDs
-    private static final int INCOME_LOADER = 4;
 
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -67,6 +69,14 @@ public class StockIncomesFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // After new current price is get, reload Overview view
+                mStockIncomeAdapter.notifyDataSetChanged();
+            }
+        };
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
     }
 
     @Override
@@ -79,7 +89,7 @@ public class StockIncomesFragment extends BaseFragment implements
         // Gets symbol received from Intent of MainActivity and puts on Bundle for initLoader
         Intent mainActivityIntent = getActivity().getIntent();
         mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        getActivity().setTitle(mSymbol);
+
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
         setUserVisibleHint(true);
@@ -89,7 +99,7 @@ public class StockIncomesFragment extends BaseFragment implements
 
         mStockIncomeAdapter = new StockIncomeAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockIncomeAdapter);
-        getActivity().getSupportLoaderManager().initLoader(INCOME_LOADER, bundle, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_INCOME, bundle, this);
 
         return view;
     }
@@ -105,6 +115,13 @@ public class StockIncomesFragment extends BaseFragment implements
         MenuInflater inflater = getActivity().getMenuInflater();
         this.id = id;
         inflater.inflate(R.menu.income_item_menu, menu);
+        if (type == Constants.IncomeType.JCP){
+            menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
+            menu.findItem(R.id.menu_item_change_dividend).setVisible(true);
+        } else {
+            menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
+            menu.findItem(R.id.menu_item_change_jcp).setVisible(true);
+        }
         super.onCreateContextMenu(menu, v, menuInfo);
     }
 
@@ -130,6 +147,12 @@ public class StockIncomesFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
+                break;
+            case R.id.menu_item_change_jcp:
+                changeIncomeType(id, mSymbol, Constants.IncomeType.JCP);
+                break;
+            case R.id.menu_item_change_dividend:
+                changeIncomeType(id, mSymbol, Constants.IncomeType.DIVIDEND);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");
@@ -168,5 +191,55 @@ public class StockIncomesFragment extends BaseFragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mStockIncomeAdapter.setCursor(null);
+    }
+
+    // Change the income of "id" from dividend to JCP or JCP to dividend
+    public void changeIncomeType(String id, String symbol, int type){
+        String selection = PortfolioContract.StockIncome._ID + " = ? AND "
+                + PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(PortfolioContract.StockIncome.URI,
+                null, selection, selectionArguments, null);
+        if(queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            double perStock = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK));
+            double quantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY));
+            double grossIncome = perStock*quantity;
+            double tax = 0;
+            double netIncome = 0;
+            if (type == Constants.IncomeType.JCP){
+                // Change to JCP
+                tax = grossIncome*0.15;
+                netIncome = grossIncome-tax;
+            } else {
+                // Change to Dividend
+                tax = 0;
+                netIncome = grossIncome;
+            }
+
+            String updateSelection = PortfolioContract.StockIncome._ID + " = ?";
+            String[] updatedSelectionArguments = {id};
+
+            ContentValues incomeCV = new ContentValues();
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, grossIncome);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, netIncome);
+            incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, type);
+
+            // Update value on incomes table
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.StockIncome.URI,
+                    incomeCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                updateStockData(mSymbol, -1);
+                Log.d(LOG_TAG, "updateStockIncomes successfully updated");
+            } else {
+                Log.d(LOG_TAG, "updateStockIncomes failed update");
+            }
+        } else {
+            Log.d(LOG_TAG, "No income found for this ID and Symbol");
+        }
     }
 }

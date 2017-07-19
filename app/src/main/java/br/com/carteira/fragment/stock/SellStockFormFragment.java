@@ -50,7 +50,7 @@ public class SellStockFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_sell_stock_form, container, false);
-
+        getActivity().setTitle(R.string.form_title_sell);
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputSellPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
@@ -79,7 +79,7 @@ public class SellStockFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView);
+        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.STOCK);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
@@ -111,7 +111,7 @@ public class SellStockFormFragment extends BaseFormFragment {
             if (insertedStockTransactionUri != null) {
                 // Rescan incomes tables to check if added stock changed their receive values.
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, -1, Constants.Type.SELL);
+                boolean updateStockData = updateStockData(inputSymbol, Constants.Type.SELL);
                 if (updateStockData){
                     Toast.makeText(mContext, R.string.sell_stock_success, Toast.LENGTH_LONG).show();
                     return true;
@@ -125,7 +125,7 @@ public class SellStockFormFragment extends BaseFormFragment {
                 mInputSymbolView.setError(this.getString(R.string.wrong_stock_code));
             }
             if(!isValidQuantity){
-                mInputQuantityView.setError(this.getString(R.string.wrong_sell_quantity));
+                mInputQuantityView.setError(this.getString(R.string.wrong_stock_sell_quantity));
             }
             if(!isValidSellPrice){
                 mInputSellPriceView.setError(this.getString(R.string.wrong_price));

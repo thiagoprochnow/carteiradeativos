@@ -46,7 +46,7 @@ public class BonificationFormFragment extends BaseFormFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_bonification_form, container, false);
-
+        getActivity().setTitle(R.string.form_title_bonification);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBonificationDate);
 
@@ -73,7 +73,6 @@ public class BonificationFormFragment extends BaseFormFragment {
         if (isValidQuantity && isValidDate) {
             String inputSymbol = mSymbol;
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
-            double inputObjective = -1;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -97,7 +96,7 @@ public class BonificationFormFragment extends BaseFormFragment {
                 Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
-                boolean updateStockData = updateStockData(inputSymbol, inputObjective, Constants
+                boolean updateStockData = updateStockData(inputSymbol, Constants
                         .Type.BONIFICATION);
                 if (updateStockData) {
                     Toast.makeText(mContext, R.string.bonification_success, Toast.LENGTH_LONG).show();
