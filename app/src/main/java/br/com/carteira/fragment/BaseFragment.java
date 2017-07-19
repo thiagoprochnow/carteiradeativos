@@ -2285,8 +2285,12 @@ public abstract class BaseFragment extends Fragment {
 
             double currentTotal = 0;
             double variation = 0;
+            double currentPrice = 0;
             // Create new TreasuryData for this symbol
             if (queryDataCursor.getCount() == 0){
+                //TODO temporary solution until Treasury is ready for IntentService
+                treasuryDataCV.put(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE, mediumPrice);
+                currentPrice = mediumPrice;
                 // Adds data to the database
                 Uri insertedTreasuryDataUri = mContext.getContentResolver().insert(PortfolioContract.TreasuryData.URI,
                         treasuryDataCV);
@@ -2302,9 +2306,9 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, TreasuryDetailsOverview will not update current total and total gain, unless refreshing the View
+                queryDataCursor.moveToFirst();
+                currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE));
                 if (type == Constants.Type.DELETE_TRANSACION){
-                    queryDataCursor.moveToFirst();
-                    double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
                     variation = currentTotal - buyTotal;
                 }
@@ -2363,8 +2367,14 @@ public abstract class BaseFragment extends Fragment {
             int updatedRows = mContext.getContentResolver().update(
                     PortfolioContract.TreasuryData.URI,
                     treasuryDataCV, updateSelection, updatedSelectionArguments);
+            //TODO temporary solution until Treasury is ready for IntentService
+            ContentValues treasuryBulkCV = new ContentValues();
+            treasuryBulkCV.put(symbol, currentPrice);
+            int updatedRows2 = mContext.getContentResolver().update(
+                    PortfolioContract.TreasuryData.BULK_UPDATE_URI,
+                    treasuryBulkCV, null, null);
             // Log update success/fail result
-            if (updatedRows > 0){
+            if (updatedRows > 0 && updatedRows2 > 0){
                 Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
