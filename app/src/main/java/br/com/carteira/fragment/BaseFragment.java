@@ -1515,7 +1515,6 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
-            //TODO - create service currency
             Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
                     .class);
             mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);

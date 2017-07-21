@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
+import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 
 public class CurrencyReceiver extends BroadcastReceiver {
@@ -102,13 +104,12 @@ public class CurrencyReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.CurrencyData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
+            if (updatedRows > 0){
+                // Send Broadcast to update other values on Portfolio
+                mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+            } else {
+                Log.d(LOG_TAG, "Rows could not be updated");
+            }
         }
-    }
-
-    // Reads all of Investment Portfolios value and sets the calculation on Portfolio table
-    // Dosent need any data because it will not query for a specific investment, but for all of them.
-    public void updatePortfolio(){
-        // TODO: Develop function to read all Stock, FII, Fixed Income, etc table to get total value of portfolio
-        // updateCurrentPercent();
     }
 }

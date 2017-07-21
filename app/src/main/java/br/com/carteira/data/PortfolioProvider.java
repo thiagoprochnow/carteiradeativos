@@ -1099,6 +1099,7 @@ public class PortfolioProvider extends ContentProvider {
                 rowsUpdated = db.update(PortfolioContract.Portfolio.TABLE_NAME, values,
                         selection,
                         selectionArgs);
+                break;
 
             case Constants.Provider.STOCK_PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.StockPortfolio.TABLE_NAME, values,
