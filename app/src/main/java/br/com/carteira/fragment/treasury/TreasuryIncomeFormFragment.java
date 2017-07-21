@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -136,8 +137,9 @@ public class TreasuryIncomeFormFragment extends BaseFormFragment {
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
             double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_INCOME));
+            double dbTax = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_INCOME_TAX));
             double totalIncome = dbIncome + valueReceived;
-            double totalTax = totalIncome * 0.15;
+            double totalTax = dbTax + tax;
 
             ContentValues updateCV = new ContentValues();
 
@@ -147,6 +149,13 @@ public class TreasuryIncomeFormFragment extends BaseFormFragment {
             int updateQueryCursor = mContext.getContentResolver().update(
                     PortfolioContract.TreasuryData.URI,
                     updateCV, selection, selectionArguments);
+            //TODO temporary solution until Treasury is ready for IntentService
+            double currentPrice = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE));
+            ContentValues treasuryBulkCV = new ContentValues();
+            treasuryBulkCV.put(symbol, currentPrice);
+            int updatedRows2 = mContext.getContentResolver().update(
+                    PortfolioContract.TreasuryData.BULK_UPDATE_URI,
+                    treasuryBulkCV, null, null);
             if (updateQueryCursor == 1){
                 // Send broadcast so TreasuryReceiver can update the rest
                 mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
