@@ -97,32 +97,35 @@ public final class Constants {
     // Constants for Loaders IDs
     public static class Loaders{
         public static final int INVALID = -1;
-        public static final int STOCK_DATA = 0;
-        public static final int SOLD_STOCK_DATA = 1;
-        public static final int STOCK_INCOME = 2;
-        public static final int STOCK_OVERVIEW = 3;
-        public static final int STOCK_DETAILS = 4;
 
-        public static final int FII_DATA = 5;
-        public static final int SOLD_FII_DATA = 6;
-        public static final int FII_INCOME = 7;
-        public static final int FII_OVERVIEW = 8;
-        public static final int FII_DETAILS = 9;
+        public static final int PORTFOLIO = 0;
 
-        public static final int CURRENCY_DATA = 10;
-        public static final int SOLD_CURRENCY_DATA = 11;
-        public static final int CURRENCY_OVERVIEW = 12;
-        public static final int CURRENCY_DETAILS = 13;
+        public static final int STOCK_DATA = 1;
+        public static final int SOLD_STOCK_DATA = 2;
+        public static final int STOCK_INCOME = 3;
+        public static final int STOCK_OVERVIEW = 4;
+        public static final int STOCK_DETAILS = 5;
 
-        public static final int FIXED_DATA = 14;
-        public static final int FIXED_OVERVIEW = 17;
-        public static final int FIXED_DETAILS = 18;
+        public static final int FII_DATA = 6;
+        public static final int SOLD_FII_DATA = 7;
+        public static final int FII_INCOME = 8;
+        public static final int FII_OVERVIEW = 9;
+        public static final int FII_DETAILS = 10;
 
-        public static final int TREASURY_DATA = 19;
-        public static final int SOLD_TREASURY_DATA = 20;
-        public static final int TREASURY_INCOME = 21;
-        public static final int TREASURY_OVERVIEW = 22;
-        public static final int TREASURY_DETAILS = 23;
+        public static final int CURRENCY_DATA = 11;
+        public static final int SOLD_CURRENCY_DATA = 12;
+        public static final int CURRENCY_OVERVIEW = 13;
+        public static final int CURRENCY_DETAILS = 14;
+
+        public static final int FIXED_DATA = 15;
+        public static final int FIXED_OVERVIEW = 16;
+        public static final int FIXED_DETAILS = 17;
+
+        public static final int TREASURY_DATA = 18;
+        public static final int SOLD_TREASURY_DATA = 19;
+        public static final int TREASURY_INCOME = 20;
+        public static final int TREASURY_OVERVIEW = 21;
+        public static final int TREASURY_DETAILS = 22;
     }
 
     // Constants for Providers IDs

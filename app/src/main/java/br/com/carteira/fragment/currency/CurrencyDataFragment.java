@@ -92,6 +92,7 @@ public class CurrencyDataFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
+        getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
         // Floating Action Button setup
         getActivity().findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override

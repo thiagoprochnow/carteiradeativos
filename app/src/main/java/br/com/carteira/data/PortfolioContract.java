@@ -100,6 +100,11 @@ public class PortfolioContract {
         public static final String COLUMN_VARIATION_TOTAL = "variation_total";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_TREASURY_PERCENT = "treasury_percent";
+        public static final String COLUMN_FIXED_PERCENT = "fixed_percent";
+        public static final String COLUMN_STOCK_PERCENT = "stock_percent";
+        public static final String COLUMN_FII_PERCENT = "fii_percent";
+        public static final String COLUMN_CURRENCY_PERCENT = "currency_percent";
 
         public static final String[] PORTFOLIO_COLUMNS = {
                 _ID,
@@ -109,6 +114,11 @@ public class PortfolioContract {
                 COLUMN_VARIATION_TOTAL,
                 COLUMN_INCOME_TOTAL,
                 COLUMN_TOTAL_GAIN,
+                COLUMN_TREASURY_PERCENT,
+                COLUMN_FIXED_PERCENT,
+                COLUMN_STOCK_PERCENT,
+                COLUMN_FII_PERCENT,
+                COLUMN_CURRENCY_PERCENT
         };
 
         public static Uri makeUriForPortfolio(String symbol) {

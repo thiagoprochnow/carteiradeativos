@@ -203,6 +203,8 @@
 
     <!-- Stock Portolfio -->
     <string name="stock_portfolio_label">Carteira de Ações</string>
+
+    <!-- Portfolio -->
     <string name="portfolio_other_label">Outros</string>
     <string name="portfolio_bought_label">Comprado</string>
     <string name="portfolio_current_label">Atual</string>
@@ -224,6 +226,9 @@
     <string name="treasury_portfolio_label">Carteira de Tesouro</string>
     <string name="treasury_portfolio_income_label">Cupons</string>
 
+    <!-- Portfolio -->
+    <string name="portfolio_label">Carteira Completa</string>
+
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
     <string name="dividend_income_type">Dividendo</string>
@@ -231,6 +236,7 @@
     <string name="fii_income_type">Rendimento</string>
     <string name="fixed_income_type">Rendimento</string>
     <string name="treasury_income_type">Cupom Semestral</string>
+    <string name="portfolio_income_type">Rendimentos</string>
     <string name="income_overview_bought_label">Compra</string>
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>

@@ -204,6 +204,8 @@
 
     <!-- Stock Portolfio -->
     <string name="stock_portfolio_label">Stock Portfolio</string>
+
+    <!-- Portfolio -->
     <string name="portfolio_other_label">Others</string>
     <string name="portfolio_bought_label">Bought</string>
     <string name="portfolio_current_label">Current</string>
@@ -225,6 +227,9 @@
     <string name="treasury_portfolio_label">Treasury Portfolio</string>
     <string name="treasury_portfolio_income_label">Coupons</string>
 
+    <!-- Portfolio -->
+    <string name="portfolio_label">Portfolio</string>
+
     <!-- Income Adapter -->
     <string name="income_overview_label">Overview</string>
     <string name="dividend_income_type">Dividend</string>
@@ -232,6 +237,7 @@
     <string name="fii_income_type">Income</string>
     <string name="fixed_income_type">Income</string>
     <string name="treasury_income_type">Semiannual Coupon</string>
+    <string name="portfolio_income_type">Income</string>
     <string name="income_overview_bought_label">Bought</string>
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>

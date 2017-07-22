@@ -144,6 +144,11 @@ public class PortfolioReceiver extends BroadcastReceiver {
         double portfolioVariation = treasuryVariation + fixedVariation + stockVariation + fiiVariation + currencyVariation;
         double portfolioIncome = treasuryIncome + fixedIncome + stockIncome + fiiIncome;
         double portfolioGain =  treasuryGain + fixedGain + stockGain + fiiGain + currencyGain;
+        double treasuryPercent = treasuryCurrent/portfolioCurrent*100;
+        double fixedPercent = fixedCurrent/portfolioCurrent*100;
+        double stockPercent = stockCurrent/portfolioCurrent*100;
+        double fiiPercent = fiiCurrent/portfolioCurrent*100;
+        double currencyPercent = currencyCurrent/portfolioCurrent*100;
 
         // Values to be inserted or updated on Portfolio table
         ContentValues portfolioCV = new ContentValues();
@@ -153,6 +158,11 @@ public class PortfolioReceiver extends BroadcastReceiver {
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_VARIATION_TOTAL, portfolioVariation);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_INCOME_TOTAL, portfolioIncome);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN, portfolioGain);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TREASURY_PERCENT, treasuryPercent);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FIXED_PERCENT, fixedPercent);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT, stockPercent);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FII_PERCENT, fiiPercent);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT, currencyPercent);
 
         // Query for the only portfolio, if dosent exist, creates one
         Cursor portfolioQueryCursor = mContext.getContentResolver().query(
@@ -196,7 +206,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         String[] affectedColumn = {"sum("+ PortfolioContract.FixedPortfolio.COLUMN_BUY_TOTAL+")",
                 "sum("+ PortfolioContract.FixedPortfolio.COLUMN_SOLD_TOTAL+")",
                 "sum("+ PortfolioContract.FixedPortfolio.COLUMN_CURRENT_TOTAL+")",
-                "sum("+ PortfolioContract.FixedPortfolio.COLUMN_VARIATION_TOTAL+")",
+                "sum("+ PortfolioContract.FixedPortfolio.COLUMN_TOTAL_GAIN+")",
                 "sum("+ PortfolioContract.FixedPortfolio.COLUMN_INCOME_TOTAL+")",
                 "sum("+ PortfolioContract.FixedPortfolio.COLUMN_TOTAL_GAIN+")"};
 
