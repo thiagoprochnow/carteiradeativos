@@ -170,7 +170,7 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     chartHolder.pieChart.setTransparentCircleRadius(61f);
                     chartHolder.pieChart.setOnChartValueSelectedListener(chartHolder);
 
-                    dataSet.setColors(new int[]{R.color.green, R.color.blue, R.color.red,
+                    dataSet.setColors(new int[]{R.color.green2, R.color.blue, R.color.red,
                             R.color.yellow, R.color.darkBlue, R.color.lightGray, R.color.wine, R.color.darkGreen, R.color.darkGray}, mContext);
 
                     Legend l = chartHolder.pieChart.getLegend();

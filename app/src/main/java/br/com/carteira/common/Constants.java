@@ -79,6 +79,7 @@ public final class Constants {
         public static final String CURRENCY = "UPDATE_CURRENCY_PORTFOLIO";
         public static final String FIXED = "UPDATE_FIXED_PORTFOLIO";
         public static final String TREASURY = "UPDATE_TREASURY_PORTFOLIO";
+        public static final String PORTFOLIO = "UPDATE_PORTFOLIO";
     }
 
     // FixedIncome Types

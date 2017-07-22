@@ -94,15 +94,19 @@ public class PortfolioContract {
 
         public static final String TABLE_NAME = "portfolio";
 
-        public static final String COLUMN_VALUE_TOTAL = "value_total";
-        public static final String COLUMN_VALUE_GAIN = "value_gain";
+        public static final String COLUMN_BUY_TOTAL = "buy_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
         public static final String COLUMN_INCOME_TOTAL = "income_total";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
 
         public static final String[] PORTFOLIO_COLUMNS = {
                 _ID,
-                COLUMN_VALUE_TOTAL,
-                COLUMN_VALUE_GAIN,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_VARIATION_TOTAL,
                 COLUMN_INCOME_TOTAL,
                 COLUMN_TOTAL_GAIN,
         };

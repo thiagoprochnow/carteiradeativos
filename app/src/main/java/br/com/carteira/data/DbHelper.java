@@ -26,8 +26,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
         String builder_portfolio = "CREATE TABLE " + PortfolioContract.Portfolio.TABLE_NAME + " (" +
                 PortfolioContract.Portfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PortfolioContract.Portfolio.COLUMN_VALUE_TOTAL + " REAL, " +
-                PortfolioContract.Portfolio.COLUMN_VALUE_GAIN + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_BUY_TOTAL + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_SOLD_TOTAL + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_INCOME_TOTAL + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN + " REAL, " +
                 "UNIQUE (" + PortfolioContract.Portfolio._ID + ") ON CONFLICT REPLACE);";
