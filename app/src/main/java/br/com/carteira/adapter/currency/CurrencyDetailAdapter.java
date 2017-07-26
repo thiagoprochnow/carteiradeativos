@@ -10,6 +10,8 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -63,7 +65,7 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
@@ -156,6 +158,15 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder.transactionType.setText(type);
                 viewHolder.transactionDate.setText(date);
                 viewHolder.quantity.setText(quantityText);
+
+                viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        String id = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction._ID));
+                        mClickHandler.onClick(id, Constants.AdapterClickable.DELETE);
+                    }
+                });
         }
     }
 
@@ -170,11 +181,10 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public interface CurrencyAdapterOnClickHandler {
-        void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String id, int type);
+        void onClick(String id, int type);
     }
 
-    class CurrencyDetailViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    class CurrencyDetailViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.transactionType)
         TextView transactionType;
@@ -191,21 +201,15 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.totalValue)
         TextView totalValue;
 
+        @BindView(R.id.currencyCardViewClickable)
+        LinearLayout currencyCardViewClickable;
+
+        @BindView(R.id.menuDelete)
+        ImageView menuDelete;
 
         CurrencyDetailViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo){
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition - 1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TYPE));
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 

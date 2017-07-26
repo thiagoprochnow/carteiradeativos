@@ -457,6 +457,7 @@ public abstract class BaseFragment extends Fragment {
             queryCursor.moveToFirst();
             timestamp = queryCursor.getLong(0);
         } else {
+            Log.d(LOG_TAG, "No Transaction found to delete");
             return false;
         }
 

@@ -92,17 +92,9 @@ public class CurrencyDetailsFragment extends BaseFragment implements
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id, int type) {
-        MenuInflater inflater = getActivity().getMenuInflater();
-        this.id = id;
-        inflater.inflate(R.menu.detail_item_menu, menu);
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_delete_detail:
+    public void onClick(final String id, int type) {
+        switch (type){
+            case Constants.AdapterClickable.DELETE:
                 // Show Dialog for user confirmation to delete Currency Operation from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(R.string.delete_stock_detail_title);
@@ -123,10 +115,9 @@ public class CurrencyDetailsFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             default:
-                Log.d(LOG_TAG, "Wrong menu Id");
+                Log.d(LOG_TAG, "Wrong menu Type");
                 break;
         }
-        return super.onContextItemSelected(item);
     }
 
     @Override

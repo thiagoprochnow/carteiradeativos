@@ -10,6 +10,8 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -63,7 +65,7 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
@@ -122,6 +124,15 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolder.totalValue.setText(totalValue);
                 viewHolder.transactionDate.setText(date);
                 viewHolder.transactionType.setText(type);
+
+                viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        String id = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FixedTransaction._ID));
+                        mClickHandler.onClick(id, Constants.AdapterClickable.DELETE);
+                    }
+                });
         }
     }
 
@@ -136,11 +147,10 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public interface FixedAdapterOnClickHandler {
-        void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String id, int type);
+        void onClick(String id, int type);
     }
 
-    class FixedDetailViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    class FixedDetailViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.transactionType)
         TextView transactionType;
@@ -151,21 +161,15 @@ public class FixedDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.totalValue)
         TextView totalValue;
 
+        @BindView(R.id.fixedCardViewClickable)
+        LinearLayout fixedCardViewClickable;
+
+        @BindView(R.id.menuDelete)
+        ImageView menuDelete;
 
         FixedDetailViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                        ContextMenu.ContextMenuInfo menuInfo){
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition - 1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.FixedTransaction._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TYPE));
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 
