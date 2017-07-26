@@ -37,6 +37,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_FII_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.Portfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_stock_portfolio = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
@@ -49,6 +51,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.StockPortfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_stock_data = "CREATE TABLE " + PortfolioContract.StockData.TABLE_NAME + " (" +
@@ -66,6 +70,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_CURRENT_PRICE + " REAL, " +
                 PortfolioContract.StockData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.StockData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.StockData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.StockData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_stock_data = "CREATE TABLE " + PortfolioContract.SoldStockData.TABLE_NAME + " (" +
@@ -76,6 +82,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.SoldStockData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL + " REAL, " +
+                PortfolioContract.SoldStockData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.SoldStockData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.SoldStockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_stock_transaction = "CREATE TABLE " + PortfolioContract.StockTransaction.TABLE_NAME + " (" +
@@ -85,6 +93,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.StockTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.StockTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.StockTransaction.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.StockTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
@@ -98,6 +108,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
                 PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
+                PortfolioContract.StockIncome.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.StockIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.StockData.TABLE_NAME + " (" + PortfolioContract.StockData._ID + "));";
 
@@ -111,6 +122,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.FiiPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.FiiPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FiiPortfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FiiPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_fii_data = "CREATE TABLE " + PortfolioContract.FiiData.TABLE_NAME + " (" +
@@ -128,6 +141,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiData.COLUMN_CURRENT_PRICE + " REAL, " +
                 PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.FiiData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.FiiData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_fii_data = "CREATE TABLE " + PortfolioContract.SoldFiiData.TABLE_NAME + " (" +
@@ -138,6 +153,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL + " REAL, " +
+                PortfolioContract.SoldFiiData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.SoldFiiData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.SoldFiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_fii_transaction = "CREATE TABLE " + PortfolioContract.FiiTransaction.TABLE_NAME + " (" +
@@ -147,6 +164,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.FiiTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.FiiTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FiiTransaction.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.FiiTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FiiData.TABLE_NAME + " (" + PortfolioContract.FiiData._ID + "));";
 
@@ -160,6 +179,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
                 PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY + " INTEGER, " +
+                PortfolioContract.FiiIncome.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.FiiIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FiiData.TABLE_NAME + " (" + PortfolioContract.FiiData._ID + "));";
 
@@ -172,6 +192,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.CurrencyPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.CurrencyPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.CurrencyPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.CurrencyPortfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.CurrencyPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_currency_data = "CREATE TABLE " + PortfolioContract.CurrencyData.TABLE_NAME + " (" +
@@ -187,6 +209,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.CurrencyData.COLUMN_CURRENT_PRICE + " REAL, " +
                 PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.CurrencyData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.CurrencyData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.CurrencyData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.CurrencyData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_currency_data = "CREATE TABLE " + PortfolioContract.SoldCurrencyData.TABLE_NAME + " (" +
@@ -197,6 +221,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.SoldCurrencyData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL + " REAL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.SoldCurrencyData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.SoldCurrencyData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_currency_transaction = "CREATE TABLE " + PortfolioContract.CurrencyTransaction.TABLE_NAME + " (" +
@@ -206,6 +232,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.CurrencyTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.CurrencyTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.CurrencyTransaction.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.CurrencyData.TABLE_NAME + " (" + PortfolioContract.CurrencyData._ID + "));";
 
@@ -219,6 +247,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.FixedPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.FixedPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.FixedPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FixedPortfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FixedPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_fixed_data = "CREATE TABLE " + PortfolioContract.FixedData.TABLE_NAME + " (" +
@@ -233,6 +263,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedData.COLUMN_CURRENT_PERCENT + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.FixedData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FixedData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_fixed_transaction = "CREATE TABLE " + PortfolioContract.FixedTransaction.TABLE_NAME + " (" +
@@ -241,6 +272,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedTransaction.COLUMN_TOTAL + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.FixedTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.FixedTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.FixedTransaction.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
 
@@ -254,6 +287,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.TreasuryPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
                 PortfolioContract.TreasuryPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.TreasuryPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.TreasuryPortfolio.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.TreasuryPortfolio._ID + ") ON CONFLICT REPLACE);";
 
         String builder_treasury_data = "CREATE TABLE " + PortfolioContract.TreasuryData.TABLE_NAME + " (" +
@@ -271,6 +306,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryData.COLUMN_CURRENT_PRICE + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.TreasuryData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.TreasuryData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.TreasuryData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_treasury_data = "CREATE TABLE " + PortfolioContract.SoldTreasuryData.TABLE_NAME + " (" +
@@ -281,6 +318,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.SoldTreasuryData.COLUMN_SELL_GAIN + " REAL, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_SELL_MEDIUM_PRICE + " REAL, " +
                 PortfolioContract.SoldTreasuryData.COLUMN_SELL_TOTAL + " REAL, " +
+                PortfolioContract.SoldTreasuryData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.SoldTreasuryData.COLUMN_BROKERAGE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.SoldTreasuryData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_treasury_transaction = "CREATE TABLE " + PortfolioContract.TreasuryTransaction.TABLE_NAME + " (" +
@@ -290,6 +329,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryTransaction.COLUMN_PRICE + " REAL, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " LONG, " +
                 PortfolioContract.TreasuryTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.TreasuryTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.TreasuryTransaction.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.TreasuryTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.TreasuryData.TABLE_NAME + " (" + PortfolioContract.TreasuryData._ID + "));";
 
@@ -301,6 +342,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_TAX + " REAL, " +
                 PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
+                PortfolioContract.TreasuryIncome.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.TreasuryData.TABLE_NAME + " (" + PortfolioContract.TreasuryData._ID + "));";
 
