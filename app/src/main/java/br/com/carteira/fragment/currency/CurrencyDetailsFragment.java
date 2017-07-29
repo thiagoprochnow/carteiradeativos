@@ -97,9 +97,9 @@ public class CurrencyDetailsFragment extends BaseFragment implements
             case Constants.AdapterClickable.DELETE:
                 // Show Dialog for user confirmation to delete Currency Operation from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_stock_detail_title);
+                builder.setTitle(R.string.delete_detail_title);
 
-                builder.setMessage(R.string.delete_stock_detail_dialog)
+                builder.setMessage(R.string.delete_detail_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {

@@ -52,8 +52,6 @@ public class TreasuryIncomesMainFragment extends BaseFragment implements
 
     private TreasuryIncomeMainAdapter mTreasuryIncomeMainAdapter;
 
-    private String id;
-
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -110,33 +108,14 @@ public class TreasuryIncomesMainFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(String id, int type) {
-        Log.d(LOG_TAG, "ID: " + id);
-        mIncomeDetailsListener.onIncomeDetails(type, id);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id, int type) {
-        MenuInflater inflater = getActivity().getMenuInflater();
-        this.id = id;
-        inflater.inflate(R.menu.income_item_menu, menu);
-
-        // Treasury does not need income change, only stock does
-        menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
-        menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_delete_income:
+    public void onClick(final String id, int type, int operation) {
+        switch (operation) {
+            case Constants.AdapterClickable.DELETE:
                 // Show Dialog for user confirmation to delete Treasury Income from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_stock_income_title);
+                builder.setTitle(R.string.delete_income_title);
 
-                builder.setMessage(R.string.delete_stock_income_dialog)
+                builder.setMessage(R.string.delete_income_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {
@@ -151,11 +130,14 @@ public class TreasuryIncomesMainFragment extends BaseFragment implements
                         });
                 builder.create().show();
                 break;
+            case Constants.AdapterClickable.MAIN:
+                Log.d(LOG_TAG, "ID: " + id);
+                mIncomeDetailsListener.onIncomeDetails(type, id);
+                break;
             default:
-                Log.d(LOG_TAG, "Wrong menu Id");
+                Log.d(LOG_TAG, "Invalid onClick");
                 break;
         }
-        return super.onContextItemSelected(item);
     }
 
     @Override

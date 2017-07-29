@@ -10,6 +10,8 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -59,7 +61,7 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
@@ -153,6 +155,26 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID))));
                 viewHolder.incomeDate.setText(date);
+
+                viewHolder.treasuryIncomeViewClickable.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE));
+                        int id = mCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID);
+                        mClickHandler.onClick(mCursor.getString(id), type, Constants.AdapterClickable.MAIN);
+                    }
+                });
+
+                viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE));
+                        int id = mCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID);
+                        mClickHandler.onClick(mCursor.getString(id), type, Constants.AdapterClickable.DELETE);
+                    }
+                });
                 break;
         }
     }
@@ -169,12 +191,10 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
     public interface TreasuryAdapterOnClickHandler {
-        void onClick(String symbol, int type);
-        void onCreateContextMenu(ContextMenu menu, View v,
-                                 ContextMenu.ContextMenuInfo menuInfo, String id, int type);
+        void onClick(String id, int type, int operation);
     }
 
-    class TreasuryIncomeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+    class TreasuryIncomeViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.incomeType)
         TextView incomeType;
@@ -185,31 +205,15 @@ public class TreasuryIncomeAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         @BindView(R.id.incomeValue)
         TextView incomeValue;
 
+        @BindView(R.id.treasuryIncomeViewClickable)
+        LinearLayout treasuryIncomeViewClickable;
+
+        @BindView(R.id.menuDelete)
+        ImageView menuDelete;
 
         TreasuryIncomeViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnCreateContextMenuListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE));
-            mClickHandler.onClick(mCursor.getString(idColumn), type);
-        }
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                                           ContextMenu.ContextMenuInfo menuInfo){
-            int adapterPosition = getAdapterPosition();
-            mCursor.moveToPosition(adapterPosition-1);
-            int idColumn = mCursor.getColumnIndex(PortfolioContract.TreasuryIncome._ID);
-            int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.TreasuryIncome.COLUMN_TYPE));
-            mClickHandler.onCreateContextMenu(menu, v , menuInfo, mCursor.getString(idColumn), type);
         }
     }
 

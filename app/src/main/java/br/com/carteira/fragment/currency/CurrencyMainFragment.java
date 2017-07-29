@@ -121,9 +121,9 @@ public class CurrencyMainFragment extends BaseFragment implements
             case R.id.menu_item_delete_income:
                 // Show Dialog for user confirmation to delete Fii Income from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_stock_income_title);
+                builder.setTitle(R.string.delete_income_title);
 
-                builder.setMessage(R.string.delete_stock_income_dialog)
+                builder.setMessage(R.string.delete_income_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {

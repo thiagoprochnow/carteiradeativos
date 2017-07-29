@@ -262,12 +262,12 @@
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Incomes</string>
-    <string name="delete_stock_income_title">Delete stock income from your portfolio?</string>
-    <string name="delete_stock_income_dialog">Are you sure you want to delete this income from your portfolio?</string>
+    <string name="delete_income_title">Delete income from your portfolio?</string>
+    <string name="delete_income_dialog">Are you sure you want to delete this income from your portfolio?</string>
 
     <!-- Stock Details Fragment -->
-    <string name="delete_stock_detail_title">Delete stock operation from your portfolio?</string>
-    <string name="delete_stock_detail_dialog">Are you sure you want to delete this operation from your portfolio?</string>
+    <string name="delete_detail_title">Delete operation from your portfolio?</string>
+    <string name="delete_detail_dialog">Are you sure you want to delete this operation from your portfolio?</string>
 
     <!-- Income Details Fragment -->
     <string name="income_per_stock">Received per Stock</string>

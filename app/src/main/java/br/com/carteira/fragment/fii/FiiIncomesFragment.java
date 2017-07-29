@@ -53,7 +53,6 @@ public class FiiIncomesFragment extends BaseFragment implements
 
     private FiiIncomeAdapter mFiiIncomeAdapter;
 
-    private String id;
     private String mSymbol;
 
     public void onAttach(Context context) {
@@ -106,33 +105,14 @@ public class FiiIncomesFragment extends BaseFragment implements
     }
 
     @Override
-    public void onClick(String id, int type) {
-        Log.d(LOG_TAG, "ID: " + id);
-        mIncomeDetailsListener.onIncomeDetails(type, id);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo, String id, int type) {
-        MenuInflater inflater = getActivity().getMenuInflater();
-        this.id = id;
-        inflater.inflate(R.menu.income_item_menu, menu);
-
-        // FII does not need income change, only stocks
-        menu.findItem(R.id.menu_item_change_dividend).setVisible(false);
-        menu.findItem(R.id.menu_item_change_jcp).setVisible(false);
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_item_delete_income:
+    public void onClick(final String id, int type, int operation) {
+        switch (operation){
+            case Constants.AdapterClickable.DELETE:
                 // Show Dialog for user confirmation to delete Fii Income from database
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle(R.string.delete_stock_income_title);
+                builder.setTitle(R.string.delete_income_title);
 
-                builder.setMessage(R.string.delete_stock_income_dialog)
+                builder.setMessage(R.string.delete_income_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {
@@ -147,11 +127,14 @@ public class FiiIncomesFragment extends BaseFragment implements
                         });
                 builder.create().show();
                 break;
+            case Constants.AdapterClickable.MAIN:
+                Log.d(LOG_TAG, "ID: " + id);
+                mIncomeDetailsListener.onIncomeDetails(type, id);
+                break;
             default:
-                Log.d(LOG_TAG, "Wrong menu Id");
+                Log.d(LOG_TAG, "Invalid onClick");
                 break;
         }
-        return super.onContextItemSelected(item);
     }
 
     @Override

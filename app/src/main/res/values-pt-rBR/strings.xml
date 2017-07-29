@@ -261,12 +261,12 @@
 
     <!-- Stock Incomes Fragment -->
     <string name="title_incomes">Recebimentos</string>
-    <string name="delete_stock_income_title">Deletar esse provento do seu portfolio?</string>
-    <string name="delete_stock_income_dialog">Tem certeza que deseja deletar esse provento do seu portfolio?</string>
+    <string name="delete_income_title">Deletar esse provento do seu portfolio?</string>
+    <string name="delete_income_dialog">Tem certeza que deseja deletar esse provento do seu portfolio?</string>
 
     <!-- Stock Details Fragment -->
-    <string name="delete_stock_detail_title">Deletar essa operação do seu portfolio?</string>
-    <string name="delete_stock_detail_dialog">Tem certeza que deseja deletar essa operação do seu portfolio?</string>
+    <string name="delete_detail_title">Deletar essa operação do seu portfolio?</string>
+    <string name="delete_detail_dialog">Tem certeza que deseja deletar essa operação do seu portfolio?</string>
 
     <!-- Income Details Fragment -->
     <string name="income_per_stock">Recebido por Ação</string>
