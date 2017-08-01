@@ -35,6 +35,12 @@
     <dimen name="treasury_price">14dp</dimen>
     <dimen name="treasury_percentage_image_margin">0dp</dimen>
     <dimen name="treasury_percentage_text_margin">10dp</dimen>
+    <dimen name="others_quantity">16dp</dimen>
+    <dimen name="others_symbol">18dp</dimen>
+    <dimen name="others_text">16dp</dimen>
+    <dimen name="others_price">14dp</dimen>
+    <dimen name="others_percentage_image_margin">0dp</dimen>
+    <dimen name="others_percentage_text_margin">10dp</dimen>
     <dimen name="letters_text_width">10dp</dimen>
     <dimen name="letters_text_margin">10dp</dimen>
     <dimen name="stock_percentage_text_size">35dp</dimen>
@@ -67,6 +73,12 @@
     <dimen name="treasury_values_width">100dp</dimen>
     <dimen name="treasury_percent_width">90dp</dimen>
     <dimen name="treasury_symbol_info_size">90dp</dimen>
+    <dimen name="others_percentage_text_size">35dp</dimen>
+    <dimen name="others_value_percentage_width">50dp</dimen>
+    <dimen name="others_values_margin">10dp</dimen>
+    <dimen name="others_values_width">100dp</dimen>
+    <dimen name="others_percent_width">90dp</dimen>
+    <dimen name="others_symbol_info_size">90dp</dimen>
 
     <!-- Stock Incomes Adapter -->
     <dimen name="stock_income_type">16dp</dimen>
@@ -134,6 +146,21 @@
     <dimen name="treasury_detail">15dp</dimen>
     <dimen name="treasury_detail_width1">115dp</dimen>
     <dimen name="treasury_detail_width2">80dp</dimen>
+
+    <!-- Others Income Incomes Adapter -->
+    <dimen name="others_income_type">16dp</dimen>
+    <dimen name="others_income_width">150dp</dimen>
+    <dimen name="others_income_date">16dp</dimen>
+    <dimen name="others_income_value">15dp</dimen>
+    <dimen name="others_income_value_marginLeft">5dp</dimen>
+    <dimen name="others_income_percent">15dp</dimen>
+
+    <!-- Others Income Details Adapter -->
+    <dimen name="others_transaction_type">16dp</dimen>
+    <dimen name="others_detail_quantity_marginLeft">15dp</dimen>
+    <dimen name="others_detail">15dp</dimen>
+    <dimen name="others_detail_width1">130dp</dimen>
+    <dimen name="others_detail_width2">80dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

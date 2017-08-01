@@ -91,6 +91,18 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_INCOME, Constants.Provider.TREASURY_INCOME);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_TREASURY_INCOME_WITH_SYMBOL,
                 Constants.Provider.TREASURY_INCOME_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_PORTFOLIO, Constants.Provider.OTHERS_PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_DATA, Constants.Provider.OTHERS_DATA);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_DATA_BULK_UPDATE, Constants.Provider.OTHERS_DATA_BULK_UPDATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_DATA_BULK_UPDATE_WITH_CURRENT,
+                Constants.Provider.OTHERS_DATA_BULK_UPDATE_FOR_CURRENT);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_DATA_WITH_SYMBOL, Constants.Provider.OTHERS_DATA_WITH_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_TRANSACTION, Constants.Provider.OTHERS_TRANSACTION);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_TRANSACTION_WITH_SYMBOL,
+                Constants.Provider.OTHERS_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_INCOME, Constants.Provider.OTHERS_INCOME);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_OTHERS_INCOME_WITH_SYMBOL,
+                Constants.Provider.OTHERS_INCOME_FOR_SYMBOL);
         return matcher;
     }
 
@@ -486,6 +498,80 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            // Returns others income portfolio of user
+            case Constants.Provider.OTHERS_PORTFOLIO:
+                returnCursor = db.query(
+                        PortfolioContract.OthersPortfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all others income symbols possessed by user
+            case Constants.Provider.OTHERS_DATA:
+                returnCursor = db.query(
+                        PortfolioContract.OthersData.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all others information possessed by user
+            case Constants.Provider.OTHERS_TRANSACTION:
+                returnCursor = db.query(
+                        PortfolioContract.OthersTransaction.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all others income information possessed by user for a specific stock symbol
+            case Constants.Provider.OTHERS_TRANSACTION_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.OthersTransaction.TABLE_NAME,
+                        projection,
+                        PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.OthersTransaction.getOthersTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.OTHERS_INCOME:
+                returnCursor = db.query(
+                        PortfolioContract.OthersIncome.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.OTHERS_INCOME_FOR_SYMBOL:
+                returnCursor = db.query(
+                        PortfolioContract.OthersIncome.TABLE_NAME,
+                        projection,
+                        PortfolioContract.OthersIncome.COLUMN_SYMBOL + " = ?",
+                        new String[]{PortfolioContract.OthersIncome.getOthersIncomeFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -806,6 +892,56 @@ public class PortfolioProvider extends ContentProvider {
                 returnUri = PortfolioContract.TreasuryIncome.URI;
                 break;
 
+            case Constants.Provider.OTHERS_PORTFOLIO:
+                _id = db.insert(
+                        PortfolioContract.OthersPortfolio.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.OthersPortfolio.buildOthersPortfolioUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.OTHERS_DATA:
+                _id = db.insert(
+                        PortfolioContract.OthersData.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.OthersData.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+
+            case Constants.Provider.OTHERS_TRANSACTION:
+                _id = db.insert(
+                        PortfolioContract.OthersTransaction.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.OthersTransaction.buildTransactionUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.OthersData.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.OTHERS_INCOME:
+                db.insert(
+                        PortfolioContract.OthersIncome.TABLE_NAME,
+                        null,
+                        values
+                );
+                returnUri = PortfolioContract.OthersIncome.URI;
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1077,6 +1213,51 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.OTHERS_DATA_WITH_SYMBOL:
+                symbol = PortfolioContract.OthersData.getOthersDataFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.OthersData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.OthersData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.OTHERS_TRANSACTION:
+                rowsDeleted = db.delete(
+                        PortfolioContract.OthersTransaction.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.OTHERS_TRANSACTION_FOR_SYMBOL:
+                symbol = PortfolioContract.OthersTransaction.getOthersTransactionFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.OthersTransaction.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.OthersTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.OTHERS_INCOME:
+                rowsDeleted = db.delete(
+                        PortfolioContract.OthersIncome.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.OTHERS_INCOME_FOR_SYMBOL:
+                // TODO: Needs to change, otherwise it will always delete all incomes of that treasury symbol
+                symbol = PortfolioContract.OthersIncome.getOthersIncomeFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.OthersIncome.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.OthersIncome.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1263,7 +1444,6 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
-
             case Constants.Provider.TREASURY_PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.TreasuryPortfolio.TABLE_NAME, values,
                         selection,
@@ -1305,6 +1485,45 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.TREASURY_INCOME:
                 rowsUpdated = db.update(PortfolioContract.TreasuryIncome.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.OTHERS_PORTFOLIO:
+                rowsUpdated = db.update(PortfolioContract.OthersPortfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.OTHERS_DATA:
+                rowsUpdated = db.update(PortfolioContract.OthersData.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.OTHERS_DATA_BULK_UPDATE:
+                rowsUpdated = this.bulkOthersUpdate(values);
+                break;
+
+            case Constants.Provider.OTHERS_DATA_BULK_UPDATE_FOR_CURRENT:
+                currentTotal = PortfolioContract.OthersTransaction
+                        .getOthersTransactionFromUri(uri);
+                if (currentTotal != null) {
+                    rowsUpdated = this.updateOthersCurrentPercent(Double.parseDouble(PortfolioContract
+                            .OthersTransaction.getOthersTransactionFromUri(uri)));
+                }else{
+                    rowsUpdated = 0;
+                }
+                break;
+
+            case Constants.Provider.OTHERS_TRANSACTION:
+                rowsUpdated = db.update(PortfolioContract.OthersTransaction.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.OTHERS_INCOME:
+                rowsUpdated = db.update(PortfolioContract.OthersIncome.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
@@ -1411,6 +1630,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.TreasuryTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.OTHERS_TRANSACTION:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.OthersTransaction.TABLE_NAME,
                                 null,
                                 value
                         );
@@ -1762,6 +2000,65 @@ public class PortfolioProvider extends ContentProvider {
     }
 
     /**
+     * This function is responsible for update the value several values of the Others income of table
+     * OthersData according to the Symbols/CurrentPrice passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int bulkOthersUpdate(ContentValues contValues) {
+
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        double totalBuy;
+        double totalSell;
+        double currentTotal;
+        double totalGain;
+
+        db.beginTransaction();
+        int returnCount = 0;
+        try {
+            String updateSelection = PortfolioContract.OthersData.COLUMN_SYMBOL + " = ?";
+            for (String key : contValues.keySet()) {
+
+                // Prepare query to update others income data
+                String[] updatedSelectionArguments = {key};
+
+                Cursor queryCursor = this.query(
+                        PortfolioContract.OthersData.URI,
+                        null, updateSelection, updatedSelectionArguments, null);
+
+                if (queryCursor.getCount() > 0) {
+                    queryCursor.moveToFirst();
+
+                    currentTotal = Double.parseDouble(contValues.get(key).toString());
+                    totalBuy = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .OthersData.COLUMN_BUY_VALUE_TOTAL));
+                    totalSell = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                            .OthersData.COLUMN_SELL_VALUE_TOTAL));
+                    totalGain = currentTotal + totalSell - totalBuy;
+
+                    ContentValues othersCV = new ContentValues();
+                    othersCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    othersCV.put(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN, totalGain);
+
+                    returnCount += this.update(
+                            PortfolioContract.OthersData.URI,
+                            othersCV, updateSelection, updatedSelectionArguments);
+
+                } else {
+                    Log.d(LOG_TAG, "OthersData was not found for symbol: " + key);
+                }
+            }
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        getContext().getContentResolver().notifyChange(PortfolioContract.OthersData.URI, null);
+        return returnCount;
+    }
+
+    /**
      * This function is responsible for update the value Current Percent of all the Stocks in the
      * table StockData according to the Current Total passed by parameter.
      * This action is done in only one transaction in order to not create a lot of I/O requests
@@ -2092,6 +2389,72 @@ public class PortfolioProvider extends ContentProvider {
             db.endTransaction();
         }
         getContext().getContentResolver().notifyChange(PortfolioContract.TreasuryData.URI, null);
+        return returnCount;
+    }
+
+    /**
+     * This function is responsible for update the value Current Percent of all the Others Income in the
+     * table OthersData according to the Current Total passed by parameter.
+     * This action is done in only one transaction in order to not create a lot of I/O requests
+     */
+    private int updateOthersCurrentPercent(double currentTotal) {
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        db.beginTransaction();
+
+        int returnCount = 0;
+
+        try {
+            // Check if the symbol exists in the db
+            Cursor queryDataCursor = this.query(
+                    PortfolioContract.OthersData.URI,
+                    null, null, null, null);
+            double percentSum = 0;
+            double currentPercent = 0;
+            if (queryDataCursor.getCount() > 0) {
+                queryDataCursor.moveToFirst();
+                // Update the Current Percent of each StockData
+                do {
+                    String _id = String.valueOf(queryDataCursor.getInt(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.OthersData._ID)));
+                    double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
+                            .getColumnIndex(
+                                    PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL));
+                    if (queryDataCursor.isLast()) {
+                        // If it is last, round last so sum of all will be 100%
+                        currentPercent = 100 - percentSum;
+                    } else {
+                        // else calculates current percent for stock
+                        String currentPercentString = String.format(Locale.US, "%.2f",
+                                currentDataTotal / currentTotal * 100);
+                        currentPercent = Double.valueOf(currentPercentString);
+                        percentSum += currentPercent;
+                    }
+
+                    ContentValues othersDataCV = new ContentValues();
+                    othersDataCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_PERCENT,
+                            currentPercent);
+
+                    // Update
+                    // Prepare query to update fixed income data
+                    String updateSelection = PortfolioContract.OthersData._ID + " = ?";
+                    String[] updatedSelectionArguments = {_id};
+
+                    // Update value on stock data
+                    returnCount += this.update(
+                            PortfolioContract.OthersData.URI,
+                            othersDataCV, updateSelection, updatedSelectionArguments);
+
+                } while (queryDataCursor.moveToNext());
+            } else {
+                Log.d(LOG_TAG, "No OthersData found");
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+        getContext().getContentResolver().notifyChange(PortfolioContract.OthersData.URI, null);
         return returnCount;
     }
 }

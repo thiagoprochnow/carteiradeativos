@@ -14,6 +14,8 @@ import br.com.carteira.fragment.currency.CurrencyDetailsFragment;
 import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.fixedincome.FixedDetailsFragment;
 import br.com.carteira.fragment.fixedincome.FixedTabFragment;
+import br.com.carteira.fragment.others.OthersDetailsFragment;
+import br.com.carteira.fragment.others.OthersTabFragment;
 import br.com.carteira.fragment.stock.StockTabFragment;
 import br.com.carteira.fragment.treasury.TreasuryDetailsFragment;
 import br.com.carteira.fragment.treasury.TreasuryTabFragment;
@@ -56,13 +58,16 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 case Constants.ProductType.TREASURY:
                     replaceFragment(new TreasuryTabFragment());
                     break;
+                case Constants.ProductType.OTHERS:
+                    replaceFragment(new OthersDetailsFragment());
+                    break;
                 default:
-                    Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+                    Log.d(LOG_TAG, "1 - Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                     finish();
                     break;
             }
         } else {
-            Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
+            Log.d(LOG_TAG, "2 - Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
         }
     }
 
@@ -157,6 +162,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case Constants.IncomeType.TREASURY:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.OTHERS:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.OTHERS);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

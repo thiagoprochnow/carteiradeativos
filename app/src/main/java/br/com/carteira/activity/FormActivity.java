@@ -18,6 +18,9 @@ import br.com.carteira.fragment.fii.SellFiiFormFragment;
 import br.com.carteira.fragment.fixedincome.BuyFixedFormFragment;
 import br.com.carteira.fragment.fixedincome.EditFixedFormFragment;
 import br.com.carteira.fragment.fixedincome.SellFixedFormFragment;
+import br.com.carteira.fragment.others.BuyOthersFormFragment;
+import br.com.carteira.fragment.others.EditOthersFormFragment;
+import br.com.carteira.fragment.others.SellOthersFormFragment;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
 import br.com.carteira.fragment.stock.EditStockFormFragment;
@@ -68,6 +71,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new BuyTreasuryFormFragment());
                         break;
+                    case Constants.ProductType.OTHERS:
+                        replaceFragment(new BuyOthersFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -90,6 +96,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new SellTreasuryFormFragment());
                         break;
+                    case Constants.ProductType.OTHERS:
+                        replaceFragment(new SellOthersFormFragment());
+                        break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
@@ -111,6 +120,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new EditTreasuryFormFragment());
+                        break;
+                    case Constants.ProductType.OTHERS:
+                        replaceFragment(new EditOthersFormFragment());
                         break;
                     default:
                         Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

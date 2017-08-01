@@ -46,6 +46,7 @@ public final class Constants {
         public static final int CURRENCY = 2;
         public static final int FIXED = 3;
         public static final int TREASURY = 4;
+        public static final int OTHERS = 5;
     }
 
     // This should contains all incomes types in the portfolio
@@ -59,6 +60,7 @@ public final class Constants {
         public static final int FII = 5;
         public static final int FIXED = 6;
         public static final int TREASURY = 7;
+        public static final int OTHERS = 8;
     }
 
     // Status of the a specific investment
@@ -80,6 +82,7 @@ public final class Constants {
         public static final String FIXED = "UPDATE_FIXED_PORTFOLIO";
         public static final String TREASURY = "UPDATE_TREASURY_PORTFOLIO";
         public static final String PORTFOLIO = "UPDATE_PORTFOLIO";
+        public static final String OTHERS = "UPDATE_OTHERS_PORTFOLIO";
     }
 
     // FixedIncome Types
@@ -126,6 +129,10 @@ public final class Constants {
         public static final int TREASURY_INCOME = 20;
         public static final int TREASURY_OVERVIEW = 21;
         public static final int TREASURY_DETAILS = 22;
+
+        public static final int OTHERS_DATA = 23;
+        public static final int OTHERS_OVERVIEW = 24;
+        public static final int OTHERS_DETAILS = 25;
     }
 
     // Constants for Providers IDs
@@ -202,5 +209,18 @@ public final class Constants {
 
         public static final int TREASURY_INCOME = 5500;
         public static final int TREASURY_INCOME_FOR_SYMBOL = 5501;
+
+        public static final int OTHERS_PORTFOLIO = 6100;
+
+        public static final int OTHERS_DATA = 6200;
+        public static final int OTHERS_DATA_WITH_SYMBOL = 6201;
+        public static final int OTHERS_DATA_BULK_UPDATE = 6202;
+        public static final int OTHERS_DATA_BULK_UPDATE_FOR_CURRENT = 6203;
+
+        public static final int OTHERS_TRANSACTION = 6400;
+        public static final int OTHERS_TRANSACTION_FOR_SYMBOL = 6401;
+
+        public static final int OTHERS_INCOME = 6500;
+        public static final int OTHERS_INCOME_FOR_SYMBOL = 6501;
     }
 }

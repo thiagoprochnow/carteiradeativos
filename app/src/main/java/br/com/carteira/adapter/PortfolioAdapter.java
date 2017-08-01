@@ -150,6 +150,8 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_FII_PERCENT));
                 float currencyEntry = mCursor.getFloat(
                         mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT));
+                float othersEntry = mCursor.getFloat(
+                        mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_OTHERS_PERCENT));
 
                 if (treasuryEntry > 0) {
                     entries.add(new PieEntry(treasuryEntry, mContext.getResources().getString(R.string.title_treasury)));
@@ -171,6 +173,10 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     entries.add(new PieEntry(currencyEntry, mContext.getResources().getString(R.string.title_currency)));
                 }
 
+                if (othersEntry > 0) {
+                    entries.add(new PieEntry(othersEntry, mContext.getResources().getString(R.string.title_others)));
+                }
+
                 // Animation on show
                 chartHolder.pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
                 chartHolder.pieChart.setDrawHoleEnabled(true);
@@ -181,7 +187,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 chartHolder.pieChart.setOnChartValueSelectedListener(chartHolder);
 
                 dataSet.setColors(new int[]{R.color.green2, R.color.blue, R.color.red,
-                        R.color.yellow, R.color.darkGreen}, mContext);
+                        R.color.yellow, R.color.darkGreen, R.color.darkGray}, mContext);
 
                 Legend l = chartHolder.pieChart.getLegend();
                 l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);

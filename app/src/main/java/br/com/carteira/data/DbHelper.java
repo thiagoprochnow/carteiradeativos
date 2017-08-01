@@ -34,6 +34,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_TREASURY_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_FIXED_PERCENT + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_OTHERS_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_FII_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT + " REAL, " +
@@ -346,6 +347,58 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + PortfolioContract.TreasuryIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.TreasuryData.TABLE_NAME + " (" + PortfolioContract.TreasuryData._ID + "));";
 
+        String builder_others_portfolio = "CREATE TABLE " + PortfolioContract.OthersPortfolio.TABLE_NAME + " (" +
+                PortfolioContract.OthersPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.OthersPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_TAX + " REAL, " +
+                PortfolioContract.OthersPortfolio.COLUMN_BROKERAGE + " REAL, " +
+                "UNIQUE (" + PortfolioContract.OthersPortfolio._ID + ") ON CONFLICT REPLACE);";
+
+        String builder_others_data = "CREATE TABLE " + PortfolioContract.OthersData.TABLE_NAME + " (" +
+                PortfolioContract.OthersData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.OthersData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_TAX + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_NET_GAIN + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_TOTAL_GAIN + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_CURRENT_PERCENT + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_STATUS + " INTEGER, " +
+                PortfolioContract.OthersData.COLUMN_BROKERAGE + " REAL, " +
+                "UNIQUE (" + PortfolioContract.OthersData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+        String builder_others_transaction = "CREATE TABLE " + PortfolioContract.OthersTransaction.TABLE_NAME + " (" +
+                PortfolioContract.OthersTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.OthersTransaction.COLUMN_TOTAL + " REAL, " +
+                PortfolioContract.OthersTransaction.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.OthersTransaction.COLUMN_TYPE + " INTEGER, " +
+                PortfolioContract.OthersTransaction.COLUMN_TAX + " REAL, " +
+                PortfolioContract.OthersTransaction.COLUMN_BROKERAGE + " REAL, " +
+                " FOREIGN KEY (" + PortfolioContract.OthersTransaction.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.OthersData.TABLE_NAME + " (" + PortfolioContract.OthersData._ID + "));";
+
+        String builder_others_income = "CREATE TABLE " + PortfolioContract.OthersIncome.TABLE_NAME + " (" +
+                PortfolioContract.OthersIncome._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.OthersIncome.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+                PortfolioContract.OthersIncome.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                PortfolioContract.OthersIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
+                PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
+                PortfolioContract.OthersIncome.COLUMN_TAX + " REAL, " +
+                PortfolioContract.OthersIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
+                PortfolioContract.OthersIncome.COLUMN_BROKERAGE + " REAL, " +
+                " FOREIGN KEY (" + PortfolioContract.OthersIncome.COLUMN_SYMBOL + ") REFERENCES "
+                + PortfolioContract.OthersData.TABLE_NAME + " (" + PortfolioContract.OthersData._ID + "));";
+
         db.execSQL(builder_portfolio);
         db.execSQL(builder_stock_portfolio);
         db.execSQL(builder_stock_data);
@@ -369,6 +422,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_sold_treasury_data);
         db.execSQL(builder_treasury_transaction);
         db.execSQL(builder_treasury_income);
+        db.execSQL(builder_others_portfolio);
+        db.execSQL(builder_others_data);
+        db.execSQL(builder_others_transaction);
+        db.execSQL(builder_others_income);
     }
 
 
@@ -398,6 +455,10 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldTreasuryData.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryTransaction.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryIncome.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersPortfolio.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersData.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersTransaction.TABLE_NAME);
+        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersIncome.TABLE_NAME);
         onCreate(db);
     }
 }

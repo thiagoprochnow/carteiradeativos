@@ -87,6 +87,19 @@ public class PortfolioContract {
     public static final String PATH_TREASURY_INCOME = "treasury_income";
     public static final String PATH_TREASURY_INCOME_WITH_SYMBOL = "treasury_income/*";
 
+    public static final String PATH_OTHERS_PORTFOLIO = "others_portfolio";
+
+    public static final String PATH_OTHERS_DATA = "others_data";
+    public static final String PATH_OTHERS_DATA_BULK_UPDATE = "others_data/update";
+    public static final String PATH_OTHERS_DATA_BULK_UPDATE_WITH_CURRENT = "others_data/update/*";
+    public static final String PATH_OTHERS_DATA_WITH_SYMBOL = "others_data/*";
+
+    public static final String PATH_OTHERS_TRANSACTION = "others_transaction";
+    public static final String PATH_OTHERS_TRANSACTION_WITH_SYMBOL = "others_transaction/*";
+
+    public static final String PATH_OTHERS_INCOME = "others_income";
+    public static final String PATH_OTHERS_INCOME_WITH_SYMBOL = "others_income/*";
+
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
 
@@ -102,6 +115,7 @@ public class PortfolioContract {
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
         public static final String COLUMN_TREASURY_PERCENT = "treasury_percent";
         public static final String COLUMN_FIXED_PERCENT = "fixed_percent";
+        public static final String COLUMN_OTHERS_PERCENT = "others_percent";
         public static final String COLUMN_STOCK_PERCENT = "stock_percent";
         public static final String COLUMN_FII_PERCENT = "fii_percent";
         public static final String COLUMN_CURRENCY_PERCENT = "currency_percent";
@@ -118,6 +132,7 @@ public class PortfolioContract {
                 COLUMN_TOTAL_GAIN,
                 COLUMN_TREASURY_PERCENT,
                 COLUMN_FIXED_PERCENT,
+                COLUMN_OTHERS_PERCENT,
                 COLUMN_STOCK_PERCENT,
                 COLUMN_FII_PERCENT,
                 COLUMN_CURRENCY_PERCENT,
@@ -1093,6 +1108,170 @@ public class PortfolioContract {
         }
 
         public static String getTreasuryIncomeFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole others income portfolio
+    public static final class OthersPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_OTHERS_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "others_portfolio";
+
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+
+        public static final String[] OTHERS_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_VARIATION_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE
+        };
+
+        public static Uri makeUriForOthersPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildOthersPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getOthersPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each others income owned.
+    public static final class OthersData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_OTHERS_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
+
+        public static final String TABLE_NAME = "others_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "buy_value_total";
+        public static final String COLUMN_SELL_VALUE_TOTAL = "sell_value_total";
+        public static final String COLUMN_NET_GAIN = "net_gain";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+
+        public static final String[] OTHERS_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_SELL_VALUE_TOTAL,
+                COLUMN_NET_GAIN,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_STATUS,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE
+        };
+
+        public static Uri makeUriForOthersData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getOthersDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each others income buy and sell
+    public static final class OthersTransaction implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_OTHERS_TRANSACTION).build();
+
+        public static final String TABLE_NAME = "others_transaction";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TOTAL = "bought_total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+
+        public static final String[] OTHERS_TRANSACTION_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TOTAL,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE
+        };
+
+        public static Uri buildTransactionUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForOthersTransaction(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getOthersTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of others incomes
+    public static final class OthersIncome implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_OTHERS_INCOME).build();
+
+        public static final String TABLE_NAME = "others_incomes";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_TYPE = "income_type";
+        public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
+        public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+
+        public static final String[] OTHERS_INCOME_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_TYPE,
+                COLUMN_EXDIVIDEND_TIMESTAMP,
+                COLUMN_RECEIVE_TOTAL,
+                COLUMN_TAX,
+                COLUMN_RECEIVE_LIQUID,
+                COLUMN_BROKERAGE
+        };
+
+        public static Uri makeUriForOthersIncome(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getOthersIncomeFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

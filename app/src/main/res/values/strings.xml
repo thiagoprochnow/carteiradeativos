@@ -9,9 +9,11 @@
     <string name="stock_update_fail">Stock update failed</string>
     <string name="fii_update_success">Fii updated successfuly</string>
     <string name="fixed_update_success">Fixed income updated successfuly</string>
+    <string name="others_update_success">Updated successfuly</string>
     <string name="treasury_update_success">Treasury updated successfuly</string>
     <string name="fii_update_fail">Fii update failed</string>
     <string name="fixed_update_fail">Fixed income update failed</string>
+    <string name="others_update_fail">Update failed</string>
     <string name="treasury_update_fail">Treasury update failed</string>
     <string name="currency_update_success">Currency updated successfuly</string>
     <string name="currency_update_fail">Currency update failed</string>
@@ -22,6 +24,7 @@
     <string name="form_title_jcp">Interest on Capital</string>
     <string name="form_title_fii_income">Income</string>
     <string name="form_title_fixed_income">Income</string>
+    <string name="form_title_others_income">Income</string>
     <string name="form_title_treasury_income">Income</string>
     <string name="form_title_bonification">Bonification</string>
     <string name="form_title_split">Split</string>
@@ -37,6 +40,7 @@
     <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>
     <string name="fixed_current_total">Fixed income current total</string>
+    <string name="others_current_total">Current total</string>
     <string name="treasury_current_price">Treasury Current Price</string>
     <string name="currency_current_price">Currency current price</string>
     <string name="percentual_objective">Objective for the portfolio (EX: 20%)</string>
@@ -58,12 +62,14 @@
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
-    <string name="wrong_treasury_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
+    <string name="wrong_others_code">Invalid label. Please type only letters and numbers.</string>
+    <string name="wrong_treasury_code">Invalid Treasury label. Please type only letters and numbers.</string>
     <string name="wrong_currency_code">Invalid Currency code</string>
     <string name="wrong_quantity">Quantity should be a number</string>
     <string name="wrong_stock_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
     <string name="wrong_fii_sell_quantity">Quantity should be a number and need to have enough fii bought</string>
     <string name="wrong_fixed_sell_quantity">Quantity should be a number and need to have enough fixed income bought</string>
+    <string name="wrong_others_sell_quantity">Quantity should be a number and need to have enough of this investment</string>
     <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
     <string name="wrong_treasury_sell_quantity">Quantity should be a number and need to have enough treasury bought</string>
     <string name="wrong_price">Price should be a number</string>
@@ -77,6 +83,7 @@
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="wrong_income_per_fii">Wrong value received per fii</string>
     <string name="wrong_income_per_fixed">Wrong value received per fixed income</string>
+    <string name="wrong_income_per_others">Wrong total value received</string>
     <string name="wrong_income_per_treasury">Wrong value received per treasury</string>
     <string name="menu_done">Done</string>
 
@@ -140,6 +147,13 @@
     <string name="delete_treasury_title">Delete treasury from your portfolio?</string>
     <string name="delete_treasury_dialog">If you sold the Treasury, select "Sell" from the option menu. Deleting the Treasury will remove all its data, including all income received.</string>
 
+    <!-- Others Main Fragment -->
+    <string name="buy_others_success">Investment added successfully</string>
+    <string name="buy_others_fail">Error adding investment</string>
+    <string name="sell_others_success">Investment sold successfully</string>
+    <string name="sell_others_fail">Error selling investment</string>
+    <string name="delete_others_title">Delete investment from your portfolio?</string>
+    <string name="delete_others_dialog">If you sold the investment, select "Sell" from the option menu. Deleting the investment will remove all its data, including all income received.</string>
 
     <!-- Stock Tab Adapter -->
     <string name="stocks_overview">Overview</string>
@@ -163,6 +177,12 @@
     <string name="fixed_portfolio">Aplications</string>
     <string name="fixed_history">History</string>
     <string name="fixed_incomes">Incomes</string>
+
+    <!-- Others Tab Adapter -->
+    <string name="others_overview">Overview</string>
+    <string name="others_portfolio">Aplications</string>
+    <string name="others_history">History</string>
+    <string name="others_incomes">Incomes</string>
 
     <!-- Treasury Tab Adapter -->
     <string name="treasury_overview">Overview</string>
@@ -199,6 +219,9 @@
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantity: </string>
 
+    <!-- Others Adapter -->
+    <string name="others_quantity_label">Quantity: </string>
+
     <!-- Treasury Adapter -->
     <string name="treasury_quantity_label">Quantity: </string>
 
@@ -223,6 +246,9 @@
     <!-- Fixed Portolfio -->
     <string name="fixed_portfolio_label">Fixed Income Portfolio</string>
 
+    <!-- Others Portolfio -->
+    <string name="others_portfolio_label">Others Portfolio</string>
+
     <!-- Treasury Portolfio -->
     <string name="treasury_portfolio_label">Treasury Portfolio</string>
     <string name="treasury_portfolio_income_label">Coupons</string>
@@ -236,6 +262,7 @@
     <string name="jcp_income_type">Interest on Capital</string>
     <string name="fii_income_type">Income</string>
     <string name="fixed_income_type">Income</string>
+    <string name="others_income_type">Income</string>
     <string name="treasury_income_type">Semiannual Coupon</string>
     <string name="portfolio_income_type">Income</string>
     <string name="income_overview_bought_label">Bought</string>
@@ -256,6 +283,8 @@
     <string name="details_medium_price">Medium Buy</string>
     <string name="details_sold_fixed">Sell</string>
     <string name="details_buy_fixed">Buy</string>
+    <string name="details_sold_others">Sell</string>
+    <string name="details_buy_others">Buy</string>
     <string name="details_gain">Gain</string>
     <string name="details_price">Price</string>
     <string name="details_total">Total</string>
@@ -273,6 +302,7 @@
     <string name="income_per_stock">Received per Stock</string>
     <string name="income_per_fii">Received per quote</string>
     <string name="income_per_fixed">Received per fixed income</string>
+    <string name="income_per_others">Total received on investment</string>
     <string name="income_per_treasury">Received per quote</string>
     <string name="gross_income">Gross Income</string>
     <string name="tax_income">Paid Tax</string>
@@ -289,6 +319,7 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
     <string name="receive_value_fixed">Received Value per Fixed Income</string>
+    <string name="receive_value_others">Total received value on investment</string>
     <string name="receive_value_treasury">Total received value on coupon</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>
@@ -296,9 +327,11 @@
     <string name="add_jcp_fail">Error adding interest on capital</string>
     <string name="add_fii_income_success">Income added successfully</string>
     <string name="add_fixed_income_success">Income added successfully</string>
+    <string name="add_others_income_success">Income added successfully</string>
     <string name="add_treasury_income_success">Income added successfully</string>
     <string name="add_fii_income_fail">Error adding income</string>
     <string name="add_fixed_income_fail">Error adding income</string>
+    <string name="add_others_income_fail">Error adding income</string>
     <string name="add_treasury_income_fail">Error adding income</string>
 
     <!-- Currency Main Fragment -->
@@ -345,6 +378,28 @@
     <string name="fixed_buy_value">Buy total value</string>
     <string name="fixed_sell_value">Sell total value</string>
 
+    <!-- Add others income Form Fragment -->
+    <string name="add_others_title">Buy Others</string>
+    <string name="buy_others_button">Buy</string>
+    <string name="cancel_others_button">Cancel</string>
+    <string name="others_type">Type of the investment</string>
+    <string name="others_rentability_type">Rentability type of the investment</string>
+    <string name="others_symbol">Type the label of the investment</string>
+    <string name="others_symbol_hint">Ex: Fund ABC</string>
+    <string name="others_type_treasury">Treasury</string>
+    <string name="others_type_cdb">CDB</string>
+    <string name="others_type_lci">LCI</string>
+    <string name="others_type_lca">LCA</string>
+    <string name="others_type_debenture">Debenture</string>
+    <string name="others_type_lc">LC</string>
+    <string name="others_type_cri">CRI</string>
+    <string name="others_type_cra">CRA</string>
+    <string name="others_rentability_type_pos">Post</string>
+    <string name="others_rentability_type_pre">Pre</string>
+    <string name="others_rentability_type_index">Indexed</string>
+    <string name="others_buy_value">Buy total value</string>
+    <string name="others_sell_value">Sell total value</string>
+
     <!-- Add treasury Form Fragment -->
     <string name="add_treasury_title">Buy Treasury</string>
     <string name="buy_treasury_button">Buy</string>
@@ -359,6 +414,7 @@
     <string name="title_fii">Real State Fund</string>
     <string name="title_stocks">Stocks</string>
     <string name="title_currency">Currencies</string>
+    <string name="title_others">Others</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -369,11 +425,13 @@
     <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
     <string name="toast_fii_successfully_removed">Fii %s successfully removed</string>
     <string name="toast_fixed_successfully_removed">Fixed income %s successfully removed</string>
+    <string name="toast_others_successfully_removed">Investment %s successfully removed</string>
     <string name="toast_currency_successfully_removed">Currency %s successfully removed</string>
     <string name="toast_treasury_successfully_removed">Treasury %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>
     <string name="toast_fii_not_removed">Unable to remove Fii %s</string>
     <string name="toast_fixed_not_removed">Unable to remove fixed income %s</string>
+    <string name="toast_others_not_removed">Unable to remove investment %s</string>
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
     <string name="no_items_to_display">No items to display</string>

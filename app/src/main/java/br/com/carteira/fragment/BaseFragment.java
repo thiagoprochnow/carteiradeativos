@@ -295,6 +295,28 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Delete others income and all its information from database
+    // This is different then selling a others income, that will maintain some information
+    public boolean deleteOthers(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .OthersTransaction
+                .makeUriForOthersTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.OthersData
+                .makeUriForOthersData(symbol), null, null);
+
+        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData);
+        if (deletedData > 0) {
+            mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+            Toast.makeText(mContext, getString(R.string.toast_others_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_others_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
     // Delete fii income from table by using its id
     // symbol is used to update Fii Data table
     public boolean deleteFiiIncome(String id, String symbol){
@@ -647,6 +669,63 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete others transaction from table by using its id
+    // symbol is used to update others Data table
+    public boolean deleteOthersTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.OthersTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.OthersTransaction._ID + " = ? AND "
+                + PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.OthersTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.OthersTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update others data for that symbol
+            updateOthersData(symbol, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from OthersData
+
+        String selectionTransaction = PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.OthersTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.OthersTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the others income and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteOthers(symbol);
+            getActivity().finish();
+        }
+
+        String sellSelectionTransaction = PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.OthersTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.OthersTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        return false;
+    }
+
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
         Log.d(LOG_TAG, "InputDate String: " + inputDate);
@@ -719,6 +798,18 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidFixedSymbol(EditText symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Fixed income (Only letters and numbers)
+        Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid Others Symbol
+    protected boolean isValidOthersSymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Others income (Only letters and numbers)
         Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
         if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
@@ -881,6 +972,49 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 double currentTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .FixedData.COLUMN_CURRENT_TOTAL));
+                if (currentTotal >= sellTotal) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            // Field is empty
+            return false;
+        }
+
+        Editable editable = value.getText();
+        // Check if it is double input
+        Pattern pattern = Pattern.compile("^[0-9]+\\.?[0-9]*$");
+        if (!isEditTextEmpty(value) && pattern.matcher(editable.toString()).matches() && isQuantityEnough) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid double and that there is enough quantity of that investment to sell
+    protected boolean isValidSellOthers(EditText value, EditText editSymbol) {
+        String symbol = editSymbol.getText().toString();
+        // Prepare query for currency data
+        String selection = PortfolioContract.OthersData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        boolean isQuantityEnough = false;
+        if (!value.toString().isEmpty()) {
+            double sellTotal = Double.parseDouble(value.getText().toString());
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.OthersData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                double currentTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                        .OthersData.COLUMN_CURRENT_TOTAL));
                 if (currentTotal >= sellTotal) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
@@ -2187,38 +2321,6 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    public String getFixedType(int typeId){
-        switch (typeId){
-            case Constants.FixedType.INVALID:
-                Log.d(LOG_TAG, "Invalid FixedType");
-                return "invalid";
-            case Constants.FixedType.CDB:
-                Log.d(LOG_TAG, "CDB FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_cdb);
-            case Constants.FixedType.LCI:
-                Log.d(LOG_TAG, "LCI FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_lci);
-            case Constants.FixedType.LCA:
-                Log.d(LOG_TAG, "LCI FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_lca);
-            case Constants.FixedType.DEBENTURE:
-                Log.d(LOG_TAG, "DEBENTURE FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_debenture);
-            case Constants.FixedType.LC:
-                Log.d(LOG_TAG, "LC FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_lc);
-            case Constants.FixedType.CRI:
-                Log.d(LOG_TAG, "CRI FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_cri);
-            case Constants.FixedType.CRA:
-                Log.d(LOG_TAG, "CRA FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_cra);
-            default:
-                Log.d(LOG_TAG, "Default FixedType");
-                return mContext.getResources().getString(R.string.fixed_type_treasury);
-        }
-    }
-
     // Reads the TreasuryTransaction entries and calculates value for TreasuryData table for this symbol
     public boolean updateTreasuryData(String symbol, int type){
 
@@ -2378,7 +2480,7 @@ public abstract class BaseFragment extends Fragment {
                 Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
-                // Send to update Fixed Income Portfolio and show overview
+                // Send to update Treasury Income Portfolio and show overview
                 mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 updateSoldTreasuryData(symbol, soldBuyValue);
                 return true;
@@ -2589,6 +2691,139 @@ public abstract class BaseFragment extends Fragment {
         } else{
             Log.d(LOG_TAG, "");
             return 0;
+        }
+    }
+
+    // Reads the OthersTransaction entries and calculates value for OthersData table for this symbol
+    public boolean updateOthersData(String symbol, int type){
+
+        String selection = PortfolioContract.OthersTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.OthersTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.OthersTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in OthersData
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyTotal = 0;
+            double lastSell = 0;
+            int currentType;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldTotal = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
+                        break;
+                    case Constants.Type.SELL:
+                        // Add the value sold times the current medium buy price
+                        soldTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
+                        lastSell = STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
+                        break;
+                    default:
+                        Log.d(LOG_TAG, "currentType Unknown");
+                }
+            } while (STQueryCursor.moveToNext());
+            ContentValues othersDataCV = new ContentValues();
+
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.OthersData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing OthersData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.OthersData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            // Create new OthersData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Current total will be the same as buyTotal at first
+                currentTotal = buyTotal;
+                othersDataCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL, buyTotal);
+                // Adds data to the database
+                Uri insertedOthersDataUri = mContext.getContentResolver().insert(PortfolioContract.OthersData.URI,
+                        othersDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedOthersDataUri != null) {
+                    Log.d(LOG_TAG, "Created others income data");
+                    // Update others income Portfolio
+                } else {
+                    Log.d(LOG_TAG, "Error creating others income data");
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, OthersDetailsOverview will not update current total and total gain, unless refreshing the View
+                queryDataCursor.moveToFirst();
+                currentTotal = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL));
+            }
+
+            // Subtract sold value from currentTotal if is selling others income
+            if (type == Constants.Type.SELL){
+                currentTotal -= lastSell;
+            }
+
+            double totalGain = currentTotal + soldTotal - buyTotal;
+
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL, buyTotal);
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL, soldTotal);
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN, totalGain);
+            if ((type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
+                othersDataCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL, currentTotal);
+            }
+
+
+            // Set others income as active
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_STATUS, Constants.Status.ACTIVE);
+
+            // Searches for existing OthersData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.OthersData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.OthersData._ID)));
+
+            // Update
+            // Prepare query to update others income data
+            String updateSelection = PortfolioContract.OthersData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on others income data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.OthersData.URI,
+                    othersDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                // Send broadcast so OthersReceiver can update the rest
+                // Send to update others Income Portfolio and show overview
+                mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+                Log.d(LOG_TAG, "updateStockData successfully updated");
+                return true;
+            } else {
+                Log.d(LOG_TAG, "updateOthersData failed update");
+                return false;
+            }
+        } else{
+            Log.d(LOG_TAG, "No OthersTransaction found");
+            return false;
         }
     }
 }

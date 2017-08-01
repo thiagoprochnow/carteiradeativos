@@ -96,6 +96,14 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name=".receiver.OthersReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_OTHERS_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name=".receiver.PortfolioReceiver"
             android:exported="false">
             <intent-filter>

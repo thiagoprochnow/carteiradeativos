@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/fragment_form_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/others_current_total"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputCurrentTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="30"
+            android:inputType="numberDecimal"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/fii_edit_tip"/>
+
+    </LinearLayout>
+</ScrollView>
