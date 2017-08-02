@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
         <!-- Complete Portfolio Item Menu -->
         <item
             android:id="@+id/nav_item_complete_portfolio"
@@ -10,37 +12,48 @@
         <!-- Fixed Income Item Menu -->
         <item
             android:id="@+id/nav_item_treasury"
-            android:checked="true"
+            android:checked="false"
             android:title="@string/title_treasury"/>
 
         <!-- Fixed Income Item Menu -->
         <item
             android:id="@+id/nav_item_fixed_income"
-            android:checked="true"
+            android:checked="false"
             android:title="@string/title_fixed"/>
 
         <!-- Stocks Item Menu -->
         <item
             android:id="@+id/nav_item_stocks"
-            android:checked="true"
+            android:checked="false"
             android:title="@string/title_stocks"/>
 
         <!-- Fii Item Menu -->
         <item
             android:id="@+id/nav_item_fii"
-            android:checked="true"
+            android:checked="false"
             android:title="@string/title_fii"/>
 
         <!-- Currency Item Menu -->
         <item
             android:id="@+id/nav_item_currency"
-            android:checked="true"
+            android:checked="false"
             android:title="@string/title_currency"/>
 
-        <!-- Currency Item Menu -->
+        <!-- Others Item Menu -->
         <item
             android:id="@+id/nav_item_others"
-            android:checked="true"
+            android:checked="false"
+            android:title="@string/title_others"/>
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+
+        <!-- Others Item Menu -->
+        <item
+            android:id="@+id/nav_item_others2"
+            android:checked="false"
             android:title="@string/title_others"/>
     </group>
 </menu>

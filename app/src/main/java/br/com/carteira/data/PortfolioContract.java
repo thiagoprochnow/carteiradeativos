@@ -1176,6 +1176,8 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_INCOME = "income_total";
+        public static final String COLUMN_INCOME_TAX = "income_tax";
 
         public static final String[] OTHERS_DATA_COLUMNS = {
                 _ID,
@@ -1189,7 +1191,9 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                COLUMN_INCOME,
+                COLUMN_INCOME_TAX
         };
 
         public static Uri makeUriForOthersData(String symbol) {

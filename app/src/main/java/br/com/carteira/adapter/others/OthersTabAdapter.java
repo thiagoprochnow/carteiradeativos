@@ -7,9 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
 import br.com.carteira.R;
-import br.com.carteira.fragment.fixedincome.FixedDataFragment;
-import br.com.carteira.fragment.fixedincome.FixedOverviewFragment;
 import br.com.carteira.fragment.others.OthersDataFragment;
+import br.com.carteira.fragment.others.OthersIncomesMainFragment;
 import br.com.carteira.fragment.others.OthersOverviewFragment;
 
 
@@ -23,16 +22,18 @@ public class OthersTabAdapter extends FragmentPagerAdapter {
     }
     @Override
     public int getCount(){
-        return 2;
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position){
         if(position == 0){
             return mContext.getString(R.string.others_overview);
+        } else if (position == 1){
+            return mContext.getString(R.string.others_portfolio);
         }
 
-        return mContext.getString(R.string.others_portfolio);
+        return mContext.getString(R.string.others_incomes);
     }
 
     @Override
@@ -41,9 +42,12 @@ public class OthersTabAdapter extends FragmentPagerAdapter {
             Log.d(LOG_TAG, "Loading OthersOverviewFragment()");
             return new OthersOverviewFragment();
         }
-        else {
+        else if (position == 1){
             Log.d(LOG_TAG, "Loading OthersDataFragment()");
             return new OthersDataFragment();
+        } else{
+            Log.d(LOG_TAG, "Loading OthersDataFragment()");
+            return new OthersIncomesMainFragment();
         }
     }
 }

@@ -59,7 +59,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     replaceFragment(new TreasuryTabFragment());
                     break;
                 case Constants.ProductType.OTHERS:
-                    replaceFragment(new OthersDetailsFragment());
+                    replaceFragment(new OthersTabFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "1 - Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

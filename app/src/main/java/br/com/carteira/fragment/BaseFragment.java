@@ -344,7 +344,7 @@ public abstract class BaseFragment extends Fragment {
                 selection, selectionArguments);
         Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
-            // Update stock data for that symbol
+            // Update fii data for that symbol
             boolean updateFiiData = updateFiiData(symbol, -1);
             if (updateFiiData)
                 return true;
@@ -379,9 +379,44 @@ public abstract class BaseFragment extends Fragment {
                 selection, selectionArguments);
         Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
-            // Update stock data for that symbol
+            // Update treasury data for that symbol
             boolean updateTreasuryData = updateTreasuryData(symbol, -1);
             if (updateTreasuryData)
+                return true;
+        }
+        return false;
+    }
+
+    // Delete others income from table by using its id
+    // symbol is used to update Treasury Data table
+    public boolean deleteOthersIncome(String id, String symbol){
+        String selection = PortfolioContract.OthersIncome._ID + " = ? AND "
+                + PortfolioContract.OthersIncome.COLUMN_SYMBOL + " = ?";
+        if (symbol == null){
+            String selectionData = PortfolioContract.OthersIncome._ID + " = ? ";
+            String[] selectionDataArguments = {id};
+            String[] affectedColumn = {PortfolioContract.OthersIncome.COLUMN_SYMBOL};
+            Cursor cursor = mContext.getContentResolver().query(
+                    PortfolioContract.OthersIncome.URI,
+                    affectedColumn, selectionData, selectionDataArguments, null);
+
+            if (cursor.getCount() > 0){
+                cursor.moveToFirst();
+                symbol = cursor.getString(0);
+            } else {
+                Log.d(LOG_TAG, "No symbol for for that income");
+            }
+        }
+        String[] selectionArguments = {id, symbol};
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.OthersIncome.URI,
+                selection, selectionArguments);
+        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
+        if (deletedResult > 0){
+            // Update others data for that symbol
+            boolean updateOthersData = updateOthersData(symbol, -1);
+            if (updateOthersData)
                 return true;
         }
         return false;

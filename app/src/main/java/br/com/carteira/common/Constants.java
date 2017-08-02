@@ -133,6 +133,7 @@ public final class Constants {
         public static final int OTHERS_DATA = 23;
         public static final int OTHERS_OVERVIEW = 24;
         public static final int OTHERS_DETAILS = 25;
+        public static final int OTHERS_INCOME = 26;
     }
 
     // Constants for Providers IDs

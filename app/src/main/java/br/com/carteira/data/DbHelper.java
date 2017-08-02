@@ -374,6 +374,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_STATUS + " INTEGER, " +
                 PortfolioContract.OthersData.COLUMN_BROKERAGE + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_INCOME + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_INCOME_TAX + " REAL, " +
                 "UNIQUE (" + PortfolioContract.OthersData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_others_transaction = "CREATE TABLE " + PortfolioContract.OthersTransaction.TABLE_NAME + " (" +

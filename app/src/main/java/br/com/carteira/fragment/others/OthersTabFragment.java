@@ -11,8 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.carteira.R;
+import br.com.carteira.activity.MainActivity;
 import br.com.carteira.adapter.fixedincome.FixedTabAdapter;
+import br.com.carteira.adapter.others.OthersDetailsTabAdapter;
 import br.com.carteira.adapter.others.OthersTabAdapter;
+import br.com.carteira.adapter.treasury.TreasuryDetailsTabAdapter;
+import br.com.carteira.adapter.treasury.TreasuryTabAdapter;
 import br.com.carteira.fragment.BaseFragment;
 
 public class OthersTabFragment extends BaseFragment {
@@ -28,11 +32,18 @@ public class OthersTabFragment extends BaseFragment {
         ViewPager viewPager;
         String activityName = getActivity().getClass().getSimpleName();
 
-        view = inflater.inflate(R.layout.fragment_others_tab, container, false);
-        viewPager = (ViewPager) view.findViewById(R.id.othersViewPager);
-        Log.d(LOG_TAG, "OthersTabAdapter");
-        viewPager.setAdapter(new OthersTabAdapter(mContext, getChildFragmentManager()));
-
+        // Check if it is a Tab for OthersData tabs or OthersDetails tabs
+        if (activityName.equals(MainActivity.class.getSimpleName())){
+            view = inflater.inflate(R.layout.fragment_others_tab, container, false);
+            viewPager = (ViewPager) view.findViewById(R.id.othersViewPager);
+            Log.d(LOG_TAG, "OthersTabAdapter");
+            viewPager.setAdapter(new OthersTabAdapter(mContext, getChildFragmentManager()));
+        } else {
+            view = inflater.inflate(R.layout.fragment_others_details_tab, container, false);
+            viewPager = (ViewPager) view.findViewById(R.id.othersViewPager);
+            Log.d(LOG_TAG, "OthersDetailsTabAdapter");
+            viewPager.setAdapter(new OthersDetailsTabAdapter(mContext, getChildFragmentManager()));
+        }
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.othersTabLayout);
         tabLayout.setupWithViewPager(viewPager);

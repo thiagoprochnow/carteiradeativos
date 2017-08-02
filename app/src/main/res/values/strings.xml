@@ -59,6 +59,7 @@
     <string name="ex_date_jcp">Ex Interest on Capital Date</string>
     <string name="ex_date_fii_income">Ex Income Date</string>
     <string name="ex_date_treasury_income">Receive Date</string>
+    <string name="ex_date_others_income">Receive Date</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>

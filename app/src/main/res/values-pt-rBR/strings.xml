@@ -59,6 +59,7 @@
     <string name="ex_date_jcp">Data Ex Juros s/ Capital</string>
     <string name="ex_date_fii_income">Data Ex Rendimento</string>
     <string name="ex_date_treasury_income">Data Recebimento</string>
+    <string name="ex_date_others_income">Data Recebimento</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
