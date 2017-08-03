@@ -2011,6 +2011,8 @@ public class PortfolioProvider extends ContentProvider {
         double totalBuy;
         double totalSell;
         double currentTotal;
+        double incomeTotal;
+        double variation;
         double totalGain;
 
         db.beginTransaction();
@@ -2034,10 +2036,14 @@ public class PortfolioProvider extends ContentProvider {
                             .OthersData.COLUMN_BUY_VALUE_TOTAL));
                     totalSell = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                             .OthersData.COLUMN_SELL_VALUE_TOTAL));
-                    totalGain = currentTotal + totalSell - totalBuy;
+                    incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                    .OthersData.COLUMN_INCOME));
+                    variation = currentTotal + totalSell - totalBuy;
+                    totalGain = currentTotal + totalSell + incomeTotal - totalBuy;
 
                     ContentValues othersCV = new ContentValues();
                     othersCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    othersCV.put(PortfolioContract.OthersData.COLUMN_VARIATION, variation);
                     othersCV.put(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN, totalGain);
 
                     returnCount += this.update(
