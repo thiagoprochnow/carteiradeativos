@@ -32,12 +32,16 @@ public class OthersReceiver extends BroadcastReceiver {
         double buyTotal = 0;
         double totalGain = 0;
         double sellTotal = 0;
+        double variationTotal = 0;
+        double incomeTotal = 0;
 
         // Return column should be the sum of value total, income total, value gain
         String[] affectedColumn = {"sum("+ PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL +"), " +
                 "sum("+PortfolioContract.OthersData.COLUMN_TOTAL_GAIN +"), " +
-                "sum("+PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL +")"};
+                "sum("+PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL +"), " +
+                "sum("+ PortfolioContract.OthersData.COLUMN_INCOME +"), " +
+                "sum("+PortfolioContract.OthersData.COLUMN_VARIATION +")"};
 
         // Check if the symbol exists in the db
         Cursor queryCursor = mContext.getContentResolver().query(
@@ -50,9 +54,13 @@ public class OthersReceiver extends BroadcastReceiver {
             totalGain += queryCursor.getDouble(2);
             sellTotal += queryCursor.getDouble(3);
             double totalGainPercent = totalGain/buyTotal*100;
+            incomeTotal += queryCursor.getDouble(4);
+            variationTotal += queryCursor.getDouble(5);
 
             // Values to be inserted or updated on OthersPortfolio table
             ContentValues portfolioCV = new ContentValues();
+            portfolioCV.put(PortfolioContract.OthersPortfolio.COLUMN_VARIATION_TOTAL, variationTotal);
+            portfolioCV.put(PortfolioContract.OthersPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
             portfolioCV.put(PortfolioContract.OthersPortfolio.COLUMN_BUY_TOTAL, buyTotal);
             portfolioCV.put(PortfolioContract.OthersPortfolio.COLUMN_TOTAL_GAIN, totalGain);
             portfolioCV.put(PortfolioContract.OthersPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);

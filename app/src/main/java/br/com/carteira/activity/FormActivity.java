@@ -20,6 +20,7 @@ import br.com.carteira.fragment.fixedincome.EditFixedFormFragment;
 import br.com.carteira.fragment.fixedincome.SellFixedFormFragment;
 import br.com.carteira.fragment.others.BuyOthersFormFragment;
 import br.com.carteira.fragment.others.EditOthersFormFragment;
+import br.com.carteira.fragment.others.OthersIncomeFormFragment;
 import br.com.carteira.fragment.others.SellOthersFormFragment;
 import br.com.carteira.fragment.stock.BonificationFormFragment;
 import br.com.carteira.fragment.stock.BuyStockFormFragment;
@@ -165,6 +166,10 @@ public class FormActivity extends AppCompatActivity {
                 case Constants.IncomeType.TREASURY:
                     Log.d(LOG_TAG, "Treasury Form Fragment");
                     replaceFragment(new TreasuryIncomeFormFragment());
+                    break;
+                case Constants.IncomeType.OTHERS:
+                    Log.d(LOG_TAG, "Others Form Fragment");
+                    replaceFragment(new OthersIncomeFormFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");

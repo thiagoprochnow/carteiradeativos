@@ -1170,6 +1170,7 @@ public class PortfolioContract {
         public static final String COLUMN_SELL_VALUE_TOTAL = "sell_value_total";
         public static final String COLUMN_NET_GAIN = "net_gain";
         public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_VARIATION = "variation";
         public static final String COLUMN_TOTAL_GAIN = "total_gain";
         public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
         public static final String COLUMN_CURRENT_PERCENT = "current_percent";
@@ -1191,6 +1192,7 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
+                COLUMN_VARIATION,
                 COLUMN_BROKERAGE,
                 COLUMN_INCOME,
                 COLUMN_INCOME_TAX
@@ -1257,7 +1259,6 @@ public class PortfolioContract {
         public static final String COLUMN_EXDIVIDEND_TIMESTAMP = "timestamp";
         public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
         public static final String COLUMN_TAX = "tax";
-        public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
         public static final String COLUMN_BROKERAGE = "brokerage";
 
         public static final String[] OTHERS_INCOME_COLUMNS = {
@@ -1267,7 +1268,6 @@ public class PortfolioContract {
                 COLUMN_EXDIVIDEND_TIMESTAMP,
                 COLUMN_RECEIVE_TOTAL,
                 COLUMN_TAX,
-                COLUMN_RECEIVE_LIQUID,
                 COLUMN_BROKERAGE
         };
 

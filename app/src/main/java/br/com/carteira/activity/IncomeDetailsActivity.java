@@ -9,6 +9,7 @@ import android.util.Log;
 import br.com.carteira.R;
 import br.com.carteira.common.Constants;
 import br.com.carteira.fragment.fii.FiiIncomeDetailsFragment;
+import br.com.carteira.fragment.others.OthersIncomeDetailsFragment;
 import br.com.carteira.fragment.stock.StockIncomeDetailsFragment;
 import br.com.carteira.fragment.treasury.TreasuryIncomeDetailsFragment;
 import br.com.carteira.listener.ProductListener;
@@ -46,6 +47,10 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                 case Constants.IncomeType.TREASURY:
                     setTitle(R.string.treasury_income_type);
                     replaceFragment(new TreasuryIncomeDetailsFragment());
+                    break;
+                case Constants.IncomeType.OTHERS:
+                    setTitle(R.string.others_income_type);
+                    replaceFragment(new OthersIncomeDetailsFragment());
                     break;
                 default:
                     Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");

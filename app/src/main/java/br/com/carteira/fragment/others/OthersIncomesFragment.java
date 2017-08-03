@@ -185,7 +185,6 @@ public class OthersIncomesFragment extends BaseFragment implements
             ContentValues incomeCV = new ContentValues();
             incomeCV.put(PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL, grossIncome);
             incomeCV.put(PortfolioContract.OthersIncome.COLUMN_TAX, tax);
-            incomeCV.put(PortfolioContract.OthersIncome.COLUMN_RECEIVE_LIQUID, netIncome);
             incomeCV.put(PortfolioContract.OthersIncome.COLUMN_TYPE, type);
 
             // Update value on incomes table

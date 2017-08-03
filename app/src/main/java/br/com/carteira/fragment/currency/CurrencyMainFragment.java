@@ -120,14 +120,14 @@ public class CurrencyMainFragment extends BaseFragment implements
         switch (item.getItemId()) {
             case R.id.menu_item_delete_income:
                 // Show Dialog for user confirmation to delete Fii Income from database
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle(R.string.delete_income_title);
 
                 builder.setMessage(R.string.delete_income_dialog)
                         .setPositiveButton(R.string.delete_confirm, new DialogInterface
                                 .OnClickListener() {
                             public void onClick(DialogInterface dialog, int onClickId) {
-                                deleteFiiIncome(id, null);
+                                deleteCurrencyIncome(id, null);
                             }
                         })
                         .setNegativeButton(R.string.delete_cancel, new DialogInterface
@@ -136,7 +136,7 @@ public class CurrencyMainFragment extends BaseFragment implements
                                 dialog.dismiss();
                             }
                         });
-                builder.create().show();
+                builder.create().show();*/
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");

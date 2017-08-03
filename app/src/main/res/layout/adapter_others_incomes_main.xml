@@ -76,7 +76,6 @@
                         android:fontFamily="sans-serif-light"
                         android:maxLines="1"
                         android:text="DUMY4"
-                        android:textAllCaps="true"
                         android:textSize="@dimen/others_income_type" />
 
                     <TextView

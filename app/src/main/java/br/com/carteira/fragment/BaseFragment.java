@@ -2748,6 +2748,8 @@ public abstract class BaseFragment extends Fragment {
             double buyTotal = 0;
             double lastSell = 0;
             int currentType;
+            double receiveIncome = 0;
+            double taxIncome = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -2808,20 +2810,41 @@ public abstract class BaseFragment extends Fragment {
                 currentTotal = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL));
             }
 
+            // Query Income table to get total of this others income
+            String[] affectedColumn = {"sum("+ PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL+")",
+                    "sum("+ PortfolioContract.OthersIncome.COLUMN_TAX+")"};
+            selection = PortfolioContract.OthersIncome.COLUMN_SYMBOL + " = ?";
+
+            Cursor incomeQueryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.OthersIncome.URI,
+                    affectedColumn, selection, selectionArguments, null);
+
+            if (incomeQueryCursor.getCount() > 0){
+                incomeQueryCursor.moveToFirst();
+                receiveIncome = incomeQueryCursor.getDouble(0);
+                taxIncome = incomeQueryCursor.getDouble(1);
+                receiveIncome = receiveIncome - taxIncome;
+            } else {
+                receiveIncome = 0;
+            }
+
             // Subtract sold value from currentTotal if is selling others income
             if (type == Constants.Type.SELL){
                 currentTotal -= lastSell;
             }
 
-            double totalGain = currentTotal + soldTotal - buyTotal;
+            double variation = currentTotal + soldTotal - buyTotal;
+            double totalGain = currentTotal + soldTotal + receiveIncome - buyTotal;
 
             othersDataCV.put(PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL, buyTotal);
             othersDataCV.put(PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL, soldTotal);
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_VARIATION, variation);
             othersDataCV.put(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN, totalGain);
             if ((type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 othersDataCV.put(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL, currentTotal);
             }
-
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_INCOME, receiveIncome);
+            othersDataCV.put(PortfolioContract.OthersData.COLUMN_INCOME_TAX, taxIncome);
 
             // Set others income as active
             othersDataCV.put(PortfolioContract.OthersData.COLUMN_STATUS, Constants.Status.ACTIVE);

@@ -38,5 +38,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/tax_value_others"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputTaxOthers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
     </LinearLayout>
 </ScrollView>

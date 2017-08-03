@@ -90,6 +90,9 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
             case Constants.ProductType.TREASURY:
                 getMenuInflater().inflate(R.menu.treasury_details_menu, menu);
                 return true;
+            case Constants.ProductType.OTHERS:
+                getMenuInflater().inflate(R.menu.others_details_menu, menu);
+                return true;
             default:
                 return true;
         }
@@ -128,6 +131,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 break;
             case R.id.menu_item_treasury_income:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                startActivity(intent);
+                break;
+            case R.id.menu_item_others_income:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.OTHERS);
                 startActivity(intent);
                 break;
             default:

@@ -321,7 +321,8 @@
     <string name="receive_value">Valor Recebido por Ação</string>
     <string name="receive_value_fii">Valor Recebido por Fundo Imobiliario</string>
     <string name="receive_value_fixed">Valor Recebido por Renda Fixa</string>
-    <string name="receive_value_others">Total recebido do investimento</string>
+    <string name="receive_value_others">Valor bruto recebido do investimento</string>
+    <string name="tax_value_others">Imposto pago no rendimento</string>
     <string name="receive_value_treasury">Valor total recebido no cupom</string>
     <string name="add_dividend_success">Dividendo adicionado com sucesso</string>
     <string name="add_dividend_fail">Falha ao adicionar dividendo</string>

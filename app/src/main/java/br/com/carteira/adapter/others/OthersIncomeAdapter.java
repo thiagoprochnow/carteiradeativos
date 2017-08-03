@@ -141,10 +141,11 @@ public class OthersIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // We'll need to format them to currency number format.
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_TYPE)));
+                double receiveTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL));
+                double receiveTax = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_TAX));
                 String date = TimestampToDate(timestamp);
                 viewHolder.incomeType.setText(incomeType);
-                viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.OthersIncome.COLUMN_RECEIVE_LIQUID))));
+                viewHolder.incomeValue.setText(formatter.format(receiveTotal-receiveTax));
                 viewHolder.incomeDate.setText(date);
 
                 viewHolder.othersIncomeViewClickable.setOnClickListener(new ImageView.OnClickListener() {

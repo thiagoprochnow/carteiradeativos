@@ -144,10 +144,11 @@ public class OthersIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.V
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
+                double receiveTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL));
+                double receiveTax = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_TAX));
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.OthersIncome.COLUMN_SYMBOL)));
                 viewHolder.incomeType.setText(incomeType);
-                viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.OthersIncome.COLUMN_RECEIVE_LIQUID))));
+                viewHolder.incomeValue.setText(formatter.format(receiveTotal-receiveTax));
                 viewHolder.incomeDate.setText(date);
                 if(position == mCursor.getCount()){
                     // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
@@ -273,10 +274,10 @@ public class OthersIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return "invalid";
             case Constants.IncomeType.OTHERS:
                 Log.d(LOG_TAG, "Income IncomeType");
-                return mContext.getResources().getString(R.string.treasury_income_type);
+                return mContext.getResources().getString(R.string.others_income_type);
             default:
                 Log.d(LOG_TAG, "Default IncomeType");
-                return mContext.getResources().getString(R.string.treasury_income_type);
+                return mContext.getResources().getString(R.string.others_income_type);
         }
     }
 

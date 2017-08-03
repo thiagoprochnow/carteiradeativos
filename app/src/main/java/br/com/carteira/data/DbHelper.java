@@ -368,6 +368,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_TAX + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_NET_GAIN + " REAL, " +
+                PortfolioContract.OthersData.COLUMN_VARIATION + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_TOTAL_GAIN + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
                 PortfolioContract.OthersData.COLUMN_CURRENT_PERCENT + " REAL, " +
@@ -396,7 +397,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.OthersIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " LONG, " +
                 PortfolioContract.OthersIncome.COLUMN_RECEIVE_TOTAL + " REAL, " +
                 PortfolioContract.OthersIncome.COLUMN_TAX + " REAL, " +
-                PortfolioContract.OthersIncome.COLUMN_RECEIVE_LIQUID + " REAL, " +
                 PortfolioContract.OthersIncome.COLUMN_BROKERAGE + " REAL, " +
                 " FOREIGN KEY (" + PortfolioContract.OthersIncome.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.OthersData.TABLE_NAME + " (" + PortfolioContract.OthersData._ID + "));";

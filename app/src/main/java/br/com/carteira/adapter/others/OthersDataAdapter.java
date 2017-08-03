@@ -57,12 +57,31 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // If it is one of the OthersData adapter views
         mCursor.moveToPosition(position);
         OthersDataViewHolder viewHolder = (OthersDataViewHolder) holder;
+        double othersAppreciation = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.OthersData.COLUMN_VARIATION));
+        double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.OthersData.COLUMN_INCOME));
         double totalGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN));
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
         // Set text colors according to positive or negative values
+        if (othersAppreciation >= 0){
+            viewHolder.othersAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            viewHolder.othersAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            viewHolder.othersAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            viewHolder.othersAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
+
+        if (totalIncome >= 0){
+            viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+            viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+        } else {
+            viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+            viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+        }
 
         if (totalGain >= 0){
             viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -73,6 +92,8 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL));
         double sellTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL));
+        double variationPercent = othersAppreciation/buyTotal*100;
+        double netIncomePercent = totalIncome/buyTotal*100;
         double totalGainPercent = totalGain/buyTotal*100;
         // Get handled values of OthersData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
@@ -82,6 +103,10 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL)))));
+        viewHolder.othersAppreciation.setText(String.format(formatter.format(othersAppreciation)));
+        viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+        viewHolder.othersAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
+        viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
         viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
         viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_CURRENT_PERCENT)))
@@ -180,6 +205,18 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @BindView(R.id.currentPercent)
         TextView currentPercent;
+
+        @BindView(R.id.othersAppreciation)
+        TextView othersAppreciation;
+
+        @BindView(R.id.othersAppreciationPercent)
+        TextView othersAppreciationPercent;
+
+        @BindView(R.id.totalIncome)
+        TextView totalIncome;
+
+        @BindView(R.id.totalIncomePercent)
+        TextView totalIncomePercent;
 
         @BindView(R.id.totalGain)
         TextView totalGain;

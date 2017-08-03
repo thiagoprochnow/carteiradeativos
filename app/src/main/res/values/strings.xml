@@ -320,7 +320,8 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
     <string name="receive_value_fixed">Received Value per Fixed Income</string>
-    <string name="receive_value_others">Total received value on investment</string>
+    <string name="receive_value_others">Gross received value on investment</string>
+    <string name="tax_value_others">Tax paid on income</string>
     <string name="receive_value_treasury">Total received value on coupon</string>
     <string name="add_dividend_success">Dividend added successfully</string>
     <string name="add_dividend_fail">Error adding dividend</string>

@@ -90,7 +90,7 @@ public class OthersDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 (dataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL)));
                         // Gain total is sum of gain from variation and sold others income
                         gainTotal = dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN)));
+                                (dataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_VARIATION)));
 
                         if (gainTotal >= 0){
                             viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
