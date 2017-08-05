@@ -67,8 +67,6 @@ public class FiiDataFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_fii);
     }
 
     @Override

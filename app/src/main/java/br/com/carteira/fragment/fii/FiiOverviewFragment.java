@@ -59,8 +59,6 @@ public class FiiOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_fii);
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override

@@ -58,8 +58,6 @@ public class FixedOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_fixed);
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override

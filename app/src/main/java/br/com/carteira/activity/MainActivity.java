@@ -177,30 +177,37 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     private void onNavDrawerItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_item_complete_portfolio:
+                setTitle(R.string.title_complete_portfolio);
                 Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
                 break;
             case R.id.nav_item_treasury:
+                setTitle(R.string.title_treasury);
                 Log.d(LOG_TAG, "Loaded Treasury Fragment from menu");
                 replaceFragment(new TreasuryTabFragment());
                 break;
             case R.id.nav_item_fixed_income:
+                setTitle(R.string.title_fixed);
                 Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
                 replaceFragment(new FixedTabFragment());
                 break;
             case R.id.nav_item_stocks:
+                setTitle(R.string.title_stocks);
                 Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
                 replaceFragment(new StockTabFragment());
                 break;
             case R.id.nav_item_fii:
+                setTitle(R.string.title_fii);
                 Log.d(LOG_TAG, "Loaded FII Fragment from menu");
                 replaceFragment(new FiiTabFragment());
                 break;
             case R.id.nav_item_currency:
+                setTitle(R.string.title_currency);
                 Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
                 replaceFragment(new CurrencyTabFragment());
                 break;
             case R.id.nav_item_others:
+                setTitle(R.string.title_others);
                 Log.d(LOG_TAG, "Loaded Others from menu");
                 replaceFragment(new OthersTabFragment());
                 break;

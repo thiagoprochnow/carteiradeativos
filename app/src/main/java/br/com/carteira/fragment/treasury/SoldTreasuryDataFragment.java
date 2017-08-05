@@ -62,8 +62,6 @@ public class SoldTreasuryDataFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_treasury);
     }
 
     @Override

@@ -58,8 +58,6 @@ public class OthersOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_others);
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override

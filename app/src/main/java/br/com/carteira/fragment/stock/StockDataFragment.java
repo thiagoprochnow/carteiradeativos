@@ -65,8 +65,6 @@ public class StockDataFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set fragment title
-        getActivity().setTitle(R.string.title_stocks);
     }
 
     @Override
