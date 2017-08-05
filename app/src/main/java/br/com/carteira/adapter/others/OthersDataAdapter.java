@@ -61,8 +61,7 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 (PortfolioContract.OthersData.COLUMN_VARIATION));
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.OthersData.COLUMN_INCOME));
-        double totalGain = mCursor.getDouble(
-                mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_TOTAL_GAIN));
+        double totalGain = othersAppreciation + totalIncome;
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 

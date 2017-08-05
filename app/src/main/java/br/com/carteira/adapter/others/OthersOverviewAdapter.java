@@ -79,8 +79,11 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 OthersOverviewViewHolder viewHolder = (OthersOverviewViewHolder) holder;
                 mCursor.moveToPosition(position);
 
-                double totalGain = mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.OthersPortfolio.COLUMN_TOTAL_GAIN));
+                double totalAppreciation = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.OthersPortfolio.COLUMN_VARIATION_TOTAL));
+                double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.OthersPortfolio.COLUMN_INCOME_TOTAL));
+                double totalGain = totalAppreciation + totalIncome;
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -93,11 +96,32 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
+
+                if (totalIncome >= 0){
+                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                } else {
+                    viewHolder.totalIncome.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.totalIncomePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                }
+
+                if (totalAppreciation >= 0){
+                    viewHolder.othersAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                    viewHolder.othersAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.green));
+                } else {
+                    viewHolder.othersAppreciation.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                    viewHolder.othersAppreciationPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                }
+
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.OthersPortfolio.COLUMN_BUY_TOTAL));
                 double totalGainPercent = 0;
+                double totalAppreciationPercent = 0;
+                double totalIncomePercent = 0;
                 if (buyTotal != 0 ) {
                     totalGainPercent = totalGain / buyTotal * 100;
+                    totalAppreciationPercent = totalAppreciation / buyTotal * 100;
+                    totalIncomePercent = totalIncome / buyTotal * 100;
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
@@ -106,6 +130,10 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         mCursor.getColumnIndex(PortfolioContract.OthersPortfolio.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+                viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+                viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", totalIncomePercent) + "%)");
+                viewHolder.othersAppreciation.setText(String.format(formatter.format(totalAppreciation)));
+                viewHolder.othersAppreciationPercent.setText("(" + String.format("%.2f", totalAppreciationPercent) + "%)");
                 break;
             default:
                 OthersOverviewAdapter.OthersPieChartViewHolder chartHolder = (OthersOverviewAdapter.OthersPieChartViewHolder) holder;
@@ -198,6 +226,18 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;
+
+        @BindView(R.id.othersAppreciation)
+        TextView othersAppreciation;
+
+        @BindView(R.id.othersAppreciationPercent)
+        TextView othersAppreciationPercent;
+
+        @BindView(R.id.totalIncome)
+        TextView totalIncome;
+
+        @BindView(R.id.totalIncomePercent)
+        TextView totalIncomePercent;
 
         public OthersOverviewViewHolder(View itemView) {
             super(itemView);

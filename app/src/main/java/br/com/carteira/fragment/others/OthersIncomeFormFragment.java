@@ -83,7 +83,7 @@ public class OthersIncomeFormFragment extends BaseFormFragment {
             int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.INVALID);
 
             // Get and handle inserted date value
-            String inputDate = mInputReceiveView.getText().toString();
+            String inputDate = mInputReceiveDateView.getText().toString();
             // Timestamp to be saved on SQLite database
             Long timestamp = DateToTimestamp(inputDate);
 
@@ -150,6 +150,14 @@ public class OthersIncomeFormFragment extends BaseFormFragment {
             int updateQueryCursor = mContext.getContentResolver().update(
                     PortfolioContract.OthersData.URI,
                     updateCV, selection, selectionArguments);
+
+            //TODO temporary solution until others is ready for IntentService
+            double currentTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_CURRENT_TOTAL));
+            ContentValues othersBulkCV = new ContentValues();
+            othersBulkCV.put(symbol, currentTotal);
+            int updatedRows2 = mContext.getContentResolver().update(
+                    PortfolioContract.OthersData.BULK_UPDATE_URI,
+                    othersBulkCV, null, null);
             if (updateQueryCursor == 1){
                 // Send broadcast so OthersReceiver can update the rest
                 mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));

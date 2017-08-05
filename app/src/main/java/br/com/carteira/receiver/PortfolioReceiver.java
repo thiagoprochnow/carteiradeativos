@@ -244,7 +244,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         String[] affectedColumn = {"sum("+ PortfolioContract.OthersPortfolio.COLUMN_BUY_TOTAL+")",
                 "sum("+ PortfolioContract.OthersPortfolio.COLUMN_SOLD_TOTAL+")",
                 "sum("+ PortfolioContract.OthersPortfolio.COLUMN_CURRENT_TOTAL+")",
-                "sum("+ PortfolioContract.OthersPortfolio.COLUMN_TOTAL_GAIN+")",
+                "sum("+ PortfolioContract.OthersPortfolio.COLUMN_VARIATION_TOTAL+")",
                 "sum("+ PortfolioContract.OthersPortfolio.COLUMN_INCOME_TOTAL+")",
                 "sum("+ PortfolioContract.OthersPortfolio.COLUMN_TOTAL_GAIN+")"};
 

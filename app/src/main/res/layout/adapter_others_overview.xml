@@ -78,6 +78,16 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/portfolio_appreciation_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/portfolio_income_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/portfolio_total_gain_label" />
             </LinearLayout>
 
@@ -119,6 +129,24 @@
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
+                        android:id="@+id/othersAppreciation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R$1000,00"
+                        android:gravity="right"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalIncome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="R$150,00"
+                        android:gravity="right"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/totalGain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -151,6 +179,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/othersAppreciationPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="0,0%"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalIncomePercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="0,0%"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
