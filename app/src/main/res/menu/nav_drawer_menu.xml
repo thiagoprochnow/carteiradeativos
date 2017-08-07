@@ -50,10 +50,15 @@
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single">
 
-        <!-- Others Item Menu -->
+        <!-- About Item Menu -->
         <item
-            android:id="@+id/nav_item_others2"
+            android:id="@+id/nav_item_about"
             android:checked="false"
-            android:title="@string/title_others"/>
+            android:title="@string/title_about"/>
+        <!-- Coming Soon Item Menu -->
+        <item
+            android:id="@+id/nav_item_coming_soon"
+            android:checked="false"
+            android:title="@string/title_coming_soon"/>
     </group>
 </menu>

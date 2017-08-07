@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Carteira</string>
+    <string name="app_name">Guia Investidor</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Portfolio updated successfully</string>
@@ -417,6 +417,8 @@
     <string name="title_stocks">Stocks</string>
     <string name="title_currency">Currencies</string>
     <string name="title_others">Others</string>
+    <string name="title_about">About</string>
+    <string name="title_coming_soon">Coming Soon</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

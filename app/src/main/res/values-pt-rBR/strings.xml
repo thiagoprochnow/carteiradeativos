@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Carteira</string>
+    <string name="app_name">Guia Investidor</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Carteira atualizada com sucesso</string>
@@ -418,6 +418,8 @@
     <string name="title_fii">Fundos Imobiliarios</string>
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
+    <string name="title_about">Sobre</string>
+    <string name="title_coming_soon">Em Breve</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
