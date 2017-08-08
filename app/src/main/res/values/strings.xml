@@ -452,4 +452,16 @@
     \u2022 Others: Other investments that you wish to add and organize in your portfolio\n\n
 
     The objective is for you to organize your portfolio and consult your incomes and appreciation of each investment and the overall portfolio.\n</string>
+
+    <!-- Comming Soon -->
+    <string name="coming_soon_description">We hope this application is useful for you.
+        We are still making fixes, upgrades and developments for this application. Here are some of the features we are developing and are coming soon:\n\n
+
+        \u2022 Automatic incomes for stocks and real state funds.\n
+        \u2022 Automatic treasury current values when clicking on refresh button.\n
+        \u2022 Graph comparing your portfolio progress and the Ibovespa index.\n
+        \u2022 Constant bug fixes and improvements.\n\n
+
+        If you see any bug or problem or have any ideias for upgrades that you are missing in this application and think would be useful, please don\'t hesitate to contact us.
+        We want to make this application the most useful possible for investors.\n</string>
 </resources>

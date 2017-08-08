@@ -444,7 +444,7 @@
     <!-- About -->
     <string name="about_description">Guia Investidor é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
 
-    \u2022 Tesouro: Papeis e cupons do tesouro direto.\n
+    \u2022 Tesouro: Papéis e cupons do tesouro direto.\n
     \u2022 Renda Fixa: Investimentos de renda fixa.\n
     \u2022 Ações: Cotas e rendimentos do mercado acionario em geral.\n
     \u2022 Fundos Imobiliarios: Cotas e rendimentos de fundos imobiliarios.\n
@@ -452,4 +452,16 @@
     \u2022 Outros: Outros investimento que deseje adicionar e organizar na sua carteira.\n\n
 
     O objetivo é que você consiga organizar sua carteira e consultar os rendimentos e valorização de cada papel e da carteira como um todo.\n</string>
+
+    <!-- Comming Soon -->
+    <string name="coming_soon_description">Nós esperamos que você goste dessa aplicação e que ela seja útil para você.
+        Nós ainda estamos corrigindo problemas, fazendo melhorias e desenvolvendo novos recursos. Aqui estão algumas das funcionalidades que estamos desenvolvendo:\n\n
+
+        \u2022 Rendimentos automáticos para ações e fundos imobiliarios.\n
+        \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
+        \u2022 Gráfico comparando a rentabilidade da sua carteira e do Ibovespa.\n
+        \u2022 Constante correção de problemas e melhorias.\n\n
+
+        Se você encontrou algum problema ou tem alguma ideia de melhoria para o aplicativo e acha que seria interessante, por favor não hesite em nos contatar.
+        Queremos fazer esse aplicativo o melhor possível para os investidores.\n</string>
 </resources>

@@ -29,6 +29,7 @@ import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
 import br.com.carteira.fragment.AboutFragment;
+import br.com.carteira.fragment.ComingSoonFragment;
 import br.com.carteira.fragment.currency.CurrencyTabFragment;
 import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
@@ -216,6 +217,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 setTitle(R.string.title_about);
                 Log.d(LOG_TAG, "Loaded About from menu");
                 replaceFragment(new AboutFragment());
+                break;
+            case R.id.nav_item_coming_soon:
+                setTitle(R.string.title_coming_soon);
+                Log.d(LOG_TAG, "Loaded Coming Soon from menu");
+                replaceFragment(new ComingSoonFragment());
                 break;
         }
     }
