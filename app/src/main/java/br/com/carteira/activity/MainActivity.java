@@ -28,6 +28,7 @@ import br.com.carteira.api.service.FiiIntentService;
 import br.com.carteira.api.service.StockIntentService;
 import br.com.carteira.common.Constants;
 import br.com.carteira.data.PortfolioContract;
+import br.com.carteira.fragment.AboutFragment;
 import br.com.carteira.fragment.currency.CurrencyTabFragment;
 import br.com.carteira.fragment.fii.FiiTabFragment;
 import br.com.carteira.fragment.PortfolioMainFragment;
@@ -210,6 +211,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 setTitle(R.string.title_others);
                 Log.d(LOG_TAG, "Loaded Others from menu");
                 replaceFragment(new OthersTabFragment());
+                break;
+            case R.id.nav_item_about:
+                setTitle(R.string.title_about);
+                Log.d(LOG_TAG, "Loaded About from menu");
+                replaceFragment(new AboutFragment());
                 break;
         }
     }

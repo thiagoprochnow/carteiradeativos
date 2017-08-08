@@ -94,7 +94,8 @@
     <string name="menu_item_bonification">Bonification</string>
     <string name="menu_item_split">Split</string>
     <string name="menu_item_grouping">Grouping</string>
-    <string name="menu_item_income">Semiannual Coupon</string>
+    <string name="menu_item_income">Income</string>
+    <string name="menu_item_treasury">Semiannual Coupon</string>
 
     <!-- Stock Main Fragment -->
     <string name="buy_stock_success">Stock added successfully</string>
@@ -439,4 +440,16 @@
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
     <string name="no_items_to_display">No items to display</string>
+
+    <!-- About -->
+    <string name="about_description">Guia Investidor is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n
+
+    \u2022 Treasury: Papers and cupons from the treasury.\n
+    \u2022 Fixed Income: Fixed income investments.\n
+    \u2022 Stocks: Quotes and incomes from the overall stock market.\n
+    \u2022 Real State Funds: Quotes and income from real state funds.\n
+    \u2022 Currencies: Exchange investments.\n
+    \u2022 Others: Other investments that you wish to add and organize in your portfolio\n\n
+
+    The objective is for you to organize your portfolio and consult your incomes and appreciation of each investment and the overall portfolio.\n</string>
 </resources>
