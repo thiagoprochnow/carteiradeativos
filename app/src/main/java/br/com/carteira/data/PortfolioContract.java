@@ -121,6 +121,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENCY_PERCENT = "currency_percent";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] PORTFOLIO_COLUMNS = {
                 _ID,
@@ -137,7 +138,8 @@ public class PortfolioContract {
                 COLUMN_FII_PERCENT,
                 COLUMN_CURRENCY_PERCENT,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForPortfolio(String symbol) {
@@ -170,6 +172,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] STOCK_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -182,7 +185,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForStockPortfolio(String symbol) {
@@ -221,6 +225,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
@@ -238,7 +243,8 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForStockData(String symbol) {
@@ -269,6 +275,7 @@ public class PortfolioContract {
         public static final String COLUMN_SELL_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] SOLD_STOCK_DATA_COLUMNS = {
                 _ID,
@@ -279,7 +286,8 @@ public class PortfolioContract {
                 COLUMN_SELL_MEDIUM_PRICE,
                 COLUMN_SELL_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForSoldStockData(String symbol) {
@@ -309,6 +317,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] STOCK_TRANSACTION_COLUMNS = {
                 _ID,
@@ -318,7 +327,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -349,6 +359,7 @@ public class PortfolioContract {
         public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
         public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] STOCK_INCOME_COLUMNS = {
                 _ID,
@@ -360,7 +371,8 @@ public class PortfolioContract {
                 COLUMN_TAX,
                 COLUMN_RECEIVE_LIQUID,
                 COLUMN_AFFECTED_QUANTITY,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForStockIncome(String symbol) {
@@ -389,6 +401,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FII_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -401,7 +414,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForFiiPortfolio(String symbol) {
@@ -440,6 +454,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FII_DATA_COLUMNS = {
                 _ID,
@@ -457,7 +472,8 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForFiiData(String symbol) {
@@ -488,6 +504,7 @@ public class PortfolioContract {
         public static final String COLUMN_SELL_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] SOLD_FII_DATA_COLUMNS = {
                 _ID,
@@ -498,7 +515,8 @@ public class PortfolioContract {
                 COLUMN_SELL_MEDIUM_PRICE,
                 COLUMN_SELL_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForSoldFiiData(String symbol) {
@@ -528,6 +546,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FII_TRANSACTION_COLUMNS = {
                 _ID,
@@ -537,7 +556,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -568,6 +588,7 @@ public class PortfolioContract {
         public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
         public static final String COLUMN_AFFECTED_QUANTITY = "affected_quantity";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FII_INCOME_COLUMNS = {
                 _ID,
@@ -579,7 +600,8 @@ public class PortfolioContract {
                 COLUMN_TAX,
                 COLUMN_RECEIVE_LIQUID,
                 COLUMN_AFFECTED_QUANTITY,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForFiiIncome(String symbol) {
@@ -607,6 +629,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] CURRENCY_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -618,7 +641,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForCurrencyPortfolio(String symbol) {
@@ -656,6 +680,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] CURRENCY_DATA_COLUMNS = {
                 _ID,
@@ -671,7 +696,8 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForCurrencyData(String symbol) {
@@ -702,6 +728,7 @@ public class PortfolioContract {
         public static final String COLUMN_SELL_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] SOLD_CURRENCY_DATA_COLUMNS = {
                 _ID,
@@ -712,7 +739,8 @@ public class PortfolioContract {
                 COLUMN_SELL_MEDIUM_PRICE,
                 COLUMN_SELL_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForSoldCurrencyData(String symbol) {
@@ -742,6 +770,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] CURRENCY_TRANSACTION_COLUMNS = {
                 _ID,
@@ -751,7 +780,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -784,6 +814,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -796,7 +827,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForFixedPortfolio(String symbol) {
@@ -831,6 +863,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_DATA_COLUMNS = {
                 _ID,
@@ -844,7 +877,8 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForFixedData(String symbol) {
@@ -873,6 +907,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_TRANSACTION_COLUMNS = {
                 _ID,
@@ -881,7 +916,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -914,6 +950,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -926,7 +963,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForTreasuryPortfolio(String symbol) {
@@ -965,6 +1003,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_DATA_COLUMNS = {
                 _ID,
@@ -982,7 +1021,8 @@ public class PortfolioContract {
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_STATUS,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForTreasuryData(String symbol) {
@@ -1013,6 +1053,7 @@ public class PortfolioContract {
         public static final String COLUMN_SELL_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] SOLD_TREASURY_DATA_COLUMNS = {
                 _ID,
@@ -1023,7 +1064,8 @@ public class PortfolioContract {
                 COLUMN_SELL_MEDIUM_PRICE,
                 COLUMN_SELL_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForSoldTreasuryData(String symbol) {
@@ -1053,6 +1095,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_TRANSACTION_COLUMNS = {
                 _ID,
@@ -1062,7 +1105,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -1091,6 +1135,7 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_RECEIVE_LIQUID = "receive_liquid";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_INCOME_COLUMNS = {
                 _ID,
@@ -1100,7 +1145,8 @@ public class PortfolioContract {
                 COLUMN_RECEIVE_TOTAL,
                 COLUMN_TAX,
                 COLUMN_RECEIVE_LIQUID,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForTreasuryIncome(String symbol) {
@@ -1129,6 +1175,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] OTHERS_PORTFOLIO_COLUMNS = {
                 _ID,
@@ -1141,7 +1188,8 @@ public class PortfolioContract {
                 COLUMN_PORTFOLIO_PERCENT,
                 COLUMN_CURRENT_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForOthersPortfolio(String symbol) {
@@ -1179,6 +1227,7 @@ public class PortfolioContract {
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String COLUMN_INCOME = "income_total";
         public static final String COLUMN_INCOME_TAX = "income_tax";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] OTHERS_DATA_COLUMNS = {
                 _ID,
@@ -1195,7 +1244,8 @@ public class PortfolioContract {
                 COLUMN_VARIATION,
                 COLUMN_BROKERAGE,
                 COLUMN_INCOME,
-                COLUMN_INCOME_TAX
+                COLUMN_INCOME_TAX,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForOthersData(String symbol) {
@@ -1224,6 +1274,7 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] OTHERS_TRANSACTION_COLUMNS = {
                 _ID,
@@ -1232,7 +1283,8 @@ public class PortfolioContract {
                 COLUMN_TIMESTAMP,
                 COLUMN_TYPE,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri buildTransactionUri(long id) {
@@ -1260,6 +1312,7 @@ public class PortfolioContract {
         public static final String COLUMN_RECEIVE_TOTAL = "receive_total";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
 
         public static final String[] OTHERS_INCOME_COLUMNS = {
                 _ID,
@@ -1268,7 +1321,8 @@ public class PortfolioContract {
                 COLUMN_EXDIVIDEND_TIMESTAMP,
                 COLUMN_RECEIVE_TOTAL,
                 COLUMN_TAX,
-                COLUMN_BROKERAGE
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
         };
 
         public static Uri makeUriForOthersIncome(String symbol) {

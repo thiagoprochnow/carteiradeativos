@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Guia Investidor</string>
+    <string name="app_name">Meus Investimentos</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Carteira atualizada com sucesso</string>
