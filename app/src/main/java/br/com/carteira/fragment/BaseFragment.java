@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -792,12 +793,22 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText field is empty
+    protected boolean isAutoTextEmpty(AutoCompleteTextView text) {
+        Editable editable = text.getText();
+        if (editable != null && TextUtils.isEmpty(editable.toString())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid Stock Symbol
-    protected boolean isValidStockSymbol(EditText symbol) {
+    protected boolean isValidStockSymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
         Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;
@@ -805,11 +816,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Validate if an EditText was set with valid Fii Symbol
-    protected boolean isValidFiiSymbol(EditText symbol) {
+    protected boolean isValidFiiSymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Fii (EX: KNRI11)
         Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9][0-9][A-Z]|[0-9][0-9])$");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;

@@ -16,12 +16,11 @@
             android:layout_height="wrap_content"
             android:text="@string/fii_symbol"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:digits="0,1,2,3,4,5,6,7,8,9,QWERTZUIOPASDFGHJKLYXCVBNM"
             android:hint="@string/fii_symbol_hint"
             android:inputType="textCapCharacters"
             android:maxLength="7"/>
