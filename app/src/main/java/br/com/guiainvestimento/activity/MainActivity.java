@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
     protected DrawerLayout mDrawerLayout;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     boolean mStockReceiver = false;
     boolean mFiiReceiver = false;
     boolean mCurrencyReceiver = false;
@@ -58,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupNavDrawer();
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Checks if savedInstanceState is null so it will not load portfolio fragment on screen
         // rotation
         // and hard keyboard opening

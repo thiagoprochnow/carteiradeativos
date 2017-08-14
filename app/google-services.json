@@ -1,65 +1,21 @@
 {
   "project_info": {
-    "project_number": "447349239118",
-    "firebase_url": "https://guia-investimento.firebaseio.com",
-    "project_id": "guia-investimento",
-    "storage_bucket": "guia-investimento.appspot.com"
+    "project_number": "196632400417",
+    "firebase_url": "https://guia-investimento-96910.firebaseio.com",
+    "project_id": "guia-investimento-96910",
+    "storage_bucket": "guia-investimento-96910.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:447349239118:android:cd7088941ffe76ad",
-        "android_client_info": {
-          "package_name": "br.com.carteira"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "447349239118-ohati7mkbfrnsre0pnj11c00i0tbhnal.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "br.com.carteira",
-            "certificate_hash": "f83899b06b9bfce4314698613dec8b16752deaaf"
-          }
-        },
-        {
-          "client_id": "447349239118-autgu4o742tpffo47nk1icuqqfs65nc1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAHYlJwr-BTxZbx9sRvzPG5ocMk_yuq9oM"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "447349239118-autgu4o742tpffo47nk1icuqqfs65nc1.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:447349239118:android:b27a56be2a819c2a",
+        "mobilesdk_app_id": "1:196632400417:android:b27a56be2a819c2a",
         "android_client_info": {
           "package_name": "br.com.guiainvestimento"
         }
       },
       "oauth_client": [
         {
-          "client_id": "447349239118-ic48tmjrvcrne8mqnd1gj4lj296i034e.apps.googleusercontent.com",
+          "client_id": "196632400417-qb79qg0cfsbtjv6tjoa21i4kr6o6t80k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "br.com.guiainvestimento",
@@ -67,13 +23,13 @@
           }
         },
         {
-          "client_id": "447349239118-autgu4o742tpffo47nk1icuqqfs65nc1.apps.googleusercontent.com",
+          "client_id": "196632400417-bpe8qfcplt002v0th6o8v68clrai8ii5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAHYlJwr-BTxZbx9sRvzPG5ocMk_yuq9oM"
+          "current_key": "AIzaSyAuJ9ECb4DOVoXgS2DN-oZkYPcjvygWc70"
         }
       ],
       "services": {
@@ -84,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "447349239118-autgu4o742tpffo47nk1icuqqfs65nc1.apps.googleusercontent.com",
+              "client_id": "196632400417-bpe8qfcplt002v0th6o8v68clrai8ii5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
