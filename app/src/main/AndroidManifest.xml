@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.carteira">
+    package="br.com.guiainvestimento">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="br.com.guiainvestimento.activity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar.NavDrawer">
             <intent-filter>
@@ -23,40 +23,40 @@
         </activity>
 
         <provider
-            android:name=".data.PortfolioProvider"
-            android:authorities="br.com.carteira"
+            android:name="br.com.guiainvestimento.data.PortfolioProvider"
+            android:authorities="br.com.guiainvestimento"
             android:exported="false" />
 
-        <service android:name=".api.service.StockIntentService" />
-        <service android:name=".api.service.StockIncomeIntentService" />
-        <service android:name=".api.service.FiiIntentService" />
-        <service android:name=".api.service.CurrencyIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.StockIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.FiiIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
 
         <activity
-            android:name=".activity.FormActivity"
-            android:parentActivityName=".activity.MainActivity">
+            android:name="br.com.guiainvestimento.activity.FormActivity"
+            android:parentActivityName="br.com.guiainvestimento.activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value="br.com.guiainvestimento.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.ProductDetailsActivity"
-            android:parentActivityName=".activity.MainActivity"
+            android:name="br.com.guiainvestimento.activity.ProductDetailsActivity"
+            android:parentActivityName="br.com.guiainvestimento.activity.MainActivity"
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value="br.com.guiainvestimento.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.IncomeDetailsActivity"
-            android:parentActivityName=".activity.ProductDetailsActivity"
+            android:name="br.com.guiainvestimento.activity.IncomeDetailsActivity"
+            android:parentActivityName="br.com.guiainvestimento.activity.ProductDetailsActivity"
             android:launchMode="singleTask">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.ProductDetailsActivity" />
+                android:value="br.com.guiainvestimento.activity.ProductDetailsActivity" />
         </activity>
         <receiver
-            android:name=".receiver.StockReceiver"
+            android:name="br.com.guiainvestimento.receiver.StockReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_STOCK_PORTFOLIO" />
@@ -64,7 +64,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.FiiReceiver"
+            android:name="br.com.guiainvestimento.receiver.FiiReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_FII_PORTFOLIO" />
@@ -72,7 +72,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.FixedReceiver"
+            android:name="br.com.guiainvestimento.receiver.FixedReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_FIXED_PORTFOLIO" />
@@ -80,7 +80,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.CurrencyReceiver"
+            android:name="br.com.guiainvestimento.receiver.CurrencyReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_CURRENCY_PORTFOLIO" />
@@ -88,7 +88,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.TreasuryReceiver"
+            android:name="br.com.guiainvestimento.receiver.TreasuryReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_TREASURY_PORTFOLIO" />
@@ -96,7 +96,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.OthersReceiver"
+            android:name="br.com.guiainvestimento.receiver.OthersReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_OTHERS_PORTFOLIO" />
@@ -104,7 +104,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.PortfolioReceiver"
+            android:name="br.com.guiainvestimento.receiver.PortfolioReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="UPDATE_PORTFOLIO" />
