@@ -43,6 +43,20 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.Portfolio.LAST_UPDATE + " LONG, " +
                 "UNIQUE (" + PortfolioContract.Portfolio._ID + ") ON CONFLICT REPLACE);";
 
+        String builder_portfolio_growth = "CREATE TABLE " + PortfolioContract.PortfolioGrowth.TABLE_NAME + " (" +
+                PortfolioContract.PortfolioGrowth._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.PortfolioGrowth.COLUMN_TOTAL + " REAL, " +
+                PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                "UNIQUE (" + PortfolioContract.PortfolioGrowth._ID + ") ON CONFLICT REPLACE);";
+
+        String builder_income_growth = "CREATE TABLE " + PortfolioContract.IncomeGrowth.TABLE_NAME + " (" +
+                PortfolioContract.IncomeGrowth._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PortfolioContract.IncomeGrowth.COLUMN_TOTAL + " REAL, " +
+                PortfolioContract.IncomeGrowth.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.IncomeGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
+                "UNIQUE (" + PortfolioContract.IncomeGrowth._ID + ") ON CONFLICT REPLACE);";
+
         String builder_stock_portfolio = "CREATE TABLE " + PortfolioContract.StockPortfolio.TABLE_NAME + " (" +
                 PortfolioContract.StockPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
@@ -429,6 +443,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + PortfolioContract.OthersData.TABLE_NAME + " (" + PortfolioContract.OthersData._ID + "));";
 
         db.execSQL(builder_portfolio);
+        db.execSQL(builder_portfolio_growth);
+        db.execSQL(builder_income_growth);
         db.execSQL(builder_stock_portfolio);
         db.execSQL(builder_stock_data);
         db.execSQL(builder_sold_stock_data);
@@ -461,33 +477,6 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.Portfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldStockData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.StockIncome.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldFiiData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FiiIncome.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldCurrencyData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.CurrencyTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.FixedTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.SoldTreasuryData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.TreasuryIncome.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersPortfolio.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersData.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersTransaction.TABLE_NAME);
-        db.execSQL(" DROP TABLE IF EXISTS " + PortfolioContract.OthersIncome.TABLE_NAME);
         onCreate(db);
     }
 }

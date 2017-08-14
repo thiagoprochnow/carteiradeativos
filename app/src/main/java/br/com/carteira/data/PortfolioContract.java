@@ -16,6 +16,10 @@ public class PortfolioContract {
 
     public static final String PATH_PORTFOLIO = "portfolio";
 
+    public static final String PATH_PORTFOLIO_GROWTH = "portfolio_growth";
+
+    public static final String PATH_INCOME_GROWTH = "income_growth";
+
     public static final String PATH_STOCK_PORTFOLIO = "stock_portfolio";
 
     public static final String PATH_STOCK_DATA = "stock_data";
@@ -151,6 +155,68 @@ public class PortfolioContract {
         }
 
         public static String getPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of growth on portfolio
+    public static final class PortfolioGrowth implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_PORTFOLIO_GROWTH).build();
+
+        public static final String TABLE_NAME = "portfolio_growth";
+
+        public static final String COLUMN_TOTAL = "total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] PORTFOLIO_GROWTH_COLUMNS = {
+                _ID,
+                COLUMN_TOTAL,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE
+        };
+
+        public static Uri makeUriForPortfolioGrowth(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildPortfolioGrowthUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getPortfolioGrowthFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of growth on income
+    public static final class IncomeGrowth implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_INCOME_GROWTH).build();
+
+        public static final String TABLE_NAME = "income_growth";
+
+        public static final String COLUMN_TOTAL = "total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] INCOME_GROWTH_COLUMNS = {
+                _ID,
+                COLUMN_TOTAL,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE
+        };
+
+        public static Uri makeUriForIncomeGrowth(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildIncomeGrowthUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getIncomeGrowthFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

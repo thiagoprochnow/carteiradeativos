@@ -140,6 +140,10 @@ public final class Constants {
     public static class Provider{
         public static final int PORTFOLIO = 100;
 
+        public static final int PORTFOLIO_GROWTH = 200;
+
+        public static final int INCOME_GROWTH = 300;
+
         public static final int STOCK_PORTFOLIO = 1100;
 
         public static final int STOCK_DATA = 1200;

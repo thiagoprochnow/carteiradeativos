@@ -29,6 +29,8 @@ public class PortfolioProvider extends ContentProvider {
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, Constants.Provider.PORTFOLIO);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO_GROWTH, Constants.Provider.PORTFOLIO_GROWTH);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_INCOME_GROWTH, Constants.Provider.INCOME_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA_BULK_UPDATE, Constants.Provider.STOCK_DATA_BULK_UPDATE);
@@ -124,6 +126,30 @@ public class PortfolioProvider extends ContentProvider {
             case Constants.Provider.PORTFOLIO:
                 returnCursor = db.query(
                         PortfolioContract.Portfolio.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns portfolio growth of user
+            case Constants.Provider.PORTFOLIO_GROWTH:
+                returnCursor = db.query(
+                        PortfolioContract.PortfolioGrowth.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns income growth of user
+            case Constants.Provider.INCOME_GROWTH:
+                returnCursor = db.query(
+                        PortfolioContract.IncomeGrowth.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -609,6 +635,32 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+            case Constants.Provider.PORTFOLIO_GROWTH:
+                _id = db.insert(
+                        PortfolioContract.PortfolioGrowth.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.PortfolioGrowth.buildPortfolioGrowthUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.INCOME_GROWTH:
+                _id = db.insert(
+                        PortfolioContract.IncomeGrowth.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.IncomeGrowth.buildIncomeGrowthUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
             case Constants.Provider.STOCK_PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.StockPortfolio.TABLE_NAME,
@@ -960,6 +1012,20 @@ public class PortfolioProvider extends ContentProvider {
         if (null == selection) selection = "1";
         switch (uriMatcher.match(uri)) {
 
+            case Constants.Provider.PORTFOLIO_GROWTH:
+                rowsDeleted = db.delete(
+                        PortfolioContract.PortfolioGrowth.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+            case Constants.Provider.INCOME_GROWTH:
+                rowsDeleted = db.delete(
+                        PortfolioContract.IncomeGrowth.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
             case Constants.Provider.STOCK_DATA_WITH_SYMBOL:
                 symbol = PortfolioContract.StockData.getStockDataFromUri(uri);
                 rowsDeleted = db.delete(
@@ -1278,6 +1344,18 @@ public class PortfolioProvider extends ContentProvider {
 
             case Constants.Provider.PORTFOLIO:
                 rowsUpdated = db.update(PortfolioContract.Portfolio.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.PORTFOLIO_GROWTH:
+                rowsUpdated = db.update(PortfolioContract.PortfolioGrowth.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.INCOME_GROWTH:
+                rowsUpdated = db.update(PortfolioContract.IncomeGrowth.TABLE_NAME, values,
                         selection,
                         selectionArgs);
                 break;
