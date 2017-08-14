@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Meus Investimentos</string>
+    <string name="app_name">Guia Investimento</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Portfolio updated successfully</string>
@@ -442,7 +442,7 @@
     <string name="no_items_to_display">No items to display</string>
 
     <!-- About -->
-    <string name="about_description">Guia Investidor is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n
+    <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n
 
     \u2022 Treasury: Papers and cupons from the treasury.\n
     \u2022 Fixed Income: Fixed income investments.\n

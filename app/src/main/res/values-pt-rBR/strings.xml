@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Meus Investimentos</string>
+    <string name="app_name">Guia Investimento</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Carteira atualizada com sucesso</string>
@@ -442,7 +442,7 @@
     <string name="no_items_to_display">Sem itens para exibir</string>
 
     <!-- About -->
-    <string name="about_description">Guia Investidor é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
+    <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
 
     \u2022 Tesouro: Papéis e cupons do tesouro direto.\n
     \u2022 Renda Fixa: Investimentos de renda fixa.\n
