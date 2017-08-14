@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/fii_card_view"
@@ -8,74 +7,102 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:layout_marginBottom="5dp"
-    app:contentPadding="10dp"
-    app:cardElevation="0dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:textSize="@dimen/fii_text"
+    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="3dp"
+    app:cardElevation="0dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="false"
+    app:contentPadding="8dp"
     card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="0dp"
-    android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="@android:color/transparent"
-    android:textSize="@dimen/fii_text">
+    card_view:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
+            android:id="@+id/fiiIncomeViewClickable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="@dimen/fii_income_width"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/incomeType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Juros s/ Capital"
-                    android:textSize="@dimen/fii_income_type"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/incomeDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="dd/MM/yyyy"
-                    android:textSize="@dimen/fii_income_date"
-                    android:ellipsize="end"
-                    android:maxLines="1" />
-            </LinearLayout>
-            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="bottom"
-                android:gravity="right">
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/incomeValue"
-                    android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="@dimen/fii_income_width"
                     android:layout_height="wrap_content"
-                    android:text="R$100,00"
-                    android:textSize="@dimen/fii_income_value"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:layout_marginLeft="@dimen/fii_income_value_marginLeft"
-                    android:gravity="right" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/incomeType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-light"
+                        android:maxLines="1"
+                        android:text="Juros s/ Capital"
+                        android:textSize="@dimen/fii_income_type" />
+
+                    <TextView
+                        android:id="@+id/incomeDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-light"
+                        android:maxLines="1"
+                        android:text="dd/MM/yyyy"
+                        android:textSize="@dimen/fii_income_date" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/incomeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fii_income_value_marginLeft"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="right"
+                        android:maxLines="1"
+                        android:text="R$100,00"
+                        android:textSize="@dimen/fii_income_value" />
+                </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:background="@color/darkGray" />
         </LinearLayout>
-        <View android:background="@color/darkGray"
-            android:layout_width = "match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/menuDelete"
+                android:layout_width="25dp"
+                android:layout_height="23dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/delete_icon_small" />
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

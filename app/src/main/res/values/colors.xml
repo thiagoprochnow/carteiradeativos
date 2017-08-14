@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#ffffff</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#3f51b5</color>
     <color name="colorAccent">#FF4081</color>
     <color name="full_black">#000000</color>
     <color name="fab_background">#67a6ed</color>
     <color name="stocks_summary">#e4effc</color>
-    <color name="activity_main_background">#E9E9E9</color>
-    <color name="header_title">#8c9bff</color>
+    <color name="activity_main_background">#ededed</color>
+    <color name="header_title">#3f51b5</color>
     <color name="darkGray">#8a8b8b</color>
-    <color name="lightGray">#e4e6e6</color>
-    <color name="blue">#87CEFA</color>
-    <color name="green">#bea871</color>
-    <color name="green2">#f1d795</color>
-    <color name="darkGreen">#2c8825</color>
-    <color name="red">#d40225</color>
-    <color name="yellow">#fafc34</color>
-    <color name="darkBlue">#303F9F</color>
-    <color name="wine">#205166</color>
+    <color name="lightGray">#c7d2d2</color>
+    <color name="blue">#64B5F6</color>
+    <color name="green">#8BC34A</color>
+    <color name="green2">#EEFF41</color>
+    <color name="darkGreen">#43A047</color>
+    <color name="red">#F44336</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="darkBlue">#3f51b5</color>
+    <color name="wine">#EC407A</color>
 </resources>
