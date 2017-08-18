@@ -100,9 +100,9 @@ public class FiiIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         netIncome= dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_INCOME)));
                         grossIncome = netIncome + tax;
-                        netPercent = netIncome/buyTotal*100;
-                        grossPercent = grossIncome/buyTotal*100;
-                        taxPercent = tax/buyTotal*100;
+                        grossPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(grossIncome/buyTotal*100)));
+                        taxPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(tax/buyTotal*100)));
+                        netPercent = grossPercent - taxPercent;
 
                         if (grossIncome >= 0){
                             overviewViewHolder.grossIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));

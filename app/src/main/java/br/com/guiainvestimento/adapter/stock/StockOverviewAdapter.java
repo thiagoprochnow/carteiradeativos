@@ -117,9 +117,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 double totalGainPercent = 0;
                 double incomePercent = 0;
                 if (buyTotal != 0){
-                    stockAppreciationPercent = totalAppreciation / buyTotal * 100;
-                    totalGainPercent = totalGain/buyTotal*100;
-                    incomePercent = totalIncome/buyTotal*100;
+                    stockAppreciationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalAppreciation / buyTotal * 100)));
+                    incomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
+                    totalGainPercent = stockAppreciationPercent + incomePercent;
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(

@@ -43,7 +43,7 @@
                 android:orientation="vertical">
             </LinearLayout>
             <LinearLayout
-                android:layout_width="80dp"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/fii_values_margin"
@@ -88,7 +88,7 @@
             android:layout_marginBottom="5dp">
 
             <LinearLayout
-                android:layout_width="80dp"
+                android:layout_width="95dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/letters_text_margin">
@@ -96,22 +96,30 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_current" />
+                    android:text="@string/details_current"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_sold" />
+                    android:text="@string/details_sold"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_medium_price" />
+                    android:text="@string/details_medium_price"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_gain" />
+                    android:text="@string/details_gain"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="80dp"

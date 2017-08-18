@@ -91,9 +91,9 @@ public class OthersDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_BUY_VALUE_TOTAL));
         double sellTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_SELL_VALUE_TOTAL));
-        double variationPercent = othersAppreciation/buyTotal*100;
-        double netIncomePercent = totalIncome/buyTotal*100;
-        double totalGainPercent = totalGain/buyTotal*100;
+        double variationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(othersAppreciation/buyTotal*100)));
+        double netIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome/buyTotal*100)));
+        double totalGainPercent = variationPercent + netIncomePercent;
         // Get handled values of OthersData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .OthersData.
