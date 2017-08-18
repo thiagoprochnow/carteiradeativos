@@ -206,7 +206,6 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 chartHolder.pieChart.setDescription(null);
                 chartHolder.pieChart.invalidate(); // refresh
 
-                Log.d(LOG_TAG, "Pie Chart Drawn");
         }
     }
 
@@ -271,14 +270,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            Log.d("VAL SELECTED",
-                    "Value: " + e.getY() + ", Label: " + pe.getLabel());
             pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
         }
 
         @Override
         public void onNothingSelected() {
-            Log.d("PieChart", "nothing selected");
+
         }
 
         private SpannableString generateCenterSpannableText(String text) {

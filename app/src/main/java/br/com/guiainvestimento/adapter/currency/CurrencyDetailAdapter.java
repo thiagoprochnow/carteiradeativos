@@ -130,7 +130,6 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
-                        Log.d(LOG_TAG, "No Currency Data found for symbol: " + symbol);
                     }
                 }
                 break;
@@ -249,16 +248,12 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public String getDetailType(int typeId){
         switch (typeId){
             case Constants.Type.INVALID:
-                Log.d(LOG_TAG, "Invalid Transaction Type");
                 return "invalid";
             case Constants.Type.BUY:
-                Log.d(LOG_TAG, "Buy Transaction Type");
                 return mContext.getResources().getString(R.string.stock_buy);
             case Constants.Type.SELL:
-                Log.d(LOG_TAG, "Sell Transaction Type");
                 return mContext.getResources().getString(R.string.stock_sell);
             default:
-                Log.d(LOG_TAG, "Default Transaction Type");
                 return mContext.getResources().getString(R.string.stock_buy);
         }
     }

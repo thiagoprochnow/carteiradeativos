@@ -99,7 +99,6 @@ public class BuyFiiFormFragment extends BaseFormFragment {
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues fiiCV = new ContentValues();
 
@@ -116,7 +115,6 @@ public class BuyFiiFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedFiiTransactionUri != null) {
-                Log.d(LOG_TAG, "Added fii transaction " + inputSymbol);
                 // Updates each fii table with new value: Income, Data, FiiPortfolio, CompletePortfolio
                 updateFiiIncomes(inputSymbol, timestamp);
                 boolean updateFiiData = updateFiiData(inputSymbol, Constants

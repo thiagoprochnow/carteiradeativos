@@ -106,7 +106,7 @@ public class OthersDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                         viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
                     } else{
-                        Log.d(LOG_TAG, "No Others Data found for symbol: " + symbol);
+
                     }
                 }
                 break;
@@ -200,16 +200,12 @@ public class OthersDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public String getDetailType(int typeId){
         switch (typeId){
             case Constants.Type.INVALID:
-                Log.d(LOG_TAG, "Invalid Transaction Type");
                 return "invalid";
             case Constants.Type.BUY:
-                Log.d(LOG_TAG, "Buy Transaction Type");
                 return mContext.getResources().getString(R.string.stock_buy);
             case Constants.Type.SELL:
-                Log.d(LOG_TAG, "Sell Transaction Type");
                 return mContext.getResources().getString(R.string.stock_sell);
             default:
-                Log.d(LOG_TAG, "Default Transaction Type");
                 return mContext.getResources().getString(R.string.stock_buy);
         }
     }

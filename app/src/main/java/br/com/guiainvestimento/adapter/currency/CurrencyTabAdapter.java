@@ -40,14 +40,11 @@ public class CurrencyTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading CurrencyOverviewFragment()");
             return new CurrencyOverviewFragment();
         }
         else if (position == 1){
-            Log.d(LOG_TAG, "Loading CurrencyDataFragment()");
             return new CurrencyDataFragment();
         } else {
-            Log.d(LOG_TAG, "Loading SoldFiiDataFragment()");
             return new SoldCurrencyDataFragment();
         }
     }

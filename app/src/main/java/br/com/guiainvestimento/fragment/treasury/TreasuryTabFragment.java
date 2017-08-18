@@ -32,12 +32,10 @@ public class TreasuryTabFragment extends BaseFragment {
         if (activityName.equals(MainActivity.class.getSimpleName())){
             view = inflater.inflate(R.layout.fragment_treasury_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.treasuryViewPager);
-            Log.d(LOG_TAG, "TreasuryTabAdapter");
             viewPager.setAdapter(new TreasuryTabAdapter(mContext, getChildFragmentManager()));
         } else {
             view = inflater.inflate(R.layout.fragment_treasury_details_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.treasuryViewPager);
-            Log.d(LOG_TAG, "TreasuryDetailsTabAdapter");
             viewPager.setAdapter(new TreasuryDetailsTabAdapter(mContext, getChildFragmentManager()));
         }
 

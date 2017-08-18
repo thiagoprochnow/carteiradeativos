@@ -35,10 +35,8 @@ public class StockDetailsTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading StockDetailsFragment()");
             return new StockDetailsFragment();
         } else {
-            Log.d(LOG_TAG, "Loading StockIncomesFragment()");
             return new StockIncomesFragment();
         }
     }

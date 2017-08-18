@@ -206,9 +206,7 @@ public class FiiIncomesFragment extends BaseFragment implements
             // Log update success/fail result
             if (updatedRows > 0){
                 updateFiiData(mSymbol, -1);
-                Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
             } else {
-                Log.d(LOG_TAG, "updateFiiIncomes failed update");
             }
         } else {
             Log.d(LOG_TAG, "No income found for this ID and Symbol");

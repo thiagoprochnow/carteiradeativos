@@ -116,7 +116,6 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues currencyCV = new ContentValues();
 

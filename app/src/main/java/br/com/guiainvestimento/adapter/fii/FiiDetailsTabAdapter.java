@@ -35,10 +35,8 @@ public class FiiDetailsTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading FiiDetailsFragment()");
             return new FiiDetailsFragment();
         } else {
-            Log.d(LOG_TAG, "Loading FiiIncomesFragment()");
             return new FiiIncomesFragment();
         }
     }

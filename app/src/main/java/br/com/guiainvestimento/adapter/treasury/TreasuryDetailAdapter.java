@@ -127,7 +127,6 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
-                        Log.d(LOG_TAG, "No Treasury Data found for symbol: " + symbol);
                     }
                 }
                 break;

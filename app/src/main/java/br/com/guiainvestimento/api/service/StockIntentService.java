@@ -49,8 +49,6 @@ public class StockIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.d(LOG_TAG, "Stock Intent Service start");
-
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
             this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
@@ -81,8 +79,6 @@ public class StockIntentService extends IntentService {
             // Prepare the query to be added in YQL (Yahoo API)
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
-            Log.d(LOG_TAG, "Response log test:" +
-                    "\nquery: " + query );
             if(symbols.length == 1) {
                 Call<ResponseStock> call = service.getStock(query);
                 Response<ResponseStock> response = call.execute();
@@ -90,13 +86,6 @@ public class StockIntentService extends IntentService {
 
                 if(responseGetStock.getStockQuotes() != null &&
                         responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
-                    Log.d(LOG_TAG, "Response log test:" +
-                            "\nquery: " + query +
-                            "\nsymbol: " + responseGetStock.getStockQuotes().get(0).getSymbol() +
-                            "\nname: " + responseGetStock.getStockQuotes().get(0).getName() +
-                            "\nlastPrice: " + responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() +
-                            "\nquery symbol removal: " + responseGetStock.getStockQuotes().get(0).getSymbol().substring(responseGetStock.getStockQuotes().get(0).getSymbol().length() - 3, responseGetStock.getStockQuotes().get(0).getSymbol().length() ) +
-                            "");
 
                     // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
                     String tableSymbol = responseGetStock.getStockQuotes().get(0).getSymbol();
@@ -115,7 +104,6 @@ public class StockIntentService extends IntentService {
                             stockDataCV, null, null);
                     // Log update success/fail result
                     if (updatedRows > 0) {
-                        Log.d(LOG_TAG, "updateStockData successfully updated");
                         // Update Stock Portfolio
                         mSuccess = true;
                     }

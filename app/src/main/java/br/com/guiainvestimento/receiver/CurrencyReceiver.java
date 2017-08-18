@@ -108,7 +108,6 @@ public class CurrencyReceiver extends BroadcastReceiver {
                 // Send Broadcast to update other values on Portfolio
                 mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             } else {
-                Log.d(LOG_TAG, "Rows could not be updated");
             }
         }
     }

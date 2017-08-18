@@ -128,7 +128,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
                         viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
-                        Log.d(LOG_TAG, "No Stock Data found for symbol: " + symbol);
                     }
                 }
                 break;

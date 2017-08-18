@@ -164,9 +164,8 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
 
-                    Log.d(LOG_TAG, "Pie Chart Drawn");
                 } else {
-                    Log.d(LOG_TAG, "No FixedData found for pieChart");
+
                 }
         }
 
@@ -221,14 +220,11 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            Log.d("VAL SELECTED",
-                    "Value: " + e.getY() + ", Label: " + pe.getLabel());
             pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
         }
 
         @Override
         public void onNothingSelected() {
-            Log.d("PieChart", "nothing selected");
         }
 
         private SpannableString generateCenterSpannableText(String text) {

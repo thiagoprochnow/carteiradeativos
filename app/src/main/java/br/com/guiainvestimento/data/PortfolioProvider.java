@@ -1800,7 +1800,6 @@ public class PortfolioProvider extends ContentProvider {
                             stockCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "StockData was not found for symbol: " + key);
                 }
             }
 
@@ -1869,7 +1868,6 @@ public class PortfolioProvider extends ContentProvider {
                             fiiCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "FiiData was not found for symbol: " + key);
                 }
             }
 
@@ -1936,7 +1934,6 @@ public class PortfolioProvider extends ContentProvider {
                             currencyCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "CurrencyData was not found for symbol: " + key);
                 }
             }
 
@@ -1995,7 +1992,6 @@ public class PortfolioProvider extends ContentProvider {
                             fixedCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "FixedData was not found for symbol: " + key);
                 }
             }
 
@@ -2064,7 +2060,6 @@ public class PortfolioProvider extends ContentProvider {
                             treasuryCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "TreasuryData was not found for symbol: " + key);
                 }
             }
 
@@ -2129,7 +2124,6 @@ public class PortfolioProvider extends ContentProvider {
                             othersCV, updateSelection, updatedSelectionArguments);
 
                 } else {
-                    Log.d(LOG_TAG, "OthersData was not found for symbol: " + key);
                 }
             }
 
@@ -2199,7 +2193,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No StockData found");
             }
             db.setTransactionSuccessful();
         } finally {
@@ -2266,7 +2259,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No FiiData found");
             }
             db.setTransactionSuccessful();
         } finally {
@@ -2333,7 +2325,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No CurrencyData found");
             }
             db.setTransactionSuccessful();
         } finally {
@@ -2399,7 +2390,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No FixedData found");
             }
             db.setTransactionSuccessful();
         } finally {
@@ -2466,7 +2456,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No TreasuryData found");
             }
             db.setTransactionSuccessful();
         } finally {
@@ -2532,7 +2521,6 @@ public class PortfolioProvider extends ContentProvider {
 
                 } while (queryDataCursor.moveToNext());
             } else {
-                Log.d(LOG_TAG, "No OthersData found");
             }
             db.setTransactionSuccessful();
         } finally {

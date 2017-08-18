@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "Loaded PortfolioMainFragment onCreate");
             replaceFragment(new PortfolioMainFragment());
         }
 
@@ -141,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(LOG_TAG, "MainActivity onDestroy()");
     }
 
     // Configure the toolbar
@@ -188,47 +186,38 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         switch (menuItem.getItemId()) {
             case R.id.nav_item_complete_portfolio:
                 setTitle(R.string.title_complete_portfolio);
-                Log.d(LOG_TAG, "Loaded Portfolio Fragment from menu");
                 replaceFragment(new PortfolioMainFragment());
                 break;
             case R.id.nav_item_treasury:
                 setTitle(R.string.title_treasury);
-                Log.d(LOG_TAG, "Loaded Treasury Fragment from menu");
                 replaceFragment(new TreasuryTabFragment());
                 break;
             case R.id.nav_item_fixed_income:
                 setTitle(R.string.title_fixed);
-                Log.d(LOG_TAG, "Loaded Fixed Income Fragment from menu");
                 replaceFragment(new FixedTabFragment());
                 break;
             case R.id.nav_item_stocks:
                 setTitle(R.string.title_stocks);
-                Log.d(LOG_TAG, "Loaded Stocks Fragment from menu");
                 replaceFragment(new StockTabFragment());
                 break;
             case R.id.nav_item_fii:
                 setTitle(R.string.title_fii);
-                Log.d(LOG_TAG, "Loaded FII Fragment from menu");
                 replaceFragment(new FiiTabFragment());
                 break;
             case R.id.nav_item_currency:
                 setTitle(R.string.title_currency);
-                Log.d(LOG_TAG, "Loaded Currency Fragment from menu");
                 replaceFragment(new CurrencyTabFragment());
                 break;
             case R.id.nav_item_others:
                 setTitle(R.string.title_others);
-                Log.d(LOG_TAG, "Loaded Others from menu");
                 replaceFragment(new OthersTabFragment());
                 break;
             case R.id.nav_item_about:
                 setTitle(R.string.title_about);
-                Log.d(LOG_TAG, "Loaded About from menu");
                 replaceFragment(new AboutFragment());
                 break;
             case R.id.nav_item_coming_soon:
                 setTitle(R.string.title_coming_soon);
-                Log.d(LOG_TAG, "Loaded Coming Soon from menu");
                 replaceFragment(new ComingSoonFragment());
                 break;
         }
@@ -339,7 +328,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "(onBuyProduct) Could not launch the FormActivity.");
                 break;
         }
     }
@@ -385,7 +373,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "(onSellProduct) Could not launch the FormActivity.");
                 break;
         }
     }
@@ -396,48 +383,41 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         switch (productType) {
             case Constants.ProductType.STOCK:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             case Constants.ProductType.FII:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             case Constants.ProductType.CURRENCY:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             case Constants.ProductType.FIXED:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             case Constants.ProductType.TREASURY:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             case Constants.ProductType.OTHERS:
                 // Sends symbol of clicked stock to details acitivity
-                Log.d(LOG_TAG, ": "+itemId);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.OTHERS);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
         }
     }
@@ -483,7 +463,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "(onEditProduct) Could not launch the FormActivity.");
                 break;
         }
     }
@@ -514,7 +493,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.StockData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            Log.d(LOG_TAG, symbol);
             mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
             startService(mStockServiceIntent);
         } else{
@@ -545,7 +523,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.FiiData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            Log.d(LOG_TAG, symbol);
             mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
             startService(mFiiServiceIntent);
         } else{
@@ -576,7 +553,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            Log.d(LOG_TAG, symbol);
             mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
             startService(mCurrencyServiceIntent);
         } else{
@@ -588,7 +564,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     @Override
     public void onIncomeDetails(int incomeType, String id){
         Intent intent = new Intent(this, IncomeDetailsActivity.class);
-        Log.d(LOG_TAG, "ID: " + id);
         switch (incomeType) {
             case Constants.IncomeType.DIVIDEND:
                 // Sends id of clicked income to income details acitivity
@@ -627,7 +602,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the IncomeDetailsActivity.");
                 break;
         }
     }

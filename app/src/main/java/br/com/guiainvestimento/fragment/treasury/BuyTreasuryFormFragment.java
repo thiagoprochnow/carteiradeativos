@@ -92,7 +92,6 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues treasuryCV = new ContentValues();
 
@@ -109,7 +108,6 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedTreasuryTransactionUri != null) {
-                Log.d(LOG_TAG, "Added treasury transaction " + inputSymbol);
                 // Updates each treasury table with new value: Income, Data, TreasuryPortfolio, CompletePortfolio
                 updateTreasuryIncomes(inputSymbol, timestamp);
                 boolean updateTreasuryData = updateTreasuryData(inputSymbol, Constants

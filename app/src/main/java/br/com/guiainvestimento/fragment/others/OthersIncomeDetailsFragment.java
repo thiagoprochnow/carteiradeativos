@@ -54,7 +54,6 @@ public class OthersIncomeDetailsFragment extends BaseFragment {
 
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            Log.d(LOG_TAG, "Income details found");
 
             Locale locale = new Locale("pt", "BR");
             NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
@@ -76,7 +75,6 @@ public class OthersIncomeDetailsFragment extends BaseFragment {
             viewTax.setText(Stax);
             viewLiquidReceived.setText(SliquidReceived);
         } else {
-            Log.d(LOG_TAG, "No income details found");
         }
     }
 }

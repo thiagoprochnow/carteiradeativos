@@ -127,7 +127,6 @@ public class OthersIncomesMainFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             case Constants.AdapterClickable.MAIN:
-                Log.d(LOG_TAG, "ID: " + id);
                 mIncomeDetailsListener.onIncomeDetails(type, id);
                 break;
             default:

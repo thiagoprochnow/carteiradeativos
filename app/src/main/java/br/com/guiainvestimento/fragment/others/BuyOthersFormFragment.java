@@ -104,7 +104,6 @@ public class BuyOthersFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedOthersTransactionUri != null) {
-                Log.d(LOG_TAG, "Added others transaction " + inputSymbol);
                 // Updates each others income table with new value: Income, Data, OthersPortfolio, CompletePortfolio
                 boolean updateOthersData = updateOthersData(inputSymbol, Constants
                         .Type.BUY);

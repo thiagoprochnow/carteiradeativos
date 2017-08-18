@@ -32,12 +32,10 @@ public class CurrencyTabFragment extends BaseFragment {
         if (activityName.equals(MainActivity.class.getSimpleName())){
             view = inflater.inflate(R.layout.fragment_currency_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.currencyViewPager);
-            Log.d(LOG_TAG, "CurrencyTabAdapter");
             viewPager.setAdapter(new CurrencyTabAdapter(mContext, getChildFragmentManager()));
         } else {
             view = inflater.inflate(R.layout.fragment_currency_details_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.currencyViewPager);
-            Log.d(LOG_TAG, "CurrencyDetailsTabAdapter");
             viewPager.setAdapter(new CurrencyDetailsTabAdapter(mContext, getChildFragmentManager()));
         }
 

@@ -169,9 +169,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
 
-                    Log.d(LOG_TAG, "Pie Chart Drawn");
                 } else {
-                    Log.d(LOG_TAG, "No CurrencyData found for pieChart");
                 }
         }
 

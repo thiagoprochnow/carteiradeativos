@@ -33,12 +33,10 @@ public class OthersTabFragment extends BaseFragment {
         if (activityName.equals(MainActivity.class.getSimpleName())){
             view = inflater.inflate(R.layout.fragment_others_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.othersViewPager);
-            Log.d(LOG_TAG, "OthersTabAdapter");
             viewPager.setAdapter(new OthersTabAdapter(mContext, getChildFragmentManager()));
         } else {
             view = inflater.inflate(R.layout.fragment_others_details_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.othersViewPager);
-            Log.d(LOG_TAG, "OthersDetailsTabAdapter");
             viewPager.setAdapter(new OthersDetailsTabAdapter(mContext, getChildFragmentManager()));
         }
 

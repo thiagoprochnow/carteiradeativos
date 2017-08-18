@@ -96,7 +96,6 @@ public class CurrencyMainFragment extends BaseFragment implements
 
     @Override
     public void onClick(String id, int type) {
-        Log.d(LOG_TAG, "ID: " + id);
         mIncomeDetailsListener.onIncomeDetails(type, id);
     }
 
@@ -137,7 +136,6 @@ public class CurrencyMainFragment extends BaseFragment implements
                 builder.create().show();*/
                 break;
             default:
-                Log.d(LOG_TAG, "Wrong menu Id");
                 break;
         }
         return super.onContextItemSelected(item);
@@ -187,7 +185,6 @@ public class CurrencyMainFragment extends BaseFragment implements
             cursor.moveToFirst();
             symbol = cursor.getString(0);
         } else {
-            Log.d(LOG_TAG, "No symbol for for that income");
         }
 
         String selection = PortfolioContract.FiiIncome._ID + " = ?";
@@ -228,12 +225,9 @@ public class CurrencyMainFragment extends BaseFragment implements
             // Log update success/fail result
             if (updatedRows > 0) {
                 updateFiiData(symbol, -1);
-                Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
             } else {
-                Log.d(LOG_TAG, "updateFiiIncomes failed update");
             }
         } else {
-            Log.d(LOG_TAG, "No income found for this ID and Symbol");
         }
     }
 }

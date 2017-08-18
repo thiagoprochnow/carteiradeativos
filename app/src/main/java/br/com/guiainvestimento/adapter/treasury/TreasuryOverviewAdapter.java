@@ -190,9 +190,7 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
 
-                    Log.d(LOG_TAG, "Pie Chart Drawn");
                 } else {
-                    Log.d(LOG_TAG, "No TreasuryData found for pieChart");
                 }
         }
 
@@ -259,14 +257,12 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            Log.d("VAL SELECTED",
-                    "Value: " + e.getY() + ", Label: " + pe.getLabel());
             pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
         }
 
         @Override
         public void onNothingSelected() {
-            Log.d("PieChart", "nothing selected");
+
         }
 
         private SpannableString generateCenterSpannableText(String text) {

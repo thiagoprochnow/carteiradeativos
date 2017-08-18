@@ -112,7 +112,6 @@ public class CurrencyDetailsFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             default:
-                Log.d(LOG_TAG, "Wrong menu Type");
                 break;
         }
     }

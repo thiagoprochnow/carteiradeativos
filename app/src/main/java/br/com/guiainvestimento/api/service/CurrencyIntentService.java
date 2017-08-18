@@ -71,18 +71,12 @@ public class CurrencyIntentService extends IntentService {
             // Prepare the query to be added in YQL (Yahoo API)
             String query = "select * from yahoo.finance.xchange where pair in ("
                     + buildSymbolQuery(symbols) + ")";
-            Log.d(LOG_TAG, "Response log test:" +
-                    "\nquery: " + query);
 
             Call<ResponseCurrency> call = service.getCurrency(query);
             Response<ResponseCurrency> response = call.execute();
             ResponseCurrency responseGetRate = response.body();
             if(responseGetRate.getDividendQuotes() != null) {
-                Log.d(LOG_TAG, "Response log test:" +
-                        "\nquery: " + query +
-                        "");
                 for(Currency currency : responseGetRate.getDividendQuotes()){
-                    Log.d(LOG_TAG, "--4> " + currency.getRate() + currency.getSymbol());
 
                     // Remove last 3 letter
                     String tableSymbol = currency.getSymbol();
@@ -101,12 +95,10 @@ public class CurrencyIntentService extends IntentService {
                             currencyDataCV, null, null);
                     // Log update success/fail result
                     if (updatedRows > 0) {
-                        Log.d(LOG_TAG, "updateStockData successfully updated");
                     }
 
 
                 }
-                Log.d(LOG_TAG, "Size: " + responseGetRate.getDividendQuotes().size());
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
