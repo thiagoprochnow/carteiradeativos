@@ -91,9 +91,9 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
-        double variationPercent = stockAppreciation / buyTotal * 100;
-        double netIncomePercent = totalIncome / buyTotal * 100;
-        double totalGainPercent = totalGain / buyTotal * 100;
+        double variationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(stockAppreciation / buyTotal * 100)));
+        double netIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
+        double totalGainPercent = variationPercent + netIncomePercent;
         // Get handled values of StockData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .StockData.

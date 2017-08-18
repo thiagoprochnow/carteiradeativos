@@ -117,9 +117,9 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 double totalGainPercent = 0;
                 double incomePercent = 0;
                 if(buyTotal != 0) {
-                    treasuryAppreciationPercent = totalAppreciation / buyTotal * 100;
-                    totalGainPercent = totalGain / buyTotal * 100;
-                    incomePercent = totalIncome / buyTotal * 100;
+                    treasuryAppreciationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalAppreciation / buyTotal * 100)));
+                    incomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
+                    totalGainPercent = treasuryAppreciationPercent + incomePercent;
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(

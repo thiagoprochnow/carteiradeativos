@@ -64,13 +64,6 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
         // Set text colors according to positive or negative values
-        if (currencyAppreciation >= 0) {
-            viewHolder.currencyAppreciation.setTextColor(ContextCompat.getColor(mContext, R.color.green));
-            viewHolder.currencyAppreciationPercent.setTextColor(ContextCompat.getColor(mContext, R.color.green));
-        } else {
-            viewHolder.currencyAppreciation.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-            viewHolder.currencyAppreciationPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
-        }
 
         if (totalGain >= 0) {
             viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext, R.color.green));
@@ -92,12 +85,10 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL)))));
 
-        viewHolder.currencyAppreciation.setText(String.format(formatter.format(currencyAppreciation)));
         viewHolder.currentPercent.setText(String.format("%.2f", mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_PERCENT)))
                 + "%");
         viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
-        viewHolder.currencyAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
         viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
 
         if (position == mCursor.getCount() - 1) {
@@ -193,17 +184,11 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.currentTotal)
         TextView currentTotal;
 
-        @BindView(R.id.currencyAppreciation)
-        TextView currencyAppreciation;
-
         @BindView(R.id.currentPercent)
         TextView currentPercent;
 
         @BindView(R.id.totalGain)
         TextView totalGain;
-
-        @BindView(R.id.currencyAppreciationPercent)
-        TextView currencyAppreciationPercent;
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;

@@ -94,9 +94,9 @@ public class OthersIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.V
                                     (dataCursor.getColumnIndex(PortfolioContract.OthersData.COLUMN_INCOME)));
                         } while (dataCursor.moveToNext());
                         grossIncome = netIncome + tax;
-                        netPercent = netIncome/buyTotal*100;
-                        grossPercent = grossIncome/buyTotal*100;
-                        taxPercent = tax/buyTotal*100;
+                        grossPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(grossIncome/buyTotal*100)));
+                        taxPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(tax/buyTotal*100)));
+                        netPercent = grossPercent - taxPercent;
 
                         if (grossIncome >= 0){
                             overviewViewHolder.grossIncome.setTextColor(ContextCompat.getColor(mContext,R.color.green));

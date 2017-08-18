@@ -119,9 +119,9 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 double totalAppreciationPercent = 0;
                 double totalIncomePercent = 0;
                 if (buyTotal != 0 ) {
-                    totalGainPercent = totalGain / buyTotal * 100;
-                    totalAppreciationPercent = totalAppreciation / buyTotal * 100;
-                    totalIncomePercent = totalIncome / buyTotal * 100;
+                    totalAppreciationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalAppreciation / buyTotal * 100)));
+                    totalIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
+                    totalGainPercent = totalAppreciationPercent + totalIncomePercent;
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
