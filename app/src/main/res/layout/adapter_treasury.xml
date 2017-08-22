@@ -46,7 +46,9 @@
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
                 android:textColor="@color/white"
-                android:textSize="@dimen/treasury_symbol" />
+                android:textSize="@dimen/treasury_symbol"
+                android:ellipsize="end"
+                android:maxLines="1"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +61,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/stock_quantity_label"
                     android:textSize="@dimen/stock_symbol"
-                    android:ellipsize="end"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:maxLines="1" />
@@ -72,7 +73,6 @@
                     android:textSize="@dimen/stock_symbol"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
-                    android:ellipsize="end"
                     android:maxLines="1" />
                 </LinearLayout>
         </LinearLayout>
@@ -94,7 +94,9 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_current_label" />
+                    android:text="@string/data_current_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
@@ -104,17 +106,23 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_appreciation_label" />
+                    android:text="@string/data_appreciation_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_treasury_income_label" />
+                    android:text="@string/data_treasury_income_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_total_gain_label" />
+                    android:text="@string/data_total_gain_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

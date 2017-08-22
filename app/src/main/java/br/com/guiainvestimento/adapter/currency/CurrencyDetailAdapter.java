@@ -79,56 +79,23 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     Cursor soldDataCursor = getSoldDataCursor(symbol);
 
                     double soldPrice = 0;
-                    double soldTotal = 0;
-                    double gainTotal = 0;
-                    double buyTotal = 0;
-                    double quantity = 0;
 
                     // Check if there is any sold currency first and add values
                     if (soldDataCursor.getCount() > 0){
                         soldDataCursor.moveToFirst();
                         soldPrice = soldDataCursor.getDouble(
                                 (soldDataCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SELL_MEDIUM_PRICE)));
-                        soldTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL)));
-                        buyTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_BUY_VALUE_TOTAL)));
-                        gainTotal = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_SELL_GAIN)));
-                        quantity = soldDataCursor.getDouble(
-                                (soldDataCursor.getColumnIndex(PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL)));
                     }
 
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
-                        // Buy total is the sum of currency in data portfolio and already sold ones
-                        buyTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL)));
-                        quantity += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL)));
-                        // Gain total is sum of gain from variation and sold currency
-                        gainTotal += dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_VARIATION)));
-
-                        if (gainTotal >= 0){
-                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
-                        } else {
-                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                            viewOverviewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
-                        }
 
                         viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.CurrencyData
                                         .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_MEDIUM_PRICE)))));
-                        viewOverviewHolder.currentTotal.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL)))));
-                        viewOverviewHolder.mediumTotal.setText(formatter.format(buyTotal));
-                        viewOverviewHolder.totalGain.setText(formatter.format(gainTotal));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
-                        viewOverviewHolder.soldTotal.setText(formatter.format(soldTotal));
                     } else{
                     }
                 }
@@ -221,18 +188,6 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.soldPrice)
         TextView soldPrice;
-
-        @BindView(R.id.currentTotal)
-        TextView currentTotal;
-
-        @BindView(R.id.buyTotal)
-        TextView mediumTotal;
-
-        @BindView(R.id.soldTotal)
-        TextView soldTotal;
-
-        @BindView(R.id.totalGain)
-        TextView totalGain;
 
         public CurrencyDetailsOverviewViewHolder(View itemView){
             super(itemView);

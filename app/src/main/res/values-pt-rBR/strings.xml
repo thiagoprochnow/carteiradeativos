@@ -267,7 +267,7 @@
     <string name="others_income_type">Rendimento</string>
     <string name="treasury_income_type">Cupom Semestral</string>
     <string name="portfolio_income_type">Rendimentos</string>
-    <string name="income_overview_bought_label">Compra</string>
+    <string name="income_overview_bought_label">Total Comprado</string>
     <string name="income_overview_net_label">Liquido</string>
     <string name="income_overview_tax_label">Imposto</string>
     <string name="income_overview_gross_label">Bruto</string>
@@ -280,9 +280,9 @@
     <string name="stock_bonification">Bonificação</string>
     <string name="stock_split">Desdobramento</string>
     <string name="stock_grouping">Grupamento</string>
-    <string name="details_current">Atual</string>
-    <string name="details_sold">Média Venda</string>
-    <string name="details_medium_price">Média Compra</string>
+    <string name="details_current">Preço Atual</string>
+    <string name="details_sold">Preço Médio de Venda</string>
+    <string name="details_medium_price">Preço Médio de Compra</string>
     <string name="details_sold_fixed">Vendido</string>
     <string name="details_buy_fixed">Comprado</string>
     <string name="details_sold_others">Vendido</string>

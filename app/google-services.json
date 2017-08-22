@@ -15,10 +15,62 @@
       },
       "oauth_client": [
         {
+          "client_id": "196632400417-86jidsbp6vqm9j4714a0quqsncspifog.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.guiainvestimento",
+            "certificate_hash": "48935f4e2d4692dc4ee8594d837a3c42753c1fb2"
+          }
+        },
+        {
           "client_id": "196632400417-qb79qg0cfsbtjv6tjoa21i4kr6o6t80k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "br.com.guiainvestimento",
+            "certificate_hash": "f83899b06b9bfce4314698613dec8b16752deaaf"
+          }
+        },
+        {
+          "client_id": "196632400417-bpe8qfcplt002v0th6o8v68clrai8ii5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuJ9ECb4DOVoXgS2DN-oZkYPcjvygWc70"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196632400417-bpe8qfcplt002v0th6o8v68clrai8ii5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196632400417:android:b590fa28a44093ae",
+        "android_client_info": {
+          "package_name": "br.com.guiainvestimento.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196632400417-spt14dt3bl05dsp1tbv88uk8euid2kgt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.guiainvestimento.debug",
             "certificate_hash": "f83899b06b9bfce4314698613dec8b16752deaaf"
           }
         },

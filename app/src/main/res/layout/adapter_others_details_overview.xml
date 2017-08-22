@@ -78,7 +78,7 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_current" />
+                    android:text="@string/portfolio_current_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"

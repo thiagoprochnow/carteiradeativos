@@ -1317,11 +1317,11 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
@@ -1598,11 +1598,11 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
@@ -1843,11 +1843,11 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
@@ -2323,11 +2323,11 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
