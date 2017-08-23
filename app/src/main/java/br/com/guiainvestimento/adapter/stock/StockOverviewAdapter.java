@@ -189,8 +189,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     // Hide Description
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
-
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
+                    chartHolder.pieChart.setVisibility(View.GONE);
                 }
         }
 

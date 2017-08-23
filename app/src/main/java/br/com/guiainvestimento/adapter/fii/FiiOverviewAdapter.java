@@ -189,8 +189,9 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // Hide Description
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
-
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
+                    chartHolder.pieChart.setVisibility(View.GONE);
                 }
         }
 

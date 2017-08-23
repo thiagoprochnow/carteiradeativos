@@ -191,8 +191,9 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     // Hide Description
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
-
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
+                    chartHolder.pieChart.setVisibility(View.GONE);
                 }
         }
 
