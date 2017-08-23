@@ -177,6 +177,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     entries.add(new PieEntry(othersEntry, mContext.getResources().getString(R.string.title_others)));
                 }
 
+                if(treasuryEntry == 0 && fixedEntry == 0 && stockEntry == 0 && fiiEntry == 0 && currencyEntry == 0 && othersEntry == 0){
+                    chartHolder.pieChart.setVisibility(View.GONE);
+                } else {
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
+                }
+
                 // Animation on show
                 chartHolder.pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
                 chartHolder.pieChart.setDrawHoleEnabled(true);
