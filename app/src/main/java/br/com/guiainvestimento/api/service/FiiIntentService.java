@@ -85,7 +85,7 @@ public class FiiIntentService extends IntentService {
                 Response<ResponseFii> response = call.execute();
                 ResponseFii responseGetFii = response.body();
 
-                if(responseGetFii.getFiiQuotes() != null &&
+                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null &&
                         responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
 
                     // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
@@ -108,12 +108,15 @@ public class FiiIntentService extends IntentService {
                         // Update Fii Portfolio
                         mSuccess = true;
                     }
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }else{
                 Call<ResponseFiis> call = service.getFiis(query);
                 Response<ResponseFiis> response = call.execute();
                 ResponseFiis responseGetFiis = response.body();
-                if(responseGetFiis.getFiiQuotes() != null) {
+
+                if(response.isSuccessful() && responseGetFiis.getFiiQuotes() != null) {
                     String tableSymbol = "";
                     ContentValues fiiDataCV = new ContentValues();
                     for(Fii fii : responseGetFiis.getFiiQuotes()) {
@@ -129,11 +132,11 @@ public class FiiIntentService extends IntentService {
                     int updatedRows = this.getContentResolver().update(
                             PortfolioContract.FiiData.BULK_UPDATE_URI,
                             fiiDataCV, null, null);
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }
 
-            // Success request
-            resultStatus = GcmNetworkManager.RESULT_SUCCESS;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();

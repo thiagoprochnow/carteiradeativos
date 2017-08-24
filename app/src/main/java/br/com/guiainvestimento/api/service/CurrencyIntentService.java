@@ -75,7 +75,7 @@ public class CurrencyIntentService extends IntentService {
             Call<ResponseCurrency> call = service.getCurrency(query);
             Response<ResponseCurrency> response = call.execute();
             ResponseCurrency responseGetRate = response.body();
-            if(responseGetRate.getDividendQuotes() != null) {
+            if(response.isSuccessful() && responseGetRate.getDividendQuotes() != null) {
                 for(Currency currency : responseGetRate.getDividendQuotes()){
 
                     // Remove last 3 letter

@@ -83,8 +83,10 @@ public class StockIntentService extends IntentService {
                 Call<ResponseStock> call = service.getStock(query);
                 Response<ResponseStock> response = call.execute();
                 ResponseStock responseGetStock = response.body();
-
-                if(responseGetStock.getStockQuotes() != null &&
+                if (!response.isSuccessful()){
+                    Log.d(LOG_TAG,"Não sucesso");
+                }
+                if(response.isSuccessful() && responseGetStock.getStockQuotes() != null &&
                         responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
 
                     // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
@@ -107,12 +109,14 @@ public class StockIntentService extends IntentService {
                         // Update Stock Portfolio
                         mSuccess = true;
                     }
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }else{
                 Call<ResponseStocks> call = service.getStocks(query);
                 Response<ResponseStocks> response = call.execute();
                 ResponseStocks responseGetStocks = response.body();
-                if(responseGetStocks.getStockQuotes() != null) {
+                if(response.isSuccessful() && responseGetStocks.getStockQuotes() != null) {
                     String tableSymbol = "";
                     ContentValues stockDataCV = new ContentValues();
                     for(Stock stock : responseGetStocks.getStockQuotes()) {
@@ -128,11 +132,11 @@ public class StockIntentService extends IntentService {
                     int updatedRows = this.getContentResolver().update(
                             PortfolioContract.StockData.BULK_UPDATE_URI,
                             stockDataCV, null, null);
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }
 
-            // Success request
-            resultStatus = GcmNetworkManager.RESULT_SUCCESS;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
