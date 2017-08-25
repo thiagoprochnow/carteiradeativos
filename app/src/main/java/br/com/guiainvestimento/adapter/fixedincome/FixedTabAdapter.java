@@ -36,11 +36,9 @@ public class FixedTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading FixedOverviewFragment()");
             return new FixedOverviewFragment();
         }
         else {
-            Log.d(LOG_TAG, "Loading FixedDataFragment()");
             return new FixedDataFragment();
         }
     }

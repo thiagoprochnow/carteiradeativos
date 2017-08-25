@@ -128,7 +128,6 @@ public class StockIncomesMainFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             case Constants.AdapterClickable.MAIN:
-                Log.d(LOG_TAG, "ID: " + id);
                 mIncomeDetailsListener.onIncomeDetails(type, id);
                 break;
             default:
@@ -221,9 +220,7 @@ public class StockIncomesMainFragment extends BaseFragment implements
             // Log update success/fail result
             if (updatedRows > 0){
                 updateStockData(symbol, -1);
-                Log.d(LOG_TAG, "updateStockIncomes successfully updated");
             } else {
-                Log.d(LOG_TAG, "updateStockIncomes failed update");
             }
         } else {
             Log.d(LOG_TAG, "No income found for this ID and Symbol");

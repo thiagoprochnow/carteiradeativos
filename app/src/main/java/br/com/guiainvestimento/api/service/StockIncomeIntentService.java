@@ -69,21 +69,14 @@ public class StockIncomeIntentService extends IntentService {
             // Prepare the query to be added in YQL (Yahoo API)
             String query = "select * from yahoo.finance.dividendhistory where symbol in ("
                     + buildSymbolQuery(symbols) + ")" + buildDateQuery(startDate, endDate);
-            Log.d(LOG_TAG, "Response log test:" +
-                    "\nquery: " + query);
 
             Call<ResponseStockIncome> call = service.getDividend(query);
             Response<ResponseStockIncome> response = call.execute();
             ResponseStockIncome responseGetStock = response.body();
 
             if(responseGetStock.getDividendQuotes() != null) {
-                Log.d(LOG_TAG, "Response log test:" +
-                        "\nquery: " + query +
-                        "");
                 for(Dividend a : responseGetStock.getDividendQuotes()){
-                    Log.d(LOG_TAG, "--4> " + a.getDividends());
                 }
-                Log.d(LOG_TAG, "Size: " + responseGetStock.getDividendQuotes().size());
                 // TODO - implement DB logic to update
             }
         } catch (IOException e) {

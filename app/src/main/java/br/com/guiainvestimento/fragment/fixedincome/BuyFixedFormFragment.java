@@ -104,7 +104,6 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedFixedTransactionUri != null) {
-                Log.d(LOG_TAG, "Added fixed transaction " + inputSymbol);
                 // Updates each fixed income table with new value: Income, Data, FixedPortfolio, CompletePortfolio
                 boolean updateFixedData = updateFixedData(inputSymbol, Constants
                         .Type.BUY);

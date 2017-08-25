@@ -142,7 +142,6 @@ public class OthersDataFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             default:
-                Log.d(LOG_TAG, "Invalid id for onClick");
         }
     }
 

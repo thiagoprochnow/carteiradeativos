@@ -137,7 +137,6 @@ public class CurrencyMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Fii Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
@@ -151,10 +150,6 @@ public class CurrencyMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
                 String incomeType = getIncomeType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE)));
                 String date = TimestampToDate(timestamp);
-                Log.d(LOG_TAG, "IncomeType: " + incomeType);
-                Log.d(LOG_TAG, "IncomeValue: " + formatter.format(mCursor.getDouble(mCursor.getColumnIndex
-                        (PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID))));
-                Log.d(LOG_TAG, "Date: " + date);
                 viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_SYMBOL)));
                 viewHolder.incomeType.setText(incomeType);
                 viewHolder.incomeValue.setText(formatter.format(mCursor.getDouble(mCursor.getColumnIndex
@@ -261,13 +256,10 @@ public class CurrencyMainAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public String getIncomeType(int incomeTypeId){
         switch (incomeTypeId){
             case Constants.IncomeType.INVALID:
-                Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
             case Constants.IncomeType.FII:
-                Log.d(LOG_TAG, "Income IncomeType");
                 return mContext.getResources().getString(R.string.fii_income_type);
             default:
-                Log.d(LOG_TAG, "Default IncomeType");
                 return mContext.getResources().getString(R.string.fii_income_type);
         }
     }

@@ -34,10 +34,8 @@ public class OthersDetailsTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading OthersDetailsFragment()");
             return new OthersDetailsFragment();
         } else {
-            Log.d(LOG_TAG, "Loading OthersIncomesFragment()");
             return new OthersIncomesFragment();
         }
     }

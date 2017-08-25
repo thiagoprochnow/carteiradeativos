@@ -50,8 +50,6 @@ public class FiiIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        Log.d(LOG_TAG, "Fii Intent Service start");
-
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
             this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
@@ -82,22 +80,13 @@ public class FiiIntentService extends IntentService {
             // Prepare the query to be added in YQL (Yahoo API)
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
-            Log.d(LOG_TAG, "Response log test:" +
-                    "\nquery: " + query );
             if(symbols.length == 1) {
                 Call<ResponseFii> call = service.getFii(query);
                 Response<ResponseFii> response = call.execute();
                 ResponseFii responseGetFii = response.body();
 
-                if(responseGetFii.getFiiQuotes() != null &&
+                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null &&
                         responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
-                    Log.d(LOG_TAG, "Response log test:" +
-                            "\nquery: " + query +
-                            "\nsymbol: " + responseGetFii.getFiiQuotes().get(0).getSymbol() +
-                            "\nname: " + responseGetFii.getFiiQuotes().get(0).getName() +
-                            "\nlastPrice: " + responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() +
-                            "\nquery symbol removal: " + responseGetFii.getFiiQuotes().get(0).getSymbol().substring(responseGetFii.getFiiQuotes().get(0).getSymbol().length() - 3, responseGetFii.getFiiQuotes().get(0).getSymbol().length() ) +
-                            "");
 
                     // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
                     String tableSymbol = responseGetFii.getFiiQuotes().get(0).getSymbol();
@@ -116,16 +105,18 @@ public class FiiIntentService extends IntentService {
                             fiiDataCV, null, null);
                     // Log update success/fail result
                     if (updatedRows > 0) {
-                        Log.d(LOG_TAG, "updateFiiData successfully updated");
                         // Update Fii Portfolio
                         mSuccess = true;
                     }
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }else{
                 Call<ResponseFiis> call = service.getFiis(query);
                 Response<ResponseFiis> response = call.execute();
                 ResponseFiis responseGetFiis = response.body();
-                if(responseGetFiis.getFiiQuotes() != null) {
+
+                if(response.isSuccessful() && responseGetFiis.getFiiQuotes() != null) {
                     String tableSymbol = "";
                     ContentValues fiiDataCV = new ContentValues();
                     for(Fii fii : responseGetFiis.getFiiQuotes()) {
@@ -141,11 +132,11 @@ public class FiiIntentService extends IntentService {
                     int updatedRows = this.getContentResolver().update(
                             PortfolioContract.FiiData.BULK_UPDATE_URI,
                             fiiDataCV, null, null);
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }
 
-            // Success request
-            resultStatus = GcmNetworkManager.RESULT_SUCCESS;
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();

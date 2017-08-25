@@ -113,7 +113,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues currencyCV = new ContentValues();
 
@@ -130,7 +129,6 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedCurrencyTransactionUri != null) {
-                Log.d(LOG_TAG, "Added currency transaction " + inputSymbol);
                 // Updates each currency table with new value: Income, Data, CurrencyPortfolio, CompletePortfolio
                // updateCurrencyIncomes(inputSymbol, timestamp);
                 boolean updateCurrencyData = updateCurrencyData(inputSymbol, Constants

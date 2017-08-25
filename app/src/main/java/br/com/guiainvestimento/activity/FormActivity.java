@@ -76,7 +76,6 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new BuyOthersFormFragment());
                         break;
                     default:
-                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
                         break;
                 }
@@ -101,7 +100,6 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new SellOthersFormFragment());
                         break;
                     default:
-                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
                         break;
                 }
@@ -126,7 +124,6 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new EditOthersFormFragment());
                         break;
                     default:
-                        Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                         finish();
                         break;
                 }
@@ -140,39 +137,30 @@ public class FormActivity extends AppCompatActivity {
                     Constants.IncomeType.INVALID);
             switch (incomeType) {
                 case Constants.IncomeType.DIVIDEND:
-                    Log.d(LOG_TAG, "Dividend Form Fragment");
                     replaceFragment(new JCPDividendFormFragment());
                     break;
                 case Constants.IncomeType.JCP:
-                    Log.d(LOG_TAG, "JCP Form Fragment");
                     replaceFragment(new JCPDividendFormFragment());
                     break;
                 case Constants.IncomeType.BONIFICATION:
-                    Log.d(LOG_TAG, "Bonification Form Fragment");
                     replaceFragment(new BonificationFormFragment());
                     break;
                 case Constants.IncomeType.SPLIT:
-                    Log.d(LOG_TAG, "Split Form Fragment");
                     replaceFragment(new SplitFormFragment());
                     break;
                 case Constants.IncomeType.GROUPING:
-                    Log.d(LOG_TAG, "Grouping Form Fragment");
                     replaceFragment(new GroupingFormFragment());
                     break;
                 case Constants.IncomeType.FII:
-                    Log.d(LOG_TAG, "FII Form Fragment");
                     replaceFragment(new FiiIncomeFormFragment());
                     break;
                 case Constants.IncomeType.TREASURY:
-                    Log.d(LOG_TAG, "Treasury Form Fragment");
                     replaceFragment(new TreasuryIncomeFormFragment());
                     break;
                 case Constants.IncomeType.OTHERS:
-                    Log.d(LOG_TAG, "Others Form Fragment");
                     replaceFragment(new OthersIncomeFormFragment());
                     break;
                 default:
-                    Log.d(LOG_TAG, "Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                     finish();
                     break;
             }

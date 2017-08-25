@@ -39,14 +39,22 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
-            <TextView
-                android:fontFamily="sans-serif-light"
-                android:id="@+id/symbol"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="DUMY4"
-                android:textColor="@color/white"
-                android:textSize="@dimen/treasury_symbol" />
+                android:orientation="horizontal"
+                android:gravity="left">
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NTNB 2019 Pré Fixado"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/treasury_symbol"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,8 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stock_quantity_label"
-                    android:textSize="@dimen/stock_symbol"
-                    android:ellipsize="end"
+                    android:textSize="@dimen/treasury_symbol"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:maxLines="1" />
@@ -68,8 +75,8 @@
                     android:id="@+id/treasuryQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="100"
-                    android:textSize="@dimen/stock_symbol"
+                    android:text="100,00"
+                    android:textSize="@dimen/treasury_symbol"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:ellipsize="end"
@@ -94,7 +101,9 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_current_label" />
+                    android:text="@string/data_current_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
@@ -104,17 +113,23 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_appreciation_label" />
+                    android:text="@string/data_appreciation_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_treasury_income_label" />
+                    android:text="@string/data_treasury_income_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/data_total_gain_label" />
+                    android:text="@string/data_total_gain_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

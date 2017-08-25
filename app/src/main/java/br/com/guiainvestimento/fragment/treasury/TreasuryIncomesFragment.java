@@ -124,7 +124,6 @@ public class TreasuryIncomesFragment extends BaseFragment implements
                 builder.create().show();
                 break;
             case Constants.AdapterClickable.MAIN:
-                Log.d(LOG_TAG, "ID: " + id);
                 mIncomeDetailsListener.onIncomeDetails(type, id);
                 break;
             default:
@@ -195,12 +194,9 @@ public class TreasuryIncomesFragment extends BaseFragment implements
             // Log update success/fail result
             if (updatedRows > 0){
                 updateTreasuryData(mSymbol, -1);
-                Log.d(LOG_TAG, "updateTreasuryIncomes successfully updated");
             } else {
-                Log.d(LOG_TAG, "updateTreasuryIncomes failed update");
             }
         } else {
-            Log.d(LOG_TAG, "No income found for this ID and Symbol");
         }
     }
 }

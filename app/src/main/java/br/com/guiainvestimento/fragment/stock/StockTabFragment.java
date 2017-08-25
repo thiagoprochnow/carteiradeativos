@@ -32,12 +32,10 @@ public class StockTabFragment extends BaseFragment {
         if (activityName.equals(MainActivity.class.getSimpleName())){
             view = inflater.inflate(R.layout.fragment_stock_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.stockViewPager);
-            Log.d(LOG_TAG, "StockTabAdapter");
             viewPager.setAdapter(new StockTabAdapter(mContext, getChildFragmentManager()));
         } else {
             view = inflater.inflate(R.layout.fragment_stock_details_tab, container, false);
             viewPager = (ViewPager) view.findViewById(R.id.stockViewPager);
-            Log.d(LOG_TAG, "StockDetailsTabAdapter");
             viewPager.setAdapter(new StockDetailsTabAdapter(mContext, getChildFragmentManager()));
         }
 

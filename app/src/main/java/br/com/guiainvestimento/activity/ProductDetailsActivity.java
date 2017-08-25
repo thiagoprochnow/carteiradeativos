@@ -59,12 +59,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     replaceFragment(new OthersTabFragment());
                     break;
                 default:
-                    Log.d(LOG_TAG, "1 - Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
                     finish();
                     break;
             }
         } else {
-            Log.d(LOG_TAG, "2 - Could not find EXTRA_PRODUCT_TYPE. Finishing activity...");
         }
     }
 
@@ -143,7 +141,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
     @Override
     public void onIncomeDetails(int incomeType, String id){
         Intent intent = new Intent(this, IncomeDetailsActivity.class);
-        Log.d(LOG_TAG, "ID: " + id);
         switch (incomeType) {
             case Constants.IncomeType.DIVIDEND:
                 // Sends id of clicked income to income details acitivity
@@ -176,7 +173,6 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 startActivity(intent);
                 break;
             default:
-                Log.d(LOG_TAG, "Could not launch the ProductDetailsActivity.");
                 break;
         }
     }

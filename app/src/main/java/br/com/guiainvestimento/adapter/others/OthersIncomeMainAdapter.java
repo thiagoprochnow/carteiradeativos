@@ -130,7 +130,6 @@ public class OthersIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.V
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Others Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
@@ -270,13 +269,10 @@ public class OthersIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.V
     public String getIncomeType(int incomeTypeId){
         switch (incomeTypeId){
             case Constants.IncomeType.INVALID:
-                Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
             case Constants.IncomeType.OTHERS:
-                Log.d(LOG_TAG, "Income IncomeType");
                 return mContext.getResources().getString(R.string.others_income_type);
             default:
-                Log.d(LOG_TAG, "Default IncomeType");
                 return mContext.getResources().getString(R.string.others_income_type);
         }
     }

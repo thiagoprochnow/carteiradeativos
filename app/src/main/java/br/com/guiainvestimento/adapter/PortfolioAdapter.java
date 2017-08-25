@@ -177,6 +177,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     entries.add(new PieEntry(othersEntry, mContext.getResources().getString(R.string.title_others)));
                 }
 
+                if(treasuryEntry == 0 && fixedEntry == 0 && stockEntry == 0 && fiiEntry == 0 && currencyEntry == 0 && othersEntry == 0){
+                    chartHolder.pieChart.setVisibility(View.GONE);
+                } else {
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
+                }
+
                 // Animation on show
                 chartHolder.pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
                 chartHolder.pieChart.setDrawHoleEnabled(true);
@@ -196,7 +202,9 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 PieData data = new PieData(dataSet);
                 chartHolder.pieChart.setData(data);
-                data.setValueTextSize(12f);
+
+                data.setValueTextSize(10f);
+
                 data.setValueTextColor(Color.BLACK);
                 // Set as Percent
                 data.setValueFormatter(new MyPercentFormatter());
@@ -206,7 +214,6 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 chartHolder.pieChart.setDescription(null);
                 chartHolder.pieChart.invalidate(); // refresh
 
-                Log.d(LOG_TAG, "Pie Chart Drawn");
         }
     }
 
@@ -271,14 +278,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            Log.d("VAL SELECTED",
-                    "Value: " + e.getY() + ", Label: " + pe.getLabel());
             pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
         }
 
         @Override
         public void onNothingSelected() {
-            Log.d("PieChart", "nothing selected");
+
         }
 
         private SpannableString generateCenterSpannableText(String text) {
@@ -286,7 +291,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             SpannableString s = new SpannableString(text);
             s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length(), 0);
             s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, s.length(), 0);
-            s.setSpan(new RelativeSizeSpan(2f), 0, s.length(), 0);
+            s.setSpan(new RelativeSizeSpan(1.4f), 0, s.length(), 0);
             s.setSpan(new StyleSpan(Typeface.ITALIC), s.length(), s.length(), 0);
             s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length(), s.length(), 0);
             return s;

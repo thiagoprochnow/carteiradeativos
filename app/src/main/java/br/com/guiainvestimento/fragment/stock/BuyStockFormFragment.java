@@ -115,7 +115,6 @@ public class BuyStockFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedStockTransactionUri != null) {
-                Log.d(LOG_TAG, "Added stock transaction " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
                 boolean updateStockData = updateStockData(inputSymbol, Constants

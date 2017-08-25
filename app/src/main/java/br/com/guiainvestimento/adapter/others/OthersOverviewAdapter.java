@@ -182,7 +182,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                     PieData data = new PieData(dataSet);
                     chartHolder.pieChart.setData(data);
-                    data.setValueTextSize(12f);
+                    data.setValueTextSize(10f);
                     data.setValueTextColor(Color.BLACK);
                     // Set as Percent
                     data.setValueFormatter(new MyPercentFormatter());
@@ -191,10 +191,9 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     // Hide Description
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
-
-                    Log.d(LOG_TAG, "Pie Chart Drawn");
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
-                    Log.d(LOG_TAG, "No OthersData found for pieChart");
+                    chartHolder.pieChart.setVisibility(View.GONE);
                 }
         }
 
@@ -261,14 +260,12 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            Log.d("VAL SELECTED",
-                    "Value: " + e.getY() + ", Label: " + pe.getLabel());
             pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
         }
 
         @Override
         public void onNothingSelected() {
-            Log.d("PieChart", "nothing selected");
+
         }
 
         private SpannableString generateCenterSpannableText(String text) {
@@ -276,7 +273,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             SpannableString s = new SpannableString(text);
             s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length(), 0);
             s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, s.length(), 0);
-            s.setSpan(new RelativeSizeSpan(2f), 0, s.length(), 0);
+            s.setSpan(new RelativeSizeSpan(1.4f), 0, s.length(), 0);
             s.setSpan(new StyleSpan(Typeface.ITALIC), s.length(), s.length(), 0);
             s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length(), s.length(), 0);
             return s;

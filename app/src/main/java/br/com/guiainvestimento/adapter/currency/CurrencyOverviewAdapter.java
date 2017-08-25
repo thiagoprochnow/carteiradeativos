@@ -159,7 +159,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                     PieData data = new PieData(dataSet);
                     chartHolder.pieChart.setData(data);
-                    data.setValueTextSize(12f);
+                    data.setValueTextSize(10f);
                     data.setValueTextColor(Color.BLACK);
                     // Set as Percent
                     data.setValueFormatter(new MyPercentFormatter());
@@ -168,10 +168,9 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     // Hide Description
                     chartHolder.pieChart.setDescription(null);
                     chartHolder.pieChart.invalidate(); // refresh
-
-                    Log.d(LOG_TAG, "Pie Chart Drawn");
+                    chartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
-                    Log.d(LOG_TAG, "No CurrencyData found for pieChart");
+                    chartHolder.pieChart.setVisibility(View.GONE);
                 }
         }
 
@@ -241,7 +240,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             SpannableString s = new SpannableString(text);
             s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length(), 0);
             s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, s.length(), 0);
-            s.setSpan(new RelativeSizeSpan(2f), 0, s.length(), 0);
+            s.setSpan(new RelativeSizeSpan(1.4f), 0, s.length(), 0);
             s.setSpan(new StyleSpan(Typeface.ITALIC), s.length(), s.length(), 0);
             s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length(), s.length(), 0);
             return s;

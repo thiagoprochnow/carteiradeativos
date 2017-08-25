@@ -55,29 +55,37 @@
             android:layout_marginBottom="5dp">
 
             <LinearLayout
-                android:layout_width="90dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/income_overview_bought_label" />
+                    android:text="@string/income_overview_bought_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/income_overview_gross_label" />
+                    android:text="@string/income_overview_gross_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/income_overview_tax_label" />
+                    android:text="@string/income_overview_tax_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/income_overview_net_label" />
+                    android:text="@string/income_overview_net_label"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

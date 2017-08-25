@@ -78,7 +78,6 @@ public class GroupingFormFragment extends BaseFormFragment {
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
-            Log.d(LOG_TAG, "InputDate timestamp: " + timestamp);
 
             ContentValues stockCV = new ContentValues();
 
@@ -95,7 +94,6 @@ public class GroupingFormFragment extends BaseFormFragment {
 
             // If error occurs to add, shows error message
             if (insertedStockTransactionUri != null) {
-                Log.d(LOG_TAG, "Added stock grouping " + inputSymbol);
                 // Updates each stock table with new value: Income, Data, StockPortfolio, CompletePortfolio
                 updateStockIncomes(inputSymbol, timestamp);
                 boolean updateStockData = updateStockData(inputSymbol, Constants

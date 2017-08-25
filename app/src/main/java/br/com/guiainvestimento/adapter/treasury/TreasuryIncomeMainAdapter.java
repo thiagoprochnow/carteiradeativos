@@ -140,7 +140,6 @@ public class TreasuryIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Treasury Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);

@@ -78,22 +78,22 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_current" />
+                    android:text="@string/portfolio_current_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_sold_fixed" />
+                    android:text="@string/portfolio_sold_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_buy_fixed" />
+                    android:text="@string/portfolio_bought_label" />
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_gain" />
+                    android:text="@string/portfolio_total_gain_label" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

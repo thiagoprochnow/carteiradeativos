@@ -53,12 +53,10 @@ public class IncomeDetailsActivity extends AppCompatActivity {
                     replaceFragment(new OthersIncomeDetailsFragment());
                     break;
                 default:
-                    Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");
                     finish();
                     break;
             }
         } else{
-            Log.d(LOG_TAG, "Could not find EXTRA_INCOME_TYPE. Finishing activity...");
         }
     }
 

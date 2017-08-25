@@ -29,7 +29,6 @@ public class FixedTabFragment extends BaseFragment {
 
         view = inflater.inflate(R.layout.fragment_fixed_tab, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.fixedViewPager);
-        Log.d(LOG_TAG, "FixedTabAdapter");
         viewPager.setAdapter(new FixedTabAdapter(mContext, getChildFragmentManager()));
 
 

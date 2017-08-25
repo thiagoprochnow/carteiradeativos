@@ -48,7 +48,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             treasuryIncome = treasuryPortfolioCursor.getDouble(4);
             treasuryGain = treasuryPortfolioCursor.getDouble(5);
         } else {
-            Log.d(LOG_TAG, "Treasury portfolio not found");
         }
 
         // Fixed
@@ -70,7 +69,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             fixedIncome = fixedPortfolioCursor.getDouble(4);
             fixedGain = fixedPortfolioCursor.getDouble(5);
         } else {
-            Log.d(LOG_TAG, "Fixed portfolio not found");
         }
 
         // Others
@@ -92,7 +90,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             othersIncome = othersPortfolioCursor.getDouble(4);
             othersGain = othersPortfolioCursor.getDouble(5);
         } else {
-            Log.d(LOG_TAG, "Others portfolio not found");
         }
 
         // Stock
@@ -114,7 +111,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             stockIncome = stockPortfolioCursor.getDouble(4);
             stockGain = stockPortfolioCursor.getDouble(5);
         } else {
-            Log.d(LOG_TAG, "Stock portfolio not found");
         }
 
         // Fii
@@ -136,7 +132,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             fiiIncome = fiiPortfolioCursor.getDouble(4);
             fiiGain = fiiPortfolioCursor.getDouble(5);
         } else {
-            Log.d(LOG_TAG, "Fii portfolio not found");
         }
 
         // Currency
@@ -156,7 +151,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
             currencyVariation = currencyPortfolioCursor.getDouble(3);
             currencyGain = currencyPortfolioCursor.getDouble(4);
         } else {
-            Log.d(LOG_TAG, "Currency portfolio not found");
         }
 
         // Sums all portfolio to get main portfolio

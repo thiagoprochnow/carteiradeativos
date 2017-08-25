@@ -69,7 +69,6 @@ public abstract class BaseFragment extends Fragment {
         // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
@@ -99,7 +98,6 @@ public abstract class BaseFragment extends Fragment {
                 cursor.moveToFirst();
                 symbol = cursor.getString(0);
             } else {
-                Log.d(LOG_TAG, "No symbol for for that income");
             }
         }
         String[] selectionArguments = {id, symbol};
@@ -107,7 +105,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedResult = mContext.getContentResolver().delete(
                 PortfolioContract.StockIncome.URI,
                 selection, selectionArguments);
-        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update stock data for that symbol
             boolean updateStockData = updateStockData(symbol, -1);
@@ -183,9 +180,7 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.SoldStockData.URI, selectionSoldData,
                     selectionArgumentsSoldData);
             if (rowsDeleted == 1){
-                Log.d(LOG_TAG, "SoldStockData deleted successfully");
             } else {
-                Log.d(LOG_TAG, "Problem deleting SoldStockData");
             }
         }
 
@@ -207,7 +202,6 @@ public abstract class BaseFragment extends Fragment {
         // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.FiiIncome
                 .makeUriForFiiIncome(symbol), null, null);
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
             Toast.makeText(mContext, getString(R.string.toast_fii_successfully_removed, symbol)
@@ -232,7 +226,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldCurrencyData
                 .makeUriForSoldCurrencyData(symbol), null, null);
 
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + "Deleted sold data" + deletedSoldData);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
             Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, symbol)
@@ -254,7 +247,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedData = getActivity().getContentResolver().delete(PortfolioContract.FixedData
                 .makeUriForFixedData(symbol), null, null);
 
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
             Toast.makeText(mContext, getString(R.string.toast_fixed_successfully_removed, symbol)
@@ -282,7 +274,6 @@ public abstract class BaseFragment extends Fragment {
         // Which is not an error
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.TreasuryIncome
                 .makeUriForTreasuryIncome(symbol), null, null);
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData + " DeletedIncome: " + deletedIncome);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
             Toast.makeText(mContext, getString(R.string.toast_treasury_successfully_removed, symbol)
@@ -304,7 +295,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedData = getActivity().getContentResolver().delete(PortfolioContract.OthersData
                 .makeUriForOthersData(symbol), null, null);
 
-        Log.d(LOG_TAG, "DeletedTransaction: " + deletedTransaction + " DeletedData: " + deletedData);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
             Toast.makeText(mContext, getString(R.string.toast_others_successfully_removed, symbol)
@@ -334,7 +324,6 @@ public abstract class BaseFragment extends Fragment {
                 cursor.moveToFirst();
                 symbol = cursor.getString(0);
             } else {
-                Log.d(LOG_TAG, "No symbol for for that income");
             }
         }
         String[] selectionArguments = {id, symbol};
@@ -342,7 +331,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedResult = mContext.getContentResolver().delete(
                 PortfolioContract.FiiIncome.URI,
                 selection, selectionArguments);
-        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update fii data for that symbol
             boolean updateFiiData = updateFiiData(symbol, -1);
@@ -369,7 +357,6 @@ public abstract class BaseFragment extends Fragment {
                 cursor.moveToFirst();
                 symbol = cursor.getString(0);
             } else {
-                Log.d(LOG_TAG, "No symbol for for that income");
             }
         }
         String[] selectionArguments = {id, symbol};
@@ -377,7 +364,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedResult = mContext.getContentResolver().delete(
                 PortfolioContract.TreasuryIncome.URI,
                 selection, selectionArguments);
-        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update treasury data for that symbol
             boolean updateTreasuryData = updateTreasuryData(symbol, -1);
@@ -404,7 +390,6 @@ public abstract class BaseFragment extends Fragment {
                 cursor.moveToFirst();
                 symbol = cursor.getString(0);
             } else {
-                Log.d(LOG_TAG, "No symbol for for that income");
             }
         }
         String[] selectionArguments = {id, symbol};
@@ -412,7 +397,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedResult = mContext.getContentResolver().delete(
                 PortfolioContract.OthersIncome.URI,
                 selection, selectionArguments);
-        Log.d(LOG_TAG, "ID: " + id + " Symbol: " + symbol);
         if (deletedResult > 0){
             // Update others data for that symbol
             boolean updateOthersData = updateOthersData(symbol, -1);
@@ -488,9 +472,7 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.SoldFiiData.URI, selectionSoldData,
                     selectionArgumentsSoldData);
             if (rowsDeleted == 1){
-                Log.d(LOG_TAG, "SoldFiiData deleted successfully");
             } else {
-                Log.d(LOG_TAG, "Problem deleting SoldFiiData");
             }
         }
 
@@ -514,7 +496,6 @@ public abstract class BaseFragment extends Fragment {
             queryCursor.moveToFirst();
             timestamp = queryCursor.getLong(0);
         } else {
-            Log.d(LOG_TAG, "No Transaction found to delete");
             return false;
         }
 
@@ -563,9 +544,7 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.SoldCurrencyData.URI, selectionSoldData,
                     selectionArgumentsSoldData);
             if (rowsDeleted == 1){
-                Log.d(LOG_TAG, "SoldCurrencyData deleted successfully");
             } else {
-                Log.d(LOG_TAG, "Problem deleting SoldCurrencyData");
             }
         }
 
@@ -695,9 +674,7 @@ public abstract class BaseFragment extends Fragment {
                     PortfolioContract.SoldTreasuryData.URI, selectionSoldData,
                     selectionArgumentsSoldData);
             if (rowsDeleted == 1){
-                Log.d(LOG_TAG, "SoldTreasuryData deleted successfully");
             } else {
-                Log.d(LOG_TAG, "Problem deleting SoldTreasuryData");
             }
         }
 
@@ -763,7 +740,6 @@ public abstract class BaseFragment extends Fragment {
 
     // Transform a date value of dd/MM/yyyy into a timestamp value
     public Long DateToTimestamp(String inputDate){
-        Log.d(LOG_TAG, "InputDate String: " + inputDate);
         DateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
         Date date = new Date();
         try{
@@ -1125,7 +1101,6 @@ public abstract class BaseFragment extends Fragment {
                 return false;
             }
         } catch (NumberFormatException ex) {
-            Log.d(LOG_TAG, "Something wrong while parsing number");
             ex.printStackTrace();
             return false;
         }
@@ -1239,12 +1214,10 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
-                        Log.d(LOG_TAG, "getStockQuantity currentType Unknown");
                 }
             } while (queryCursor.moveToNext());
             return quantityTotal;
         } else{
-            Log.d(LOG_TAG, "");
             return 0;
         }
     }
@@ -1296,13 +1269,10 @@ public abstract class BaseFragment extends Fragment {
                         incomeCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateStockIncomes successfully updated");
                 } else {
-                    Log.d(LOG_TAG, "updateStockIncomes failed update");
                 }
             } while (queryCursor.moveToNext());
         } else {
-            Log.d(LOG_TAG, "No incomes affected by buy/sell stock");
         }
     }
 
@@ -1347,11 +1317,11 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
@@ -1369,7 +1339,6 @@ public abstract class BaseFragment extends Fragment {
                         mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             // Adds the bonification after the buyValue is totally calculated
@@ -1397,10 +1366,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedStockDataUri != null) {
-                    Log.d(LOG_TAG, "Created stock data");
                     // Update Stock Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating stock data");
                     return false;
                 }
             } else {
@@ -1475,17 +1442,14 @@ public abstract class BaseFragment extends Fragment {
                     stockDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Stock Portfolio
                 // Send broadcast so StockReceiver can update the rest
                 updateSoldStockData(symbol, soldBuyValue);
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateStockData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No StockTransaction found");
             return false;
         }
     }
@@ -1518,12 +1482,8 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         soldTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                         sellMediumPrice = soldTotal/quantityTotal;
-                        Log.d(LOG_TAG, "SELL: QuantityTotal: " + quantityTotal);
-                        Log.d(LOG_TAG, "SELL: SoldTotal: " + quantityTotal);
-                        Log.d(LOG_TAG, "SELL: soldBuyValue: " + soldBuyValue);
                         break;
                     default:
-                        Log.d(LOG_TAG, "Do nothing");
                 }
             } while (STQueryCursor.moveToNext());
 
@@ -1550,10 +1510,8 @@ public abstract class BaseFragment extends Fragment {
 
                     // If error occurs to add, shows error message
                     if (insertedStockDataUri != null) {
-                        Log.d(LOG_TAG, "Created stock sold data");
                         // Update Stock Portfolio
                     } else {
-                        Log.d(LOG_TAG, "Error creating sold stock data");
                         return false;
                     }
                 }
@@ -1586,20 +1544,16 @@ public abstract class BaseFragment extends Fragment {
                         stockDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    Log.d(LOG_TAG, "updateSoldStockData successfully updated");
                     // Update Stock Portfolio
                     // Send broadcast so StockReceiver can update the rest
                     mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
                     return true;
                 } else {
-                    Log.d(LOG_TAG, "updateSoldStockData failed update");
                     return false;
                 }
             }
-            Log.d(LOG_TAG, "No sold stock yet");
             return true;
         } else{
-            Log.d(LOG_TAG, "No StockTransaction found");
             return false;
         }
     }
@@ -1644,16 +1598,15 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             ContentValues currencyDataCV = new ContentValues();
@@ -1678,10 +1631,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedCurrencyDataUri != null) {
-                    Log.d(LOG_TAG, "Created Currency data");
                     // Update Currency Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating Currency data");
                     return false;
                 }
             } else {
@@ -1736,17 +1687,14 @@ public abstract class BaseFragment extends Fragment {
                     currencyDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                Log.d(LOG_TAG, "updateCurrencyData successfully updated");
                 // Update Currency Portfolio
                 // Send broadcast so CurrencyReceiver can update the rest
                 updateSoldCurrencyData(symbol, soldBuyValue);
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateCurrencyData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No CurrencyTransaction found");
             return false;
         }
     }
@@ -1781,7 +1729,6 @@ public abstract class BaseFragment extends Fragment {
                         sellMediumPrice = soldTotal/quantityTotal;
                         break;
                     default:
-                        Log.d(LOG_TAG, "Do nothing");
                 }
             } while (STQueryCursor.moveToNext());
 
@@ -1808,10 +1755,8 @@ public abstract class BaseFragment extends Fragment {
 
                     // If error occurs to add, shows error message
                     if (insertedCurrencyDataUri != null) {
-                        Log.d(LOG_TAG, "Created Currency sold data");
                         // Update Currency Portfolio
                     } else {
-                        Log.d(LOG_TAG, "Error creating sold Currency data");
                         return false;
                     }
                 }
@@ -1844,20 +1789,16 @@ public abstract class BaseFragment extends Fragment {
                         currencyDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    Log.d(LOG_TAG, "updateSoldCurrencyData successfully updated");
                     // Update Currency Portfolio
                     // Send broadcast so CurrencyReceiver can update the rest
                     mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                     return true;
                 } else {
-                    Log.d(LOG_TAG, "updateSoldCurrencyData failed update");
                     return false;
                 }
             }
-            Log.d(LOG_TAG, "No sold currency yet");
             return true;
         } else{
-            Log.d(LOG_TAG, "No CurrencyTransaction found");
             return false;
         }
     }
@@ -1902,16 +1843,15 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             ContentValues fiiDataCV = new ContentValues();
@@ -1936,10 +1876,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedFiiDataUri != null) {
-                    Log.d(LOG_TAG, "Created fii data");
                     // Update Fii Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating fii data");
                     return false;
                 }
             } else {
@@ -2013,17 +1951,14 @@ public abstract class BaseFragment extends Fragment {
                     fiiDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Fii Portfolio
                 // Send broadcast so FiiReceiver can update the rest
                 updateSoldFiiData(symbol, soldBuyValue);
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateFiiData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No FiiTransaction found");
             return false;
         }
     }
@@ -2058,7 +1993,6 @@ public abstract class BaseFragment extends Fragment {
                         sellMediumPrice = soldTotal/quantityTotal;
                         break;
                     default:
-                        Log.d(LOG_TAG, "Do nothing");
                 }
             } while (STQueryCursor.moveToNext());
 
@@ -2085,10 +2019,8 @@ public abstract class BaseFragment extends Fragment {
 
                     // If error occurs to add, shows error message
                     if (insertedFiiDataUri != null) {
-                        Log.d(LOG_TAG, "Created fii sold data");
                         // Update Fii Portfolio
                     } else {
-                        Log.d(LOG_TAG, "Error creating sold fii data");
                         return false;
                     }
                 }
@@ -2121,20 +2053,16 @@ public abstract class BaseFragment extends Fragment {
                         fiiDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    Log.d(LOG_TAG, "updateSoldFiiData successfully updated");
                     // Update Fii Portfolio
                     // Send broadcast so FiiReceiver can update the rest
                     mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
                     return true;
                 } else {
-                    Log.d(LOG_TAG, "updateSoldFiiData failed update");
                     return false;
                 }
             }
-            Log.d(LOG_TAG, "No sold fii yet");
             return true;
         } else{
-            Log.d(LOG_TAG, "No FiiTransaction found");
             return false;
         }
     }
@@ -2184,13 +2112,10 @@ public abstract class BaseFragment extends Fragment {
                         incomeCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateFiiIncomes successfully updated");
                 } else {
-                    Log.d(LOG_TAG, "updateFiiIncomes failed update");
                 }
             } while (queryCursor.moveToNext());
         } else {
-            Log.d(LOG_TAG, "No incomes affected by buy/sell fii");
         }
     }
 
@@ -2223,12 +2148,10 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
-                        Log.d(LOG_TAG, "getFiiQuantity currentType Unknown");
                 }
             } while (queryCursor.moveToNext());
             return quantityTotal;
         } else{
-            Log.d(LOG_TAG, "");
             return 0;
         }
     }
@@ -2272,7 +2195,6 @@ public abstract class BaseFragment extends Fragment {
                         lastSell = STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             ContentValues fixedDataCV = new ContentValues();
@@ -2299,10 +2221,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedFixedDataUri != null) {
-                    Log.d(LOG_TAG, "Created fixed income data");
                     // Update Fixed income Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating fixed income data");
                     return false;
                 }
             } else {
@@ -2354,14 +2274,11 @@ public abstract class BaseFragment extends Fragment {
                 // Send broadcast so FixedReceiver can update the rest
                 // Send to update Fixed Income Portfolio and show overview
                 mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
-                Log.d(LOG_TAG, "updateStockData successfully updated");
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateFixedData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No FixedTransaction found");
             return false;
         }
     }
@@ -2406,16 +2323,15 @@ public abstract class BaseFragment extends Fragment {
                         buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         quantityTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
-                        mediumPrice = buyTotal/buyQuantity;
+                        mediumPrice = buyValue/quantityTotal;
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
-                        buyValue = quantityTotal*mediumPrice;
+                        buyValue -= STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY))*mediumPrice;
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             ContentValues treasuryDataCV = new ContentValues();
@@ -2444,10 +2360,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedTreasuryDataUri != null) {
-                    Log.d(LOG_TAG, "Created treasury data");
                     // Update Treasury Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating treasury data");
                     return false;
                 }
             } else {
@@ -2522,7 +2436,6 @@ public abstract class BaseFragment extends Fragment {
                     treasuryBulkCV, null, null);
             // Log update success/fail result
             if (updatedRows > 0 && updatedRows2 > 0){
-                Log.d(LOG_TAG, "updateStockData successfully updated");
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
                 // Send to update Treasury Income Portfolio and show overview
@@ -2530,11 +2443,9 @@ public abstract class BaseFragment extends Fragment {
                 updateSoldTreasuryData(symbol, soldBuyValue);
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateTreasuryData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No TreasuryTransaction found");
             return false;
         }
     }
@@ -2569,7 +2480,6 @@ public abstract class BaseFragment extends Fragment {
                         sellMediumPrice = soldTotal/quantityTotal;
                         break;
                     default:
-                        Log.d(LOG_TAG, "Do nothing");
                 }
             } while (STQueryCursor.moveToNext());
 
@@ -2596,10 +2506,8 @@ public abstract class BaseFragment extends Fragment {
 
                     // If error occurs to add, shows error message
                     if (insertedTreasuryDataUri != null) {
-                        Log.d(LOG_TAG, "Created treasury sold data");
                         // Update Treasury Portfolio
                     } else {
-                        Log.d(LOG_TAG, "Error creating sold treasury data");
                         return false;
                     }
                 }
@@ -2632,20 +2540,16 @@ public abstract class BaseFragment extends Fragment {
                         treasuryDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    Log.d(LOG_TAG, "updateSoldTreasuryData successfully updated");
                     // Update Treasury Portfolio
                     // Send broadcast so TreasuryReceiver can update the rest
                     mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                     return true;
                 } else {
-                    Log.d(LOG_TAG, "updateSoldTreasuryData failed update");
                     return false;
                 }
             }
-            Log.d(LOG_TAG, "No sold treasury yet");
             return true;
         } else{
-            Log.d(LOG_TAG, "No TreasuryTransaction found");
             return false;
         }
     }
@@ -2690,13 +2594,10 @@ public abstract class BaseFragment extends Fragment {
                         incomeCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0){
-                    Log.d(LOG_TAG, "updateTreasuryIncomes successfully updated");
                 } else {
-                    Log.d(LOG_TAG, "updateTreasuryIncomes failed update");
                 }
             } while (queryCursor.moveToNext());
         } else {
-            Log.d(LOG_TAG, "No incomes affected by buy/sell treasury");
         }
     }
 
@@ -2729,12 +2630,10 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal -= queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.TreasuryTransaction.COLUMN_QUANTITY));
                         break;
                     default:
-                        Log.d(LOG_TAG, "getTreasuryQuantity currentType Unknown");
                 }
             } while (queryCursor.moveToNext());
             return quantityTotal;
         } else{
-            Log.d(LOG_TAG, "");
             return 0;
         }
     }
@@ -2780,7 +2679,6 @@ public abstract class BaseFragment extends Fragment {
                         lastSell = STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
                         break;
                     default:
-                        Log.d(LOG_TAG, "currentType Unknown");
                 }
             } while (STQueryCursor.moveToNext());
             ContentValues othersDataCV = new ContentValues();
@@ -2807,10 +2705,8 @@ public abstract class BaseFragment extends Fragment {
 
                 // If error occurs to add, shows error message
                 if (insertedOthersDataUri != null) {
-                    Log.d(LOG_TAG, "Created others income data");
                     // Update others income Portfolio
                 } else {
-                    Log.d(LOG_TAG, "Error creating others income data");
                     return false;
                 }
             } else {
@@ -2883,14 +2779,11 @@ public abstract class BaseFragment extends Fragment {
                 // Send broadcast so OthersReceiver can update the rest
                 // Send to update others Income Portfolio and show overview
                 mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
-                Log.d(LOG_TAG, "updateStockData successfully updated");
                 return true;
             } else {
-                Log.d(LOG_TAG, "updateOthersData failed update");
                 return false;
             }
         } else{
-            Log.d(LOG_TAG, "No OthersTransaction found");
             return false;
         }
     }

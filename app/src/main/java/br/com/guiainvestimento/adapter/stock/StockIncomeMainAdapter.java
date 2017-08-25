@@ -140,7 +140,6 @@ public class StockIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         overviewViewHolder.taxIncomePercent.setText("(" + String.format("%.2f",taxPercent)+"%)");
                         overviewViewHolder.netIncomePercent.setText("(" + String.format("%.2f",netPercent)+"%)");
                     } else{
-                        Log.d(LOG_TAG, "(Income) No Stock Data found");
                     }
                 } else {
                     overviewViewHolder.itemView.setVisibility(View.GONE);
@@ -279,16 +278,12 @@ public class StockIncomeMainAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public String getIncomeType(int incomeTypeId){
         switch (incomeTypeId){
             case Constants.IncomeType.INVALID:
-                Log.d(LOG_TAG, "Invalid IncomeType");
                 return "invalid";
             case Constants.IncomeType.DIVIDEND:
-                Log.d(LOG_TAG, "Dividend IncomeType");
                 return mContext.getResources().getString(R.string.dividend_income_type);
             case Constants.IncomeType.JCP:
-                Log.d(LOG_TAG, "JCP IncomeType");
                 return mContext.getResources().getString(R.string.jcp_income_type);
             default:
-                Log.d(LOG_TAG, "Default IncomeType");
                 return mContext.getResources().getString(R.string.dividend_income_type);
         }
     }

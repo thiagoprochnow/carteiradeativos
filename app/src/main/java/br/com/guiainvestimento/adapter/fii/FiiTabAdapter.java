@@ -42,17 +42,13 @@ public class FiiTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading FiiOverviewFragment()");
             return new FiiOverviewFragment();
         }
         else if (position == 1){
-            Log.d(LOG_TAG, "Loading FiiDataFragment()");
             return new FiiDataFragment();
         } else if (position == 2) {
-            Log.d(LOG_TAG, "Loading SoldFiiDataFragment()");
             return new SoldFiiDataFragment();
         } else {
-            Log.d(LOG_TAG, "Loading FiiIncomesMainFragment()");
             return new FiiIncomesMainFragment();
         }
     }

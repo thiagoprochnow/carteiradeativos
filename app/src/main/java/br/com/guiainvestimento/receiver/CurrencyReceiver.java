@@ -104,12 +104,8 @@ public class CurrencyReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.CurrencyData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            if (updatedRows > 0){
-                // Send Broadcast to update other values on Portfolio
-                mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
-            } else {
-                Log.d(LOG_TAG, "Rows could not be updated");
-            }
+            // Send Broadcast to update other values on Portfolio
+            mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

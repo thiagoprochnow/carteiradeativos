@@ -34,10 +34,8 @@ public class TreasuryDetailsTabAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position){
         if (position == 0){
-            Log.d(LOG_TAG, "Loading TreasuryDetailsFragment()");
             return new TreasuryDetailsFragment();
         } else {
-            Log.d(LOG_TAG, "Loading TreasuryIncomesFragment()");
             return new TreasuryIncomesFragment();
         }
     }

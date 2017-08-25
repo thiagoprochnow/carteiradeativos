@@ -267,7 +267,7 @@
     <string name="others_income_type">Income</string>
     <string name="treasury_income_type">Semiannual Coupon</string>
     <string name="portfolio_income_type">Income</string>
-    <string name="income_overview_bought_label">Bought</string>
+    <string name="income_overview_bought_label">Total Bought</string>
     <string name="income_overview_net_label">Net Income</string>
     <string name="income_overview_tax_label">Tax</string>
     <string name="income_overview_gross_label">Gross Income</string>
@@ -280,9 +280,9 @@
     <string name="stock_bonification">Bonification</string>
     <string name="stock_split">Split</string>
     <string name="stock_grouping">Grouping</string>
-    <string name="details_current">Current</string>
-    <string name="details_sold">Medium Sell</string>
-    <string name="details_medium_price">Medium Buy</string>
+    <string name="details_current">Current Price</string>
+    <string name="details_sold">Medium Sell Price</string>
+    <string name="details_medium_price">Medium Buy Price</string>
     <string name="details_sold_fixed">Sell</string>
     <string name="details_buy_fixed">Buy</string>
     <string name="details_sold_others">Sell</string>
