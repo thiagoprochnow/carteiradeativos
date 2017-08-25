@@ -65,6 +65,7 @@
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_others_code">Nomenclatura do investimento errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_treasury_code">Nomenclatura do papel errada. Por favor digite apenas letras e números.</string>
+    <string name="wrong_currency_code">Código de moeda inválido</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
