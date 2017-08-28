@@ -358,7 +358,7 @@
     <string name="buy_fii_button">Comprar</string>
     <string name="cancel_fii_button">Cancelar</string>
     <string name="fii_symbol">Código do Fundo Imobiliario</string>
-    <string name="fii_symbol_hint">Ex: HTMX11B</string>
+    <string name="fii_symbol_hint">Ex: HTMX11</string>
 
     <!-- Add fixed income Form Fragment -->
     <string name="add_fixed_title">Compra de Renda Fixa</string>

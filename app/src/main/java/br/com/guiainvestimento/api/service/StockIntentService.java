@@ -80,12 +80,16 @@ public class StockIntentService extends IntentService {
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
             if(symbols.length == 1) {
-                Call<ResponseStock> call = service.getStock(query);
-                Response<ResponseStock> response = call.execute();
-                ResponseStock responseGetStock = response.body();
-                if (!response.isSuccessful()){
-                    Log.d(LOG_TAG,"Não sucesso");
-                }
+                Call<ResponseStock> call;
+                Response<ResponseStock> response;
+                ResponseStock responseGetStock;
+                int count = 0;
+                do {
+                    call = service.getStock(query);
+                    response = call.execute();
+                    responseGetStock = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
                 if(response.isSuccessful() && responseGetStock.getStockQuotes() != null &&
                         responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
 
@@ -113,9 +117,17 @@ public class StockIntentService extends IntentService {
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }else{
-                Call<ResponseStocks> call = service.getStocks(query);
-                Response<ResponseStocks> response = call.execute();
-                ResponseStocks responseGetStocks = response.body();
+                Call<ResponseStocks> call;
+                Response<ResponseStocks> response;
+                ResponseStocks responseGetStocks;
+                int count = 0;
+                do {
+                    call = service.getStocks(query);
+                    response = call.execute();
+                    responseGetStocks = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
+
                 if(response.isSuccessful() && responseGetStocks.getStockQuotes() != null) {
                     String tableSymbol = "";
                     ContentValues stockDataCV = new ContentValues();

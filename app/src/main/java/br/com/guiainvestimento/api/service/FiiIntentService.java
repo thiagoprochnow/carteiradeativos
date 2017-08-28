@@ -81,9 +81,18 @@ public class FiiIntentService extends IntentService {
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
             if(symbols.length == 1) {
-                Call<ResponseFii> call = service.getFii(query);
-                Response<ResponseFii> response = call.execute();
-                ResponseFii responseGetFii = response.body();
+
+                Call<ResponseFii> call;
+                Response<ResponseFii> response;
+                ResponseFii responseGetFii;
+                int count = 0;
+
+                do {
+                    call = service.getFii(query);
+                    response = call.execute();
+                    responseGetFii = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
 
                 if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null &&
                         responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
@@ -112,9 +121,17 @@ public class FiiIntentService extends IntentService {
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 }
             }else{
-                Call<ResponseFiis> call = service.getFiis(query);
-                Response<ResponseFiis> response = call.execute();
-                ResponseFiis responseGetFiis = response.body();
+                Call<ResponseFiis> call;
+                Response<ResponseFiis> response;
+                ResponseFiis responseGetFiis;
+                int count = 0;
+
+                do {
+                    call = service.getFiis(query);
+                    response = call.execute();
+                    responseGetFiis = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
 
                 if(response.isSuccessful() && responseGetFiis.getFiiQuotes() != null) {
                     String tableSymbol = "";

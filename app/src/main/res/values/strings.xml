@@ -357,7 +357,7 @@
     <string name="buy_fii_button">Buy</string>
     <string name="cancel_fii_button">Cancel</string>
     <string name="fii_symbol">Real State Fund Code</string>
-    <string name="fii_symbol_hint">Ex: HTMX11B</string>
+    <string name="fii_symbol_hint">Ex: HTMX11</string>
 
     <!-- Add fixed income Form Fragment -->
     <string name="add_fixed_title">Buy Fixed Income</string>

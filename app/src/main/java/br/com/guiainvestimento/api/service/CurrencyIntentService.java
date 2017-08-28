@@ -72,9 +72,17 @@ public class CurrencyIntentService extends IntentService {
             String query = "select * from yahoo.finance.xchange where pair in ("
                     + buildSymbolQuery(symbols) + ")";
 
-            Call<ResponseCurrency> call = service.getCurrency(query);
-            Response<ResponseCurrency> response = call.execute();
-            ResponseCurrency responseGetRate = response.body();
+            Call<ResponseCurrency> call;
+            Response<ResponseCurrency> response;
+            ResponseCurrency responseGetRate;
+            int count = 0;
+
+            do {
+                call = service.getCurrency(query);
+                response = call.execute();
+                responseGetRate = response.body();
+                count++;
+            } while (response.code() == 400 && count < 20);
             if(response.isSuccessful() && responseGetRate.getDividendQuotes() != null) {
                 for(Currency currency : responseGetRate.getDividendQuotes()){
 

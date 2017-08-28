@@ -15,7 +15,7 @@ public class FiiService {
         for (int i = 0; i < 1; i++) {
             // For more information on each stock variable, check the Stock.java class
             Fii fii = new Fii();
-            fii.setSymbol("HTMX11B");
+            fii.setSymbol("HTMX11");
             fii.setFiiQuantity(100);
             fii.setBoughtPrice(32.45);
             fii.setBoughtTotal(fii.getFiiQuantity() * fii.getBoughtPrice());
