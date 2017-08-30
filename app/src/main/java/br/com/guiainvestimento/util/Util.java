@@ -1,5 +1,12 @@
 package br.com.guiainvestimento.util;
 
+import android.content.Context;
+
+import java.util.Arrays;
+import java.util.List;
+
+import br.com.guiainvestimento.R;
+
 /**
  * Util class
  */
@@ -29,5 +36,17 @@ public class Util {
      */
     public static boolean isInRange(int min, int max, float input) {
         return max > min ? input >= min && input <= max : input >= max && input <= min;
+    }
+
+    // Transform from currency symbol to currency label USD -> Dolar
+    public static String convertCurrencySymbol(Context context, String symbol){
+        List<String> myArrayList = Arrays.asList(context.getResources().getStringArray(R.array.currency_array));
+        if (symbol.equals("USD")){
+            return myArrayList.get(0);
+        } else if (symbol.equals("EUR")){
+            return myArrayList.get(1);
+        } else{
+            return myArrayList.get(2);
+        }
     }
 }

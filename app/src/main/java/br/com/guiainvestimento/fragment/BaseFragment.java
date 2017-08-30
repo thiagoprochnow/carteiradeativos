@@ -32,6 +32,7 @@ import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.util.Util;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -225,14 +226,14 @@ public abstract class BaseFragment extends Fragment {
 
         int deletedSoldData = getActivity().getContentResolver().delete(PortfolioContract.SoldCurrencyData
                 .makeUriForSoldCurrencyData(symbol), null, null);
-
+        String label = Util.convertCurrencySymbol(mContext, symbol);
         if (deletedData > 0) {
             mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
-            Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, symbol)
+            Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, label)
                     , Toast.LENGTH_SHORT).show();
             return true;
         } else {
-            Toast.makeText(mContext, getString(R.string.toast_currency_not_removed, symbol), Toast
+            Toast.makeText(mContext, getString(R.string.toast_currency_not_removed, label), Toast
                     .LENGTH_SHORT).show();
             return false;
         }

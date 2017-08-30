@@ -19,6 +19,7 @@ import java.util.Locale;
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -67,9 +68,11 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
             holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+        String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldCurrencyData.
-                COLUMN_SYMBOL)));
+                COLUMN_SYMBOL));
+        String currencyLabel = Util.convertCurrencySymbol(mContext, symbol);
+        holder.symbol.setText(currencyLabel);
         holder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));

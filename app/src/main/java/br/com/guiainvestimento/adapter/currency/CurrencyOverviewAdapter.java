@@ -34,6 +34,7 @@ import java.util.Locale;
 
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.util.Util;
 import br.com.guiainvestimento.utils.MyPercentFormatter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -124,12 +125,13 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     do{
                         float currentPercent = dataCursor.getFloat(0);
                         String symbol = dataCursor.getString(1);
+                        String label = Util.convertCurrencySymbol(mContext, symbol);
                         // Check if already reach others field
                         // Show each pie data order in asc form
                         // Do not show sold currency
                         if (currentPercent > 0) {
                             if (dataCursor.getPosition() < 8) {
-                                entries.add(new PieEntry(currentPercent, symbol));
+                                entries.add(new PieEntry(currentPercent, label));
                             } else {
                                 // Check if is last currency data
                                 otherPercent += currentPercent;
