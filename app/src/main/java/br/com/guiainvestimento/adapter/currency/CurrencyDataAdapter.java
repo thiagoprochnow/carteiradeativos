@@ -81,9 +81,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .CurrencyData.
                 COLUMN_SYMBOL));
-        Log.d(LOG_TAG, "Symbol: " + symbol);
         String currencyLabel = Util.convertCurrencySymbol(mContext,symbol);
-        Log.d(LOG_TAG, "Label: " + currencyLabel);
         viewHolder.symbol.setText(currencyLabel);
         viewHolder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));

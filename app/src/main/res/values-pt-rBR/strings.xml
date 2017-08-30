@@ -442,6 +442,11 @@
     <string name="toast_treasury_not_removed">Não foi possível remover o Tesouro %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 
+    <!-- Service -->
+    <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii">Erro ao atualizar fundos imobiliarios, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
+
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
 

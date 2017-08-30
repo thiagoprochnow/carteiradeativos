@@ -441,6 +441,11 @@
     <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
     <string name="no_items_to_display">No items to display</string>
 
+    <!-- Service -->
+    <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
+    <string name="error_updating_fii">Error updating fii, please try again later.</string>
+    <string name="error_updating_currency">Error updating currency, please try again later.</string>
+
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n
 
