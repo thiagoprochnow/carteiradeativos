@@ -4,13 +4,17 @@ package br.com.guiainvestimento.api.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
 
+import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.domain.ResponseCurrency;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
@@ -27,6 +31,8 @@ public class CurrencyIntentService extends IntentService {
     public static final String START_DATE = "start_date";
     public static final String END_DATE = "end_date";
 
+    Handler mHandler;
+
     // Log variable
     private static final String LOG_TAG = CurrencyIntentService.class.getSimpleName();
 
@@ -38,12 +44,33 @@ public class CurrencyIntentService extends IntentService {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        mHandler = new Handler();
+        return super.onStartCommand(intent,flags,startId);
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
 
         try{
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
-                this.addCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                int success = this.addCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                if (success == GcmNetworkManager.RESULT_SUCCESS){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_currency), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_currency), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }else{
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
             }
@@ -55,6 +82,8 @@ public class CurrencyIntentService extends IntentService {
     }
 
     private int addCurrencyTask(TaskParams params) {
+
+        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
         // Build retrofit base request
         Retrofit retrofit = new Retrofit.Builder()
@@ -102,17 +131,16 @@ public class CurrencyIntentService extends IntentService {
                             PortfolioContract.CurrencyData.BULK_UPDATE_URI,
                             currencyDataCV, null, null);
                     // Log update success/fail result
-                    if (updatedRows > 0) {
-                    }
-
-
                 }
+                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+            } else {
+                return GcmNetworkManager.RESULT_FAILURE;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
         }
-        return 0;
+        return resultStatus;
     }
 
     private String buildSymbolQuery(String[] symbols) {

@@ -442,6 +442,9 @@
     <string name="no_items_to_display">No items to display</string>
 
     <!-- Service -->
+    <string name="success_updating_stocks">Stocks successfully updated.</string>
+    <string name="success_updating_fii">Fiis successfully updated.</string>
+    <string name="success_updating_currency">Currency successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>

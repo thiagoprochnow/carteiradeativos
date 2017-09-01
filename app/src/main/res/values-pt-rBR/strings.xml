@@ -241,7 +241,7 @@
     <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Fii Portolfio -->
-    <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
+    <string name="fii_portfolio_label">Carteira de Fundos Imobiliário</string>
 
     <!-- Currency Portolfio -->
     <string name="currency_portfolio_label">Carteira de Moedas</string>
@@ -416,7 +416,7 @@
     <string name="title_treasury">Tesouro</string>
     <string name="title_fixed">Renda Fixa</string>
     <string name="title_others">Outros</string>
-    <string name="title_fii">Fundos Imobiliarios</string>
+    <string name="title_fii">Fundos Imobiliários</string>
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
@@ -443,8 +443,11 @@
     <string name="no_items_to_display">Sem itens para exibir</string>
 
     <!-- Service -->
+    <string name="success_updating_stocks">Ações atualizadas com sucesso.</string>
+    <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
+    <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
-    <string name="error_updating_fii">Erro ao atualizar fundos imobiliarios, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
 
     <!-- About -->
@@ -453,7 +456,7 @@
     \u2022 Tesouro: Papéis e cupons do tesouro direto.\n
     \u2022 Renda Fixa: Investimentos de renda fixa.\n
     \u2022 Ações: Cotas e rendimentos do mercado acionario em geral.\n
-    \u2022 Fundos Imobiliarios: Cotas e rendimentos de fundos imobiliarios.\n
+    \u2022 Fundos Imobiliários: Cotas e rendimentos de fundos imobiliários.\n
     \u2022 Moedas: Investimento em câmbio.\n
     \u2022 Outros: Outros investimento que deseje adicionar e organizar na sua carteira.\n\n
 
@@ -463,7 +466,7 @@
     <string name="coming_soon_description">Nós esperamos que você goste dessa aplicação e que ela seja útil para você.
         Nós ainda estamos corrigindo problemas, fazendo melhorias e desenvolvendo novos recursos. Aqui estão algumas das funcionalidades que estamos desenvolvendo:\n\n
 
-        \u2022 Rendimentos automáticos para ações e fundos imobiliarios.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
         \u2022 Adicionar funcionalidade para fazer backup do seu portfolio em arquivo para transferencia ou nuvem.\n
         \u2022 Gráfico mostrando o crescimento do portfólio.\n
