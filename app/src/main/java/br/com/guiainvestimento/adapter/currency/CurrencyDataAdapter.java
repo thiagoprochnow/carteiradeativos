@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.Locale;
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -76,9 +78,11 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         double variationPercent = currencyAppreciation / buyTotal * 100;
         double totalGainPercent = totalGain / buyTotal * 100;
         // Get handled values of CurrencyData with current symbol
-        viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+        String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .CurrencyData.
-                COLUMN_SYMBOL)));
+                COLUMN_SYMBOL));
+        String currencyLabel = Util.convertCurrencySymbol(mContext,symbol);
+        viewHolder.symbol.setText(currencyLabel);
         viewHolder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));
         viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));

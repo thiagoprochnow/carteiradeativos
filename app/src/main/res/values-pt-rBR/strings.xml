@@ -65,6 +65,7 @@
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_others_code">Nomenclatura do investimento errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_treasury_code">Nomenclatura do papel errada. Por favor digite apenas letras e números.</string>
+    <string name="wrong_currency_code">Código de moeda inválido</string>
     <string name="wrong_quantity">Quantidade deve ser um número</string>
     <string name="wrong_stock_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa ação na carteira</string>
     <string name="wrong_fii_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse fundo imobiliario na carteira</string>
@@ -240,7 +241,7 @@
     <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Fii Portolfio -->
-    <string name="fii_portfolio_label">Carteira de Fundos Imobiliario</string>
+    <string name="fii_portfolio_label">Carteira de Fundos Imobiliário</string>
 
     <!-- Currency Portolfio -->
     <string name="currency_portfolio_label">Carteira de Moedas</string>
@@ -357,7 +358,7 @@
     <string name="buy_fii_button">Comprar</string>
     <string name="cancel_fii_button">Cancelar</string>
     <string name="fii_symbol">Código do Fundo Imobiliario</string>
-    <string name="fii_symbol_hint">Ex: HTMX11B</string>
+    <string name="fii_symbol_hint">Ex: HTMX11</string>
 
     <!-- Add fixed income Form Fragment -->
     <string name="add_fixed_title">Compra de Renda Fixa</string>
@@ -415,7 +416,7 @@
     <string name="title_treasury">Tesouro</string>
     <string name="title_fixed">Renda Fixa</string>
     <string name="title_others">Outros</string>
-    <string name="title_fii">Fundos Imobiliarios</string>
+    <string name="title_fii">Fundos Imobiliários</string>
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
@@ -441,13 +442,21 @@
     <string name="toast_treasury_not_removed">Não foi possível remover o Tesouro %s</string>
     <string name="no_items_to_display">Sem itens para exibir</string>
 
+    <!-- Service -->
+    <string name="success_updating_stocks">Ações atualizadas com sucesso.</string>
+    <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
+    <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
+    <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
+
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
 
     \u2022 Tesouro: Papéis e cupons do tesouro direto.\n
     \u2022 Renda Fixa: Investimentos de renda fixa.\n
     \u2022 Ações: Cotas e rendimentos do mercado acionario em geral.\n
-    \u2022 Fundos Imobiliarios: Cotas e rendimentos de fundos imobiliarios.\n
+    \u2022 Fundos Imobiliários: Cotas e rendimentos de fundos imobiliários.\n
     \u2022 Moedas: Investimento em câmbio.\n
     \u2022 Outros: Outros investimento que deseje adicionar e organizar na sua carteira.\n\n
 
@@ -457,7 +466,7 @@
     <string name="coming_soon_description">Nós esperamos que você goste dessa aplicação e que ela seja útil para você.
         Nós ainda estamos corrigindo problemas, fazendo melhorias e desenvolvendo novos recursos. Aqui estão algumas das funcionalidades que estamos desenvolvendo:\n\n
 
-        \u2022 Rendimentos automáticos para ações e fundos imobiliarios.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
         \u2022 Adicionar funcionalidade para fazer backup do seu portfolio em arquivo para transferencia ou nuvem.\n
         \u2022 Gráfico mostrando o crescimento do portfólio.\n

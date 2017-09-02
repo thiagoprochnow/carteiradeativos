@@ -156,8 +156,7 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     chartHolder.pieChart.setData(data);
                     data.setValueTextSize(10f);
                     data.setValueTextColor(Color.BLACK);
-                    // Set as Percent
-                    data.setValueFormatter(new MyPercentFormatter());
+                    data.setDrawValues(false);
                     //Hides labels
                     chartHolder.pieChart.setDrawEntryLabels(false);
                     // Hide Description
@@ -220,19 +219,19 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (e == null)
                 return;
             PieEntry pe = (PieEntry) e;
-            pieChart.setCenterText(generateCenterSpannableText(pe.getLabel()));
+            pieChart.setCenterText(generateCenterSpannableText(pe.getLabel(), pe.getValue()));
         }
 
         @Override
         public void onNothingSelected() {
         }
 
-        private SpannableString generateCenterSpannableText(String text) {
-
-            SpannableString s = new SpannableString(text);
+        private SpannableString generateCenterSpannableText(String text, float value) {
+            String valueS = String.format("%.2f", value) + "%";
+            SpannableString s = new SpannableString(text+"\n"+valueS);
             s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length(), 0);
             s.setSpan(new ForegroundColorSpan(Color.GRAY), 0, s.length(), 0);
-            s.setSpan(new RelativeSizeSpan(1.4f), 0, s.length(), 0);
+            s.setSpan(new RelativeSizeSpan(1f), 0, s.length(), 0);
             s.setSpan(new StyleSpan(Typeface.ITALIC), s.length(), s.length(), 0);
             s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length(), s.length(), 0);
             return s;

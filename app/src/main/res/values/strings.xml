@@ -357,7 +357,7 @@
     <string name="buy_fii_button">Buy</string>
     <string name="cancel_fii_button">Cancel</string>
     <string name="fii_symbol">Real State Fund Code</string>
-    <string name="fii_symbol_hint">Ex: HTMX11B</string>
+    <string name="fii_symbol_hint">Ex: HTMX11</string>
 
     <!-- Add fixed income Form Fragment -->
     <string name="add_fixed_title">Buy Fixed Income</string>
@@ -440,6 +440,14 @@
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
     <string name="no_items_to_display">No items to display</string>
+
+    <!-- Service -->
+    <string name="success_updating_stocks">Stocks successfully updated.</string>
+    <string name="success_updating_fii">Fiis successfully updated.</string>
+    <string name="success_updating_currency">Currency successfully updated.</string>
+    <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
+    <string name="error_updating_fii">Error updating fii, please try again later.</string>
+    <string name="error_updating_currency">Error updating currency, please try again later.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n

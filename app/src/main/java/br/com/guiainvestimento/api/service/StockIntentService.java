@@ -3,15 +3,19 @@ package br.com.guiainvestimento.api.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
-import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
+import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.domain.ResponseStock;
 import br.com.guiainvestimento.api.domain.ResponseStocks;
 import br.com.guiainvestimento.common.Constants;
@@ -47,11 +51,32 @@ public class StockIntentService extends IntentService {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        mHandler = new Handler();
+        return super.onStartCommand(intent,flags,startId);
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            if (success == GcmNetworkManager.RESULT_SUCCESS){
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
@@ -80,12 +105,16 @@ public class StockIntentService extends IntentService {
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
             if(symbols.length == 1) {
-                Call<ResponseStock> call = service.getStock(query);
-                Response<ResponseStock> response = call.execute();
-                ResponseStock responseGetStock = response.body();
-                if (!response.isSuccessful()){
-                    Log.d(LOG_TAG,"Não sucesso");
-                }
+                Call<ResponseStock> call;
+                Response<ResponseStock> response;
+                ResponseStock responseGetStock;
+                int count = 0;
+                do {
+                    call = service.getStock(query);
+                    response = call.execute();
+                    responseGetStock = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
                 if(response.isSuccessful() && responseGetStock.getStockQuotes() != null &&
                         responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
 
@@ -111,11 +140,21 @@ public class StockIntentService extends IntentService {
                     }
                     // Success request
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    return GcmNetworkManager.RESULT_FAILURE;
                 }
             }else{
-                Call<ResponseStocks> call = service.getStocks(query);
-                Response<ResponseStocks> response = call.execute();
-                ResponseStocks responseGetStocks = response.body();
+                Call<ResponseStocks> call;
+                Response<ResponseStocks> response;
+                ResponseStocks responseGetStocks;
+                int count = 0;
+                do {
+                    call = service.getStocks(query);
+                    response = call.execute();
+                    responseGetStocks = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
+
                 if(response.isSuccessful() && responseGetStocks.getStockQuotes() != null) {
                     String tableSymbol = "";
                     ContentValues stockDataCV = new ContentValues();
@@ -134,6 +173,8 @@ public class StockIntentService extends IntentService {
                             stockDataCV, null, null);
                     // Success request
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    return GcmNetworkManager.RESULT_FAILURE;
                 }
             }
 

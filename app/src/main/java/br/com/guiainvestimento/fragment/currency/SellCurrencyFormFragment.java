@@ -34,10 +34,10 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
     private View mView;
 
     HashMap<String, String> currencyMap = new HashMap<String, String>() {{
-        put("Dollar","USD");
+        put("Dolar","USD");
         put("Euro","EUR");
         put("Bitcoin","BTC");
-        put("USD", "Dollar");
+        put("USD", "Dolar");
         put("EUR","Euro");
         put("BTC","Bitcoin");
     }};

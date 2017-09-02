@@ -27,6 +27,7 @@ import br.com.guiainvestimento.adapter.currency.CurrencyDetailAdapter;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFragment;
+import br.com.guiainvestimento.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -76,7 +77,8 @@ public class CurrencyDetailsFragment extends BaseFragment implements
         mSymbol = mainActivityIntent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         Bundle bundle = new Bundle();
         bundle.putString(Constants.Extra.EXTRA_PRODUCT_SYMBOL, mSymbol);
-        getActivity().setTitle(mSymbol);
+        String title = Util.convertCurrencySymbol(mContext, mSymbol);
+        getActivity().setTitle(title);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);

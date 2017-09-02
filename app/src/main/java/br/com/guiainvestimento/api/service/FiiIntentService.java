@@ -3,15 +3,17 @@ package br.com.guiainvestimento.api.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
-import java.util.logging.Handler;
 
+import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.domain.ResponseFii;
 
 import br.com.guiainvestimento.api.domain.ResponseFiis;
@@ -48,11 +50,32 @@ public class FiiIntentService extends IntentService {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId){
+        mHandler = new Handler();
+        return super.onStartCommand(intent,flags,startId);
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int success = this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            if (success == GcmNetworkManager.RESULT_SUCCESS){
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
     }
 
@@ -81,9 +104,18 @@ public class FiiIntentService extends IntentService {
             String query = "select * from yahoo.finance.quotes where symbol in ("
                     + buildQuery(symbols) + ")";
             if(symbols.length == 1) {
-                Call<ResponseFii> call = service.getFii(query);
-                Response<ResponseFii> response = call.execute();
-                ResponseFii responseGetFii = response.body();
+
+                Call<ResponseFii> call;
+                Response<ResponseFii> response;
+                ResponseFii responseGetFii;
+                int count = 0;
+
+                do {
+                    call = service.getFii(query);
+                    response = call.execute();
+                    responseGetFii = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
 
                 if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null &&
                         responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
@@ -110,11 +142,21 @@ public class FiiIntentService extends IntentService {
                     }
                     // Success request
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    return GcmNetworkManager.RESULT_FAILURE;
                 }
             }else{
-                Call<ResponseFiis> call = service.getFiis(query);
-                Response<ResponseFiis> response = call.execute();
-                ResponseFiis responseGetFiis = response.body();
+                Call<ResponseFiis> call;
+                Response<ResponseFiis> response;
+                ResponseFiis responseGetFiis;
+                int count = 0;
+
+                do {
+                    call = service.getFiis(query);
+                    response = call.execute();
+                    responseGetFiis = response.body();
+                    count++;
+                } while (response.code() == 400 && count < 20);
 
                 if(response.isSuccessful() && responseGetFiis.getFiiQuotes() != null) {
                     String tableSymbol = "";
@@ -134,6 +176,8 @@ public class FiiIntentService extends IntentService {
                             fiiDataCV, null, null);
                     // Success request
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    return GcmNetworkManager.RESULT_FAILURE;
                 }
             }
 
