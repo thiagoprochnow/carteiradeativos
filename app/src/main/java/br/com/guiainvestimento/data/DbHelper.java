@@ -11,12 +11,25 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // TODO: Need to change db name to the final app name or to anything meaningful
     static final String NAME = "Portfolio.db";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
 
     public DbHelper(Context context) {
         super(context, NAME, null, VERSION);
     }
+
+
+    private static final String DATABASE_ALTER_PORTFOLIO_GROWTH_1 = "ALTER TABLE "
+            + PortfolioContract.PortfolioGrowth.TABLE_NAME + " ADD COLUMN " + PortfolioContract.PortfolioGrowth.YEAR + " INTEGER;";
+
+    private static final String DATABASE_ALTER_PORTFOLIO_GROWTH_2 = "ALTER TABLE "
+            + PortfolioContract.PortfolioGrowth.TABLE_NAME + " ADD COLUMN " + PortfolioContract.PortfolioGrowth.MONTH + " INTEGER;";
+
+    private static final String DATABASE_ALTER_INCOME_GROWTH_1 = "ALTER TABLE "
+            + PortfolioContract.IncomeGrowth.TABLE_NAME + " ADD COLUMN " + PortfolioContract.IncomeGrowth.YEAR + " INTEGER;";
+
+    private static final String DATABASE_ALTER_INCOME_GROWTH_2 = "ALTER TABLE "
+            + PortfolioContract.IncomeGrowth.TABLE_NAME + " ADD COLUMN " + PortfolioContract.IncomeGrowth.MONTH + " INTEGER;";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -47,6 +60,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.PortfolioGrowth._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.PortfolioGrowth.COLUMN_TOTAL + " REAL, " +
                 PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.PortfolioGrowth.MONTH + " INTEGER, " +
+                PortfolioContract.PortfolioGrowth.YEAR + " INTEGER, " +
                 PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
                 "UNIQUE (" + PortfolioContract.PortfolioGrowth._ID + ") ON CONFLICT REPLACE);";
 
@@ -54,6 +69,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.IncomeGrowth._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 PortfolioContract.IncomeGrowth.COLUMN_TOTAL + " REAL, " +
                 PortfolioContract.IncomeGrowth.COLUMN_TIMESTAMP + " LONG, " +
+                PortfolioContract.IncomeGrowth.MONTH + " INTEGER, " +
+                PortfolioContract.IncomeGrowth.YEAR + " INTEGER, " +
                 PortfolioContract.IncomeGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
                 "UNIQUE (" + PortfolioContract.IncomeGrowth._ID + ") ON CONFLICT REPLACE);";
 
@@ -477,6 +494,11 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onCreate(db);
+        if (oldVersion < 2){
+            db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_1);
+            db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_2);
+            db.execSQL(DATABASE_ALTER_INCOME_GROWTH_1);
+            db.execSQL(DATABASE_ALTER_INCOME_GROWTH_2);
+        }
     }
 }

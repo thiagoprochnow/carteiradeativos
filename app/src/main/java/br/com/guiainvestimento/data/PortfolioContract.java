@@ -168,12 +168,16 @@ public class PortfolioContract {
 
         public static final String COLUMN_TOTAL = "total";
         public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String MONTH = "month";
+        public static final String YEAR = "year";
         public static final String COLUMN_TYPE = "type";
 
         public static final String[] PORTFOLIO_GROWTH_COLUMNS = {
                 _ID,
                 COLUMN_TOTAL,
                 COLUMN_TIMESTAMP,
+                MONTH,
+                YEAR,
                 COLUMN_TYPE
         };
 
@@ -199,12 +203,16 @@ public class PortfolioContract {
 
         public static final String COLUMN_TOTAL = "total";
         public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String MONTH = "month";
+        public static final String YEAR = "year";
         public static final String COLUMN_TYPE = "type";
 
         public static final String[] INCOME_GROWTH_COLUMNS = {
                 _ID,
                 COLUMN_TOTAL,
                 COLUMN_TIMESTAMP,
+                MONTH,
+                YEAR,
                 COLUMN_TYPE
         };
 
