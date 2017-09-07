@@ -18,6 +18,8 @@ public class PortfolioContract {
 
     public static final String PATH_PORTFOLIO_GROWTH = "portfolio_growth";
 
+    public static final String PATH_BUY_GROWTH = "buy_growth";
+
     public static final String PATH_INCOME_GROWTH = "income_growth";
 
     public static final String PATH_STOCK_PORTFOLIO = "stock_portfolio";
@@ -190,6 +192,41 @@ public class PortfolioContract {
         }
 
         public static String getPortfolioGrowthFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of growth on byu values
+    public static final class BuyGrowth implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_BUY_GROWTH).build();
+
+        public static final String TABLE_NAME = "buy_growth";
+
+        public static final String COLUMN_TOTAL = "total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String MONTH = "month";
+        public static final String YEAR = "year";
+        public static final String COLUMN_TYPE = "type";
+
+        public static final String[] BUY_GROWTH_COLUMNS = {
+                _ID,
+                COLUMN_TOTAL,
+                COLUMN_TIMESTAMP,
+                MONTH,
+                YEAR,
+                COLUMN_TYPE
+        };
+
+        public static Uri makeUriForBuyGrowth(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildBuyGrowthUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getBuyGrowthFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

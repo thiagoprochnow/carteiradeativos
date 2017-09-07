@@ -47,6 +47,7 @@ public final class Constants {
         public static final int FIXED = 3;
         public static final int TREASURY = 4;
         public static final int OTHERS = 5;
+        public static final int PORTFOLIO = 6;
     }
 
     // This should contains all incomes types in the portfolio
@@ -143,6 +144,8 @@ public final class Constants {
         public static final int PORTFOLIO_GROWTH = 200;
 
         public static final int INCOME_GROWTH = 300;
+
+        public static final int BUY_GROWTH = 400;
 
         public static final int STOCK_PORTFOLIO = 1100;
 

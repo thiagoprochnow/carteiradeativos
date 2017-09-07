@@ -3,6 +3,7 @@ package br.com.guiainvestimento.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /* DbHelper class that creates all tables and perform the db upgrade logic */
 
@@ -13,6 +14,8 @@ public class DbHelper extends SQLiteOpenHelper {
     static final String NAME = "Portfolio.db";
     private static final int VERSION = 2;
 
+    // Log variable
+    private static final String LOG_TAG = DbHelper.class.getSimpleName();
 
     public DbHelper(Context context) {
         super(context, NAME, null, VERSION);
@@ -30,6 +33,15 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_ALTER_INCOME_GROWTH_2 = "ALTER TABLE "
             + PortfolioContract.IncomeGrowth.TABLE_NAME + " ADD COLUMN " + PortfolioContract.IncomeGrowth.MONTH + " INTEGER;";
+
+    private static final String DATABASE_CREATE_BUY_GROWTH = "CREATE TABLE " + PortfolioContract.BuyGrowth.TABLE_NAME + " (" +
+            PortfolioContract.BuyGrowth._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.BuyGrowth.COLUMN_TOTAL + " REAL, " +
+            PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP + " LONG, " +
+            PortfolioContract.BuyGrowth.MONTH + " INTEGER, " +
+            PortfolioContract.BuyGrowth.YEAR + " INTEGER, " +
+            PortfolioContract.BuyGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
+            "UNIQUE (" + PortfolioContract.BuyGrowth._ID + ") ON CONFLICT REPLACE);";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -488,17 +500,20 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_others_data);
         db.execSQL(builder_others_transaction);
         db.execSQL(builder_others_income);
+        db.execSQL(DATABASE_CREATE_BUY_GROWTH);
     }
 
 
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(LOG_TAG, "upgrade");
         if (oldVersion < 2){
             db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_1);
             db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_2);
             db.execSQL(DATABASE_ALTER_INCOME_GROWTH_1);
             db.execSQL(DATABASE_ALTER_INCOME_GROWTH_2);
+            db.execSQL(DATABASE_CREATE_BUY_GROWTH);
         }
     }
 }
