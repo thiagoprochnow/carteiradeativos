@@ -209,6 +209,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         }
 
         updatePortfolioGrowth(portfolioCurrent, treasuryCurrent, fixedCurrent, stockCurrent, fiiCurrent, currencyCurrent, othersCurrent);
+        updateBuyGrowth(portfolioBuy, treasuryBuy, fixedBuy, stockBuy, fiiBuy, currencyBuy, othersBuy);
     }
 
     // Function to update Portfolio, Stock, Fii... Growth values, this values will be used to make the Growth graph for each investment.
@@ -402,6 +403,201 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
             // Create and insert
             mContext.getContentResolver().insert(PortfolioContract.PortfolioGrowth.URI,
+                    othersCV);
+        }
+    }
+
+    // Function to update Portfolio, Stock, Fii... Buy Growth values, this values will be used to make the Buy Growth graph for each investment.
+    // Only one value will be saved per month, so if the refresh was done in same month as already existing value, this new one will overwrite old value until a new month is done refresh.
+    public void updateBuyGrowth(double portfolioBuy, double treasuryBuy, double fixedBuy, double stockBuy, double fiiBuy, double currencyBuy, double othersBuy){
+        Calendar calendar = Calendar.getInstance();
+        long timestamp = calendar.getTimeInMillis();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+
+        // Portfolio Buy Growth
+        ContentValues portfolioCV = new ContentValues();
+        portfolioCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, portfolioBuy);
+        portfolioCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.PORTFOLIO);
+        portfolioCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        portfolioCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        portfolioCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String selection = PortfolioContract.BuyGrowth.MONTH + " = ? AND "
+                + PortfolioContract.BuyGrowth.YEAR + " = ? AND "
+                + PortfolioContract.BuyGrowth.COLUMN_TYPE + " = ?";
+
+        String[] selectionArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.PORTFOLIO)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor portfolioQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, selectionArguments, null);
+
+        if(portfolioQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    portfolioCV, selection, selectionArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    portfolioCV);
+        }
+
+        // Treasury Growth
+        ContentValues treasuryCV = new ContentValues();
+        treasuryCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, treasuryBuy);
+        treasuryCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.TREASURY);
+        treasuryCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        treasuryCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        treasuryCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] treasuryArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.TREASURY)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor treasuryQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, treasuryArguments, null);
+
+        if(treasuryQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    treasuryCV, selection, treasuryArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    treasuryCV);
+        }
+
+        // Fixed Growth
+        ContentValues fixedCV = new ContentValues();
+        fixedCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, fixedBuy);
+        fixedCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.FIXED);
+        fixedCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        fixedCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        fixedCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] fixedArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.FIXED)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor fixedQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, fixedArguments, null);
+
+        if(fixedQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    fixedCV, selection, fixedArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    fixedCV);
+        }
+
+        // Stock Growth
+        ContentValues stockCV = new ContentValues();
+        stockCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, stockBuy);
+        stockCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.STOCK);
+        stockCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        stockCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        stockCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] stockArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.STOCK)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor stockQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, stockArguments, null);
+
+        if(stockQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    stockCV, selection, stockArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    stockCV);
+        }
+
+        // Fii Growth
+        ContentValues fiiCV = new ContentValues();
+        fiiCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, fiiBuy);
+        fiiCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.FII);
+        fiiCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        fiiCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        fiiCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] fiiArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.FII)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor fiiQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, fiiArguments, null);
+
+        if(fiiQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    fiiCV, selection, fiiArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    fiiCV);
+        }
+
+        // Currency Growth
+        ContentValues currencyCV = new ContentValues();
+        currencyCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, currencyBuy);
+        currencyCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.CURRENCY);
+        currencyCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        currencyCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        currencyCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] currencyArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.CURRENCY)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor currencyQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, currencyArguments, null);
+
+        if(currencyQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    currencyCV, selection, currencyArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    currencyCV);
+        }
+
+        // Others Growth
+        ContentValues othersCV = new ContentValues();
+        othersCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, othersBuy);
+        othersCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.OTHERS);
+        othersCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        othersCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        othersCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] othersArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.OTHERS)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor othersQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, othersArguments, null);
+
+        if(othersQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    othersCV, selection, othersArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
                     othersCV);
         }
     }
