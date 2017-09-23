@@ -258,6 +258,8 @@
 
     <!-- Portfolio -->
     <string name="portfolio_label">Carteira Completa</string>
+    <string name="asset_allocation_label">Alocação de Ativos</string>
+    <string name="growth_chart_label">Gráfico de Crescimento</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
