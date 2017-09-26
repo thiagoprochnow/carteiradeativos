@@ -2,9 +2,11 @@ package br.com.guiainvestimento.adapter.fixedincome;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -193,8 +195,15 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 //TODO: Change so year can be selected or inputed by user
                 String queryYear = "2017";
 
-                Cursor growthCursor = getGrowthCursor(queryYear);
-                Cursor buyCursor = getBuyGrowthCursor(queryYear);
+                Cursor growthCursor = null;
+                Cursor buyCursor = null;
+
+                try {
+                    growthCursor = getGrowthCursor(queryYear);
+                    buyCursor = getBuyGrowthCursor(queryYear);
+                } catch (SQLException e){
+                    Log.e(LOG_TAG, e.toString());
+                }
 
                 if(growthCursor != null && growthCursor.getCount() > 0 && buyCursor != null && buyCursor.getCount() > 0){
 
@@ -296,8 +305,10 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     chartHolder.chart.invalidate();
 
                     chartHolder.chart.setVisibility(View.VISIBLE);
+                    chartHolder.chart_cardview.setVisibility(View.VISIBLE);
                 } else {
                     chartHolder.chart.setVisibility(View.GONE);
+                    chartHolder.chart_cardview.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -374,6 +385,9 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     class FixedChartViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.chart_cardview)
+        CardView chart_cardview;
 
         @BindView(R.id.chart)
         LineChart chart;

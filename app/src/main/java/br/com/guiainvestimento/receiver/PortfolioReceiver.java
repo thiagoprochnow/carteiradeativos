@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.net.Uri;
 import android.util.Log;
 
@@ -208,8 +209,12 @@ public class PortfolioReceiver extends BroadcastReceiver {
                     portfolioCV);
         }
 
-        updatePortfolioGrowth(portfolioCurrent, treasuryCurrent, fixedCurrent, stockCurrent, fiiCurrent, currencyCurrent, othersCurrent);
-        updateBuyGrowth(portfolioBuy, treasuryBuy, fixedBuy, stockBuy, fiiBuy, currencyBuy, othersBuy);
+        try {
+            updatePortfolioGrowth(portfolioCurrent, treasuryCurrent, fixedCurrent, stockCurrent, fiiCurrent, currencyCurrent, othersCurrent);
+            updateBuyGrowth(portfolioBuy, treasuryBuy, fixedBuy, stockBuy, fiiBuy, currencyBuy, othersBuy);
+        } catch (SQLException e){
+            Log.e(LOG_TAG, e.toString());
+        }
     }
 
     // Function to update Portfolio, Stock, Fii... Growth values, this values will be used to make the Growth graph for each investment.
