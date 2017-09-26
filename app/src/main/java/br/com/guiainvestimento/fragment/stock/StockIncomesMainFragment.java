@@ -63,6 +63,7 @@ public class StockIncomesMainFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mStockIncomeMainAdapter = new StockIncomeMainAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -70,7 +71,9 @@ public class StockIncomesMainFragment extends BaseFragment implements
                 mStockIncomeMainAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        if(mContext != null && mStockIncomeMainAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        }
     }
 
     @Override
@@ -97,7 +100,6 @@ public class StockIncomesMainFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mStockIncomeMainAdapter = new StockIncomeMainAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockIncomeMainAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_INCOME, null, this);
 

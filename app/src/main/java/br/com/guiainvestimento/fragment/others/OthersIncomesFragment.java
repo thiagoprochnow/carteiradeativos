@@ -65,6 +65,7 @@ public class OthersIncomesFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mOthersIncomeAdapter = new OthersIncomeAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -72,7 +73,9 @@ public class OthersIncomesFragment extends BaseFragment implements
                 mOthersIncomeAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        if (mContext != null && mOthersIncomeAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        }
     }
 
     @Override
@@ -93,7 +96,6 @@ public class OthersIncomesFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mOthersIncomeAdapter = new OthersIncomeAdapter(mContext, this);
         mRecyclerView.setAdapter(mOthersIncomeAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.OTHERS_INCOME, bundle, this);
 

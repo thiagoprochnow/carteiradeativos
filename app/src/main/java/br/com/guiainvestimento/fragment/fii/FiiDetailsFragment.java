@@ -53,7 +53,7 @@ public class FiiDetailsFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFiiDetailAdapter = new FiiDetailAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -61,7 +61,9 @@ public class FiiDetailsFragment extends BaseFragment implements
                 mFiiDetailAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
+        if (mContext != null && mFiiDetailAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
+        }
     }
 
     @Override
@@ -81,7 +83,6 @@ public class FiiDetailsFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mFiiDetailAdapter = new FiiDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mFiiDetailAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_DETAILS, bundle, this);
 

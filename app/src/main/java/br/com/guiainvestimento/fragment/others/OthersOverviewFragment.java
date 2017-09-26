@@ -58,7 +58,7 @@ public class OthersOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mOthersOverviewAdapter = new OthersOverviewAdapter(mContext);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -66,7 +66,9 @@ public class OthersOverviewFragment extends BaseFragment implements
                 mOthersOverviewAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        if(mContext != null && mOthersOverviewAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        }
     }
 
     @Override
@@ -90,7 +92,6 @@ public class OthersOverviewFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.OTHERS, "");
             }
         });
-        mOthersOverviewAdapter = new OthersOverviewAdapter(mContext);
         mRecyclerView.setAdapter(mOthersOverviewAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.OTHERS_OVERVIEW, null, this);
         return view;

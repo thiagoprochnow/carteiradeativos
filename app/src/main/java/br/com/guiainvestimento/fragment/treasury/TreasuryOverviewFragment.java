@@ -58,7 +58,7 @@ public class TreasuryOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTreasuryOverviewAdapter = new TreasuryOverviewAdapter(mContext);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -66,7 +66,9 @@ public class TreasuryOverviewFragment extends BaseFragment implements
                 mTreasuryOverviewAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.TREASURY));
+        if (mContext != null && mTreasuryOverviewAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.TREASURY));
+        }
     }
 
     @Override
@@ -90,7 +92,6 @@ public class TreasuryOverviewFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.TREASURY, "");
             }
         });
-        mTreasuryOverviewAdapter = new TreasuryOverviewAdapter(mContext);
         mRecyclerView.setAdapter(mTreasuryOverviewAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.TREASURY_OVERVIEW, null, this);
         return view;

@@ -53,7 +53,7 @@ public class OthersDetailsFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mOthersDetailAdapter = new OthersDetailAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -61,7 +61,9 @@ public class OthersDetailsFragment extends BaseFragment implements
                 mOthersDetailAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        if (mContext != null && mOthersDetailAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.OTHERS));
+        }
     }
 
     @Override
@@ -81,7 +83,6 @@ public class OthersDetailsFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mOthersDetailAdapter = new OthersDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mOthersDetailAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.OTHERS_DETAILS, bundle, this);
 

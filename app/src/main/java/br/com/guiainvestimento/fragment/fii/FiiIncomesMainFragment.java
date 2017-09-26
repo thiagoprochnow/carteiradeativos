@@ -63,6 +63,7 @@ public class FiiIncomesMainFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFiiIncomeMainAdapter = new FiiIncomeMainAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -70,7 +71,9 @@ public class FiiIncomesMainFragment extends BaseFragment implements
                 mFiiIncomeMainAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
+        if(mContext != null && mFiiIncomeMainAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FII));
+        }
     }
 
     @Override
@@ -97,7 +100,6 @@ public class FiiIncomesMainFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mFiiIncomeMainAdapter = new FiiIncomeMainAdapter(mContext, this);
         mRecyclerView.setAdapter(mFiiIncomeMainAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_INCOME, null, this);
 

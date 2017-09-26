@@ -65,6 +65,7 @@ public class TreasuryIncomesFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTreasuryIncomeAdapter = new TreasuryIncomeAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -72,7 +73,9 @@ public class TreasuryIncomesFragment extends BaseFragment implements
                 mTreasuryIncomeAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.TREASURY));
+        if (mContext != null && mTreasuryIncomeAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.TREASURY));
+        }
     }
 
     @Override
@@ -93,7 +96,6 @@ public class TreasuryIncomesFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mTreasuryIncomeAdapter = new TreasuryIncomeAdapter(mContext, this);
         mRecyclerView.setAdapter(mTreasuryIncomeAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.TREASURY_INCOME, bundle, this);
 
