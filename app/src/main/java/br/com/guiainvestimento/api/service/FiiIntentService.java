@@ -117,7 +117,7 @@ public class FiiIntentService extends IntentService {
                     count++;
                 } while (response.code() == 400 && count < 20);
 
-                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null &&
+                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null && !responseGetFii.getFiiQuotes().isEmpty() &&
                         responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
 
                     // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
@@ -158,7 +158,7 @@ public class FiiIntentService extends IntentService {
                     count++;
                 } while (response.code() == 400 && count < 20);
 
-                if(response.isSuccessful() && responseGetFiis.getFiiQuotes() != null) {
+                if(response.isSuccessful() && responseGetFiis != null && responseGetFiis.getFiiQuotes() != null && !responseGetFiis.getFiiQuotes().isEmpty()) {
                     String tableSymbol = "";
                     ContentValues fiiDataCV = new ContentValues();
                     for(Fii fii : responseGetFiis.getFiiQuotes()) {

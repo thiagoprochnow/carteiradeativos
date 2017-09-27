@@ -24,11 +24,13 @@ public class ResponseFiis {
      */
     public List<Fii> getFiiQuotes() {
         List<Fii> result = new ArrayList<>();
-        List<Fii> fiiQuotes = mResult.getQuotes().getFiiQuotes();
-        for (Fii quote : fiiQuotes){
-            if (quote.getLastTradePriceOnly() != null
-                    && quote.getName() != null) {
-                result.add(quote);
+        if (mResult != null && mResult.getQuotes() != null) {
+            List<Fii> fiiQuotes = mResult.getQuotes().getFiiQuotes();
+            for (Fii quote : fiiQuotes) {
+                if (quote.getLastTradePriceOnly() != null
+                        && quote.getName() != null) {
+                    result.add(quote);
+                }
             }
         }
         return result;

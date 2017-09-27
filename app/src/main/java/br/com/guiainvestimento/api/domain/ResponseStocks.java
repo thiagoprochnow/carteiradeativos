@@ -24,11 +24,13 @@ public class ResponseStocks {
      */
     public List<Stock> getStockQuotes() {
         List<Stock> result = new ArrayList<>();
-        List<Stock> stockQuotes = mResult.getQuotes().getStockQuotes();
-        for (Stock quote : stockQuotes){
-            if (quote.getLastTradePriceOnly() != null
-                    && quote.getName() != null) {
-                result.add(quote);
+        if (mResult != null && mResult.getQuotes() != null) {
+            List<Stock> stockQuotes = mResult.getQuotes().getStockQuotes();
+            for (Stock quote : stockQuotes) {
+                if (quote.getLastTradePriceOnly() != null
+                        && quote.getName() != null) {
+                    result.add(quote);
+                }
             }
         }
         return result;
