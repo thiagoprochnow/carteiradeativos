@@ -1,6 +1,7 @@
 package br.com.guiainvestimento.data;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -508,12 +509,16 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(LOG_TAG, "upgrade");
-        if (oldVersion < 2){
-            db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_1);
-            db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_2);
-            db.execSQL(DATABASE_ALTER_INCOME_GROWTH_1);
-            db.execSQL(DATABASE_ALTER_INCOME_GROWTH_2);
-            db.execSQL(DATABASE_CREATE_BUY_GROWTH);
+        try {
+            if (oldVersion < 2) {
+                db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_1);
+                db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_2);
+                db.execSQL(DATABASE_ALTER_INCOME_GROWTH_1);
+                db.execSQL(DATABASE_ALTER_INCOME_GROWTH_2);
+                db.execSQL(DATABASE_CREATE_BUY_GROWTH);
+            }
+        } catch (SQLException e){
+            Log.e(LOG_TAG, "onUpgrade error " + e);
         }
     }
 }
