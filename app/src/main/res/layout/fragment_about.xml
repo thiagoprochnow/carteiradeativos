@@ -11,4 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/about_description"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/about_email_contact"
+        android:text="@string/email_contact"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_version" />
 </LinearLayout>

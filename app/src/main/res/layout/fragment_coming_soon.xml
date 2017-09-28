@@ -10,5 +10,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/coming_soon_description"
         android:text="@string/coming_soon_description"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cs_email_contact"
+        android:text="@string/email_contact"/>
 </LinearLayout>

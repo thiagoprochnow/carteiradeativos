@@ -461,19 +461,25 @@
     \u2022 Currencies: Exchange investments.\n
     \u2022 Others: Other investments that you wish to add and organize in your portfolio\n\n
 
-    The objective is for you to organize your portfolio and consult your incomes and appreciation of each investment and the overall portfolio.\n</string>
+    The objective is for you to organize your portfolio and consult your incomes and appreciation of each investment and the overall portfolio.\n\n
+    </string>
 
     <!-- Comming Soon -->
     <string name="coming_soon_description">We hope this application is useful for you.
         We are still making fixes, upgrades and developments for this application. Here are some of the features we are developing and are coming soon:\n\n
 
+        \u2022 Help buttons explaining each information provided.\n
         \u2022 Automatic incomes for stocks and real state funds.\n
         \u2022 Automatic treasury current values when clicking on refresh button.\n
         \u2022 Add functionality to make a backup of your portfolio on transfer file or cloud.\n
-        \u2022 Graph showing the portfolio growth.\n
         \u2022 Graph showing the income growth.\n
         \u2022 Constant bug fixes and improvements.\n\n
 
         If you see any bug or problem or have any ideias for upgrades that you are missing in this application and think would be useful, please don\'t hesitate to contact us.
-        We want to make this application the most useful possible for investors.\n</string>
+        We want to make this application the most useful possible for investors.\n\n
+    </string>
+
+    <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>
+
+    <string name="app_version">\n\nVersion: %1$s</string>
 </resources>
