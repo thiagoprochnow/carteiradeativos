@@ -53,7 +53,7 @@ public class FixedDetailsFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFixedDetailAdapter = new FixedDetailAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -61,7 +61,9 @@ public class FixedDetailsFragment extends BaseFragment implements
                 mFixedDetailAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FIXED));
+        if (mContext != null && mFixedDetailAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FIXED));
+        }
     }
 
     @Override
@@ -81,7 +83,6 @@ public class FixedDetailsFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mFixedDetailAdapter = new FixedDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mFixedDetailAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FIXED_DETAILS, bundle, this);
 

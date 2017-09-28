@@ -53,7 +53,7 @@ public class StockDetailsFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mStockDetailAdapter = new StockDetailAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -61,7 +61,9 @@ public class StockDetailsFragment extends BaseFragment implements
                 mStockDetailAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        if(mContext != null && mStockDetailAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.STOCK));
+        }
     }
 
     @Override
@@ -81,7 +83,6 @@ public class StockDetailsFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mStockDetailAdapter = new StockDetailAdapter(mContext, this);
         mRecyclerView.setAdapter(mStockDetailAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.STOCK_DETAILS, bundle, this);
 

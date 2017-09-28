@@ -65,6 +65,7 @@ public class CurrencyMainFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCurrencyMainAdapter = new CurrencyMainAdapter(mContext, this);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -72,7 +73,9 @@ public class CurrencyMainFragment extends BaseFragment implements
                 mCurrencyMainAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.CURRENCY));
+        if(receiver != null && mCurrencyMainAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.CURRENCY));
+        }
     }
 
     @Override
@@ -87,7 +90,6 @@ public class CurrencyMainFragment extends BaseFragment implements
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-        mCurrencyMainAdapter = new CurrencyMainAdapter(mContext, this);
         mRecyclerView.setAdapter(mCurrencyMainAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FII_INCOME, null, this);
 

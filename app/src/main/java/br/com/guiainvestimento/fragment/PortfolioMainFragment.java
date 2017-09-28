@@ -41,7 +41,7 @@ public class PortfolioMainFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mPortfolioAdapter = new PortfolioAdapter(mContext);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -49,7 +49,9 @@ public class PortfolioMainFragment extends BaseFragment implements
                 mPortfolioAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.PORTFOLIO));
+        if (mContext != null && mPortfolioAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.PORTFOLIO));
+        }
     }
 
     @Override
@@ -64,7 +66,6 @@ public class PortfolioMainFragment extends BaseFragment implements
         mRecyclerView.setHasFixedSize(true);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-        mPortfolioAdapter = new PortfolioAdapter(mContext);
         mRecyclerView.setAdapter(mPortfolioAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.PORTFOLIO, null, this);
         return view;

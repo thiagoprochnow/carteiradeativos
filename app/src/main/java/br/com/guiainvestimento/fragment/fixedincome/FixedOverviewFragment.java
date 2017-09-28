@@ -58,7 +58,7 @@ public class FixedOverviewFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFixedOverviewAdapter = new FixedOverviewAdapter(mContext);
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -66,7 +66,9 @@ public class FixedOverviewFragment extends BaseFragment implements
                 mFixedOverviewAdapter.notifyDataSetChanged();
             }
         };
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FIXED));
+        if(mContext != null && mFixedOverviewAdapter != null) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, new IntentFilter(Constants.Receiver.FIXED));
+        }
     }
 
     @Override
@@ -90,7 +92,6 @@ public class FixedOverviewFragment extends BaseFragment implements
                 mFormProductListener.onBuyProduct(Constants.ProductType.FIXED, "");
             }
         });
-        mFixedOverviewAdapter = new FixedOverviewAdapter(mContext);
         mRecyclerView.setAdapter(mFixedOverviewAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FIXED_OVERVIEW, null, this);
         return view;

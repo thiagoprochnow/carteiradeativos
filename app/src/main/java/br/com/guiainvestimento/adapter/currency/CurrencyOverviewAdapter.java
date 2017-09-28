@@ -2,9 +2,11 @@ package br.com.guiainvestimento.adapter.currency;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -17,13 +19,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -33,6 +44,8 @@ import java.util.List;
 import java.util.Locale;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.adapter.treasury.TreasuryOverviewAdapter;
+import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.util.Util;
 import br.com.guiainvestimento.utils.MyPercentFormatter;
@@ -44,6 +57,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final String LOG_TAG = CurrencyOverviewAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
+    private TextView mChartLabel;
 
     public CurrencyOverviewAdapter(Context context) {
         this.mContext = context;
@@ -67,9 +81,12 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
             case 0:
                 item = LayoutInflater.from(mContext).inflate(R.layout.adapter_currency_overview, parent, false);
                 return new CurrencyOverviewViewHolder(item);
-            default:
+            case 1:
                 item = LayoutInflater.from(mContext).inflate(R.layout.adapter_piechart, parent, false);
                 return new CurrencyPieChartViewHolder(item);
+            default:
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_chart, parent, false);
+                return new CurrencyChartViewHolder(item);
         }
     }
 
@@ -113,8 +130,8 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
-            default:
-                CurrencyOverviewAdapter.CurrencyPieChartViewHolder chartHolder = (CurrencyOverviewAdapter.CurrencyPieChartViewHolder) holder;
+            case 1:
+                CurrencyOverviewAdapter.CurrencyPieChartViewHolder piechartHolder = (CurrencyOverviewAdapter.CurrencyPieChartViewHolder) holder;
 
                 List<PieEntry> entries = new ArrayList<>();
                 Cursor dataCursor = getDataCursor();
@@ -143,36 +160,162 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } while (dataCursor.moveToNext());
 
                     // Animation on show
-                    chartHolder.pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
-                    chartHolder.pieChart.setDrawHoleEnabled(true);
-                    chartHolder.pieChart.setHoleColor(mContext.getResources().getColor(R.color.activity_main_background));
+                    piechartHolder.pieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
+                    piechartHolder.pieChart.setDrawHoleEnabled(true);
+                    piechartHolder.pieChart.setHoleColor(mContext.getResources().getColor(R.color.white));
                     PieDataSet dataSet = new PieDataSet(entries, "");
-                    chartHolder.pieChart.setHoleRadius(58f);
-                    chartHolder.pieChart.setTransparentCircleRadius(61f);
-                    chartHolder.pieChart.setOnChartValueSelectedListener(chartHolder);
+                    piechartHolder.pieChart.setHoleRadius(58f);
+                    piechartHolder.pieChart.setTransparentCircleRadius(61f);
+                    piechartHolder.pieChart.setOnChartValueSelectedListener(piechartHolder);
 
                     dataSet.setColors(new int[]{R.color.green2, R.color.blue, R.color.red,
                             R.color.yellow, R.color.darkBlue, R.color.lightGray, R.color.wine, R.color.darkGreen, R.color.darkGray}, mContext);
 
-                    Legend l = chartHolder.pieChart.getLegend();
+                    Legend l = piechartHolder.pieChart.getLegend();
                     l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
                     l.setXEntrySpace(7f);
                     l.setYEntrySpace(5f);
 
                     PieData data = new PieData(dataSet);
-                    chartHolder.pieChart.setData(data);
+                    piechartHolder.pieChart.setData(data);
                     data.setValueTextSize(10f);
                     data.setValueTextColor(Color.BLACK);
                     data.setDrawValues(false);
                     //Hides labels
-                    chartHolder.pieChart.setDrawEntryLabels(false);
+                    piechartHolder.pieChart.setDrawEntryLabels(false);
                     // Hide Description
-                    chartHolder.pieChart.setDescription(null);
-                    chartHolder.pieChart.invalidate(); // refresh
-                    chartHolder.pieChart.setVisibility(View.VISIBLE);
+                    piechartHolder.pieChart.setDescription(null);
+                    piechartHolder.pieChart.invalidate(); // refresh
+                    piechartHolder.pieChart.setVisibility(View.VISIBLE);
                 } else {
-                    chartHolder.pieChart.setVisibility(View.GONE);
+                    piechartHolder.pieChart.setVisibility(View.GONE);
                 }
+                break;
+            default:
+                mCursor.moveToPosition(0);
+                CurrencyChartViewHolder chartHolder = (CurrencyChartViewHolder) holder;
+                mChartLabel = (TextView) chartHolder.chartLabel;
+
+                List<Entry> growthEntries = new ArrayList<Entry>();
+                List<Entry> buyEntries = new ArrayList<Entry>();
+                //TODO: Change so year can be selected or inputed by user
+                String queryYear = "2017";
+
+                Cursor growthCursor = null;
+                Cursor buyCursor = null;
+                try {
+                    growthCursor = getGrowthCursor(queryYear);
+                    buyCursor = getBuyGrowthCursor(queryYear);
+                }catch (SQLException e){
+                    Log.e(LOG_TAG, e.toString());
+                }
+
+                if(growthCursor != null && growthCursor.getCount() > 0 && buyCursor != null && buyCursor.getCount() > 0){
+
+                    // Make growth entries
+                    growthCursor.moveToFirst();
+                    do{
+                        long timestamp = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
+                        long month = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.MONTH));
+                        long year = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.YEAR));
+                        float value = growthCursor.getFloat(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL));
+                        // Check if already reach others field
+                        // Show each pie data order in asc form
+                        // Do not show sold stocks
+                        growthEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+
+                    } while (growthCursor.moveToNext());
+
+                    // Make buy entries
+                    buyCursor.moveToFirst();
+                    do{
+                        long timestamp = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP));
+                        long month = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.MONTH));
+                        long year = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.YEAR));
+                        float value = buyCursor.getFloat(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TOTAL));
+                        // Check if already reach others field
+                        // Show each pie data order in asc form
+                        // Do not show sold stocks
+                        buyEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+
+                    } while (buyCursor.moveToNext());
+
+                    Description desc = chartHolder.chart.getDescription();
+                    desc.setEnabled(false);
+
+                    // Disable zoom
+                    chartHolder.chart.setDoubleTapToZoomEnabled(false);
+                    chartHolder.chart.setPinchZoom(false);
+                    chartHolder.chart.setScaleEnabled(false);
+
+                    chartHolder.chart.setOnChartValueSelectedListener(valueSelectedListener());
+
+                    Legend legend = chartHolder.chart.getLegend();
+                    legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                    legend.setXEntrySpace(20);
+
+                    LineDataSet growthDS = new LineDataSet(growthEntries, "Atual"); // add entries to dataset
+                    growthDS.setHighLightColor(Color.BLACK);
+                    growthDS.setLineWidth(3);
+                    growthDS.setColor(mContext.getResources().getColor(R.color.green));
+                    growthDS.setCircleRadius(7f);
+                    growthDS.setCircleHoleRadius(5f);
+                    growthDS.setValueTextSize(10f);
+                    growthDS.setDrawValues(false);
+
+                    LineDataSet buyDS = new LineDataSet(buyEntries, "Comprado");
+                    buyDS.setHighLightColor(Color.BLACK);
+                    buyDS.setLineWidth(3);
+                    buyDS.setCircleRadius(7f);
+                    buyDS.setCircleHoleRadius(5f);
+                    buyDS.setValueTextSize(10f);
+                    buyDS.setDrawValues(false);
+
+                    final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
+
+                    XAxis xAxis = chartHolder.chart.getXAxis();
+                    xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+                    xAxis.setDrawAxisLine(false);
+                    xAxis.setDrawGridLines(false);
+                    xAxis.setValueFormatter(axisValueFormatter());
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xAxis.setLabelCount(8);
+                    xAxis.setXOffset(20f);
+                    xAxis.setAxisMinValue(0);
+                    xAxis.setAxisMaxValue(11);
+                    xAxis.setTextSize(8f);
+
+                    YAxis yAxisLeft = chartHolder.chart.getAxisLeft();
+                    yAxisLeft.setDrawAxisLine(false);
+                    //yAxisLeft.setDrawGridLines(false);
+                    yAxisLeft.setGranularity(0.1f);
+                    yAxisLeft.setTextSize(10f);
+                    yAxisLeft.setLabelCount(5);
+                    yAxisLeft.setXOffset(20f);
+                    yAxisLeft.setTextSize(8f);
+
+                    YAxis yAxisRight = chartHolder.chart.getAxisRight();
+                    yAxisRight.setDrawGridLines(false);
+                    yAxisRight.setDrawAxisLine(false);
+                    yAxisRight.setDrawLabels(false);
+                    yAxisRight.setXOffset(20f);
+
+                    // use the interface ILineDataSet
+                    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                    dataSets.add(growthDS);
+                    dataSets.add(buyDS);
+
+                    LineData lineData = new LineData(dataSets);
+                    chartHolder.chart.setData(lineData);
+                    chartHolder.chart.invalidate();
+
+                    chartHolder.chart.setVisibility(View.VISIBLE);
+                    chartHolder.chart_cardview.setVisibility(View.VISIBLE);
+                } else {
+                    chartHolder.chart.setVisibility(View.GONE);
+                    chartHolder.chart_cardview.setVisibility(View.GONE);
+                }
+                break;
         }
 
     }
@@ -182,6 +325,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         int count = 0;
         if (mCursor != null && mCursor.getCount() > 0) {
             count = mCursor.getCount();
+            count++;
             count++;
         }
         return count;
@@ -212,7 +356,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     class CurrencyPieChartViewHolder extends RecyclerView.ViewHolder implements OnChartValueSelectedListener {
 
-        @BindView(R.id.chart)
+        @BindView(R.id.piechart)
         PieChart pieChart;
 
         public CurrencyPieChartViewHolder(View itemView) {
@@ -249,6 +393,23 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    class CurrencyChartViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.chart_cardview)
+        CardView chart_cardview;
+
+        @BindView(R.id.chart)
+        LineChart chart;
+
+        @BindView(R.id.chart_label)
+        TextView chartLabel;
+
+        public CurrencyChartViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
     private Cursor getDataCursor(){
         String[] affectedColumn = {PortfolioContract.CurrencyData.COLUMN_CURRENT_PERCENT,
                 PortfolioContract.CurrencyData.COLUMN_SYMBOL};
@@ -260,4 +421,75 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 PortfolioContract.CurrencyData.URI,
                 affectedColumn, null, null, sortOrder);
     }
+
+    private Cursor getGrowthCursor(String year){
+        String sortOrder = PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP + " ASC Limit 12";
+
+        String selection = PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " = ? AND "
+                + PortfolioContract.PortfolioGrowth.YEAR + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.ProductType.CURRENCY), year};
+
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.PortfolioGrowth.URI,
+                null, selection, selectionArguments, sortOrder);
+    }
+
+    private Cursor getBuyGrowthCursor(String year){
+        String sortOrder = PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP + " ASC Limit 12";
+        String selection = PortfolioContract.BuyGrowth.COLUMN_TYPE + " = ? AND "
+                + PortfolioContract.BuyGrowth.YEAR + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.ProductType.CURRENCY), year};
+
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI,
+                null, selection, selectionArguments, sortOrder);
+    }
+
+    private OnChartValueSelectedListener valueSelectedListener(){
+        OnChartValueSelectedListener valueSelectedListener = new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                int month = (int) e.getX();
+                float value = e.getY();
+                String year = e.getData().toString();
+                int chart = h.getDataSetIndex();
+
+                final String[] months = mContext.getResources().getStringArray(R.array.chart_months);
+
+                Locale locale = new Locale("pt", "BR");
+                NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+
+                String tipo;
+                if (chart == 1){
+                    tipo = mContext.getResources().getString(R.string.portfolio_bought_label) + ": ";
+                } else {
+                    tipo = mContext.getResources().getString(R.string.portfolio_current_label) + ": ";
+                }
+                mChartLabel.setText(tipo + String.valueOf(months[month] + ", " + year + " - " + formatter.format(e.getY())));
+            }
+
+            @Override
+            public void onNothingSelected() {
+                mChartLabel.setText("");
+            }
+        };
+
+        return valueSelectedListener;
+    }
+
+    private IAxisValueFormatter axisValueFormatter() {
+        IAxisValueFormatter axisValueFormatter = new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
+                int month = (int) value;
+                return months[month];
+            }
+        };
+        return axisValueFormatter;
+    };
 }

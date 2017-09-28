@@ -258,6 +258,8 @@
 
     <!-- Portfolio -->
     <string name="portfolio_label">Carteira Completa</string>
+    <string name="asset_allocation_label">Alocação de Ativos</string>
+    <string name="growth_chart_label">Gráfico de Crescimento</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
@@ -460,19 +462,25 @@
     \u2022 Moedas: Investimento em câmbio.\n
     \u2022 Outros: Outros investimento que deseje adicionar e organizar na sua carteira.\n\n
 
-    O objetivo é que você consiga organizar sua carteira e consultar os rendimentos e valorização de cada papel e da carteira como um todo.\n</string>
+    O objetivo é que você consiga organizar sua carteira e consultar os rendimentos e valorização de cada papel e da carteira como um todo.\n\n
+    </string>
 
     <!-- Comming Soon -->
     <string name="coming_soon_description">Nós esperamos que você goste dessa aplicação e que ela seja útil para você.
         Nós ainda estamos corrigindo problemas, fazendo melhorias e desenvolvendo novos recursos. Aqui estão algumas das funcionalidades que estamos desenvolvendo:\n\n
 
+        \u2022 Botão de ajuda explicando cada informação fornecida.\n
         \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
         \u2022 Adicionar funcionalidade para fazer backup do seu portfolio em arquivo para transferencia ou nuvem.\n
-        \u2022 Gráfico mostrando o crescimento do portfólio.\n
         \u2022 Gráfico mostrando o crescimento dos rendimentos.\n
         \u2022 Constante correção de problemas e melhorias.\n\n
 
         Se você encontrou algum problema ou tem alguma ideia de melhoria para o aplicativo e acha que seria interessante, por favor não hesite em nos contatar.
-        Queremos fazer esse aplicativo o melhor possível para os investidores.\n</string>
+        Queremos fazer esse aplicativo o melhor possível para os investidores.\n\n
+    </string>
+
+    <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>
+
+    <string name="app_version">\n\nVersão: %1$s</string>
 </resources>

@@ -115,7 +115,8 @@ public class StockIntentService extends IntentService {
                     responseGetStock = response.body();
                     count++;
                 } while (response.code() == 400 && count < 20);
-                if(response.isSuccessful() && responseGetStock.getStockQuotes() != null &&
+
+                if(response.isSuccessful() && responseGetStock.getStockQuotes() != null && !responseGetStock.getStockQuotes().isEmpty() &&
                         responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
 
                     // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
@@ -155,7 +156,7 @@ public class StockIntentService extends IntentService {
                     count++;
                 } while (response.code() == 400 && count < 20);
 
-                if(response.isSuccessful() && responseGetStocks.getStockQuotes() != null) {
+                if(response.isSuccessful() && responseGetStocks != null && responseGetStocks.getStockQuotes() != null && !responseGetStocks.getStockQuotes().isEmpty()) {
                     String tableSymbol = "";
                     ContentValues stockDataCV = new ContentValues();
                     for(Stock stock : responseGetStocks.getStockQuotes()) {
