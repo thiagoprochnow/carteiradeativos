@@ -31,6 +31,7 @@ import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
+import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ComingSoonFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
@@ -219,6 +220,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_coming_soon:
                 setTitle(R.string.title_coming_soon);
                 replaceFragment(new ComingSoonFragment());
+                break;
+            case R.id.nav_item_backup_restore:
+                setTitle(R.string.title_backup_restore);
+                replaceFragment(new BackupRestoreFragment());
                 break;
         }
     }

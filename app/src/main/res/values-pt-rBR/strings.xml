@@ -423,6 +423,7 @@
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
     <string name="title_coming_soon">Em Breve</string>
+    <string name="title_backup_restore">Cópia e Restauração</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -451,6 +452,22 @@
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
+
+    <!-- Backup and Restore -->
+    <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
+        Selecione uma das opções abaixo para fazer o download do seu banco em um arquivo .db e utilize-o para carregar seus dados em outro dispositivo ou como backup.</string>
+    <string name="backup_description">Faça um backup do banco de dados selecionando uma das opções abaixo.</string>
+    <string name="backup_title">Backup</string>
+    <string name="restore_title">Restauração</string>
+    <string name="download_button">Download</string>
+    <string name="file_button">Arquivo</string>
+    <string name="sdcard_button">SD Card</string>
+    <string name="google_drive_button">Google Drive</string>
+    <string name="backup_download_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
+    <string name="backup_download_write_success_toast">Banco de dados salvo com sucesso em Download. Salvo em %s.</string>
+    <string name="backup_sdcard_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
+    <string name="backup_sdcard_write_success_toast">Banco de dados salvo com sucesso no SD Card. Salvo em %s.</string>
+    <string name="restore_error_toast">Erro na restauração</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
