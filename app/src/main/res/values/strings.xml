@@ -455,19 +455,20 @@
     <!-- Backup and Restore -->
     <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.
         Select one of the below options to make the download of your databse in a .db file and use it to upload your data in another device or as backup.</string>
-    <string name="backup_description">Make a database backup by selecting one of the options below.</string>
+    <string name="backup_description">Make a database backup by selecting one of the options below. <b>Make sure your current application is on latest version to avoid problem on restore.</b></string>
     <string name="restore_description">Make a database restore by selecting one of the options below.</string>
     <string name="backup_title">Backup</string>
     <string name="restore_title">Restore</string>
-    <string name="download_button">Download</string>
+    <string name="download_button">Downloads</string>
     <string name="file_button">File System</string>
     <string name="sdcard_button">SD Card</string>
     <string name="google_drive_button">Google Drive</string>
     <string name="backup_download_write_error_toast">Error backing up database. No write pemission on folder.</string>
-    <string name="backup_download_write_success_toast">Database backup successfully Downloaded. Saved in %s.</string>
+    <string name="backup_download_write_success_toast">Database backup successfully saved in Downloads directory. Saved in %s.</string>
     <string name="backup_sdcard_write_error_toast">Error backing up database. No write pemission on folder.</string>
     <string name="backup_sdcard_write_success_toast">Database backup successfully saved on SD Card. Saved in %s.</string>
     <string name="restore_error_toast">Error restoring file.</string>
+    <string name="restore_wrong_extension">Invalid file, please upload a database file.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n

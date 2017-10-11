@@ -456,18 +456,19 @@
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
         Selecione uma das opções abaixo para fazer o download do seu banco em um arquivo .db e utilize-o para carregar seus dados em outro dispositivo ou como backup.</string>
-    <string name="backup_description">Faça um backup do banco de dados selecionando uma das opções abaixo.</string>
+    <string name="backup_description">Faça um backup do banco de dados selecionando uma das opções abaixo. <b>Verifique se seu aplicativo está atualizado para evitar problemas na restauração.</b></string>
     <string name="backup_title">Backup</string>
     <string name="restore_title">Restauração</string>
-    <string name="download_button">Download</string>
+    <string name="download_button">Downloads</string>
     <string name="file_button">Arquivo</string>
     <string name="sdcard_button">SD Card</string>
     <string name="google_drive_button">Google Drive</string>
     <string name="backup_download_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
-    <string name="backup_download_write_success_toast">Banco de dados salvo com sucesso em Download. Salvo em %s.</string>
+    <string name="backup_download_write_success_toast">Banco de dados salvo com sucesso no diretorio Downloads. Salvo em %s.</string>
     <string name="backup_sdcard_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
     <string name="backup_sdcard_write_success_toast">Banco de dados salvo com sucesso no SD Card. Salvo em %s.</string>
     <string name="restore_error_toast">Erro na restauração</string>
+    <string name="restore_wrong_extension">Arquivo inválido, por favor escolha um arquivo de banco de dados.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
