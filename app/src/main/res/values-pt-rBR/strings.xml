@@ -462,10 +462,12 @@
     <string name="backup_title">Backup</string>
     <string name="restore_title">Restauração</string>
     <string name="download_button">Downloads</string>
-    <string name="download_folder">Pasta Download</string>
+    <string name="download_folder">Download</string>
     <string name="file_button">Arquivo</string>
     <string name="sdcard_button">SD Card</string>
-    <string name="google_drive_button">Google Drive</string>
+    <string name="google_drive_button">Drive</string>
+    <string name="google_drive_connection_error">Erro ao conectar no seu Google Drive.</string>
+    <string name="backup_drive_success">Backup do banco de dados salvo com sucesso no Google Drive.</string>
     <string name="backup_download_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
     <string name="backup_overwrite">Você já tem um arquivo de backup salvo, você quer sobrescrever-lo?</string>
     <string name="backup_overwrite_title">Sobrescrever Backup.</string>

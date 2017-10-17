@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.guiainvestimento.R;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mStockReceiver = false;
     boolean mFiiReceiver = false;
     boolean mCurrencyReceiver = false;
+
+    GoogleApiClient mGoogleApiClient;
 
     private Menu mMenu;
     @Override

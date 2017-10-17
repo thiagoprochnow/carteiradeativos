@@ -19,6 +19,8 @@ public final class Constants {
     // To start activitys for result
     public static class Intent{
         public static final int IMPORT_DB = 1;
+        public static final int GET_DRIVE_FILE = 2;
+        public static final int DRIVE_CONNECTION_RESOLUTION = 3;
     }
 
     // Value of stock/fii type, buy, sell, bonification, grouping, split

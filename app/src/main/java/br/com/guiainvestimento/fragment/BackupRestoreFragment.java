@@ -7,11 +7,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +25,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.MetadataChangeSet;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,9 +53,16 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.DOWNLOAD_SERVICE;
 
-public class BackupRestoreFragment extends BaseFragment{
+public class BackupRestoreFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String LOG_TAG = BackupRestoreFragment.class.getSimpleName();
     private DbHelper mDBHelper;
+    private GoogleApiClient mGoogleApiClient;
+
+    private String NAME;
+    private String PACKAGE_NAME;
+    private String DB_FILEPATH;
+    private File mCurrentDB;
+    private String mBackupName;
 
     @BindView(R.id.download_backup_db)
     LinearLayout downloadBackupDB;
@@ -72,6 +91,13 @@ public class BackupRestoreFragment extends BaseFragment{
 
         // Gets SD Card write permission if needed
         mDBHelper = new DbHelper(getActivity().getBaseContext());
+
+        NAME = "Portfolio.db";
+        PACKAGE_NAME = getActivity().getApplicationContext().getPackageName();
+        DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
+        mCurrentDB = new File(DB_FILEPATH);
+        mBackupName = "GIBackup.db";
+
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
         }
@@ -93,8 +119,7 @@ public class BackupRestoreFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 File dir = new File("//sdcard//Download//");
-                String backupName = "GIBackup.db";
-                File backupFile = new File(dir, backupName);
+                File backupFile = new File(dir, mBackupName);
                 if (backupFile.exists()){
                     new AlertDialog.Builder(getContext())
                             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -145,8 +170,7 @@ public class BackupRestoreFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 File sdCardDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                String backupName = "GIBackup.db";
-                File backupFile = new File(sdCardDir, backupName);
+                File backupFile = new File(sdCardDir, mBackupName);
                 if (backupFile.exists()){
                     new AlertDialog.Builder(getContext())
                             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -197,6 +221,67 @@ public class BackupRestoreFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
 
+                // Establish Drive Connection
+                establishDriveConnection();
+
+                if (mGoogleApiClient.isConnected()){
+
+                    final ResultCallback<DriveFolder.DriveFileResult> fileCallback = new
+                            ResultCallback<DriveFolder.DriveFileResult>() {
+                                @Override
+                                public void onResult(DriveFolder.DriveFileResult result) {
+                                    if (!result.getStatus().isSuccess()) {
+                                        Log.e(LOG_TAG, "Error on fileCallback");
+                                        return;
+                                    }
+                                }
+                            };
+
+                    // create new contents resource
+                    final ResultCallback<DriveApi.DriveContentsResult> contentsCallback = new
+                            ResultCallback<DriveApi.DriveContentsResult>() {
+                                @Override
+                                public void onResult(DriveApi.DriveContentsResult result) {
+                                    if (!result.getStatus().isSuccess()) {
+                                        Log.e(LOG_TAG, "Error on contentsCallback");
+                                        return;
+                                    }
+
+                                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                                            .setTitle(mBackupName)
+                                            .setMimeType("text/plain").build();
+
+                                    //Put backup data in the file
+                                    DriveContents contents = result.getDriveContents();
+                                    try {
+                                        ParcelFileDescriptor parcelFileDescriptor = contents.getParcelFileDescriptor();
+                                        FileInputStream fileInputStream = new FileInputStream(parcelFileDescriptor
+                                                .getFileDescriptor());
+                                        // Read to the end of the file.
+                                        fileInputStream.read(new byte[fileInputStream.available()]);
+
+                                        // Append to the file.
+                                        FileOutputStream fileOutputStream = new FileOutputStream(parcelFileDescriptor
+                                                .getFileDescriptor());
+
+                                        FileUtils.copyFile(new FileInputStream(mCurrentDB), fileOutputStream);
+
+                                        // Create a file in the root folder
+                                        Drive.DriveApi.getRootFolder(mGoogleApiClient)
+                                                .createFile(mGoogleApiClient, changeSet, contents)
+                                                .setResultCallback(fileCallback);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            };
+
+                    Drive.DriveApi.newDriveContents(mGoogleApiClient)
+                            .setResultCallback(contentsCallback);
+                    Toast.makeText(mContext, getActivity().getResources().getString(R.string.backup_drive_success), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
+                }
             }
         };
         return onclick;
@@ -251,46 +336,33 @@ public class BackupRestoreFragment extends BaseFragment{
         View.OnClickListener onclick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mGoogleApiClient.isConnected()){
+                    IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder()
+                            .setMimeType(new String[] { DriveFolder.MIME_TYPE , "text/plain"})
+                            .build(mGoogleApiClient);
+                    try {
+                        startIntentSenderForResult(intentSender, Constants.Intent.GET_DRIVE_FILE, null, 0, 0, 0, null);
+                    } catch (IntentSender.SendIntentException e){
+                        Log.e(LOG_TAG, "IntentSender error: " + e.toString());
+                    }
+                } else {
+                    Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
+                }
             }
         };
         return onclick;
     }
 
-
-    private boolean exportDBtoDrive(Context context) throws IOException {
-
-        String NAME = "Portfolio.db";
-        String PACKAGE_NAME = context.getApplicationContext().getPackageName();
-        String DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
-        String backupName = "GIBackup.db";
-
-        File currentDB = new File(DB_FILEPATH);
-        File backupDB = new File(backupName);
-        backupDB.setReadable(true);
-        backupDB.setWritable(true);
-        backupDB.setExecutable(true);
-        FileUtils.copyFile(new FileInputStream(currentDB), new FileOutputStream(backupDB));
-
-
-        return true;
-    }
-
     private String exportDBtoDowloads(Context context) throws IOException {
         File dir = new File("/sdcard/Download/");
 
-        String NAME = "Portfolio.db";
-        String PACKAGE_NAME = context.getApplicationContext().getPackageName();
-        String DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
-        String backupName = "GIBackup.db";
-
         if (dir.canWrite()) {
-            File currentDB = new File(DB_FILEPATH);
-            File backupDB = new File(dir, backupName);
+            File backupDB = new File(dir, mBackupName);
             backupDB.setReadable(true);
             backupDB.setWritable(true);
             backupDB.setExecutable(true);
             backupDB.createNewFile();
-            FileUtils.copyFile(new FileInputStream(currentDB), new FileOutputStream(backupDB));
+            FileUtils.copyFile(new FileInputStream(mCurrentDB), new FileOutputStream(backupDB));
 
             return backupDB.getAbsolutePath();
         } else{
@@ -301,18 +373,13 @@ public class BackupRestoreFragment extends BaseFragment{
     private String exportDBtoSD(Context context) throws IOException{
         File sdCardDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 
-        String NAME = "Portfolio.db";
-        String PACKAGE_NAME = context.getApplicationContext().getPackageName();
-        String DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
-
         if (sdCardDir.canWrite()) {
-            File currentDB = new File(DB_FILEPATH);
             File backupDB = new File(sdCardDir, "GIBackup.db");
             backupDB.setReadable(true);
             backupDB.setWritable(true);
             backupDB.setExecutable(true);
             backupDB.createNewFile();
-            FileUtils.copyFile(new FileInputStream(currentDB), new FileOutputStream(backupDB));
+            FileUtils.copyFile(new FileInputStream(mCurrentDB), new FileOutputStream(backupDB));
 
             // Adds to Download Manager
 
@@ -325,15 +392,11 @@ public class BackupRestoreFragment extends BaseFragment{
     private boolean importDBfromFolder(Context context) throws IOException{
         String BACKUP_NAME = "GIBackup.db";
         String BACKUP_PATH = "/sdcard/Download/";
-        String NAME = "Portfolio.db";
-        String PACKAGE_NAME = getContext().getApplicationContext().getPackageName();
-        String DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
 
-        File currentDB = new File(DB_FILEPATH);
         File backupDB = new File(BACKUP_PATH, BACKUP_NAME);
 
         if(backupDB.exists() && backupDB.canRead() && isDBExtension(backupDB.getName())){
-            FileUtils.copyFile(new FileInputStream(backupDB), new FileOutputStream(currentDB));
+            FileUtils.copyFile(new FileInputStream(backupDB), new FileOutputStream(mCurrentDB));
             Toast.makeText(context, context.getString(R.string.restore_success), Toast.LENGTH_LONG).show();
 
             // Restart application
@@ -360,14 +423,10 @@ public class BackupRestoreFragment extends BaseFragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String NAME = "Portfolio.db";
-        final String PACKAGE_NAME = getContext().getApplicationContext().getPackageName();
-        String DB_FILEPATH = "/data/data/" + PACKAGE_NAME + "/databases/" + NAME;
 
         if (requestCode == Constants.Intent.IMPORT_DB) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                final File currentDB = new File(DB_FILEPATH);
                 final Uri backupUri = data.getData();
                 String fileExtension = getFileExtension(backupUri);
                 if(fileExtension.equalsIgnoreCase("db")) {
@@ -381,7 +440,7 @@ public class BackupRestoreFragment extends BaseFragment{
                         public void onClick(DialogInterface dialog, int which) {
                             try{
                                 FileInputStream backupInputStream = (FileInputStream) getContext().getContentResolver().openInputStream(backupUri);
-                                FileUtils.copyFile(backupInputStream, new FileOutputStream(currentDB));
+                                FileUtils.copyFile(backupInputStream, new FileOutputStream(mCurrentDB));
 
                                 // Restart application
                                 Intent applicationIntent = getContext().getApplicationContext().getPackageManager().getLaunchIntentForPackage(PACKAGE_NAME);
@@ -451,4 +510,40 @@ public class BackupRestoreFragment extends BaseFragment{
         }
         return false;
     }
+
+    private void establishDriveConnection(){
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addApi(Drive.API)
+                    .addScope(Drive.SCOPE_FILE)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (result.hasResolution()) {
+            try {
+                result.startResolutionForResult(getActivity(), Constants.Intent.DRIVE_CONNECTION_RESOLUTION);
+            } catch (IntentSender.SendIntentException e) {
+                // Unable to resolve, message user appropriately
+            }
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), getActivity(), 0).show();
+        }
+    }
+
 }

@@ -462,10 +462,12 @@
     <string name="backup_title">Backup</string>
     <string name="restore_title">Restore</string>
     <string name="download_button">Downloads</string>
-    <string name="download_folder">Download Folder</string>
+    <string name="download_folder">Download</string>
     <string name="file_button">File</string>
     <string name="sdcard_button">SD Card</string>
-    <string name="google_drive_button">Google Drive</string>
+    <string name="google_drive_button">Drive</string>
+    <string name="google_drive_connection_error">Error connecting to your Google Drive.</string>
+    <string name="backup_drive_success">Database backup successfully saved in Google Drive.</string>
     <string name="backup_download_write_error_toast">Error backing up database. No write pemission on folder.</string>
     <string name="backup_overwrite">You already have a backup file saved, do you want to overwrite it?</string>
     <string name="backup_overwrite_title">Overwrite Backup.</string>
