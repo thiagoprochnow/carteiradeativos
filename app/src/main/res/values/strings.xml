@@ -466,7 +466,9 @@
     <string name="file_button">File</string>
     <string name="sdcard_button">SD Card</string>
     <string name="google_drive_button">Drive</string>
+    <string name="google_drive_connection">Connecting on your Google Drive.</string>
     <string name="google_drive_connection_error">Error connecting to your Google Drive.</string>
+    <string name="google_drive_read_file_error">Error reading file from Google Drive.</string>
     <string name="backup_drive_success">Database backup successfully saved in Google Drive.</string>
     <string name="backup_download_write_error_toast">Error backing up database. No write pemission on folder.</string>
     <string name="backup_overwrite">You already have a backup file saved, do you want to overwrite it?</string>

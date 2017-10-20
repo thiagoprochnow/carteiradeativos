@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -33,18 +34,25 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.activity.MainActivity;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.DbHelper;
+import br.com.guiainvestimento.util.ApiClientAsyncTask;
 import br.com.guiainvestimento.util.Util;
 import br.com.guiainvestimento.utils.FileUtils;
 import butterknife.BindView;
@@ -112,6 +120,29 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
 
         getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Drive.API)
+                .addScope(Drive.SCOPE_FILE)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        mGoogleApiClient = null;
+                    }
+                })
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
     }
 
     private View.OnClickListener downloadBackupOnClick() {
@@ -249,7 +280,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
 
                                     MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                                             .setTitle(mBackupName)
-                                            .setMimeType("text/plain").build();
+                                            .setMimeType("application/vnd.oasis.opendocument.database").build();
 
                                     //Put backup data in the file
                                     DriveContents contents = result.getDriveContents();
@@ -279,6 +310,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                     Drive.DriveApi.newDriveContents(mGoogleApiClient)
                             .setResultCallback(contentsCallback);
                     Toast.makeText(mContext, getActivity().getResources().getString(R.string.backup_drive_success), Toast.LENGTH_SHORT).show();
+                } else if(mGoogleApiClient.isConnecting()){
+                    Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
                 }
@@ -338,7 +371,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             public void onClick(View v) {
                 if (mGoogleApiClient.isConnected()){
                     IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder()
-                            .setMimeType(new String[] { DriveFolder.MIME_TYPE , "text/plain"})
+                            .setMimeType(new String[] { DriveFolder.MIME_TYPE , "application/vnd.oasis.opendocument.database", "text/plain"})
                             .build(mGoogleApiClient);
                     try {
                         startIntentSenderForResult(intentSender, Constants.Intent.GET_DRIVE_FILE, null, 0, 0, 0, null);
@@ -400,11 +433,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             Toast.makeText(context, context.getString(R.string.restore_success), Toast.LENGTH_LONG).show();
 
             // Restart application
-            Intent applicationIntent = getContext().getApplicationContext().getPackageManager()
-                    .getLaunchIntentForPackage(PACKAGE_NAME);
-            applicationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             getActivity().finish();
-            startActivity(applicationIntent);
+            startActivity(getActivity().getIntent());
         } else {
             Toast.makeText(context, context.getString(R.string.restore_download_folder_error, BACKUP_PATH), Toast.LENGTH_LONG).show();
         }
@@ -422,8 +452,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == Constants.Intent.IMPORT_DB) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
@@ -443,11 +472,9 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                                 FileUtils.copyFile(backupInputStream, new FileOutputStream(mCurrentDB));
 
                                 // Restart application
-                                Intent applicationIntent = getContext().getApplicationContext().getPackageManager().getLaunchIntentForPackage(PACKAGE_NAME);
-                                applicationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 Toast.makeText(getContext().getApplicationContext(), getContext().getApplicationContext().getString(R.string.restore_success), Toast.LENGTH_LONG).show();
                                 getActivity().finish();
-                                startActivity(applicationIntent);
+                                startActivity(getActivity().getIntent());
                             } catch (IOException e){
                                 Log.e(LOG_TAG, e.toString());
                             }
@@ -459,6 +486,29 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                    // File extension is wrong, not a valid file to import
                    Toast.makeText(getContext(), getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
                 }
+            }
+        } else if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION){
+            if(mGoogleApiClient != null && !mGoogleApiClient.isConnecting()){
+                mGoogleApiClient.connect();
+            }
+        } else if (requestCode == Constants.Intent.GET_DRIVE_FILE){
+            if (resultCode == RESULT_OK) {
+                new AlertDialog.Builder(getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(getContext().getString(R.string.restore_confirm_title))
+                        .setMessage(getContext().getString(R.string.restore_confirm))
+                        .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                // Get file from Google Drive server
+                                DriveId driveId = (DriveId) data.getParcelableExtra(
+                                        OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+                                new RetrieveDriveFileContentsAsyncTask(getActivity()).execute(driveId);
+                            }
+                        }).setNegativeButton(getContext().getString(R.string.no), null)
+                        .show();
             }
         }
     }
@@ -543,6 +593,50 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             }
         } else {
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), getActivity(), 0).show();
+        }
+    }
+
+    final private class RetrieveDriveFileContentsAsyncTask
+            extends ApiClientAsyncTask<DriveId, Boolean, String> {
+
+        public RetrieveDriveFileContentsAsyncTask(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected String doInBackgroundConnected(DriveId... params) {
+            String contents = null;
+            DriveFile file = params[0].asDriveFile();
+            DriveApi.DriveContentsResult driveContentsResult =
+                    file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
+            if (!driveContentsResult.getStatus().isSuccess()) {
+                return null;
+            }
+            DriveContents driveContents = driveContentsResult.getDriveContents();
+            FileInputStream inputStream = (FileInputStream) driveContents.getInputStream();
+
+            try{
+                FileUtils.copyFile(inputStream, new FileOutputStream(mCurrentDB));
+            } catch (IOException e){
+                Log.e(LOG_TAG, e.toString());
+            }
+
+            driveContents.discard(getGoogleApiClient());
+            return "true";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (result != "true") {
+                Log.d(LOG_TAG, "Error while reading from the file");
+                return;
+            }
+
+            // Send broadcast to restart app
+            getActivity().finish();
+            startActivity(getActivity().getIntent());
+            Toast.makeText(mContext, mContext.getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -48,7 +48,6 @@ import br.com.guiainvestimento.listener.ProductListener;
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
     protected DrawerLayout mDrawerLayout;
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -132,6 +131,21 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrency, new IntentFilter(Constants.Receiver.CURRENCY));
     }
 
+    // Send result for Fragment
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION) {
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        } else if (requestCode == Constants.Intent.GET_DRIVE_FILE){
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
