@@ -465,7 +465,7 @@
     <string name="download_folder">Download</string>
     <string name="file_button">File</string>
     <string name="sdcard_button">SD Card</string>
-    <string name="google_drive_button">Drive</string>
+    <string name="google_drive_button">Google Drive</string>
     <string name="google_drive_connection">Connecting on your Google Drive.</string>
     <string name="google_drive_connection_error">Error connecting to your Google Drive.</string>
     <string name="google_drive_read_file_error">Error reading file from Google Drive.</string>

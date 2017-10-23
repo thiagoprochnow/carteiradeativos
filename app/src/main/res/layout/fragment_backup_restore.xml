@@ -48,38 +48,12 @@
             android:layout_marginBottom="30dp">
 
             <LinearLayout
-                android:id="@+id/download_backup_db"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:clickable="true"
-                android:background="@drawable/download_button"
-                android:layout_marginRight="10dp">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:src="@drawable/folder_100"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:paddingTop="4dp"
-                    android:paddingLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/download_button" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/sdcard_backup_db"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:clickable="true"
+                android:padding="2dp"
                 android:background="@drawable/download_button"
                 android:layout_marginRight="10dp">
                 <ImageView
@@ -107,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:clickable="true"
+                android:padding="2dp"
                 android:background="@drawable/download_button">
                 <ImageView
                     android:layout_width="20dp"
@@ -158,38 +133,12 @@
             android:layout_marginBottom="30dp">
 
             <LinearLayout
-                android:id="@+id/download_folder_restore_db"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:clickable="true"
-                android:background="@drawable/download_button"
-                android:layout_marginRight="10dp">
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:src="@drawable/folder_100"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="14dp"
-                    android:paddingTop="4dp"
-                    android:paddingLeft="5dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/download_folder" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/file_restore_db"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:clickable="true"
+                android:padding="2dp"
                 android:background="@drawable/download_button"
                 android:layout_marginRight="10dp">
                 <ImageView
@@ -198,7 +147,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:src="@drawable/folder_100"
+                    android:src="@drawable/sd_100"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center" />
                 <TextView
@@ -208,7 +157,7 @@
                     android:paddingTop="4dp"
                     android:paddingLeft="5dp"
                     android:layout_marginRight="10dp"
-                    android:text="@string/file_button" />
+                    android:text="@string/sdcard_button" />
             </LinearLayout>
 
 
@@ -218,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:clickable="true"
+                android:padding="2dp"
                 android:background="@drawable/download_button">
                 <ImageView
                     android:layout_width="20dp"

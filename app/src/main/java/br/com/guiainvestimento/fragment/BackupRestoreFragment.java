@@ -72,17 +72,11 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     private File mCurrentDB;
     private String mBackupName;
 
-    @BindView(R.id.download_backup_db)
-    LinearLayout downloadBackupDB;
-
     @BindView(R.id.sdcard_backup_db)
     LinearLayout sdcardBackupDB;
 
     @BindView(R.id.google_drive_backup_db)
     LinearLayout googleDriveBackupDB;
-
-    @BindView(R.id.download_folder_restore_db)
-    LinearLayout downloadFolderRestoreDB;
 
     @BindView(R.id.file_restore_db)
     LinearLayout fileRestoreDB;
@@ -111,10 +105,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         }
 
         // Set all click listeners
-        downloadBackupDB.setOnClickListener(downloadBackupOnClick());
         sdcardBackupDB.setOnClickListener(sdcardBackupOnClick());
         googleDriveBackupDB.setOnClickListener(googleDriveBackupOnClick());
-        downloadFolderRestoreDB.setOnClickListener(downloadFolderRestoreOnClick());
         fileRestoreDB.setOnClickListener(fileRestoreOnClick());
         googleDriveRestoreDB.setOnClickListener(googleDriveRestoreOnClick());
 
@@ -144,7 +136,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         super.onStart();
         mGoogleApiClient.connect();
     }
-
+/*
     private View.OnClickListener downloadBackupOnClick() {
         View.OnClickListener onclick = new View.OnClickListener() {
             @Override
@@ -194,7 +186,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             }
         };
         return onclick;
-    }
+    }*/
 
     private View.OnClickListener sdcardBackupOnClick() {
         View.OnClickListener onclick = new View.OnClickListener() {
@@ -320,7 +312,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         return onclick;
     }
 
-    private View.OnClickListener downloadFolderRestoreOnClick() {
+   /* private View.OnClickListener downloadFolderRestoreOnClick() {
         View.OnClickListener onclick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -349,7 +341,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             }
         };
         return onclick;
-    }
+    }*/
 
     private View.OnClickListener fileRestoreOnClick() {
         View.OnClickListener onclick = new View.OnClickListener() {
@@ -404,7 +396,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     }
 
     private String exportDBtoSD(Context context) throws IOException{
-        File sdCardDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File sdCardDir = Environment.getExternalStorageDirectory();
 
         if (sdCardDir.canWrite()) {
             File backupDB = new File(sdCardDir, "GIBackup.db");
