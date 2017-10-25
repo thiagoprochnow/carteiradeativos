@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Optional permission for App measurement to run. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
@@ -22,11 +20,9 @@
             android:theme="@style/AppTheme.NoActionBar.NavDrawer">
             <meta-data android:name="com.google.android.apps.drive.APP_ID" android:value="id=196632400417-0ql700h30pcdfaqiadsrhnssh59pqoj0.apps.googleusercontent.com" />
             <intent-filter>
-                <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
                 <action android:name="android.intent.action.MAIN" />
-                <data android:mimeType="application/vnd.google-apps.drive-sdk.196632400417-0ql700h30pcdfaqiadsrhnssh59pqoj0.apps.googleusercontent.com" />
-                <data android:mimeType="text/plain" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
             </intent-filter>
         </activity>
 

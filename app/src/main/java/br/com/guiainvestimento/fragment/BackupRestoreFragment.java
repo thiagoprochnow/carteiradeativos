@@ -37,6 +37,7 @@ import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.DriveResource;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
@@ -72,14 +73,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     private File mCurrentDB;
     private String mBackupName;
 
-    @BindView(R.id.sdcard_backup_db)
-    LinearLayout sdcardBackupDB;
-
     @BindView(R.id.google_drive_backup_db)
     LinearLayout googleDriveBackupDB;
-
-    @BindView(R.id.file_restore_db)
-    LinearLayout fileRestoreDB;
 
     @BindView(R.id.google_drive_restore_db)
     LinearLayout googleDriveRestoreDB;
@@ -100,14 +95,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         mCurrentDB = new File(DB_FILEPATH);
         mBackupName = "GIBackup.db";
 
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
-        }
-
         // Set all click listeners
-        sdcardBackupDB.setOnClickListener(sdcardBackupOnClick());
         googleDriveBackupDB.setOnClickListener(googleDriveBackupOnClick());
-        fileRestoreDB.setOnClickListener(fileRestoreOnClick());
         googleDriveRestoreDB.setOnClickListener(googleDriveRestoreOnClick());
 
         getActivity().findViewById(R.id.fab).setVisibility(View.INVISIBLE);
@@ -135,108 +124,6 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-    }
-/*
-    private View.OnClickListener downloadBackupOnClick() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File dir = new File("//sdcard//Download//");
-                File backupFile = new File(dir, mBackupName);
-                if (backupFile.exists()){
-                    new AlertDialog.Builder(getContext())
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle(getContext().getString(R.string.backup_overwrite_title))
-                            .setMessage(getContext().getString(R.string.backup_overwrite))
-                            .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        String downloadedPath = exportDBtoDowloads(mContext);
-                                        if (downloadedPath != "") {
-                                            Toast.makeText(mContext, mContext.getString(R.string.backup_download_write_success_toast, downloadedPath), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(mContext, mContext.getString(R.string.backup_download_write_error_toast), Toast.LENGTH_SHORT).show();
-                                        }
-                                    } catch (IOException e) {
-                                        Log.e(LOG_TAG, e.toString());
-                                    }
-                                }
-                            })
-                            .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .show();
-                } else {
-                    try {
-                        String downloadedPath = exportDBtoDowloads(mContext);
-                        if (downloadedPath != "") {
-                            Toast.makeText(mContext, mContext.getString(R.string.backup_download_write_success_toast, downloadedPath), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mContext, mContext.getString(R.string.backup_download_write_error_toast), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, e.toString());
-                    }
-                }
-            }
-        };
-        return onclick;
-    }*/
-
-    private View.OnClickListener sdcardBackupOnClick() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                File sdCardDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                File backupFile = new File(sdCardDir, mBackupName);
-                if (backupFile.exists()){
-                    new AlertDialog.Builder(getContext())
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle(getContext().getString(R.string.backup_overwrite_title))
-                            .setMessage(getContext().getString(R.string.backup_overwrite))
-                            .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        String downloadedPath = exportDBtoSD(mContext);
-                                        if (downloadedPath != "") {
-                                            Toast.makeText(mContext, mContext.getString(R.string.backup_sdcard_write_success_toast, downloadedPath), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(mContext, mContext.getString(R.string.backup_sdcard_write_error_toast), Toast.LENGTH_SHORT).show();
-                                        }
-                                    } catch (IOException e) {
-                                        Log.e(LOG_TAG, e.toString());
-                                    }
-                                }
-                            })
-                            .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            })
-                            .show();
-                } else {
-                    try {
-                        String downloadedPath = exportDBtoSD(mContext);
-                        if (downloadedPath != "") {
-                            Toast.makeText(mContext, mContext.getString(R.string.backup_sdcard_write_success_toast, downloadedPath), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mContext, mContext.getString(R.string.backup_sdcard_write_error_toast), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        Log.e(LOG_TAG, e.toString());
-                    }
-                }
-            }
-        };
-        return onclick;
     }
 
     private View.OnClickListener googleDriveBackupOnClick() {
@@ -312,56 +199,13 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         return onclick;
     }
 
-   /* private View.OnClickListener downloadFolderRestoreOnClick() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(getContext())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(getContext().getString(R.string.restore_confirm_title))
-                        .setMessage(getContext().getString(R.string.restore_confirm))
-                        .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try{
-                                    importDBfromFolder(mContext);
-                                } catch (IOException e){
-                                    Log.e(LOG_TAG, e.toString());
-                                }
-                            }
-                        })
-                        .setNegativeButton(getContext().getString(R.string.no), new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        })
-                        .show();
-            }
-        };
-        return onclick;
-    }*/
-
-    private View.OnClickListener fileRestoreOnClick() {
-        View.OnClickListener onclick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    importDB(mContext);
-                } catch (IOException e){
-                    Log.e(LOG_TAG, e.toString());
-                }
-            }
-        };
-        return onclick;
-    }
-
     private View.OnClickListener googleDriveRestoreOnClick() {
         View.OnClickListener onclick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGoogleApiClient.isConnected()){
+                // Establish Drive Connection
+                establishDriveConnection();
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()){
                     IntentSender intentSender = Drive.DriveApi.newOpenFileActivityBuilder()
                             .setMimeType(new String[] { DriveFolder.MIME_TYPE , "application/vnd.oasis.opendocument.database", "text/plain"})
                             .build(mGoogleApiClient);
@@ -370,6 +214,8 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                     } catch (IntentSender.SendIntentException e){
                         Log.e(LOG_TAG, "IntentSender error: " + e.toString());
                     }
+                } else if(mGoogleApiClient.isConnecting()){
+                    Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(mContext, getActivity().getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
                 }
@@ -378,108 +224,9 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         return onclick;
     }
 
-    private String exportDBtoDowloads(Context context) throws IOException {
-        File dir = new File("/sdcard/Download/");
-
-        if (dir.canWrite()) {
-            File backupDB = new File(dir, mBackupName);
-            backupDB.setReadable(true);
-            backupDB.setWritable(true);
-            backupDB.setExecutable(true);
-            backupDB.createNewFile();
-            FileUtils.copyFile(new FileInputStream(mCurrentDB), new FileOutputStream(backupDB));
-
-            return backupDB.getAbsolutePath();
-        } else{
-            return "";
-        }
-    }
-
-    private String exportDBtoSD(Context context) throws IOException{
-        File sdCardDir = Environment.getExternalStorageDirectory();
-
-        if (sdCardDir.canWrite()) {
-            File backupDB = new File(sdCardDir, "GIBackup.db");
-            backupDB.setReadable(true);
-            backupDB.setWritable(true);
-            backupDB.setExecutable(true);
-            backupDB.createNewFile();
-            FileUtils.copyFile(new FileInputStream(mCurrentDB), new FileOutputStream(backupDB));
-
-            // Adds to Download Manager
-
-            return backupDB.getAbsolutePath();
-        } else {
-            return "";
-        }
-    }
-
-    private boolean importDBfromFolder(Context context) throws IOException{
-        String BACKUP_NAME = "GIBackup.db";
-        String BACKUP_PATH = "/sdcard/Download/";
-
-        File backupDB = new File(BACKUP_PATH, BACKUP_NAME);
-
-        if(backupDB.exists() && backupDB.canRead() && isDBExtension(backupDB.getName())){
-            FileUtils.copyFile(new FileInputStream(backupDB), new FileOutputStream(mCurrentDB));
-            Toast.makeText(context, context.getString(R.string.restore_success), Toast.LENGTH_LONG).show();
-
-            // Restart application
-            getActivity().finish();
-            startActivity(getActivity().getIntent());
-        } else {
-            Toast.makeText(context, context.getString(R.string.restore_download_folder_error, BACKUP_PATH), Toast.LENGTH_LONG).show();
-        }
-
-        return true;
-    }
-
-    private boolean importDB(Context context) throws IOException{
-        Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-        chooseFile.setType("*/*");
-        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        chooseFile = Intent.createChooser(chooseFile, "Choose the file");
-        startActivityForResult(chooseFile, Constants.Intent.IMPORT_DB);
-        return true;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if (requestCode == Constants.Intent.IMPORT_DB) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                final Uri backupUri = data.getData();
-                String fileExtension = getFileExtension(backupUri);
-                if(fileExtension.equalsIgnoreCase("db")) {
-                    new AlertDialog.Builder(getContext())
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle(getContext().getString(R.string.restore_confirm_title))
-                    .setMessage(getContext().getString(R.string.restore_confirm))
-                    .setPositiveButton(getContext().getString(R.string.yes), new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try{
-                                FileInputStream backupInputStream = (FileInputStream) getContext().getContentResolver().openInputStream(backupUri);
-                                FileUtils.copyFile(backupInputStream, new FileOutputStream(mCurrentDB));
-
-                                // Restart application
-                                Toast.makeText(getContext().getApplicationContext(), getContext().getApplicationContext().getString(R.string.restore_success), Toast.LENGTH_LONG).show();
-                                getActivity().finish();
-                                startActivity(getActivity().getIntent());
-                            } catch (IOException e){
-                                Log.e(LOG_TAG, e.toString());
-                            }
-                        }
-                    }).setNegativeButton(getContext().getString(R.string.no), null)
-                    .show();
-
-                } else {
-                   // File extension is wrong, not a valid file to import
-                   Toast.makeText(getContext(), getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION){
+        if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION){
             if(mGoogleApiClient != null && !mGoogleApiClient.isConnecting()){
                 mGoogleApiClient.connect();
             }
@@ -503,41 +250,6 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                         .show();
             }
         }
-    }
-
-    public String getFileExtension(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
-            try {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                }
-                if (result != null && result != ""){
-                    int cut2 = result.lastIndexOf('.');
-                    if (cut2 != -1){
-                        result = result.substring(cut2 + 1);
-                    }
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-            // Turns into extension
-            if (result != null && result != ""){
-                int cut2 = result.lastIndexOf('.');
-                if (cut2 != -1){
-                    result = result.substring(cut2 + 1);
-                }
-            }
-        }
-        return result;
     }
 
     public boolean isDBExtension(String fileName) {
@@ -599,22 +311,41 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         protected String doInBackgroundConnected(DriveId... params) {
             String contents = null;
             DriveFile file = params[0].asDriveFile();
-            DriveApi.DriveContentsResult driveContentsResult =
-                    file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
-            if (!driveContentsResult.getStatus().isSuccess()) {
-                return null;
-            }
-            DriveContents driveContents = driveContentsResult.getDriveContents();
-            FileInputStream inputStream = (FileInputStream) driveContents.getInputStream();
+            if(file != null && mGoogleApiClient != null) {
 
-            try{
-                FileUtils.copyFile(inputStream, new FileOutputStream(mCurrentDB));
-            } catch (IOException e){
-                Log.e(LOG_TAG, e.toString());
-            }
+                DriveResource.MetadataResult metadata = file.getMetadata(mGoogleApiClient).await();
+                if (metadata != null && metadata.getStatus().isSuccess()) {
 
-            driveContents.discard(getGoogleApiClient());
-            return "true";
+                    String fileName = metadata.getMetadata().getTitle();
+                    if(isDBExtension(fileName)) {
+                        DriveApi.DriveContentsResult driveContentsResult =
+                                file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
+                        if (!driveContentsResult.getStatus().isSuccess()) {
+                            return null;
+                        }
+                        DriveContents driveContents = driveContentsResult.getDriveContents();
+                        FileInputStream inputStream = (FileInputStream) driveContents.getInputStream();
+
+                        try {
+                            FileUtils.copyFile(inputStream, new FileOutputStream(mCurrentDB));
+                        } catch (IOException e) {
+                            Log.e(LOG_TAG, e.toString());
+                        }
+
+                        driveContents.discard(getGoogleApiClient());
+                        return "true";
+                    } else {
+                        Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
+                        return "false";
+                    }
+                } else {
+                    Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
+                    return "false";
+                }
+            } else {
+                Toast.makeText(getContext(), getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
+                return "false";
+            }
         }
 
         @Override
@@ -623,12 +354,11 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             if (result != "true") {
                 Log.d(LOG_TAG, "Error while reading from the file");
                 return;
+            } else {
+                getActivity().finish();
+                startActivity(getActivity().getIntent());
+                Toast.makeText(mContext, mContext.getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
             }
-
-            // Send broadcast to restart app
-            getActivity().finish();
-            startActivity(getActivity().getIntent());
-            Toast.makeText(mContext, mContext.getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -476,6 +476,7 @@
     <string name="backup_download_write_success_toast">Banco de dados salvo com sucesso no diretorio Downloads. Salvo em %s.</string>
     <string name="backup_sdcard_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
     <string name="backup_sdcard_write_success_toast">Banco de dados salvo com sucesso no SD Card. Salvo em %s.</string>
+    <string name="backup_sdcard_not_mounted">SD card não está disponível.</string>
     <string name="restore_error_toast">Erro na restauração</string>
     <string name="restore_wrong_extension">Arquivo inválido, por favor escolha um arquivo de banco de dados.</string>
     <string name="restore_success">Banco de dados restaurado com sucesso.</string>

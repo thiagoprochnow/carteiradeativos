@@ -476,6 +476,7 @@
     <string name="backup_download_write_success_toast">Database backup successfully saved in Downloads directory. Saved in %s.</string>
     <string name="backup_sdcard_write_error_toast">Error backing up database. No write pemission on folder.</string>
     <string name="backup_sdcard_write_success_toast">Database backup successfully saved on SD Card. Saved in %s.</string>
+    <string name="backup_sdcard_not_mounted">SD card is not available.</string>
     <string name="restore_error_toast">Error restoring file.</string>
     <string name="restore_wrong_extension">Invalid file, please upload a database file.</string>
     <string name="restore_success">Database restored successfully.</string>
