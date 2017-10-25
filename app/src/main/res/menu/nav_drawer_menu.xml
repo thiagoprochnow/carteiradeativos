@@ -50,6 +50,11 @@
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single">
 
+        <!-- Backup and Restore Item Menu -->
+        <item
+            android:id="@+id/nav_item_backup_restore"
+            android:checked="false"
+            android:title="@string/title_backup_restore"/>
         <!-- About Item Menu -->
         <item
             android:id="@+id/nav_item_about"
@@ -60,10 +65,5 @@
             android:id="@+id/nav_item_coming_soon"
             android:checked="false"
             android:title="@string/title_coming_soon"/>
-        <!-- Backup and Restore Item Menu -->
-        <item
-            android:id="@+id/nav_item_backup_restore"
-            android:checked="false"
-            android:title="@string/title_backup_restore"/>
     </group>
 </menu>

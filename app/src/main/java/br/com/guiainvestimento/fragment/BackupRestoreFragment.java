@@ -313,37 +313,23 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
             DriveFile file = params[0].asDriveFile();
             if(file != null && mGoogleApiClient != null) {
 
-                DriveResource.MetadataResult metadata = file.getMetadata(mGoogleApiClient).await();
-                if (metadata != null && metadata.getStatus().isSuccess()) {
-
-                    String fileName = metadata.getMetadata().getTitle();
-                    if(isDBExtension(fileName)) {
-                        DriveApi.DriveContentsResult driveContentsResult =
-                                file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
-                        if (!driveContentsResult.getStatus().isSuccess()) {
-                            return null;
-                        }
-                        DriveContents driveContents = driveContentsResult.getDriveContents();
-                        FileInputStream inputStream = (FileInputStream) driveContents.getInputStream();
-
-                        try {
-                            FileUtils.copyFile(inputStream, new FileOutputStream(mCurrentDB));
-                        } catch (IOException e) {
-                            Log.e(LOG_TAG, e.toString());
-                        }
-
-                        driveContents.discard(getGoogleApiClient());
-                        return "true";
-                    } else {
-                        Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
-                        return "false";
-                    }
-                } else {
-                    Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
-                    return "false";
+                DriveApi.DriveContentsResult driveContentsResult =
+                        file.open(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, null).await();
+                if (!driveContentsResult.getStatus().isSuccess()) {
+                    return null;
                 }
+                DriveContents driveContents = driveContentsResult.getDriveContents();
+                FileInputStream inputStream = (FileInputStream) driveContents.getInputStream();
+
+                try {
+                    FileUtils.copyFile(inputStream, new FileOutputStream(mCurrentDB));
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, e.toString());
+                }
+
+                driveContents.discard(getGoogleApiClient());
+                return "true";
             } else {
-                Toast.makeText(getContext(), getResources().getString(R.string.google_drive_connection_error), Toast.LENGTH_SHORT).show();
                 return "false";
             }
         }
@@ -351,13 +337,12 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (result != "true") {
-                Log.d(LOG_TAG, "Error while reading from the file");
-                return;
-            } else {
+            if (result == "true") {
                 getActivity().finish();
                 startActivity(getActivity().getIntent());
                 Toast.makeText(mContext, mContext.getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
             }
         }
     }

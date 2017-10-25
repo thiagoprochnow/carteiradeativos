@@ -22,7 +22,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
                 <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
+                <data android:mimeType="application/vnd.google-apps.drive-sdk.196632400417-0ql700h30pcdfaqiadsrhnssh59pqoj0.apps.googleusercontent.com" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 

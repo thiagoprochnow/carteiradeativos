@@ -179,9 +179,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // Navigation view of the activity layout
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null && mDrawerLayout != null) {
-            // Sets the image of the header of the navigation view
-            setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
-                    R.drawable.nav_drawer_header);
             // Configures the event when a item is selected from the menu
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -281,19 +278,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     protected void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-    // Set Drawer header values and images
-    public static void setHeaderValues(View navDrawerView, int listViewContainerId, int
-            imgNavDrawerHeaderId) {
-        View view = navDrawerView.findViewById(listViewContainerId);
-        if (view != null) {
-            view.setVisibility(View.VISIBLE);
-            ImageView imgUserBackground = (ImageView) view.findViewById(R.id.imgUserBackground);
-            if (imgUserBackground != null) {
-                imgUserBackground.setImageResource(imgNavDrawerHeaderId);
-            }
         }
     }
 
