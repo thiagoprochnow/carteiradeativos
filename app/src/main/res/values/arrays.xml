@@ -4,6 +4,7 @@
         <item>Dolar</item>
         <item>Euro</item>
         <item>Bitcoin</item>
+        <item>Litecoin</item>
     </string-array>
 
     <string-array name="chart_months_abv">

@@ -37,9 +37,11 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
         put("Dolar","USD");
         put("Euro","EUR");
         put("Bitcoin","BTC");
+        put("Litecoin","LTC");
         put("USD", "Dolar");
         put("EUR","Euro");
         put("BTC","Bitcoin");
+        put("LTC","Litecoin");
     }};
 
     private Spinner mInputSymbolView;

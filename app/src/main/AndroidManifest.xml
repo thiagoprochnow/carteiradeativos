@@ -39,6 +39,7 @@
         <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.FiiIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.CryptoIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"

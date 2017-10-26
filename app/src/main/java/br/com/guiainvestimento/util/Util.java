@@ -56,8 +56,10 @@ public class Util {
             return myArrayList.get(0);
         } else if (symbol.equals("EUR")){
             return myArrayList.get(1);
-        } else{
+        } else if (symbol.equals("BTC")){
             return myArrayList.get(2);
+        } else {
+            return myArrayList.get(3);
         }
     }
 }

@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
@@ -1647,10 +1648,17 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
-            Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
-                    .class);
-            mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent);
+            if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+                Intent mServiceIntent = new Intent(mContext, CryptoIntentService
+                        .class);
+                mServiceIntent.putExtra(CryptoIntentService.ADD_SYMBOL, symbol);
+                getActivity().startService(mServiceIntent);
+            } else {
+                Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
+                        .class);
+                mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
+                getActivity().startService(mServiceIntent);
+            }
 
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL, buyValue);

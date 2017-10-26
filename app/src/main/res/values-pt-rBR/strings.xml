@@ -451,14 +451,17 @@
     <string name="success_updating_stocks">Ações atualizadas com sucesso.</string>
     <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
     <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
+    <string name="success_updating_crypto_currency">Cripto moedas atualizadas com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
         Selecione uma das opções abaixo para fazer o download do seu banco em um arquivo .db e utilize-o para carregar seus dados em outro dispositivo ou como backup.</string>
     <string name="backup_description">Faça um backup do banco de dados selecionando uma das opções abaixo. <b>Verifique se seu aplicativo está atualizado para evitar problemas na restauração.</b></string>
+    <string name="restore_description">Faça uma restauração do seu banco de dados selecionando uma das opções abaixo. <b>É importante que o arquivo de backup foi gerado na mesma versão de aplicativo da restauração, caso contrario pode resultar em erros na aplicação.</b></string>
     <string name="backup_title">Backup</string>
     <string name="restore_title">Restauração</string>
     <string name="download_button">Downloads</string>

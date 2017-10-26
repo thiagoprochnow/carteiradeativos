@@ -26,6 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
@@ -537,8 +538,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         //Currency Refresh
-        Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
-                .class);
 
         String[] affectedColumn3 = {PortfolioContract.CurrencyData.COLUMN_SYMBOL};
 
@@ -549,18 +548,45 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // For each symbol found on CurrencyData, add to service make webservice query and update
         if (queryCursor.getCount() > 0) {
             String symbol = "";
+            String currencySymbol = "";
+            String cryptoSymbol = "";
             queryCursor.moveToFirst();
             do {
-                if (!queryCursor.isLast()){
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL))+",";
-                } else{
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                // Prepare symbols of crypto and normal currency to send on Intent Services
+                symbol = queryCursor.getString(queryCursor.getColumnIndex
+                        (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+                    // Crypto currency
+                    if (cryptoSymbol == "") {
+                        cryptoSymbol += symbol;
+                    } else {
+                        cryptoSymbol += "," + symbol;
+                    }
+                } else {
+                    // Normal currency
+                    if (currencySymbol == "") {
+                        currencySymbol += symbol;
+                    } else {
+                        currencySymbol += "," + symbol;
+                    }
                 }
             } while (queryCursor.moveToNext());
-            mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
-            startService(mCurrencyServiceIntent);
+
+            // Start Intent Service to update currency
+            if (currencySymbol != "") {
+                Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
+                        .class);
+                mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, currencySymbol);
+                startService(mCurrencyServiceIntent);
+            }
+
+            // Start Intent Service to update crypto currency
+            if (cryptoSymbol != ""){
+                Intent mCryptoServiceIntent = new Intent(this, CryptoIntentService
+                        .class);
+                mCryptoServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, cryptoSymbol);
+                startService(mCryptoServiceIntent);
+            }
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
