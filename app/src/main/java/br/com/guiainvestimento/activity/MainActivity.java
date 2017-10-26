@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.guiainvestimento.R;
@@ -31,6 +32,7 @@ import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
+import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ComingSoonFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
@@ -46,7 +48,6 @@ import br.com.guiainvestimento.listener.ProductListener;
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
     protected DrawerLayout mDrawerLayout;
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mStockReceiver = false;
     boolean mFiiReceiver = false;
     boolean mCurrencyReceiver = false;
+
+    GoogleApiClient mGoogleApiClient;
 
     private Menu mMenu;
     @Override
@@ -128,6 +131,21 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrency, new IntentFilter(Constants.Receiver.CURRENCY));
     }
 
+    // Send result for Fragment
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION) {
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        } else if (requestCode == Constants.Intent.GET_DRIVE_FILE){
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,9 +179,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // Navigation view of the activity layout
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null && mDrawerLayout != null) {
-            // Sets the image of the header of the navigation view
-            setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
-                    R.drawable.nav_drawer_header);
             // Configures the event when a item is selected from the menu
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -220,6 +235,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 setTitle(R.string.title_coming_soon);
                 replaceFragment(new ComingSoonFragment());
                 break;
+            case R.id.nav_item_backup_restore:
+                setTitle(R.string.title_backup_restore);
+                replaceFragment(new BackupRestoreFragment());
+                break;
         }
     }
 
@@ -259,19 +278,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     protected void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-    // Set Drawer header values and images
-    public static void setHeaderValues(View navDrawerView, int listViewContainerId, int
-            imgNavDrawerHeaderId) {
-        View view = navDrawerView.findViewById(listViewContainerId);
-        if (view != null) {
-            view.setVisibility(View.VISIBLE);
-            ImageView imgUserBackground = (ImageView) view.findViewById(R.id.imgUserBackground);
-            if (imgUserBackground != null) {
-                imgUserBackground.setImageResource(imgNavDrawerHeaderId);
-            }
         }
     }
 

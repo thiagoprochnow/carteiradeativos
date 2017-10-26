@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:paddingTop="20px">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/backup_restore_description"
+            android:layout_marginBottom="10dp"
+            android:layout_margin="20dp"
+            android:text="@string/backup_restore_description"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/backup_title"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:text="@string/backup_title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/backup_description"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="12dp"
+            android:text="@string/backup_description"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
+
+            <LinearLayout
+                android:id="@+id/google_drive_backup_db"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:padding="2dp"
+                android:background="@drawable/download_button">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:src="@drawable/google_drive_100"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:paddingTop="4dp"
+                    android:paddingLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/google_drive_button" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/restore_title"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimary"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:text="@string/restore_title"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/restore_description"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="12dp"
+            android:text="@string/restore_description"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
+
+            <LinearLayout
+                android:id="@+id/google_drive_restore_db"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:padding="2dp"
+                android:background="@drawable/download_button">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:src="@drawable/google_drive_100"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:paddingTop="4dp"
+                    android:paddingLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/google_drive_button" />
+            </LinearLayout>
+
+        </LinearLayout>
+    />
+    </LinearLayout>
+</ScrollView>

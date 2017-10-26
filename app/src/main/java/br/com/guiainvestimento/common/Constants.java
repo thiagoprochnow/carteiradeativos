@@ -16,6 +16,13 @@ public final class Constants {
         public static final String EXTRA_INCOME_ID = "extra_income_id";
     }
 
+    // To start activitys for result
+    public static class Intent{
+        public static final int IMPORT_DB = 100;
+        public static final int GET_DRIVE_FILE = 101;
+        public static final int DRIVE_CONNECTION_RESOLUTION = 102;
+    }
+
     // Value of stock/fii type, buy, sell, bonification, grouping, split
     public static class Type {
         public static final int INVALID = -1;

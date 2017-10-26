@@ -1,11 +1,22 @@
 package br.com.guiainvestimento.util;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.utils.FileUtils;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
  * Util class

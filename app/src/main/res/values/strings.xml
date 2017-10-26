@@ -3,6 +3,8 @@
 
     <!-- Main Activity -->
     <string name="refresh_done">Portfolio updated successfully</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Stock updated successfuly</string>
@@ -422,6 +424,7 @@
     <string name="title_others">Others</string>
     <string name="title_about">About</string>
     <string name="title_coming_soon">Coming Soon</string>
+    <string name="title_backup_restore">Backup and Restore</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -451,6 +454,36 @@
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>
 
+    <!-- Backup and Restore -->
+    <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.
+        Select one of the below options to make the download of your databse in a .db file and use it to upload your data in another device or as backup.</string>
+    <string name="backup_description">Make a database backup by selecting one of the options below. <b>Make sure your current application is on latest version to avoid problem on restore.</b></string>
+    <string name="restore_description">Make a database restore by selecting one of the options below.</string>
+    <string name="backup_title">Backup</string>
+    <string name="restore_title">Restore</string>
+    <string name="download_button">Downloads</string>
+    <string name="download_folder">Download</string>
+    <string name="file_button">File</string>
+    <string name="sdcard_button">SD Card</string>
+    <string name="google_drive_button">Google Drive</string>
+    <string name="google_drive_connection">Connecting on your Google Drive.</string>
+    <string name="google_drive_connection_error">Error connecting to your Google Drive.</string>
+    <string name="google_drive_read_file_error">Error reading file from Google Drive.</string>
+    <string name="backup_drive_success">Database backup successfully saved in Google Drive.</string>
+    <string name="backup_download_write_error_toast">Error backing up database. No write pemission on folder.</string>
+    <string name="backup_overwrite">You already have a backup file saved, do you want to overwrite it?</string>
+    <string name="backup_overwrite_title">Overwrite Backup.</string>
+    <string name="backup_download_write_success_toast">Database backup successfully saved in Downloads directory. Saved in %s.</string>
+    <string name="backup_sdcard_write_error_toast">Error backing up database. No write pemission on folder.</string>
+    <string name="backup_sdcard_write_success_toast">Database backup successfully saved on SD Card. Saved in %s.</string>
+    <string name="backup_sdcard_not_mounted">SD card is not available.</string>
+    <string name="restore_error_toast">Error restoring file.</string>
+    <string name="restore_wrong_extension">Invalid file, please upload a database file.</string>
+    <string name="restore_success">Database restored successfully.</string>
+    <string name="restore_download_folder_error">Database backup not found, place the GIBackup.db file in the %s path.</string>
+    <string name="restore_confirm_title">Restore</string>
+    <string name="restore_confirm">Are you sure you want to replace your database information with the one in the backup file? You will lose all current information in the application and it will be replace with the backup file.</string>
+
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n
 
@@ -471,7 +504,6 @@
         \u2022 Help buttons explaining each information provided.\n
         \u2022 Automatic incomes for stocks and real state funds.\n
         \u2022 Automatic treasury current values when clicking on refresh button.\n
-        \u2022 Add functionality to make a backup of your portfolio on transfer file or cloud.\n
         \u2022 Graph showing the income growth.\n
         \u2022 Constant bug fixes and improvements.\n\n
 
