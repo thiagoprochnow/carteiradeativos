@@ -105,7 +105,8 @@ public class FormActivity extends AppCompatActivity {
                 }
             } else if (productStatus == Constants.Type.EDIT){
                 switch (productType) {
-                    case Constants.ProductType.STOCK:
+                    // Since Stock, FII and Currency get current value from service, it is redundt and confusing to edit current price manualy.
+                    /*case Constants.ProductType.STOCK:
                         replaceFragment(new EditStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
@@ -113,7 +114,7 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.CURRENCY:
                         replaceFragment(new EditCurrencyFormFragment());
-                        break;
+                        break;*/
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedFormFragment());
                         break;

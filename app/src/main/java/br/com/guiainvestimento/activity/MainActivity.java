@@ -433,6 +433,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     public void onEditProduct(int productType, String symbol){
         Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
+            // Since Stock, FII and Currency get current value from service, it is redundt and confusing to edit current price manualy.
+            /*
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
@@ -450,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
-                break;
+                break;*/
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
