@@ -114,8 +114,8 @@
     <dimen name="currency_transaction_type">16dp</dimen>
     <dimen name="currency_detail_quantity_marginLeft">15dp</dimen>
     <dimen name="currency_detail">15dp</dimen>
-    <dimen name="currency_detail_width1">90dp</dimen>
-    <dimen name="currency_detail_width2">80dp</dimen>
+    <dimen name="currency_detail_width1">80dp</dimen>
+    <dimen name="currency_detail_width2">100dp</dimen>
 
     <!-- Fixed Income Incomes Adapter -->
     <dimen name="fixed_income_type">16dp</dimen>

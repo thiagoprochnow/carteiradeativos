@@ -14,6 +14,7 @@ public final class Constants {
         public static final String EXTRA_PRODUCT_SYMBOL = "extra_product_symbol";
         public static final String EXTRA_INCOME_TYPE = "extra_income_type";
         public static final String EXTRA_INCOME_ID = "extra_income_id";
+        public static final String EXTRA_TRANSACTION_ID = "extra_transaction_id";
     }
 
     // To start activitys for result
@@ -33,6 +34,7 @@ public final class Constants {
         public static final int SPLIT = 4;
         public static final int EDIT = 5;
         public static final int DELETE_TRANSACION = 6;
+        public static final int EDIT_TRANSACION = 7;
     }
 
     // Value id for the clicked item in the data adapters

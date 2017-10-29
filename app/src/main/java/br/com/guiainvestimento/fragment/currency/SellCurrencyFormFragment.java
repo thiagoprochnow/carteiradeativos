@@ -104,15 +104,15 @@ public class SellCurrencyFormFragment extends BaseFormFragment {
         // Aux because common ValidSellQuantity receives a Edit text not a String
         EditText editTextAux = new EditText(mContext);
         editTextAux.setText(currencyMap.get(mInputSymbolView.getSelectedItem().toString()));
+        String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
         // Validate for each inputted value
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, editTextAux, Constants.ProductType.CURRENCY);
+        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, inputSymbol, Constants.ProductType.CURRENCY);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the Currency
         if (isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
-            String inputSymbol = currencyMap.get(mInputSymbolView.getSelectedItem().toString());
             double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value

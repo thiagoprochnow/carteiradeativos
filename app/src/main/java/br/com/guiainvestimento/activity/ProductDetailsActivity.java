@@ -18,8 +18,9 @@ import br.com.guiainvestimento.fragment.stock.StockTabFragment;
 import br.com.guiainvestimento.fragment.treasury.TreasuryTabFragment;
 import br.com.guiainvestimento.listener.ProductListener;
 import br.com.guiainvestimento.listener.IncomeDetailsListener;
+import br.com.guiainvestimento.listener.TransactionListener;
 
-public class ProductDetailsActivity extends AppCompatActivity implements IncomeDetailsListener {
+public class ProductDetailsActivity extends AppCompatActivity implements IncomeDetailsListener, TransactionListener {
 
     private ProductListener mFormProductListener;
 
@@ -177,4 +178,48 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
         }
     }
 
+    @Override
+    public void onEditTransaction(int mProductType, String id){
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (mProductType) {
+            case Constants.ProductType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.STOCK:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.CURRENCY:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.CURRENCY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.OTHERS:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.OTHERS);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
 }

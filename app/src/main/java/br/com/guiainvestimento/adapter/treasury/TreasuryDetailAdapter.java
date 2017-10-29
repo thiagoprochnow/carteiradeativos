@@ -129,6 +129,15 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         mClickHandler.onClick(id, Constants.AdapterClickable.DELETE);
                     }
                 });
+
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        String id = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockTransaction._ID));
+                        mClickHandler.onClick(id, Constants.AdapterClickable.EDIT);
+                    }
+                });
         }
     }
 
@@ -168,6 +177,9 @@ public class TreasuryDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         @BindView(R.id.menuDelete)
         ImageView menuDelete;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
 
         TreasuryDetailViewHolder(View itemView) {
             super(itemView);

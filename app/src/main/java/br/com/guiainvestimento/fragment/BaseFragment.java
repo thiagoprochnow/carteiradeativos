@@ -854,7 +854,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Validate if an EditText was set with valid int and that there is enough quantity of that investment to sell
-    protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
+    protected boolean isValidSellQuantity(EditText editQuantity, String editSymbol, int type) {
         // TODO
         Editable editableQuantity = editQuantity.getText();
         double quantity = 0;
@@ -875,7 +875,7 @@ public abstract class BaseFragment extends Fragment {
                 quantity2 = Integer.parseInt(editableQuantity.toString());
             }
         }
-        String symbol = editSymbol.getText().toString();
+        String symbol = editSymbol;
 
         boolean isQuantityEnough = false;
 
@@ -958,6 +958,7 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 double boughtQuantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .TreasuryData.COLUMN_QUANTITY_TOTAL));
+                boughtQuantity = Util.round(boughtQuantity, 2);
                 if (boughtQuantity >= quantity) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;

@@ -86,14 +86,21 @@ public class SellFiiFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidFiiSymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.FII);
+        boolean isValidQuantity;
+        String inputSymbol = "";
+        if (isValidSymbol){
+            inputSymbol = mInputSymbolView.getText().toString();
+            isValidQuantity = isValidSellQuantity(mInputQuantityView, inputSymbol, Constants.ProductType.FII);
+        } else {
+            isValidQuantity = false;
+        }
+
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the fii
         if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
-            String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value

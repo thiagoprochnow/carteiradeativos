@@ -27,6 +27,7 @@ import br.com.guiainvestimento.adapter.fii.FiiDetailAdapter;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFragment;
+import br.com.guiainvestimento.listener.TransactionListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -49,6 +50,17 @@ public class FiiDetailsFragment extends BaseFragment implements
     private String mSymbol;
 
     private FiiDetailAdapter mFiiDetailAdapter;
+    private TransactionListener mFormTransactionListener;
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TransactionListener) {
+            mFormTransactionListener = (TransactionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements ProductListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +123,9 @@ public class FiiDetailsFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
+                break;
+            case Constants.AdapterClickable.EDIT:
+                mFormTransactionListener.onEditTransaction(Constants.ProductType.FII, id);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Type");

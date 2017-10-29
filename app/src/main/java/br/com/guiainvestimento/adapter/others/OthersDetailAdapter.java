@@ -132,6 +132,15 @@ public class OthersDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         mClickHandler.onClick(id, Constants.AdapterClickable.DELETE);
                     }
                 });
+
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        String id = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockTransaction._ID));
+                        mClickHandler.onClick(id, Constants.AdapterClickable.EDIT);
+                    }
+                });
         }
     }
 
@@ -165,6 +174,9 @@ public class OthersDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.menuDelete)
         ImageView menuDelete;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
 
         OthersDetailViewHolder(View itemView) {
             super(itemView);
