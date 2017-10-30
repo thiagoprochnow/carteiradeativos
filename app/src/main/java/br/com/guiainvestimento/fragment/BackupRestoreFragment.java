@@ -310,6 +310,10 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
         @Override
         protected String doInBackgroundConnected(DriveId... params) {
             String contents = null;
+            int resourceType = params[0].getResourceType();
+            if (resourceType != DriveId.RESOURCE_TYPE_FILE){
+                return "false";
+            }
             DriveFile file = params[0].asDriveFile();
             if(file != null && mGoogleApiClient != null) {
 
