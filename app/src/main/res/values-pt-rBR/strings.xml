@@ -89,6 +89,7 @@
     <string name="wrong_income_per_others">Valor total recebido inválido</string>
     <string name="wrong_income_per_treasury">Valor inválido recebido por papel</string>
     <string name="menu_done">Concluir</string>
+    <string name="wrong_others_tax">Imposto total inválido.</string>
 
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividendos</string>

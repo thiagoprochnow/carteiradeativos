@@ -140,6 +140,49 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
     }
 
     @Override
+    public void onIncomeEdit(int incomeType, String id){
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (incomeType){
+            case Constants.IncomeType.DIVIDEND:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.JCP:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.OTHERS:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.OTHERS);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
     public void onIncomeDetails(int incomeType, String id){
         Intent intent = new Intent(this, IncomeDetailsActivity.class);
         switch (incomeType) {

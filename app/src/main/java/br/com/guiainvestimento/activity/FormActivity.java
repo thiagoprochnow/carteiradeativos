@@ -11,6 +11,7 @@ import br.com.guiainvestimento.fragment.currency.BuyCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.currency.SellCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.fii.BuyFiiFormFragment;
 import br.com.guiainvestimento.fragment.currency.EditCurrencyTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fii.EditFiiIncomeFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiTransactionFormFragment;
 import br.com.guiainvestimento.fragment.fii.FiiIncomeFormFragment;
 import br.com.guiainvestimento.fragment.fii.SellFiiFormFragment;
@@ -20,11 +21,13 @@ import br.com.guiainvestimento.fragment.fixedincome.EditFixedTransactionFormFrag
 import br.com.guiainvestimento.fragment.fixedincome.SellFixedFormFragment;
 import br.com.guiainvestimento.fragment.others.BuyOthersFormFragment;
 import br.com.guiainvestimento.fragment.others.EditOthersFormFragment;
+import br.com.guiainvestimento.fragment.others.EditOthersIncomeFormFragment;
 import br.com.guiainvestimento.fragment.others.EditOthersTransactionFormFragment;
 import br.com.guiainvestimento.fragment.others.OthersIncomeFormFragment;
 import br.com.guiainvestimento.fragment.others.SellOthersFormFragment;
 import br.com.guiainvestimento.fragment.stock.BonificationFormFragment;
 import br.com.guiainvestimento.fragment.stock.BuyStockFormFragment;
+import br.com.guiainvestimento.fragment.stock.EditJCPDividendFormFragment;
 import br.com.guiainvestimento.fragment.stock.EditStockTransactionFormFragment;
 import br.com.guiainvestimento.fragment.stock.GroupingFormFragment;
 import br.com.guiainvestimento.fragment.stock.JCPDividendFormFragment;
@@ -32,6 +35,7 @@ import br.com.guiainvestimento.fragment.stock.SellStockFormFragment;
 import br.com.guiainvestimento.fragment.stock.SplitFormFragment;
 import br.com.guiainvestimento.fragment.treasury.BuyTreasuryFormFragment;
 import br.com.guiainvestimento.fragment.treasury.EditTreasuryFormFragment;
+import br.com.guiainvestimento.fragment.treasury.EditTreasuryIncomeFormFragment;
 import br.com.guiainvestimento.fragment.treasury.EditTreasuryTransactionFormFragment;
 import br.com.guiainvestimento.fragment.treasury.SellTreasuryFormFragment;
 import br.com.guiainvestimento.fragment.treasury.TreasuryIncomeFormFragment;
@@ -161,37 +165,61 @@ public class FormActivity extends AppCompatActivity {
 
         // If it has EXTRA_INCOME_TYPE, it is registering income
         if (intent != null && intent.hasExtra(Constants.Extra.EXTRA_INCOME_TYPE)) {
-
+            int productStatus = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_STATUS,
+                    Constants.Type.INVALID);
             int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE,
                     Constants.IncomeType.INVALID);
-            switch (incomeType) {
-                case Constants.IncomeType.DIVIDEND:
-                    replaceFragment(new JCPDividendFormFragment());
-                    break;
-                case Constants.IncomeType.JCP:
-                    replaceFragment(new JCPDividendFormFragment());
-                    break;
-                case Constants.IncomeType.BONIFICATION:
-                    replaceFragment(new BonificationFormFragment());
-                    break;
-                case Constants.IncomeType.SPLIT:
-                    replaceFragment(new SplitFormFragment());
-                    break;
-                case Constants.IncomeType.GROUPING:
-                    replaceFragment(new GroupingFormFragment());
-                    break;
-                case Constants.IncomeType.FII:
-                    replaceFragment(new FiiIncomeFormFragment());
-                    break;
-                case Constants.IncomeType.TREASURY:
-                    replaceFragment(new TreasuryIncomeFormFragment());
-                    break;
-                case Constants.IncomeType.OTHERS:
-                    replaceFragment(new OthersIncomeFormFragment());
-                    break;
-                default:
-                    finish();
-                    break;
+            if (productStatus == Constants.Type.EDIT_INCOME){
+                switch (incomeType) {
+                    case Constants.IncomeType.DIVIDEND:
+                        replaceFragment(new EditJCPDividendFormFragment());
+                        break;
+                    case Constants.IncomeType.JCP:
+                        replaceFragment(new EditJCPDividendFormFragment());
+                        break;
+                    case Constants.IncomeType.FII:
+                        replaceFragment(new EditFiiIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.TREASURY:
+                        replaceFragment(new EditTreasuryIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.OTHERS:
+                        replaceFragment(new EditOthersIncomeFormFragment());
+                        break;
+                    default:
+                        finish();
+                        break;
+                }
+            } else {
+                switch (incomeType) {
+                    case Constants.IncomeType.DIVIDEND:
+                        replaceFragment(new JCPDividendFormFragment());
+                        break;
+                    case Constants.IncomeType.JCP:
+                        replaceFragment(new JCPDividendFormFragment());
+                        break;
+                    case Constants.IncomeType.BONIFICATION:
+                        replaceFragment(new BonificationFormFragment());
+                        break;
+                    case Constants.IncomeType.SPLIT:
+                        replaceFragment(new SplitFormFragment());
+                        break;
+                    case Constants.IncomeType.GROUPING:
+                        replaceFragment(new GroupingFormFragment());
+                        break;
+                    case Constants.IncomeType.FII:
+                        replaceFragment(new FiiIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.TREASURY:
+                        replaceFragment(new TreasuryIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.OTHERS:
+                        replaceFragment(new OthersIncomeFormFragment());
+                        break;
+                    default:
+                        finish();
+                        break;
+                }
             }
         }
     }

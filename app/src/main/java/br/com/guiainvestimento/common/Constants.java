@@ -35,6 +35,7 @@ public final class Constants {
         public static final int EDIT = 5;
         public static final int DELETE_TRANSACION = 6;
         public static final int EDIT_TRANSACION = 7;
+        public static final int EDIT_INCOME = 8;
     }
 
     // Value id for the clicked item in the data adapters

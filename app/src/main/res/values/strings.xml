@@ -89,6 +89,7 @@
     <string name="wrong_income_per_others">Wrong total value received</string>
     <string name="wrong_income_per_treasury">Wrong value received per treasury</string>
     <string name="menu_done">Done</string>
+    <string name="wrong_others_tax">Wrong tax total.</string>
 
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividends</string>

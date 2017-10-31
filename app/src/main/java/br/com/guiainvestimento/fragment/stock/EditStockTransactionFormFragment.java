@@ -70,7 +70,6 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
             getActivity().finish();
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
-        Log.d(LOG_TAG, "mType: " + mType);
         switch (mType){
             case Constants.Type.BUY:
                 getActivity().setTitle(getResources().getString(R.string.stock_buy));
