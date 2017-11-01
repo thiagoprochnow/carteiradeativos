@@ -22,15 +22,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
+import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ComingSoonFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
@@ -46,7 +49,6 @@ import br.com.guiainvestimento.listener.ProductListener;
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
     protected DrawerLayout mDrawerLayout;
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mStockReceiver = false;
     boolean mFiiReceiver = false;
     boolean mCurrencyReceiver = false;
+
+    GoogleApiClient mGoogleApiClient;
 
     private Menu mMenu;
     @Override
@@ -128,6 +132,21 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrency, new IntentFilter(Constants.Receiver.CURRENCY));
     }
 
+    // Send result for Fragment
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (requestCode == Constants.Intent.DRIVE_CONNECTION_RESOLUTION) {
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        } else if (requestCode == Constants.Intent.GET_DRIVE_FILE){
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,9 +180,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // Navigation view of the activity layout
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null && mDrawerLayout != null) {
-            // Sets the image of the header of the navigation view
-            setHeaderValues(navigationView, R.id.containerNavDrawerListViewHeader,
-                    R.drawable.nav_drawer_header);
             // Configures the event when a item is selected from the menu
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -220,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 setTitle(R.string.title_coming_soon);
                 replaceFragment(new ComingSoonFragment());
                 break;
+            case R.id.nav_item_backup_restore:
+                setTitle(R.string.title_backup_restore);
+                replaceFragment(new BackupRestoreFragment());
+                break;
         }
     }
 
@@ -259,19 +279,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     protected void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-    }
-
-    // Set Drawer header values and images
-    public static void setHeaderValues(View navDrawerView, int listViewContainerId, int
-            imgNavDrawerHeaderId) {
-        View view = navDrawerView.findViewById(listViewContainerId);
-        if (view != null) {
-            view.setVisibility(View.VISIBLE);
-            ImageView imgUserBackground = (ImageView) view.findViewById(R.id.imgUserBackground);
-            if (imgUserBackground != null) {
-                imgUserBackground.setImageResource(imgNavDrawerHeaderId);
-            }
         }
     }
 
@@ -426,6 +433,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     public void onEditProduct(int productType, String symbol){
         Intent intent = new Intent(this, FormActivity.class);
         switch (productType) {
+            // Since Stock, FII and Currency get current value from service, it is redundt and confusing to edit current price manualy.
+            /*
             case Constants.ProductType.STOCK:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.STOCK);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
@@ -443,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
-                break;
+                break;*/
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
@@ -531,8 +540,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         //Currency Refresh
-        Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
-                .class);
 
         String[] affectedColumn3 = {PortfolioContract.CurrencyData.COLUMN_SYMBOL};
 
@@ -543,21 +550,91 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // For each symbol found on CurrencyData, add to service make webservice query and update
         if (queryCursor.getCount() > 0) {
             String symbol = "";
+            String currencySymbol = "";
+            String cryptoSymbol = "";
             queryCursor.moveToFirst();
             do {
-                if (!queryCursor.isLast()){
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL))+",";
-                } else{
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                // Prepare symbols of crypto and normal currency to send on Intent Services
+                symbol = queryCursor.getString(queryCursor.getColumnIndex
+                        (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
+                if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+                    // Crypto currency
+                    if (cryptoSymbol == "") {
+                        cryptoSymbol += symbol;
+                    } else {
+                        cryptoSymbol += "," + symbol;
+                    }
+                } else {
+                    // Normal currency
+                    if (currencySymbol == "") {
+                        currencySymbol += symbol;
+                    } else {
+                        currencySymbol += "," + symbol;
+                    }
                 }
             } while (queryCursor.moveToNext());
-            mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
-            startService(mCurrencyServiceIntent);
+
+            // Start Intent Service to update currency
+            if (currencySymbol != "") {
+                Intent mCurrencyServiceIntent = new Intent(this, CurrencyIntentService
+                        .class);
+                mCurrencyServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, currencySymbol);
+                startService(mCurrencyServiceIntent);
+            }
+
+            // Start Intent Service to update crypto currency
+            if (cryptoSymbol != ""){
+                Intent mCryptoServiceIntent = new Intent(this, CryptoIntentService
+                        .class);
+                mCryptoServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, cryptoSymbol);
+                startService(mCryptoServiceIntent);
+            }
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        }
+    }
+
+    @Override
+    public void onIncomeEdit(int incomeType, String id){
+        Intent intent = new Intent(this, FormActivity.class);
+        switch (incomeType){
+            case Constants.IncomeType.DIVIDEND:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.DIVIDEND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.JCP:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.JCP);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FII:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FII);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FIXED:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.TREASURY:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.OTHERS:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.OTHERS);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
         }
     }
 

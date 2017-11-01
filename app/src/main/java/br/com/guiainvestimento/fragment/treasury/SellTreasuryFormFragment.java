@@ -79,14 +79,20 @@ public class SellTreasuryFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidTreasurySymbol(mInputSymbolView);
-        boolean isValidQuantity = isValidSellQuantity(mInputQuantityView, mInputSymbolView, Constants.ProductType.TREASURY);
+        boolean isValidQuantity;
+        String inputSymbol = "";
+        if (isValidSymbol){
+            inputSymbol = mInputSymbolView.getText().toString();
+            isValidQuantity = isValidSellQuantity(mInputQuantityView, inputSymbol, Constants.ProductType.TREASURY);
+        } else {
+            isValidQuantity = false;
+        }
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the treasury
         if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
-            String inputSymbol = mInputSymbolView.getText().toString();
             double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
             // Get and handle inserted date value

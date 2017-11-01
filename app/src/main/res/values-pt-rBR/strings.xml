@@ -3,6 +3,8 @@
 
     <!-- Main Activity -->
     <string name="refresh_done">Carteira atualizada com sucesso</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Ação atualizada com sucesso</string>
@@ -87,6 +89,7 @@
     <string name="wrong_income_per_others">Valor total recebido inválido</string>
     <string name="wrong_income_per_treasury">Valor inválido recebido por papel</string>
     <string name="menu_done">Concluir</string>
+    <string name="wrong_others_tax">Imposto total inválido.</string>
 
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividendos</string>
@@ -423,6 +426,7 @@
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
     <string name="title_coming_soon">Em Breve</string>
+    <string name="title_backup_restore">Cópia e Restauração</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -448,9 +452,41 @@
     <string name="success_updating_stocks">Ações atualizadas com sucesso.</string>
     <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
     <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
+    <string name="success_updating_crypto_currency">Cripto moedas atualizadas com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
+
+    <!-- Backup and Restore -->
+    <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
+        Selecione uma das opções abaixo para fazer o download do seu banco em um arquivo .db e utilize-o para carregar seus dados em outro dispositivo ou como backup.</string>
+    <string name="backup_description">Faça um backup do banco de dados selecionando uma das opções abaixo. <b>Verifique se seu aplicativo está atualizado para evitar problemas na restauração.</b></string>
+    <string name="restore_description">Faça uma restauração do seu banco de dados selecionando uma das opções abaixo. <b>É importante que o arquivo de backup foi gerado na mesma versão de aplicativo da restauração, caso contrario pode resultar em erros na aplicação.</b></string>
+    <string name="backup_title">Backup</string>
+    <string name="restore_title">Restauração</string>
+    <string name="download_button">Downloads</string>
+    <string name="download_folder">Download</string>
+    <string name="file_button">Arquivo</string>
+    <string name="sdcard_button">SD Card</string>
+    <string name="google_drive_button">Google Drive</string>
+    <string name="google_drive_connection">Conectando no seu Google Drive.</string>
+    <string name="google_drive_connection_error">Erro ao conectar no seu Google Drive.</string>
+    <string name="google_drive_read_file_error">Erro ao ler o arquivo do Google Drive.</string>
+    <string name="backup_drive_success">Backup do banco de dados salvo com sucesso no Google Drive.</string>
+    <string name="backup_download_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
+    <string name="backup_overwrite">Você já tem um arquivo de backup salvo, você quer sobrescrever-lo?</string>
+    <string name="backup_overwrite_title">Sobrescrever Backup.</string>
+    <string name="backup_download_write_success_toast">Banco de dados salvo com sucesso no diretorio Downloads. Salvo em %s.</string>
+    <string name="backup_sdcard_write_error_toast">Erro ao fazer backup do banco de dados. Sem permissão na pasta.</string>
+    <string name="backup_sdcard_write_success_toast">Banco de dados salvo com sucesso no SD Card. Salvo em %s.</string>
+    <string name="backup_sdcard_not_mounted">SD card não está disponível.</string>
+    <string name="restore_error_toast">Erro na restauração</string>
+    <string name="restore_wrong_extension">Arquivo inválido, por favor escolha um arquivo de banco de dados.</string>
+    <string name="restore_success">Banco de dados restaurado com sucesso.</string>
+    <string name="restore_download_folder_error">Backup do banco de dados não encontrado, coloque o arquivo GIBackup.db no caminho %s .</string>
+    <string name="restore_confirm_title">Restauração</string>
+    <string name="restore_confirm">Tem certeza que deseja substituir seu banco de dados com as informações no arquivo de backup? Você perderá todas os informações da aplicação e ela será substituida pelas informações do arquivo de backup.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
@@ -472,7 +508,6 @@
         \u2022 Botão de ajuda explicando cada informação fornecida.\n
         \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
-        \u2022 Adicionar funcionalidade para fazer backup do seu portfolio em arquivo para transferencia ou nuvem.\n
         \u2022 Gráfico mostrando o crescimento dos rendimentos.\n
         \u2022 Constante correção de problemas e melhorias.\n\n
 

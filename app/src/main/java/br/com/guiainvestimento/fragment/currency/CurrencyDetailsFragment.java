@@ -27,6 +27,7 @@ import br.com.guiainvestimento.adapter.currency.CurrencyDetailAdapter;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFragment;
+import br.com.guiainvestimento.listener.TransactionListener;
 import br.com.guiainvestimento.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +51,17 @@ public class CurrencyDetailsFragment extends BaseFragment implements
     private String mSymbol;
 
     private CurrencyDetailAdapter mCurrencyDetailAdapter;
+    private TransactionListener mFormTransactionListener;
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TransactionListener) {
+            mFormTransactionListener = (TransactionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements ProductListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,6 +126,9 @@ public class CurrencyDetailsFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
+                break;
+            case Constants.AdapterClickable.EDIT:
+                mFormTransactionListener.onEditTransaction(Constants.ProductType.CURRENCY, id);
                 break;
             default:
                 break;

@@ -132,6 +132,15 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mClickHandler.onClick(id, Constants.AdapterClickable.DELETE);
                     }
                 });
+
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        String id = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.StockTransaction._ID));
+                        mClickHandler.onClick(id, Constants.AdapterClickable.EDIT);
+                    }
+                });
         }
     }
 
@@ -171,6 +180,9 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.menuDelete)
         ImageView menuDelete;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
 
         FiiDetailViewHolder(View itemView) {
             super(itemView);

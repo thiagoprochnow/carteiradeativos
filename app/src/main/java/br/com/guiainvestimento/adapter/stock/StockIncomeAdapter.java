@@ -164,6 +164,16 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                 });
 
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+                        int id = mCursor.getColumnIndex(PortfolioContract.StockIncome._ID);
+                        mClickHandler.onClick(mCursor.getString(id), type, Constants.AdapterClickable.EDIT);
+                    }
+                });
+
                 viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -206,6 +216,9 @@ public class StockIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @BindView(R.id.stockIncomeViewClickable)
         LinearLayout stockIncomeViewClickable;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
 
         @BindView(R.id.menuDelete)
         ImageView menuDelete;

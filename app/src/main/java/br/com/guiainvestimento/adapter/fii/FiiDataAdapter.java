@@ -146,14 +146,14 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         });
 
-        viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+        /*viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCursor.moveToPosition(position);
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });
+        });*/
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -232,8 +232,8 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
 
-        @BindView(R.id.menuEdit)
-        ImageView menuEdit;
+        /*@BindView(R.id.menuEdit)
+        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

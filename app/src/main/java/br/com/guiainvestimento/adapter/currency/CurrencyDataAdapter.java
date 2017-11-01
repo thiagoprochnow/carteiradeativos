@@ -128,7 +128,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
+        /*
         viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +136,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });
+        });*/
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -202,9 +202,9 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
+        /*
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;
+        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

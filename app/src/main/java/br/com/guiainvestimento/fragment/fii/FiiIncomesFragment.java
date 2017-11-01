@@ -125,6 +125,9 @@ public class FiiIncomesFragment extends BaseFragment implements
                         });
                 builder.create().show();
                 break;
+            case Constants.AdapterClickable.EDIT:
+                mIncomeDetailsListener.onIncomeEdit(type, id);
+                break;
             case Constants.AdapterClickable.MAIN:
                 Log.d(LOG_TAG, "ID: " + id);
                 mIncomeDetailsListener.onIncomeDetails(type, id);

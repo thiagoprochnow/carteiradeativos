@@ -111,7 +111,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
+        /*
         holder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -119,7 +119,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });
+        });*/
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -182,9 +182,9 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
+        /*
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;
+        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

@@ -1,11 +1,24 @@
 package br.com.guiainvestimento.util;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.utils.FileUtils;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 /**
  * Util class
@@ -45,8 +58,18 @@ public class Util {
             return myArrayList.get(0);
         } else if (symbol.equals("EUR")){
             return myArrayList.get(1);
-        } else{
+        } else if (symbol.equals("BTC")){
             return myArrayList.get(2);
+        } else {
+            return myArrayList.get(3);
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

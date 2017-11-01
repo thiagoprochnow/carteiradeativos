@@ -27,6 +27,8 @@ import br.com.guiainvestimento.adapter.stock.StockDetailAdapter;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFragment;
+import br.com.guiainvestimento.listener.ProductListener;
+import br.com.guiainvestimento.listener.TransactionListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -49,6 +51,17 @@ public class StockDetailsFragment extends BaseFragment implements
     private String mSymbol;
 
     private StockDetailAdapter mStockDetailAdapter;
+    private TransactionListener mFormTransactionListener;
+
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TransactionListener) {
+            mFormTransactionListener = (TransactionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " Parent Activity must implements ProductListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +124,9 @@ public class StockDetailsFragment extends BaseFragment implements
                             }
                         });
                 builder.create().show();
+                break;
+            case Constants.AdapterClickable.EDIT:
+                mFormTransactionListener.onEditTransaction(Constants.ProductType.STOCK, id);
                 break;
             default:
                 Log.d(LOG_TAG, "Wrong menu Id");

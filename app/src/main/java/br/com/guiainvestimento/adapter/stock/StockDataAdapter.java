@@ -147,7 +147,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
+        /*
         viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +155,7 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });
+        });*/
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -233,9 +233,9 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
+        /*
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;
+        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

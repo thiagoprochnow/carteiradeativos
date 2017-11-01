@@ -164,6 +164,16 @@ public class FiiIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 });
 
+                viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mCursor.moveToPosition(position - 1);
+                        int type = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
+                        int id = mCursor.getColumnIndex(PortfolioContract.FiiIncome._ID);
+                        mClickHandler.onClick(mCursor.getString(id), type, Constants.AdapterClickable.EDIT);
+                    }
+                });
+
                 viewHolder.menuDelete.setOnClickListener(new ImageView.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -206,6 +216,9 @@ public class FiiIncomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.fiiIncomeViewClickable)
         LinearLayout fiiIncomeViewClickable;
+
+        @BindView(R.id.menuEdit)
+        ImageView menuEdit;
 
         @BindView(R.id.menuDelete)
         ImageView menuDelete;

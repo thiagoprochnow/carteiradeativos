@@ -121,6 +121,12 @@ public class OthersIncomeFormFragment extends BaseFormFragment {
             if(!isValidExDate){
                 mInputReceiveDateView.setError(this.getString(R.string.wrong_date));
             }
+            if(!isValidPerOthers){
+                mInputReceiveView.setError(this.getString(R.string.wrong_income_per_others));
+            }
+            if(!isValidTax){
+                mInputTaxView.setError(this.getString(R.string.wrong_others_tax));
+            }
         }
         return false;
     }

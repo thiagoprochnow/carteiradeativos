@@ -5,10 +5,6 @@
         android:title="@string/menu_buy"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/sold_menu_item_edit"
-        android:title="@string/menu_edit"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/sold_menu_item_sell"
         android:title="@string/menu_sell"
         app:showAsAction="never"/>

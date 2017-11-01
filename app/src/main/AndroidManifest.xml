@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Optional permission for App measurement to run. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -17,10 +18,15 @@
             android:name="br.com.guiainvestimento.activity.MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar.NavDrawer">
+            <meta-data android:name="com.google.android.apps.drive.APP_ID" android:value="id=196632400417-0ql700h30pcdfaqiadsrhnssh59pqoj0.apps.googleusercontent.com" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.apps.drive.DRIVE_OPEN" />
+                <data android:mimeType="application/vnd.google-apps.drive-sdk.196632400417-0ql700h30pcdfaqiadsrhnssh59pqoj0.apps.googleusercontent.com" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 
@@ -33,6 +39,7 @@
         <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.FiiIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.CryptoIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"

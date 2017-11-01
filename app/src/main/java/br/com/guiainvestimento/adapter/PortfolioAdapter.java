@@ -196,8 +196,13 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if(treasuryEntry == 0 && fixedEntry == 0 && stockEntry == 0 && fiiEntry == 0 && currencyEntry == 0 && othersEntry == 0){
                     piechartHolder.pieChart.setVisibility(View.GONE);
+                    piechartHolder.piechartCardview.setVisibility(View.GONE);
+                    piechartHolder.piechartHeader.setVisibility(View.GONE);
                 } else {
                     piechartHolder.pieChart.setVisibility(View.VISIBLE);
+                    piechartHolder.piechartCardview.setVisibility(View.VISIBLE);
+                    piechartHolder.piechartHeader.setVisibility(View.VISIBLE);
+
                 }
 
                 // Animation on show
@@ -409,6 +414,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.piechart)
         PieChart pieChart;
+
+        @BindView(R.id.piechart_cardview)
+        CardView piechartCardview;
+
+        @BindView(R.id.piechart_header_label)
+        TextView piechartHeader;
 
         public PortfolioPieChartViewHolder(View itemView) {
             super(itemView);

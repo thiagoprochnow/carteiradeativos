@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
@@ -853,7 +854,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Validate if an EditText was set with valid int and that there is enough quantity of that investment to sell
-    protected boolean isValidSellQuantity(EditText editQuantity, EditText editSymbol, int type) {
+    protected boolean isValidSellQuantity(EditText editQuantity, String editSymbol, int type) {
         // TODO
         Editable editableQuantity = editQuantity.getText();
         double quantity = 0;
@@ -874,7 +875,7 @@ public abstract class BaseFragment extends Fragment {
                 quantity2 = Integer.parseInt(editableQuantity.toString());
             }
         }
-        String symbol = editSymbol.getText().toString();
+        String symbol = editSymbol;
 
         boolean isQuantityEnough = false;
 
@@ -957,6 +958,7 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 double boughtQuantity = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .TreasuryData.COLUMN_QUANTITY_TOTAL));
+                boughtQuantity = Util.round(boughtQuantity, 2);
                 if (boughtQuantity >= quantity) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
@@ -1647,10 +1649,17 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
-            Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
-                    .class);
-            mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent);
+            if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+                Intent mServiceIntent = new Intent(mContext, CryptoIntentService
+                        .class);
+                mServiceIntent.putExtra(CryptoIntentService.ADD_SYMBOL, symbol);
+                getActivity().startService(mServiceIntent);
+            } else {
+                Intent mServiceIntent = new Intent(mContext, CurrencyIntentService
+                        .class);
+                mServiceIntent.putExtra(CurrencyIntentService.ADD_SYMBOL, symbol);
+                getActivity().startService(mServiceIntent);
+            }
 
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             currencyDataCV.put(PortfolioContract.CurrencyData.COLUMN_BUY_VALUE_TOTAL, buyValue);

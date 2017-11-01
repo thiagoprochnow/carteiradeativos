@@ -114,7 +114,7 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
+        /*
         holder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -122,7 +122,7 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });
+        });*/
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -185,9 +185,9 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
+        /*
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;
+        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

@@ -125,6 +125,9 @@ public class TreasuryIncomesFragment extends BaseFragment implements
                         });
                 builder.create().show();
                 break;
+            case Constants.AdapterClickable.EDIT:
+                mIncomeDetailsListener.onIncomeEdit(type, id);
+                break;
             case Constants.AdapterClickable.MAIN:
                 mIncomeDetailsListener.onIncomeDetails(type, id);
                 break;

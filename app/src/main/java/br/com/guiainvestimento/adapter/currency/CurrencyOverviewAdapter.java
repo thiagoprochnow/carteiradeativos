@@ -187,8 +187,12 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                     piechartHolder.pieChart.setDescription(null);
                     piechartHolder.pieChart.invalidate(); // refresh
                     piechartHolder.pieChart.setVisibility(View.VISIBLE);
+                    piechartHolder.piechartCardview.setVisibility(View.VISIBLE);
+                    piechartHolder.piechartHeader.setVisibility(View.VISIBLE);
                 } else {
                     piechartHolder.pieChart.setVisibility(View.GONE);
+                    piechartHolder.piechartCardview.setVisibility(View.GONE);
+                    piechartHolder.piechartHeader.setVisibility(View.GONE);
                 }
                 break;
             default:
@@ -358,6 +362,12 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         @BindView(R.id.piechart)
         PieChart pieChart;
+
+        @BindView(R.id.piechart_cardview)
+        CardView piechartCardview;
+
+        @BindView(R.id.piechart_header_label)
+        TextView piechartHeader;
 
         public CurrencyPieChartViewHolder(View itemView) {
             super(itemView);
