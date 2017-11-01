@@ -56,7 +56,7 @@ public class EditOthersTransactionFormFragment extends BaseFormFragment {
         mType = getTransactionType(mTransactionCursor);
 
         if (mTransactionCursor.moveToFirst()) {
-            mTotal = mTransactionCursor.getInt(mTransactionCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
+            mTotal = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TOTAL));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_TIMESTAMP));
             mSymbol = mTransactionCursor.getString(mTransactionCursor.getColumnIndex(PortfolioContract.OthersTransaction.COLUMN_SYMBOL));
         } else{

@@ -56,7 +56,7 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
         mType = getTransactionType(mTransactionCursor);
 
         if (mTransactionCursor.moveToFirst()) {
-            mTotal = mTransactionCursor.getInt(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
+            mTotal = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP));
             mSymbol = mTransactionCursor.getString(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_SYMBOL));
         } else{
