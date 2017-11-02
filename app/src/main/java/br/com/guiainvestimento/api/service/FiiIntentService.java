@@ -233,7 +233,7 @@ public class FiiIntentService extends IntentService {
                 response = call.execute();
                 responseGetFii = response.body();
 
-                if (response.isSuccessful() && responseGetFii != null && responseGetFii != "") {
+                if (response.isSuccessful() && responseGetFii != null && responseGetFii != "" && !responseGetFii.trim().isEmpty()) {
                     String[] arrayGetFii = responseGetFii.split(",");
                     // Prepare the data of the current price to update the FiiData table
                     fiiDataCV.put(symbol,arrayGetFii[9]);

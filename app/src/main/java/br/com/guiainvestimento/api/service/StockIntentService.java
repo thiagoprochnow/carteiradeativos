@@ -230,7 +230,7 @@ public class StockIntentService extends IntentService {
                 response = call.execute();
                 responseGetStock = response.body();
 
-                if (response.isSuccessful() && responseGetStock != null && responseGetStock != "") {
+                if (response.isSuccessful() && responseGetStock != null && responseGetStock != "" && !responseGetStock.trim().isEmpty()) {
                     String[] arrayGetStock = responseGetStock.split(",");
                     // Prepare the data of the current price to update the StockData table
                     stockDataCV.put(symbol,arrayGetStock[9]);
