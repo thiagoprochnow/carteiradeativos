@@ -24,6 +24,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Service responsible for making the Api request and parser the result.
@@ -34,6 +35,7 @@ public class FiiIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
+    private final String BFToken = "42745199c91e49ff73706f997cd8f465";
 
     private boolean mSuccess = false;
     private String mSymbol;
@@ -69,12 +71,23 @@ public class FiiIntentService extends IntentService {
                     }
                 });
             } else {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                // try the Bolsa Financeira backup API
+                int backupSuccess = this.backupAddFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
@@ -184,6 +197,62 @@ public class FiiIntentService extends IntentService {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
+        }
+        return resultStatus;
+    }
+
+    // This is used whem the yahoo API fails
+    // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
+    private int backupAddFiiTask(TaskParams params) {
+
+        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
+
+        // Build retrofit base request
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BackupAPIFiiService.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        ContentValues fiiDataCV = new ContentValues();
+        try {
+            // Validate if Symbol was added
+            if (params.getExtras() == null || params.getExtras().getString(FiiIntentService.ADD_SYMBOL).isEmpty()) {
+                throw new IOException("Missing Extra ADD_SYMBOL");
+            }
+
+            // Make the request and parse the result
+            BackupAPIFiiService service = retrofit.create(BackupAPIFiiService.class);
+
+            String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
+            for (String symbol: symbols) {
+                Call<String> call;
+                Response<String> response;
+                String responseGetFii;
+
+                call = service.getFiiBackupAPI(BFToken, symbol);
+                response = call.execute();
+                responseGetFii = response.body();
+
+                if (response.isSuccessful() && responseGetFii != null && responseGetFii != "") {
+                    String[] arrayGetFii = responseGetFii.split(",");
+                    // Prepare the data of the current price to update the FiiData table
+                    fiiDataCV.put(symbol,arrayGetFii[9]);
+
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    resultStatus = GcmNetworkManager.RESULT_FAILURE;
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        if (resultStatus == GcmNetworkManager.RESULT_SUCCESS){
+            // Update value on fii data
+            int updatedRows = this.getContentResolver().update(
+                    PortfolioContract.FiiData.BULK_UPDATE_URI,
+                    fiiDataCV, null, null);
         }
         return resultStatus;
     }

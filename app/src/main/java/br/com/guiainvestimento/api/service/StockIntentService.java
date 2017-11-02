@@ -25,6 +25,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Service responsible for making the Api request and parser the result.
@@ -35,6 +36,7 @@ public class StockIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
+    private final String BFToken = "42745199c91e49ff73706f997cd8f465";
 
     private boolean mSuccess = false;
     private String mSymbol;
@@ -70,12 +72,23 @@ public class StockIntentService extends IntentService {
                     }
                 });
             } else {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                // try the Bolsa Financeira backup API
+                int backupSuccess = this.backupAddStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
@@ -182,6 +195,61 @@ public class StockIntentService extends IntentService {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
+        }
+        return resultStatus;
+    }
+
+    // This is used whem the yahoo API fails
+    // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
+    private int backupAddStockTask(TaskParams params) {
+
+        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
+
+        // Build retrofit base request
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BackupAPIStockService.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+        ContentValues stockDataCV = new ContentValues();
+        try {
+            // Validate if Symbol was added
+            if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
+                throw new IOException("Missing Extra ADD_SYMBOL");
+            }
+
+            // Make the request and parse the result
+            BackupAPIStockService service = retrofit.create(BackupAPIStockService.class);
+
+            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
+            for (String symbol: symbols) {
+                Call<String> call;
+                Response<String> response;
+                String responseGetStock;
+
+                call = service.getStockBackupAPI(BFToken, symbol);
+                response = call.execute();
+                responseGetStock = response.body();
+
+                if (response.isSuccessful() && responseGetStock != null && responseGetStock != "") {
+                    String[] arrayGetStock = responseGetStock.split(",");
+                    // Prepare the data of the current price to update the StockData table
+                    stockDataCV.put(symbol,arrayGetStock[9]);
+
+                    // Success request
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    resultStatus = GcmNetworkManager.RESULT_FAILURE;
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        if (resultStatus == GcmNetworkManager.RESULT_SUCCESS){
+            // Update value on stock data
+            int updatedRows = this.getContentResolver().update(
+                    PortfolioContract.StockData.BULK_UPDATE_URI,
+                    stockDataCV, null, null);
         }
         return resultStatus;
     }

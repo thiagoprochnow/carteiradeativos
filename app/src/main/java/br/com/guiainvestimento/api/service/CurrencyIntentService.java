@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.domain.ResponseCurrency;
+import br.com.guiainvestimento.api.domain.ResponseCurrencyBackup;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Currency;
@@ -64,12 +65,23 @@ public class CurrencyIntentService extends IntentService {
                         }
                     });
                 } else {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_currency), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    // try the Pro Master backup API
+                    int backupSuccess = this.backupAddCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                    if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_currency), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_currency), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             }else{
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
@@ -112,6 +124,7 @@ public class CurrencyIntentService extends IntentService {
                 responseGetRate = response.body();
                 count++;
             } while (response.code() == 400 && count < 20);
+
             if(response.isSuccessful() && responseGetRate.getDividendQuotes() != null) {
                 for(Currency currency : responseGetRate.getDividendQuotes()){
 
@@ -139,6 +152,59 @@ public class CurrencyIntentService extends IntentService {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
+        }
+        return resultStatus;
+    }
+
+    private int backupAddCurrencyTask(TaskParams params) {
+
+        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
+
+        // Build retrofit base request
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BackupAPICurrencyService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ContentValues currencyDataCV = new ContentValues();
+        try {
+            // Make the request and parse the result
+            BackupAPICurrencyService service = retrofit.create(BackupAPICurrencyService.class);
+
+            String[] symbols = params.getExtras().getString(CurrencyIntentService.ADD_SYMBOL).split(",");
+
+            Call<ResponseCurrencyBackup> call;
+            Response<ResponseCurrencyBackup> response;
+            ResponseCurrencyBackup responseGetRate;
+            int count = 0;
+
+            for(String symbol : symbols) {
+                call = service.getCurrencyBackupAPI(symbol, "json");
+                response = call.execute();
+                responseGetRate = response.body();
+                count++;
+
+                if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
+
+                        // Prepare the data of the current price to update the StockData table
+                        currencyDataCV.put(symbol,
+                                responseGetRate.getQuote(symbol));
+
+                        // Log update success/fail result
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    resultStatus = GcmNetworkManager.RESULT_FAILURE;
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        if (resultStatus == GcmNetworkManager.RESULT_SUCCESS){
+            // Update value on stock data
+            int updatedRows = this.getContentResolver().update(
+                    PortfolioContract.CurrencyData.BULK_UPDATE_URI,
+                    currencyDataCV, null, null);
         }
         return resultStatus;
     }
