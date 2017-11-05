@@ -236,23 +236,27 @@ public class FiiIntentService extends IntentService {
                 if (response.isSuccessful() && responseGetFii != null && responseGetFii != "" && !responseGetFii.trim().isEmpty()) {
                     String[] arrayGetFii = responseGetFii.split(",");
                     // Prepare the data of the current price to update the FiiData table
-                    fiiDataCV.put(symbol,arrayGetFii[9]);
-
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                    if (arrayGetFii.length > 9) {
+                        fiiDataCV.put(symbol, arrayGetFii[9]);
+                    }
                 } else {
-                    resultStatus = GcmNetworkManager.RESULT_FAILURE;
+                    // symbol not updated automaticly
                 }
+            }
+
+            if (fiiDataCV.size() > 0){
+                // Update value on fii data
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.FiiData.BULK_UPDATE_URI,
+                        fiiDataCV, null, null);
+                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
-        }
-        if (resultStatus == GcmNetworkManager.RESULT_SUCCESS){
-            // Update value on fii data
-            int updatedRows = this.getContentResolver().update(
-                    PortfolioContract.FiiData.BULK_UPDATE_URI,
-                    fiiDataCV, null, null);
+            resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
     }

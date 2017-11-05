@@ -185,26 +185,25 @@ public class CurrencyIntentService extends IntentService {
                 count++;
 
                 if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
-
                         // Prepare the data of the current price to update the StockData table
-                        currencyDataCV.put(symbol,
-                                responseGetRate.getQuote(symbol));
-
-                        // Log update success/fail result
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                    currencyDataCV.put(symbol,responseGetRate.getQuote(symbol));
                 } else {
-                    resultStatus = GcmNetworkManager.RESULT_FAILURE;
+                    // Error updating symbol
                 }
+            }
+            if (currencyDataCV.size() > 0){
+                // Update value on stock data
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.CurrencyData.BULK_UPDATE_URI,
+                        currencyDataCV, null, null);
+                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
-        }
-        if (resultStatus == GcmNetworkManager.RESULT_SUCCESS){
-            // Update value on stock data
-            int updatedRows = this.getContentResolver().update(
-                    PortfolioContract.CurrencyData.BULK_UPDATE_URI,
-                    currencyDataCV, null, null);
+            resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
     }
