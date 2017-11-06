@@ -2205,7 +2205,6 @@ public class PortfolioProvider extends ContentProvider {
                     double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
                             .getColumnIndex(
                             PortfolioContract.StockData.COLUMN_CURRENT_TOTAL));
-                    Log.d(LOG_TAG, "StockTotal: " + currentDataTotal);
                     if (queryDataCursor.isLast()) {
                         // If it is last, round last so sum of all will be 100%
                         currentPercent = 100 - percentSum;
@@ -2272,7 +2271,6 @@ public class PortfolioProvider extends ContentProvider {
                     double currentDataTotal = queryDataCursor.getDouble(queryDataCursor
                             .getColumnIndex(
                                     PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL));
-                    Log.d(LOG_TAG, "FiiTotal: " + currentDataTotal);
                     if (queryDataCursor.isLast()) {
                         // If it is last, round last so sum of all will be 100%
                         currentPercent = 100 - percentSum;
