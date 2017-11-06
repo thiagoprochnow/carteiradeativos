@@ -123,6 +123,7 @@
     <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar essa ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
     <string name="delete_confirm">Deletar</string>
     <string name="delete_cancel">Cancelar</string>
+    <string name="edit_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
     <string name="menu_sell">Vender</string>
@@ -196,7 +197,7 @@
     <string name="treasury_history">Histórico</string>
     <string name="treasury_incomes">Cupons</string>
 
-    <!-- Stock Adapter -->
+    <!-- Adapter -->
     <string name="current_percent_label">Percent:</string>
     <string name="target_percent_label">Target:</string>
     <string name="incomes">Rendimentos</string>
@@ -210,6 +211,8 @@
     <string name="data_income_label">Rendimentos</string>
     <string name="data_treasury_income_label">Cupons</string>
     <string name="data_total_gain_label">Ganho</string>
+    <string name="dialog_stock_update_failed_message">Essa ação não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="dialog_fii_update_failed_message">Esse fundo imobiliário não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>

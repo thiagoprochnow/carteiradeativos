@@ -1376,7 +1376,7 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, StockDetailsOverview will not update current total and total gain, unless refreshing the View
-                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION){
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION || type == Constants.Type.SELL){
                     queryDataCursor.moveToFirst();
                     double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
@@ -1409,7 +1409,7 @@ public abstract class BaseFragment extends Fragment {
             stockDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL, buyValue);
 
-            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION || type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
             }
@@ -1893,7 +1893,7 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, FiiDetailsOverview will not update current total and total gain, unless refreshing the View
-                if (type == Constants.Type.DELETE_TRANSACION){
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.SELL){
                     queryDataCursor.moveToFirst();
                     double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
@@ -1925,7 +1925,7 @@ public abstract class BaseFragment extends Fragment {
 
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if ((type == Constants.Type.DELETE_TRANSACION) && queryDataCursor.getCount() > 0){
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL, currentTotal);
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_VARIATION, variation);
             }

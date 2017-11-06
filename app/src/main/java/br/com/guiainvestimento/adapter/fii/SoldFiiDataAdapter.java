@@ -1,8 +1,10 @@
 package br.com.guiainvestimento.adapter.fii;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +54,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+        int updateStatus = -1;
 
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL));
         // Get handled values of FiiTransaction with current symbol
@@ -59,6 +62,16 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
                 mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN));
         double sellGainPercent = sellGain/buyTotal*100;
         // Set text colors according to positive or negative values
+
+        String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+                .SoldFiiData.
+                COLUMN_SYMBOL));
+
+        Cursor dataCursor = getFiiDataCursor(symbol);
+        if (dataCursor.moveToFirst()){
+            updateStatus = dataCursor.getInt(dataCursor.getColumnIndex
+                    (PortfolioContract.FiiData.COLUMN_UPDATE_STATUS));
+        }
 
         if (sellGain >=0){
             holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -68,9 +81,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                .SoldFiiData.
-                COLUMN_SYMBOL)));
+        holder.symbol.setText(symbol);
         holder.fiiQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
@@ -94,6 +105,34 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             holder.fiiCardView.setLayoutParams(params);
         }
 
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            holder.updateError.setVisibility(View.GONE);
+        } else {
+            holder.updateError.setVisibility(View.VISIBLE);
+            holder.updateError.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Use the Builder class for convenient dialog construction
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                    dialog.setMessage(R.string.dialog_fii_update_failed_message)
+                            .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mCursor.moveToPosition(position);
+                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SYMBOL);
+                                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                                }
+                            })
+                            .setNegativeButton(R.string.edit_cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    dialog.create().show();
+                }
+            });
+        }
+
         holder.fiiCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -111,15 +150,20 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-        /*
-        holder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mCursor.moveToPosition(position);
-                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
-                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-            }
-        });*/
+
+        if (updateStatus == Constants.UpdateStatus.UPDATED) {
+            holder.menuEdit.setVisibility(View.GONE);
+        } else {
+            holder.menuEdit.setVisibility(View.VISIBLE);
+            holder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCursor.moveToPosition(position);
+                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
+                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                }
+            });
+        }
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -182,9 +226,12 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-        /*
+
+        @BindView(R.id.updateError)
+        ImageView updateError;
+
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;*/
+        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;
@@ -196,5 +243,13 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    private Cursor getFiiDataCursor(String symbol){
+        String selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        return mContext.getContentResolver().query(
+                PortfolioContract.FiiData.URI,
+                null, selection, selectionArguments, null);
     }
 }

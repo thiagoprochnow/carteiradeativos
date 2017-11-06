@@ -1,8 +1,10 @@
 package br.com.guiainvestimento.adapter.stock;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,6 +65,8 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_NET_INCOME));
         double totalGain = stockAppreciation + totalIncome;
+        int updateStatus = mCursor.getInt(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_UPDATE_STATUS));
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -130,6 +134,35 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.stockCardView.setLayoutParams(params);
         }
 
+        // If the stock could not be updated automatically, give notice and option to update it manually
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            viewHolder.updateError.setVisibility(View.GONE);
+        } else {
+            viewHolder.updateError.setVisibility(View.VISIBLE);
+            viewHolder.updateError.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Use the Builder class for convenient dialog construction
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                    dialog.setMessage(R.string.dialog_stock_update_failed_message)
+                            .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mCursor.moveToPosition(position);
+                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
+                                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                                }
+                            })
+                            .setNegativeButton(R.string.edit_cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    dialog.create().show();
+                }
+            });
+        }
+
         viewHolder.stockCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,15 +180,20 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-        /*
-        viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCursor.moveToPosition(position);
-                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
-                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-            }
-        });*/
+
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            viewHolder.menuEdit.setVisibility(View.GONE);
+        } else {
+            viewHolder.menuEdit.setVisibility(View.VISIBLE);
+            viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCursor.moveToPosition(position);
+                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
+                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                }
+            });
+        }
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -233,9 +271,12 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-        /*
+
+        @BindView(R.id.updateError)
+        ImageView updateError;
+
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;*/
+        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

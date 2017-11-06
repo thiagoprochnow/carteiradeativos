@@ -62,7 +62,8 @@ public class FiiIntentService extends IntentService {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            int success = this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            // try the Bolsa Financeira backup API
+            int success = this.backupAddFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
@@ -71,27 +72,16 @@ public class FiiIntentService extends IntentService {
                     }
                 });
             } else {
-                // try the Bolsa Financeira backup API
-                int backupSuccess = this.backupAddFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
-                if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
-
+/*
     private int addFiiTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
@@ -200,7 +190,7 @@ public class FiiIntentService extends IntentService {
         }
         return resultStatus;
     }
-
+*/
     // This is used whem the yahoo API fails
     // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
     private int backupAddFiiTask(TaskParams params) {
@@ -233,15 +223,29 @@ public class FiiIntentService extends IntentService {
                 response = call.execute();
                 responseGetFii = response.body();
 
+                ContentValues updateFii = new ContentValues();
                 if (response.isSuccessful() && responseGetFii != null && responseGetFii != "" && !responseGetFii.trim().isEmpty()) {
                     String[] arrayGetFii = responseGetFii.split(",");
                     // Prepare the data of the current price to update the FiiData table
                     if (arrayGetFii.length > 9) {
                         fiiDataCV.put(symbol, arrayGetFii[9]);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, arrayGetFii[5]);
+                    } else {
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, 0);
                     }
                 } else {
-                    // symbol not updated automaticly
+                    // symbol not updated automatically
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, 0);
                 }
+
+                String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                String[] updatedSelectionArguments = {symbol};
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.FiiData.URI,
+                        updateFii, updateSelection, updatedSelectionArguments);
             }
 
             if (fiiDataCV.size() > 0){
@@ -260,7 +264,7 @@ public class FiiIntentService extends IntentService {
         }
         return resultStatus;
     }
-
+/*
     private String buildQuery(String[] symbols) {
         String resultQuery = "";
 
@@ -280,7 +284,7 @@ public class FiiIntentService extends IntentService {
 
         return resultQuery;
     }
-
+*/
     @Override
     public void onDestroy() {
         super.onDestroy();

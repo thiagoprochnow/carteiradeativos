@@ -11,6 +11,7 @@ import br.com.guiainvestimento.fragment.currency.BuyCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.currency.SellCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.fii.BuyFiiFormFragment;
 import br.com.guiainvestimento.fragment.currency.EditCurrencyTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fii.EditFiiFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiIncomeFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiTransactionFormFragment;
 import br.com.guiainvestimento.fragment.fii.FiiIncomeFormFragment;
@@ -28,6 +29,7 @@ import br.com.guiainvestimento.fragment.others.SellOthersFormFragment;
 import br.com.guiainvestimento.fragment.stock.BonificationFormFragment;
 import br.com.guiainvestimento.fragment.stock.BuyStockFormFragment;
 import br.com.guiainvestimento.fragment.stock.EditJCPDividendFormFragment;
+import br.com.guiainvestimento.fragment.stock.EditStockFormFragment;
 import br.com.guiainvestimento.fragment.stock.EditStockTransactionFormFragment;
 import br.com.guiainvestimento.fragment.stock.GroupingFormFragment;
 import br.com.guiainvestimento.fragment.stock.JCPDividendFormFragment;
@@ -113,14 +115,13 @@ public class FormActivity extends AppCompatActivity {
                 }
             } else if (productStatus == Constants.Type.EDIT){
                 switch (productType) {
-                    // Since Stock, FII and Currency get current value from service, it is redundt and confusing to edit current price manualy.
-                    /*case Constants.ProductType.STOCK:
+                    case Constants.ProductType.STOCK:
                         replaceFragment(new EditStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
                         replaceFragment(new EditFiiFormFragment());
                         break;
-                    case Constants.ProductType.CURRENCY:
+                    /*case Constants.ProductType.CURRENCY:
                         replaceFragment(new EditCurrencyFormFragment());
                         break;*/
                     case Constants.ProductType.FIXED:

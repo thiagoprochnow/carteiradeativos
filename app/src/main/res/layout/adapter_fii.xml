@@ -39,6 +39,13 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
+            <ImageView
+                android:id="@+id/updateError"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:paddingTop="1dp"
+                android:src="@drawable/error_icon"
+                android:layout_marginRight="3dp"/>
             <TextView
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/symbol"
@@ -285,6 +292,12 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/sell_icon_small"
+                    android:layout_marginRight="10dp"/>
+                <ImageView
+                    android:id="@+id/menuEdit"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/edit_icon_small"
                     android:layout_marginRight="10dp"/>
                 <ImageView
                     android:id="@+id/menuDelete"

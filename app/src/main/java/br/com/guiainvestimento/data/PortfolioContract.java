@@ -337,6 +337,8 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String LAST_UPDATE = "last_update";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
+        public static final String COLUMN_OPENING_PRICE = "opening_price";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
@@ -355,7 +357,9 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
-                LAST_UPDATE
+                LAST_UPDATE,
+                COLUMN_UPDATE_STATUS,
+                COLUMN_OPENING_PRICE
         };
 
         public static Uri makeUriForStockData(String symbol) {
@@ -566,6 +570,8 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String LAST_UPDATE = "last_update";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
+        public static final String COLUMN_OPENING_PRICE = "opening_price";
 
         public static final String[] FII_DATA_COLUMNS = {
                 _ID,
@@ -584,7 +590,9 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
-                LAST_UPDATE
+                LAST_UPDATE,
+                COLUMN_UPDATE_STATUS,
+                COLUMN_OPENING_PRICE
         };
 
         public static Uri makeUriForFiiData(String symbol) {

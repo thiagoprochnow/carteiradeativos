@@ -115,6 +115,7 @@
     <string name="delete_stock_dialog">If you sold the stock, select "Sell" from the option menu. Deleting the stock will remove all its data, including all income received.</string>
     <string name="delete_confirm">Delete</string>
     <string name="delete_cancel">Cancel</string>
+    <string name="edit_cancel">Cancel</string>
     <string name="menu_buy">Buy</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_sell">Sell</string>
@@ -195,7 +196,7 @@
     <string name="treasury_history">History</string>
     <string name="treasury_incomes">Coupons</string>
 
-    <!-- Stock Adapter -->
+    <!-- Adapter -->
     <string name="current_percent_label">Percent:</string>
     <string name="target_percent_label">Target:</string>
     <string name="incomes">Incomes</string>
@@ -209,6 +210,8 @@
     <string name="data_income_label">Income</string>
     <string name="data_treasury_income_label">Coupons</string>
     <string name="data_total_gain_label">Gain</string>
+    <string name="dialog_stock_update_failed_message">This stock could not be update automatically, please input current price manually by clicking on Edit button.</string>
+    <string name="dialog_fii_update_failed_message">This Fii could not be update automatically, please input current price manually by clicking on Edit button.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>

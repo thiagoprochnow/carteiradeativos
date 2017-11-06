@@ -63,7 +63,8 @@ public class StockIntentService extends IntentService {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            // try the Bolsa Financeira backup API
+            int success = this.backupAddStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
@@ -72,27 +73,16 @@ public class StockIntentService extends IntentService {
                     }
                 });
             } else {
-                // try the Bolsa Financeira backup API
-                int backupSuccess = this.backupAddStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
-                if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
-
+/*
     private int addStockTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
@@ -198,7 +188,7 @@ public class StockIntentService extends IntentService {
         }
         return resultStatus;
     }
-
+*/
     // This is used whem the yahoo API fails
     // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
     private int backupAddStockTask(TaskParams params) {
@@ -229,16 +219,29 @@ public class StockIntentService extends IntentService {
                 call = service.getStockBackupAPI(BFToken, symbol);
                 response = call.execute();
                 responseGetStock = response.body();
-
+                ContentValues updateStock = new ContentValues();
                 if (response.isSuccessful() && responseGetStock != null && responseGetStock != "" && !responseGetStock.trim().isEmpty()) {
                     String[] arrayGetStock = responseGetStock.split(",");
                     // Prepare the data of the current price to update the StockData table
                     if (arrayGetStock.length > 9) {
                         stockDataCV.put(symbol, arrayGetStock[9]);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, arrayGetStock[5]);
+                    } else {
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, 0);
                     }
                 } else {
-                    // symbol not updated automaticly
+                    // symbol not updated automatically
+                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, 0);
                 }
+
+                String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                String[] updatedSelectionArguments = {symbol};
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.StockData.URI,
+                        updateStock, updateSelection, updatedSelectionArguments);
             }
 
             if (stockDataCV.size() > 0){
@@ -257,7 +260,7 @@ public class StockIntentService extends IntentService {
         }
         return resultStatus;
     }
-
+/*
     private String buildQuery(String[] symbols) {
         String resultQuery = "";
 
@@ -277,7 +280,7 @@ public class StockIntentService extends IntentService {
 
         return resultQuery;
     }
-
+*/
     @Override
     public void onDestroy() {
         super.onDestroy();

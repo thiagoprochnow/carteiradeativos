@@ -13,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // TODO: Need to change db name to the final app name or to anything meaningful
     static final String NAME = "Portfolio.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     // Log variable
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
@@ -43,6 +43,18 @@ public class DbHelper extends SQLiteOpenHelper {
             PortfolioContract.BuyGrowth.YEAR + " INTEGER, " +
             PortfolioContract.BuyGrowth.COLUMN_TYPE + " INTEGER NOT NULL, " +
             "UNIQUE (" + PortfolioContract.BuyGrowth._ID + ") ON CONFLICT REPLACE);";
+
+    private static final String DATABASE_ALTER_STOCK_DATA_1 = "ALTER TABLE "
+            + PortfolioContract.StockData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.StockData.COLUMN_UPDATE_STATUS + " INTEGER;";
+
+    private static final String DATABASE_ALTER_STOCK_DATA_2 = "ALTER TABLE "
+            + PortfolioContract.StockData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.StockData.COLUMN_OPENING_PRICE + " REAL;";
+
+    private static final String DATABASE_ALTER_FII_DATA_1 = "ALTER TABLE "
+            + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_UPDATE_STATUS + " INTEGER;";
+
+    private static final String DATABASE_ALTER_FII_DATA_2 = "ALTER TABLE "
+            + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_OPENING_PRICE + " REAL;";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -120,6 +132,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_TAX + " REAL, " +
                 PortfolioContract.StockData.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.StockData.LAST_UPDATE + " LONG, " +
+                PortfolioContract.StockData.COLUMN_UPDATE_STATUS + " INTEGER, " +
+                PortfolioContract.StockData.COLUMN_OPENING_PRICE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_stock_data = "CREATE TABLE " + PortfolioContract.SoldStockData.TABLE_NAME + " (" +
@@ -196,6 +210,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiData.COLUMN_TAX + " REAL, " +
                 PortfolioContract.FiiData.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.FiiData.LAST_UPDATE + " LONG, " +
+                PortfolioContract.FiiData.COLUMN_UPDATE_STATUS + " INTEGER, " +
+                PortfolioContract.FiiData.COLUMN_OPENING_PRICE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_fii_data = "CREATE TABLE " + PortfolioContract.SoldFiiData.TABLE_NAME + " (" +
@@ -518,7 +534,18 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(DATABASE_CREATE_BUY_GROWTH);
             }
         } catch (SQLException e){
-            Log.e(LOG_TAG, "onUpgrade error " + e);
+            Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
+        }
+
+        try {
+            if (oldVersion < 3){
+                db.execSQL(DATABASE_ALTER_STOCK_DATA_1);
+                db.execSQL(DATABASE_ALTER_STOCK_DATA_2);
+                db.execSQL(DATABASE_ALTER_FII_DATA_1);
+                db.execSQL(DATABASE_ALTER_FII_DATA_2);
+            }
+        } catch (SQLException e){
+            Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
         }
     }
 }
