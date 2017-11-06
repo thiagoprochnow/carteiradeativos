@@ -53,6 +53,22 @@
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
                 android:textColor="@color/white"
+                android:textSize="@dimen/fii_symbol"
+                android:layout_marginRight="5dp"/>
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/white"
+                android:textSize="@dimen/stock_symbol"
+                android:layout_marginRight="5dp"/>
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/dailyPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:textSize="@dimen/fii_symbol" />
             <LinearLayout
                 android:layout_width="match_parent"

@@ -69,6 +69,23 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
+        // Show daily gain or loss
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            double currentPrice = mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.FiiData.COLUMN_CURRENT_PRICE));
+            double closingPrice = mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.FiiData.COLUMN_CLOSING_PRICE));
+            double dailyGain = (currentPrice - closingPrice)/closingPrice * 100;
+            String dailyGainString = String.format("%.2f", dailyGain);
+            if (dailyGain >= 0){
+                viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+                viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            } else {
+                viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
+                viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            }
+        }
+
         // Set text colors according to positive or negative values
         if (fiiAppreciation >= 0) {
             viewHolder.fiiAppreciation.setTextColor(ContextCompat.getColor(mContext, R.color.green));
@@ -145,7 +162,7 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     mCursor.moveToPosition(position);
-                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
+                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_SYMBOL);
                                     mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
                                 }
                             })
@@ -252,6 +269,9 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @BindView(R.id.totalGain)
         TextView totalGain;
+
+        @BindView(R.id.dailyPercent)
+        TextView dailyPercent;
 
         @BindView(R.id.fiiAppreciationPercent)
         TextView fiiAppreciationPercent;

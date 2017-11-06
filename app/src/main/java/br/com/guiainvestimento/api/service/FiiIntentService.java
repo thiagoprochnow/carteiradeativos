@@ -227,18 +227,18 @@ public class FiiIntentService extends IntentService {
                 if (response.isSuccessful() && responseGetFii != null && responseGetFii != "" && !responseGetFii.trim().isEmpty()) {
                     String[] arrayGetFii = responseGetFii.split(",");
                     // Prepare the data of the current price to update the FiiData table
-                    if (arrayGetFii.length > 9) {
+                    if (arrayGetFii.length > 10) {
                         fiiDataCV.put(symbol, arrayGetFii[9]);
                         updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, arrayGetFii[5]);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, arrayGetFii[10]);
                     } else {
                         updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, 0);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
                     }
                 } else {
                     // symbol not updated automatically
                     updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                    updateFii.put(PortfolioContract.FiiData.COLUMN_OPENING_PRICE, 0);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
                 }
 
                 String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";

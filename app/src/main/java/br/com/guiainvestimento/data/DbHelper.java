@@ -48,13 +48,13 @@ public class DbHelper extends SQLiteOpenHelper {
             + PortfolioContract.StockData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.StockData.COLUMN_UPDATE_STATUS + " INTEGER;";
 
     private static final String DATABASE_ALTER_STOCK_DATA_2 = "ALTER TABLE "
-            + PortfolioContract.StockData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.StockData.COLUMN_OPENING_PRICE + " REAL;";
+            + PortfolioContract.StockData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.StockData.COLUMN_CLOSING_PRICE + " REAL;";
 
     private static final String DATABASE_ALTER_FII_DATA_1 = "ALTER TABLE "
             + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_UPDATE_STATUS + " INTEGER;";
 
     private static final String DATABASE_ALTER_FII_DATA_2 = "ALTER TABLE "
-            + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_OPENING_PRICE + " REAL;";
+            + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_CLOSING_PRICE + " REAL;";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -133,7 +133,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.StockData.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.StockData.LAST_UPDATE + " LONG, " +
                 PortfolioContract.StockData.COLUMN_UPDATE_STATUS + " INTEGER, " +
-                PortfolioContract.StockData.COLUMN_OPENING_PRICE + " REAL, " +
+                PortfolioContract.StockData.COLUMN_CLOSING_PRICE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.StockData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_stock_data = "CREATE TABLE " + PortfolioContract.SoldStockData.TABLE_NAME + " (" +
@@ -211,7 +211,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FiiData.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.FiiData.LAST_UPDATE + " LONG, " +
                 PortfolioContract.FiiData.COLUMN_UPDATE_STATUS + " INTEGER, " +
-                PortfolioContract.FiiData.COLUMN_OPENING_PRICE + " REAL, " +
+                PortfolioContract.FiiData.COLUMN_CLOSING_PRICE + " REAL, " +
                 "UNIQUE (" + PortfolioContract.FiiData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
         String builder_sold_fii_data = "CREATE TABLE " + PortfolioContract.SoldFiiData.TABLE_NAME + " (" +

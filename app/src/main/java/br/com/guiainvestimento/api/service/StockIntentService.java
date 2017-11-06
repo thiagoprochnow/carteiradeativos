@@ -223,18 +223,18 @@ public class StockIntentService extends IntentService {
                 if (response.isSuccessful() && responseGetStock != null && responseGetStock != "" && !responseGetStock.trim().isEmpty()) {
                     String[] arrayGetStock = responseGetStock.split(",");
                     // Prepare the data of the current price to update the StockData table
-                    if (arrayGetStock.length > 9) {
+                    if (arrayGetStock.length > 10) {
                         stockDataCV.put(symbol, arrayGetStock[9]);
                         updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                        updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, arrayGetStock[5]);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, arrayGetStock[10]);
                     } else {
                         updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                        updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, 0);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
                     }
                 } else {
                     // symbol not updated automatically
                     updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                    updateStock.put(PortfolioContract.StockData.COLUMN_OPENING_PRICE, 0);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
                 }
 
                 String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
