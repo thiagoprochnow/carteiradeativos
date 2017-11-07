@@ -94,6 +94,10 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
                 viewHolder.dailyPrice.setText(dailyPrice);
             }
+
+            //Temp
+            viewHolder.dailyPercent.setVisibility(View.GONE);
+            viewHolder.dailyPrice.setVisibility(View.GONE);
         }
 
         // Set text colors according to positive or negative values
