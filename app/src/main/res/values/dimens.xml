@@ -5,14 +5,14 @@
     <dimen name="card_view_elevation">3dp</dimen>
 
     <!-- Stock/Fii/Currency/Fixed Adapter -->
-    <dimen name="stock_quantity">14dp</dimen>
-    <dimen name="stock_symbol">14dp</dimen>
+    <dimen name="stock_quantity">13dp</dimen>
+    <dimen name="stock_symbol">13dp</dimen>
     <dimen name="stock_text">16dp</dimen>
     <dimen name="stock_price">14dp</dimen>
     <dimen name="stock_percentage_image_margin">0dp</dimen>
     <dimen name="stock_percentage_text_margin">10dp</dimen>
-    <dimen name="fii_quantity">14dp</dimen>
-    <dimen name="fii_symbol">14dp</dimen>
+    <dimen name="fii_quantity">13dp</dimen>
+    <dimen name="fii_symbol">13dp</dimen>
     <dimen name="fii_text">16dp</dimen>
     <dimen name="fii_price">14dp</dimen>
     <dimen name="fii_percentage_image_margin">0dp</dimen>

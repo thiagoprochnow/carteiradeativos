@@ -78,12 +78,21 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     (PortfolioContract.StockData.COLUMN_CLOSING_PRICE));
             double dailyGain = (currentPrice - closingPrice)/closingPrice * 100;
             String dailyGainString = String.format("%.2f", dailyGain);
+            String dailyPrice = formatter.format(currentPrice);
             if (dailyGain >= 0){
                 viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.green));
                 viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
             } else {
                 viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
                 viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            }
+
+            if (currentPrice >= closingPrice){
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+                viewHolder.dailyPrice.setText(dailyPrice);
+            } else {
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
+                viewHolder.dailyPrice.setText(dailyPrice);
             }
         }
 
@@ -273,6 +282,9 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.totalGain)
         TextView totalGain;
+
+        @BindView(R.id.dailyPrice)
+        TextView dailyPrice;
 
         @BindView(R.id.dailyPercent)
         TextView dailyPercent;

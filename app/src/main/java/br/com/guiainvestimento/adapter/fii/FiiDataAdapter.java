@@ -68,7 +68,6 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 (PortfolioContract.FiiData.COLUMN_UPDATE_STATUS));
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-
         // Show daily gain or loss
         if (updateStatus == Constants.UpdateStatus.UPDATED){
             double currentPrice = mCursor.getDouble(mCursor.getColumnIndex
@@ -76,13 +75,23 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             double closingPrice = mCursor.getDouble(mCursor.getColumnIndex
                     (PortfolioContract.FiiData.COLUMN_CLOSING_PRICE));
             double dailyGain = (currentPrice - closingPrice)/closingPrice * 100;
+            String dailyPrice = formatter.format(currentPrice);
             String dailyGainString = String.format("%.2f", dailyGain);
+
             if (dailyGain >= 0){
                 viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.green));
                 viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
             } else {
                 viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
                 viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            }
+
+            if (currentPrice >= closingPrice){
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+                viewHolder.dailyPrice.setText(dailyPrice);
+            } else {
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
+                viewHolder.dailyPrice.setText(dailyPrice);
             }
         }
 
@@ -269,6 +278,9 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @BindView(R.id.totalGain)
         TextView totalGain;
+
+        @BindView(R.id.dailyPrice)
+        TextView dailyPrice;
 
         @BindView(R.id.dailyPercent)
         TextView dailyPercent;
