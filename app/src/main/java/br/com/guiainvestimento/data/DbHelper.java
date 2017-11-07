@@ -524,7 +524,6 @@ public class DbHelper extends SQLiteOpenHelper {
     // Here is the code that is executed when db's VERSION is upgraded.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(LOG_TAG, "upgrade");
         try {
             if (oldVersion < 2) {
                 db.execSQL(DATABASE_ALTER_PORTFOLIO_GROWTH_1);

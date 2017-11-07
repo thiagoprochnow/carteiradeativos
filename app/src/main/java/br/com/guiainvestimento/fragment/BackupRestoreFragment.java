@@ -345,6 +345,7 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
                 getActivity().finish();
                 startActivity(getActivity().getIntent());
                 Toast.makeText(mContext, mContext.getString(R.string.restore_success), Toast.LENGTH_SHORT).show();
+                System.exit(0);
             } else {
                 Toast.makeText(getContext(), getResources().getString(R.string.restore_wrong_extension), Toast.LENGTH_SHORT).show();
             }
