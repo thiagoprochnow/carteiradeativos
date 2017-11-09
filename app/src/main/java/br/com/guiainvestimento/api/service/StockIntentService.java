@@ -13,16 +13,22 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.LogRecord;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.domain.ResponseStock;
-import br.com.guiainvestimento.api.domain.ResponseStocks;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
-import br.com.guiainvestimento.domain.Stock;
+import br.com.guiainvestimento.domain.StockQuote;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import retrofit2.Call;
-import retrofit2.Response;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -37,7 +43,8 @@ public class StockIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
     private final String BFToken = "42745199c91e49ff73706f997cd8f465";
-
+    private final String CedroL = "thiprochnow";
+    private final String CedroP = "102030";
     private boolean mSuccess = false;
     private String mSymbol;
     Handler mHandler;
@@ -64,7 +71,7 @@ public class StockIntentService extends IntentService {
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
             // try the Bolsa Financeira backup API
-            int success = this.backupAddStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
@@ -82,16 +89,10 @@ public class StockIntentService extends IntentService {
             }
         }
     }
-/*
+
     private int addStockTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(StockService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
         try {
             // Validate if Symbol was added
@@ -99,88 +100,36 @@ public class StockIntentService extends IntentService {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
-            // Make the request and parse the result
-            StockService service = retrofit.create(StockService.class);
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            RequestBody body = RequestBody.create(null, new byte[]{});
+            Request requestPost = new Request.Builder()
+                    .url("http://webfeeder.cedrofinances.com.br/SignIn?login=thiprochnow&password=102030")
+                    .post(body)
+                    .build();
+
+            Response responsePost = mClient.newCall(requestPost).execute();
+
+            Log.d(LOG_TAG, "Post: " + responsePost.body().string());
+
+            Request requestGet = new Request.Builder()
+                    .url("http://webfeeder.cedrofinances.com.br/services/quotes/quote/petr4")
+                    .build();
+
+            Response responseGet = mClient.newCall(requestGet).execute();
+
+            Log.d(LOG_TAG, "Get: " + responseGet.body().string());
 
             String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.quotes where symbol in ("
-                    + buildQuery(symbols) + ")";
-            if(symbols.length == 1) {
-                Call<ResponseStock> call;
-                Response<ResponseStock> response;
-                ResponseStock responseGetStock;
-                int count = 0;
-                do {
-                    call = service.getStock(query);
-                    response = call.execute();
-                    responseGetStock = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetStock.getStockQuotes() != null && !responseGetStock.getStockQuotes().isEmpty() &&
-                        responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
-
-                    // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
-                    String tableSymbol = responseGetStock.getStockQuotes().get(0).getSymbol();
-                    if( (tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                        tableSymbol = tableSymbol.substring(0, tableSymbol.length() -3);
-                    }
-
-                    // Prepare the data of the current price to update the StockData table
-                    ContentValues stockDataCV = new ContentValues();
-                    stockDataCV.put(tableSymbol,
-                            responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly());
-
-                    // Update value on stock data
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.BULK_UPDATE_URI,
-                            stockDataCV, null, null);
-                    // Log update success/fail result
-                    if (updatedRows > 0) {
-                        // Update Stock Portfolio
-                        mSuccess = true;
-                    }
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }else{
-                Call<ResponseStocks> call;
-                Response<ResponseStocks> response;
-                ResponseStocks responseGetStocks;
-                int count = 0;
-                do {
-                    call = service.getStocks(query);
-                    response = call.execute();
-                    responseGetStocks = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetStocks != null && responseGetStocks.getStockQuotes() != null && !responseGetStocks.getStockQuotes().isEmpty()) {
-                    String tableSymbol = "";
-                    ContentValues stockDataCV = new ContentValues();
-                    for(Stock stock : responseGetStocks.getStockQuotes()) {
-                        // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
-                        tableSymbol = stock.getSymbol();
-                        if ((tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                            tableSymbol = tableSymbol.substring(0, tableSymbol.length() - 3);
-                        }
-                        stockDataCV.put(tableSymbol,
-                                stock.getLastTradePriceOnly());
-                    }
-
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.BULK_UPDATE_URI,
-                            stockDataCV, null, null);
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
@@ -188,7 +137,7 @@ public class StockIntentService extends IntentService {
         }
         return resultStatus;
     }
-*/
+/*
     // This is used whem the yahoo API fails
     // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
     private int backupAddStockTask(TaskParams params) {
@@ -200,6 +149,7 @@ public class StockIntentService extends IntentService {
                 .baseUrl(BackupAPIStockService.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
+
         ContentValues stockDataCV = new ContentValues();
         try {
             // Validate if Symbol was added
@@ -259,26 +209,6 @@ public class StockIntentService extends IntentService {
             resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
-    }
-/*
-    private String buildQuery(String[] symbols) {
-        String resultQuery = "";
-
-        if (symbols.length == 1) {
-
-            resultQuery = "\"" + symbols[0] + ".SA" + "\"";
-        } else {
-            for (String symbol : symbols) {
-                if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + ".SA" + "\"";
-                } else {
-                    resultQuery += ",\"" + symbol + ".SA" + "\"";
-                }
-            }
-
-        }
-
-        return resultQuery;
     }
 */
     @Override

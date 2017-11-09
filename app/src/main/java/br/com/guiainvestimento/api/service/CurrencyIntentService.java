@@ -56,7 +56,8 @@ public class CurrencyIntentService extends IntentService {
         try{
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
-                int success = this.addCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+
+                int success = this.backupAddCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
                 if (success == GcmNetworkManager.RESULT_SUCCESS){
                     mHandler.post(new Runnable() {
                         @Override
@@ -65,23 +66,12 @@ public class CurrencyIntentService extends IntentService {
                         }
                     });
                 } else {
-                    // try the Pro Master backup API
-                    int backupSuccess = this.backupAddCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
-                    if (backupSuccess == GcmNetworkManager.RESULT_SUCCESS){
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_currency), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_currency), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_currency), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }else{
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
@@ -91,69 +81,6 @@ public class CurrencyIntentService extends IntentService {
             e.printStackTrace();
         }
 
-    }
-
-    private int addCurrencyTask(TaskParams params) {
-
-        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(StockService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        try {
-            // Make the request and parse the result
-            StockService service = retrofit.create(StockService.class);
-
-            String[] symbols = params.getExtras().getString(CurrencyIntentService.ADD_SYMBOL).split(",");
-
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.xchange where pair in ("
-                    + buildSymbolQuery(symbols) + ")";
-
-            Call<ResponseCurrency> call;
-            Response<ResponseCurrency> response;
-            ResponseCurrency responseGetRate;
-            int count = 0;
-
-            do {
-                call = service.getCurrency(query);
-                response = call.execute();
-                responseGetRate = response.body();
-                count++;
-            } while (response.code() == 400 && count < 20);
-
-            if(response.isSuccessful() && responseGetRate.getDividendQuotes() != null) {
-                for(Currency currency : responseGetRate.getDividendQuotes()){
-
-                    // Remove last 3 letter
-                    String tableSymbol = currency.getSymbol();
-                    if( (tableSymbol.substring(tableSymbol.length() - 4, tableSymbol.length()).equals("/BRL"))) {
-                        tableSymbol = tableSymbol.substring(0, tableSymbol.length() -4);
-                    }
-
-                    // Prepare the data of the current price to update the StockData table
-                    ContentValues currencyDataCV = new ContentValues();
-                    currencyDataCV.put(tableSymbol,
-                            currency.getRate());
-
-                    // Update value on stock data
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.CurrencyData.BULK_UPDATE_URI,
-                            currencyDataCV, null, null);
-                    // Log update success/fail result
-                }
-                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-            } else {
-                return GcmNetworkManager.RESULT_FAILURE;
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in request " + e.getMessage());
-            e.printStackTrace();
-        }
-        return resultStatus;
     }
 
     private int backupAddCurrencyTask(TaskParams params) {
@@ -206,24 +133,6 @@ public class CurrencyIntentService extends IntentService {
             resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
-    }
-
-    private String buildSymbolQuery(String[] symbols) {
-        String resultQuery = "";
-
-        if (symbols.length == 1) {
-
-            resultQuery = "\"" + symbols[0] + "BRL" + "\"";
-        } else {
-            for (String symbol : symbols) {
-                if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + "BRL" + "\"";
-                } else {
-                    resultQuery += ",\"" + symbol + "BRL" + "\"";
-                }
-            }
-        }
-        return resultQuery;
     }
 
     @Override
