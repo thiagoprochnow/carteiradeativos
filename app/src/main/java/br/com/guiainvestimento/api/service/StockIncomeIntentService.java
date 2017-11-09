@@ -3,18 +3,6 @@ package br.com.guiainvestimento.api.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
-
-import com.google.android.gms.gcm.TaskParams;
-
-import java.io.IOException;
-
-import br.com.guiainvestimento.api.domain.ResponseStockIncome;
-import br.com.guiainvestimento.domain.Dividend;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class StockIncomeIntentService extends IntentService {
 

@@ -24,11 +24,9 @@ import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.StockQuote;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -110,88 +108,56 @@ public class StockIntentService extends IntentService {
                     .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
                     .build();
 
-            RequestBody body = RequestBody.create(null, new byte[]{});
-            Request requestPost = new Request.Builder()
-                    .url("http://webfeeder.cedrofinances.com.br/SignIn?login=thiprochnow&password=102030")
-                    .post(body)
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(StockService.BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
                     .build();
 
-            Response responsePost = mClient.newCall(requestPost).execute();
+            StockService service = retrofit.create(StockService.class);
 
-            Log.d(LOG_TAG, "Post: " + responsePost.body().string());
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
 
-            Request requestGet = new Request.Builder()
-                    .url("http://webfeeder.cedrofinances.com.br/services/quotes/quote/petr4")
-                    .build();
+            ContentValues stockDataCV = new ContentValues();
 
-            Response responseGet = mClient.newCall(requestGet).execute();
+            if (responseString.equals("true")){
+                String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
-            Log.d(LOG_TAG, "Get: " + responseGet.body().string());
+                for (String symbol: symbols){
+                    Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
+                    Response<StockQuote> responseGet = callGet.execute();
+                    StockQuote stock = responseGet.body();
 
-            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
+                    ContentValues updateStock = new ContentValues();
 
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in request " + e.getMessage());
-            e.printStackTrace();
-        }
-        return resultStatus;
-    }
-/*
-    // This is used whem the yahoo API fails
-    // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
-    private int backupAddStockTask(TaskParams params) {
-
-        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BackupAPIStockService.BASE_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
-        ContentValues stockDataCV = new ContentValues();
-        try {
-            // Validate if Symbol was added
-            if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
-                throw new IOException("Missing Extra ADD_SYMBOL");
-            }
-
-            // Make the request and parse the result
-            BackupAPIStockService service = retrofit.create(BackupAPIStockService.class);
-
-            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
-            for (String symbol: symbols) {
-                Call<String> call;
-                Response<String> response;
-                String responseGetStock;
-
-                call = service.getStockBackupAPI(BFToken, symbol);
-                response = call.execute();
-                responseGetStock = response.body();
-                ContentValues updateStock = new ContentValues();
-                if (response.isSuccessful() && responseGetStock != null && responseGetStock != "" && !responseGetStock.trim().isEmpty()) {
-                    String[] arrayGetStock = responseGetStock.split(",");
-                    // Prepare the data of the current price to update the StockData table
-                    if (arrayGetStock.length > 10) {
-                        stockDataCV.put(symbol, arrayGetStock[9]);
-                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, arrayGetStock[10]);
+                    if (responseGet != null && stock != null && stock.getError() == null){
+                        // Success on request
+                        if (stock.getLast() != null){
+                            stockDataCV.put(symbol, stock.getLast());
+                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
+                        } else {
+                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+                        }
                     } else {
+                        // Mark symbol as failer and set NOT UPDATED on sql db
                         updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                         updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
                     }
-                } else {
-                    // symbol not updated automatically
-                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
-                }
 
-                String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {symbol};
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.StockData.URI,
-                        updateStock, updateSelection, updatedSelectionArguments);
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 
             if (stockDataCV.size() > 0){
@@ -203,14 +169,14 @@ public class StockIntentService extends IntentService {
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
+
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
-            resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
     }
-*/
+
     @Override
     public void onDestroy() {
         super.onDestroy();

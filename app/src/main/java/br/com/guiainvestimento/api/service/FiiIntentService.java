@@ -12,14 +12,17 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.concurrent.TimeUnit;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.domain.ResponseFii;
 
-import br.com.guiainvestimento.api.domain.ResponseFiis;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
-import br.com.guiainvestimento.domain.Fii;
+import br.com.guiainvestimento.domain.FiiQuote;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -36,6 +39,8 @@ public class FiiIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
     private final String BFToken = "42745199c91e49ff73706f997cd8f465";
+    private final String CedroL = "thiprochnow";
+    private final String CedroP = "102030";
 
     private boolean mSuccess = false;
     private String mSymbol;
@@ -63,7 +68,7 @@ public class FiiIntentService extends IntentService {
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
             // try the Bolsa Financeira backup API
-            int success = this.backupAddFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int success = this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
@@ -81,171 +86,76 @@ public class FiiIntentService extends IntentService {
             }
         }
     }
-/*
     private int addFiiTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(FiiService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(FiiIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
-            // Make the request and parse the result
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(FiiService.BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
+                    .build();
+
             FiiService service = retrofit.create(FiiService.class);
 
-            String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
 
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.quotes where symbol in ("
-                    + buildQuery(symbols) + ")";
-            if(symbols.length == 1) {
+            ContentValues fiiDataCV = new ContentValues();
 
-                Call<ResponseFii> call;
-                Response<ResponseFii> response;
-                ResponseFii responseGetFii;
-                int count = 0;
+            if (responseString.equals("true")){
+                String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
-                do {
-                    call = service.getFii(query);
-                    response = call.execute();
-                    responseGetFii = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
+                for (String symbol: symbols){
+                    Call<FiiQuote> callGet = service.getFii(symbol.toLowerCase());
+                    Response<FiiQuote> responseGet = callGet.execute();
+                    FiiQuote fii = responseGet.body();
 
-                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null && !responseGetFii.getFiiQuotes().isEmpty() &&
-                        responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
+                    ContentValues updateFii = new ContentValues();
 
-                    // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
-                    String tableSymbol = responseGetFii.getFiiQuotes().get(0).getSymbol();
-                    if( (tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                        tableSymbol = tableSymbol.substring(0, tableSymbol.length() -3);
-                    }
-
-                    // Prepare the data of the current price to update the FiiData table
-                    ContentValues fiiDataCV = new ContentValues();
-                    fiiDataCV.put(tableSymbol,
-                            responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly());
-
-                    // Update value on fii data
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.FiiData.BULK_UPDATE_URI,
-                            fiiDataCV, null, null);
-                    // Log update success/fail result
-                    if (updatedRows > 0) {
-                        // Update Fii Portfolio
-                        mSuccess = true;
-                    }
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }else{
-                Call<ResponseFiis> call;
-                Response<ResponseFiis> response;
-                ResponseFiis responseGetFiis;
-                int count = 0;
-
-                do {
-                    call = service.getFiis(query);
-                    response = call.execute();
-                    responseGetFiis = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetFiis != null && responseGetFiis.getFiiQuotes() != null && !responseGetFiis.getFiiQuotes().isEmpty()) {
-                    String tableSymbol = "";
-                    ContentValues fiiDataCV = new ContentValues();
-                    for(Fii fii : responseGetFiis.getFiiQuotes()) {
-                        // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
-                        tableSymbol = fii.getSymbol();
-                        if ((tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                            tableSymbol = tableSymbol.substring(0, tableSymbol.length() - 3);
+                    if (responseGet != null && fii != null && fii.getError() == null){
+                        // Success on request
+                        if (fii.getLast() != null){
+                            fiiDataCV.put(symbol, fii.getLast());
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());
+                        } else {
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
                         }
-                        fiiDataCV.put(tableSymbol,
-                                fii.getLastTradePriceOnly());
-                    }
-
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.FiiData.BULK_UPDATE_URI,
-                            fiiDataCV, null, null);
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in request " + e.getMessage());
-            e.printStackTrace();
-        }
-        return resultStatus;
-    }
-*/
-    // This is used whem the yahoo API fails
-    // Since yahoo API is very inconsistent it is important to have a paid service backup fallback
-    private int backupAddFiiTask(TaskParams params) {
-
-        int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BackupAPIFiiService.BASE_URL)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
-        ContentValues fiiDataCV = new ContentValues();
-        try {
-            // Validate if Symbol was added
-            if (params.getExtras() == null || params.getExtras().getString(FiiIntentService.ADD_SYMBOL).isEmpty()) {
-                throw new IOException("Missing Extra ADD_SYMBOL");
-            }
-
-            // Make the request and parse the result
-            BackupAPIFiiService service = retrofit.create(BackupAPIFiiService.class);
-
-            String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
-            for (String symbol: symbols) {
-                Call<String> call;
-                Response<String> response;
-                String responseGetFii;
-
-                call = service.getFiiBackupAPI(BFToken, symbol);
-                response = call.execute();
-                responseGetFii = response.body();
-
-                ContentValues updateFii = new ContentValues();
-                if (response.isSuccessful() && responseGetFii != null && responseGetFii != "" && !responseGetFii.trim().isEmpty()) {
-                    String[] arrayGetFii = responseGetFii.split(",");
-                    // Prepare the data of the current price to update the FiiData table
-                    if (arrayGetFii.length > 10) {
-                        fiiDataCV.put(symbol, arrayGetFii[9]);
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, arrayGetFii[10]);
                     } else {
+                        // Mark symbol as failer and set NOT UPDATED on sql db
                         updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                         updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
                     }
-                } else {
-                    // symbol not updated automatically
-                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
-                }
 
-                String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {symbol};
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.FiiData.URI,
-                        updateFii, updateSelection, updatedSelectionArguments);
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 
             if (fiiDataCV.size() > 0){
@@ -257,34 +167,13 @@ public class FiiIntentService extends IntentService {
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
+
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
             e.printStackTrace();
-            resultStatus = GcmNetworkManager.RESULT_FAILURE;
         }
         return resultStatus;
     }
-/*
-    private String buildQuery(String[] symbols) {
-        String resultQuery = "";
-
-        if (symbols.length == 1) {
-
-            resultQuery = "\"" + symbols[0] + ".SA" + "\"";
-        } else {
-            for (String symbol : symbols) {
-                if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + ".SA" + "\"";
-                } else {
-                    resultQuery += ",\"" + symbol + ".SA" + "\"";
-                }
-            }
-
-        }
-
-        return resultQuery;
-    }
-*/
     @Override
     public void onDestroy() {
         super.onDestroy();
