@@ -483,7 +483,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
         String[] affectedColumn = {PortfolioContract.StockData.COLUMN_SYMBOL};
         String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
-        String[] selectionArguments = {String.valueOf(Constants.Status.SOLD)};
+        String[] selectionArguments = {String.valueOf(Constants.Status.ACTIVE)};
 
         Cursor queryCursor = this.getContentResolver().query(
                 PortfolioContract.StockData.URI, affectedColumn,
@@ -515,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
         String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
         String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
-        String[] selectionArguments2 = {String.valueOf(Constants.Status.SOLD)};
+        String[] selectionArguments2 = {String.valueOf(Constants.Status.ACTIVE)};
 
         queryCursor = this.getContentResolver().query(
                 PortfolioContract.FiiData.URI, affectedColumn2,
