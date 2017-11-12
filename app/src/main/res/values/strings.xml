@@ -238,9 +238,9 @@
 
     <!-- Portfolio -->
     <string name="portfolio_other_label">Others</string>
-    <string name="portfolio_bought_label">Bought</string>
+    <string name="portfolio_bought_label">Buys</string>
     <string name="portfolio_current_label">Current</string>
-    <string name="portfolio_sold_label">Sold</string>
+    <string name="portfolio_sold_label">Sells</string>
     <string name="portfolio_appreciation_label">Appreciation</string>
     <string name="portfolio_income_label">Incomes</string>
     <string name="portfolio_total_gain_label">Gain</string>
