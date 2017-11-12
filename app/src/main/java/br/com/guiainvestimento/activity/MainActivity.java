@@ -482,10 +482,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 .class);
 
         String[] affectedColumn = {PortfolioContract.StockData.COLUMN_SYMBOL};
+        String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.Status.SOLD)};
 
         Cursor queryCursor = this.getContentResolver().query(
                 PortfolioContract.StockData.URI, affectedColumn,
-                null, null, null);
+                selection, selectionArguments, null);
 
         // For each symbol found on StockData, add to service make webservice query and update
         if (queryCursor.getCount() > 0) {
@@ -512,10 +514,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 .class);
 
         String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
+        String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments2 = {String.valueOf(Constants.Status.SOLD)};
 
         queryCursor = this.getContentResolver().query(
                 PortfolioContract.FiiData.URI, affectedColumn2,
-                null, null, null);
+                selection2, selectionArguments2, null);
 
         // For each symbol found on FiiData, add to service make webservice query and update
         if (queryCursor.getCount() > 0) {

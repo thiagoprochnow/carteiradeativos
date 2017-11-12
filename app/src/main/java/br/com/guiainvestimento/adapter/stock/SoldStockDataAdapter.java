@@ -54,7 +54,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-        int updateStatus = -1;
 
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL));
         // Get handled values of StockTransaction with current symbol
@@ -65,12 +64,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldStockData.
                 COLUMN_SYMBOL));
-
-        Cursor dataCursor = getStockDataCursor(symbol);
-        if (dataCursor.moveToFirst()){
-            updateStatus = dataCursor.getInt(dataCursor.getColumnIndex
-                    (PortfolioContract.StockData.COLUMN_UPDATE_STATUS));
-        }
 
         if (sellGain >=0){
             holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -104,35 +97,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
             holder.stockCardView.setLayoutParams(params);
         }
 
-        // If the stock could not be updated automatically, give notice and option to update it manually
-        if (updateStatus == Constants.UpdateStatus.UPDATED){
-            holder.updateError.setVisibility(View.GONE);
-        } else {
-            holder.updateError.setVisibility(View.VISIBLE);
-            holder.updateError.setOnClickListener(new ImageView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Use the Builder class for convenient dialog construction
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                    dialog.setMessage(R.string.dialog_stock_update_failed_message)
-                            .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    mCursor.moveToPosition(position);
-                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
-                                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-                                }
-                            })
-                            .setNegativeButton(R.string.edit_cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            });
-                    // Create the AlertDialog object and return it
-                    dialog.create().show();
-                }
-            });
-        }
-
         holder.stockCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -150,20 +114,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
-        if (updateStatus == Constants.UpdateStatus.UPDATED){
-            holder.menuEdit.setVisibility(View.GONE);
-        } else {
-            holder.menuEdit.setVisibility(View.VISIBLE);
-            holder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCursor.moveToPosition(position);
-                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
-                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-                }
-            });
-        }
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -224,14 +174,8 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         @BindView(R.id.stockCardViewClickable)
         LinearLayout stockCardViewClickable;
 
-        @BindView(R.id.updateError)
-        ImageView updateError;
-
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
-        @BindView(R.id.menuEdit)
-        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

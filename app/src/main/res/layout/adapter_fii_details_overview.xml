@@ -74,13 +74,6 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/details_current"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/details_sold"
                     android:ellipsize="end"
                     android:maxLines="1"/>
@@ -98,15 +91,6 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="@dimen/fii_values_margin"
                 android:gravity="left">
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/currentPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="R$20,00"
-                    android:gravity="right"
-                    android:ellipsize="end"
-                    android:maxLines="1"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:id="@+id/soldPrice"

@@ -90,9 +90,6 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
 
-                        viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.FiiData
-                                        .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
@@ -191,9 +188,6 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class FiiDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
-
-        @BindView(R.id.currentPrice)
-        TextView currentPrice;
 
         @BindView(R.id.mediumPrice)
         TextView mediumPrice;

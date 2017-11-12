@@ -88,9 +88,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
 
-                        viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData
-                                        .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
@@ -189,9 +186,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class StockDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
-
-        @BindView(R.id.currentPrice)
-        TextView currentPrice;
 
         @BindView(R.id.mediumPrice)
         TextView mediumPrice;
