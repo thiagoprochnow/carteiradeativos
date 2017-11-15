@@ -73,7 +73,6 @@ public class StockReceiver extends BroadcastReceiver {
             buyTotal += queryCursor.getDouble(1);
             double incomeTotal = queryCursor.getDouble(2);
             mCurrentTotal += queryCursor.getDouble(3);
-            // Sold and Data have same value for brokerage
             brokerage += queryCursor.getDouble(4);
             totalGain += queryCursor.getDouble(5);
             double variationPercent = variationTotal/buyTotal*100;

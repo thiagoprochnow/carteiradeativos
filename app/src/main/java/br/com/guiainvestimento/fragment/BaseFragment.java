@@ -1853,6 +1853,11 @@ public abstract class BaseFragment extends Fragment {
             double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
+            // Used for brokerage calculation for buy and sell
+            // See file calculo brokerage.txt for math
+            double buyBrokerage = 0;
+            double buyQuantityBrokerage = 0;
+            double sellBrokerage = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -1870,12 +1875,22 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         mediumPrice = buyValue/quantityTotal;
+                        // Brokerage
+                        buyBrokerage += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        // Brokerage
+                        double partialSell = 0;
+                        partialSell = buyBrokerage/buyQuantityBrokerage * STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        buyBrokerage -=partialSell;
+                        sellBrokerage += partialSell + STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+
                         break;
                     default:
                 }
@@ -1948,6 +1963,7 @@ public abstract class BaseFragment extends Fragment {
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME, receiveIncome);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME_TAX, taxIncome);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE, mediumPrice);
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BROKERAGE, buyBrokerage);
 
             if(quantityTotal > 0){
                 // Set fii as active
@@ -1979,7 +1995,7 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Update Fii Portfolio
                 // Send broadcast so FiiReceiver can update the rest
-                updateSoldFiiData(symbol, soldBuyValue);
+                updateSoldFiiData(symbol, soldBuyValue, sellBrokerage);
                 return true;
             } else {
                 return false;
@@ -1990,7 +2006,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the FiiTransaction entries and calculates value for SoldFiiData table for this symbol
-    public boolean updateSoldFiiData(String symbol, double soldBuyValue){
+    public boolean updateSoldFiiData(String symbol, double soldBuyValue, double sellBrokerage){
 
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -2051,12 +2067,13 @@ public abstract class BaseFragment extends Fragment {
                     }
                 }
 
-                double sellGain = soldTotal - soldBuyValue;
+                double sellGain = soldTotal - soldBuyValue - sellBrokerage;
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL, soldTotal);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN, sellGain);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_BROKERAGE, sellBrokerage);
 
                 // Searches for existing FiiData to update value.
                 // If dosent exists, creates new one

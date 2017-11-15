@@ -59,6 +59,7 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
         // Get handled values of FiiTransaction with current symbol
         double sellGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN));
+        double brokerage = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BROKERAGE));
         double sellGainPercent = sellGain/buyTotal*100;
         // Set text colors according to positive or negative values
 
@@ -74,12 +75,15 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
+        holder.brokerage.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+
         holder.symbol.setText(symbol);
         holder.fiiQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL)))));
+        holder.brokerage.setText(String.format(formatter.format(brokerage)));
         holder.sellGain.setText(String.format(formatter.format(sellGain)));
         holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
         if(position == mCursor.getCount()-1){
@@ -162,6 +166,9 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
 
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
+
+        @BindView(R.id.brokerage)
+        TextView brokerage;
 
         @BindView(R.id.sellTotal)
         TextView sellTotal;

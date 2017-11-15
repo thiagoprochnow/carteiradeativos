@@ -1870,6 +1870,7 @@ public class PortfolioProvider extends ContentProvider {
         double currentTotal;
         double variation;
         double totalGain;
+        double buyBrokerage;
 
         db.beginTransaction();
         int returnCount = 0;
@@ -1894,9 +1895,11 @@ public class PortfolioProvider extends ContentProvider {
                             .FiiData.COLUMN_BUY_VALUE_TOTAL));
                     incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
                             (PortfolioContract.FiiData.COLUMN_INCOME));
+                    buyBrokerage = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_BROKERAGE));
                     currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
-                    totalGain = currentTotal + incomeTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy - buyBrokerage;
 
                     ContentValues fiiCV = new ContentValues();
                     fiiCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE,
