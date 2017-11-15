@@ -33,9 +33,11 @@ public class StockReceiver extends BroadcastReceiver {
         double totalGain = 0;
         double variationTotal = 0;
         double sellTotal = 0;
+        double brokerage = 0;
         // Return column should be the sum of buy total, sell total, sell gain
         String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL +"), " +
+                "sum("+ PortfolioContract.SoldStockData.COLUMN_BROKERAGE +"), " +
                 "sum("+PortfolioContract.SoldStockData.COLUMN_SELL_GAIN +")"};
 
         Cursor queryCursor = mContext.getContentResolver().query(
@@ -47,8 +49,10 @@ public class StockReceiver extends BroadcastReceiver {
             queryCursor.moveToFirst();
             buyTotal = queryCursor.getDouble(0);
             sellTotal = queryCursor.getDouble(1);
-            variationTotal = queryCursor.getDouble(2);
-            totalGain = queryCursor.getDouble(2);
+            brokerage = queryCursor.getDouble(2);
+            // Variation cannot count brokerage discount
+            variationTotal = queryCursor.getDouble(3) + queryCursor.getDouble(2);
+            totalGain = queryCursor.getDouble(3);
         }
 
         // Return column should be the sum of value total, income total, value gain
@@ -56,6 +60,7 @@ public class StockReceiver extends BroadcastReceiver {
                 "sum("+ PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.StockData.COLUMN_NET_INCOME +"), " +
                 "sum("+ PortfolioContract.StockData.COLUMN_CURRENT_TOTAL +"), " +
+                "sum("+ PortfolioContract.StockData.COLUMN_BROKERAGE +"), " +
                 "sum("+PortfolioContract.StockData.COLUMN_TOTAL_GAIN +")"};
 
         // Check if the symbol exists in the db
@@ -68,7 +73,9 @@ public class StockReceiver extends BroadcastReceiver {
             buyTotal += queryCursor.getDouble(1);
             double incomeTotal = queryCursor.getDouble(2);
             mCurrentTotal += queryCursor.getDouble(3);
-            totalGain += queryCursor.getDouble(4);
+            // Sold and Data have same value for brokerage
+            brokerage += queryCursor.getDouble(4);
+            totalGain += queryCursor.getDouble(5);
             double variationPercent = variationTotal/buyTotal*100;
             double incomePercent = incomeTotal/buyTotal*100;
             double totalGainPercent = totalGain/buyTotal*100;
@@ -79,6 +86,7 @@ public class StockReceiver extends BroadcastReceiver {
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL, buyTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_SOLD_TOTAL, sellTotal);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL, incomeTotal);
+            portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_BROKERAGE, brokerage);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN, totalGain);
             portfolioCV.put(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL, mCurrentTotal);
 

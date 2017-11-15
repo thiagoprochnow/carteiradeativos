@@ -34,6 +34,7 @@ public class SellStockFormFragment extends BaseFormFragment {
     private EditText mInputQuantityView;
     private EditText mInputSellPriceView;
     private EditText mInputDateView;
+    private EditText mInputBrokerage;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,6 +57,7 @@ public class SellStockFormFragment extends BaseFormFragment {
         mInputSymbolView = (AutoCompleteTextView) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputSellPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
+        mInputBrokerage = (EditText) mView.findViewById(R.id.inputBrokerage);
         mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
 
         // Sets autocomplete for stock symbol
@@ -94,14 +96,16 @@ public class SellStockFormFragment extends BaseFormFragment {
         } else {
             isValidQuantity = false;
         }
+        boolean isValidBrokerage = isValidDouble(mInputBrokerage);
         boolean isValidSellPrice = isValidDouble(mInputSellPriceView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to sell the stock
-        if (isValidSymbol && isValidQuantity && isValidSellPrice && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidQuantity && isValidBrokerage && isValidSellPrice && isValidDate && !isFutureDate) {
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double sellPrice = Double.parseDouble(mInputSellPriceView.getText().toString());
+            double brokerage = Double.parseDouble(mInputBrokerage.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -114,6 +118,7 @@ public class SellStockFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, sellPrice);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.SELL);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_BROKERAGE, brokerage);
             // Adds to the database
             Uri insertedStockTransactionUri = mContext.getContentResolver().insert(PortfolioContract
                     .StockTransaction.URI,
@@ -138,6 +143,9 @@ public class SellStockFormFragment extends BaseFormFragment {
             }
             if(!isValidQuantity){
                 mInputQuantityView.setError(this.getString(R.string.wrong_stock_sell_quantity));
+            }
+            if(!isValidBrokerage){
+                mInputBrokerage.setError(this.getString(R.string.wrong_brokerage));
             }
             if(!isValidSellPrice){
                 mInputSellPriceView.setError(this.getString(R.string.wrong_price));

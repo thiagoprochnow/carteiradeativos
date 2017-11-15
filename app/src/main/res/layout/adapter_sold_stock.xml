@@ -102,6 +102,11 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/brokerage" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/sold_data_gain_label" />
             </LinearLayout>
 
@@ -136,6 +141,16 @@
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
+                        android:id="@+id/brokerage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1150,00"
+                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/sellGain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -150,6 +165,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="@dimen/stock_percentage_text_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:layout_width="wrap_content"

@@ -100,7 +100,10 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                         (PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL));
                 double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL));
-                double totalGain = totalAppreciation + totalIncome;
+                double totalBrokerage = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockPortfolio.COLUMN_BROKERAGE));
+                double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN));
                 Locale locale = new Locale("pt", "BR");
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -128,15 +131,21 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
+
+                viewHolder.totalBrokerage.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                viewHolder.totalBrokeragePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_BUY_TOTAL));
                 double stockAppreciationPercent = 0;
                 double totalGainPercent = 0;
                 double incomePercent = 0;
+                double brokeragePercent = 0;
                 if (buyTotal != 0){
                     stockAppreciationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalAppreciation / buyTotal * 100)));
                     incomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
-                    totalGainPercent = stockAppreciationPercent + incomePercent;
+                    brokeragePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalBrokerage / buyTotal * 100)));
+                    totalGainPercent = stockAppreciationPercent + incomePercent + brokeragePercent;
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
@@ -145,9 +154,11 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                         mCursor.getColumnIndex(PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.stockAppreciation.setText(String.format(formatter.format(totalAppreciation)));
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+                viewHolder.totalBrokerage.setText(String.format(formatter.format(totalBrokerage)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", stockAppreciationPercent) + "%)");
                 viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", incomePercent) + "%)");
+                viewHolder.totalBrokeragePercent.setText("(" + String.format("%.2f", brokeragePercent) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
             case 1:
@@ -372,6 +383,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.totalIncome)
         TextView totalIncome;
 
+        @BindView(R.id.totalBrokerage)
+        TextView totalBrokerage;
+
         @BindView(R.id.totalGain)
         TextView totalGain;
 
@@ -380,6 +394,9 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @BindView(R.id.totalIncomePercent)
         TextView totalIncomePercent;
+
+        @BindView(R.id.totalBrokeragePercent)
+        TextView totalBrokeragePercent;
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;

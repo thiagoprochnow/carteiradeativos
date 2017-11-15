@@ -1304,6 +1304,11 @@ public abstract class BaseFragment extends Fragment {
             double mediumPrice = 0;
             int currentType;
             int bonificationQuantity = 0;
+            // Used for brokerage calculation for buy and sell
+            // See file calculo brokerage.txt for math
+            double buyBrokerage = 0;
+            double buyQuantityBrokerage = 0;
+            double sellBrokerage = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -1321,12 +1326,21 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                         mediumPrice = buyValue/quantityTotal;
+                        // Brokerage
+                        buyBrokerage += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        // Brokerage
+                        double partialSell = 0;
+                        partialSell = buyBrokerage/buyQuantityBrokerage * STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyBrokerage -=partialSell;
+                        sellBrokerage += partialSell + STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.BONIFICATION:
                         bonificationQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
@@ -1416,6 +1430,7 @@ public abstract class BaseFragment extends Fragment {
             stockDataCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME, receiveIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TAX, taxIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_BROKERAGE, buyBrokerage);
 
             if(quantityTotal > 0){
                 // Set stock as active
@@ -1447,7 +1462,7 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Update Stock Portfolio
                 // Send broadcast so StockReceiver can update the rest
-                updateSoldStockData(symbol, soldBuyValue);
+                updateSoldStockData(symbol, soldBuyValue, sellBrokerage);
                 return true;
             } else {
                 return false;
@@ -1458,7 +1473,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the StockTransaction entries and calculates value for StockData table for this symbol
-    public boolean updateSoldStockData(String symbol, double soldBuyValue){
+    public boolean updateSoldStockData(String symbol, double soldBuyValue, double sellBrokerage){
 
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -1519,12 +1534,13 @@ public abstract class BaseFragment extends Fragment {
                     }
                 }
 
-                double sellGain = soldTotal - soldBuyValue;
+                double sellGain = soldTotal - soldBuyValue - sellBrokerage;
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL, soldTotal);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN, sellGain);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_BROKERAGE, sellBrokerage);
 
                 // Searches for existing StockData to update value.
                 // If dosent exists, creates new one
