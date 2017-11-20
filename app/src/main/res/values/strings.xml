@@ -5,6 +5,7 @@
     <string name="refresh_done">Portfolio updated successfully</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="loading_ad">Please wait, Ad is loading!</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Stock updated successfuly</string>

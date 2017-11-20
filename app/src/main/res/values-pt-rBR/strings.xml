@@ -5,6 +5,7 @@
     <string name="refresh_done">Carteira atualizada com sucesso</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="loading_ad">Por favor aguarde, propaganda está sendo carregada!</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Ação atualizada com sucesso</string>
