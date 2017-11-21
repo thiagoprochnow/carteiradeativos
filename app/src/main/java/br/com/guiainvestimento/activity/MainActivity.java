@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
             @Override
             public void onAdClosed() {
+                refreshPortfolio();
                 // Code to be executed when when the interstitial ad is closed.
                 if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
                     AdRequest adRequest = new AdRequest.Builder().build();
@@ -208,7 +209,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         mMenu = menu;
-        mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
+        if (mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded() && !mAdFailedLoading) {
+            mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
+        }
         return true;
     }
 
@@ -314,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 item.setActionView(spinner);
                 if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
-                    refreshPortfolio();
                 } else if(mAdFailedLoading){
                     refreshPortfolio();
                 } else {
