@@ -12,6 +12,8 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +25,9 @@ import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.FiiQuote;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -109,6 +113,7 @@ public class FiiIntentService extends IntentService {
             // Build retrofit base request
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(FiiService.BASE_URL)
+                    .addConverterFactory(new NullOnEmptyConverterFactory())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(mClient)
@@ -134,7 +139,7 @@ public class FiiIntentService extends IntentService {
                     }
                     ContentValues updateFii = new ContentValues();
 
-                    if (responseGet != null && responseGet.isSuccessful() && fii != null && fii.getError() == null){
+                    if (responseGet != null && responseGet.isSuccessful() && fii != null && fii.getError() == null && fii.toString().length() > 0){
                         // Success on request
                         if (fii.getLast() != null){
                             fiiDataCV.put(symbol, fii.getLast());
@@ -181,5 +186,19 @@ public class FiiIntentService extends IntentService {
         super.onDestroy();
         this.sendBroadcast(new Intent(Constants.Receiver.FII));
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+    }
+
+    public class NullOnEmptyConverterFactory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+            final Converter<ResponseBody, ?> delegate = retrofit.nextResponseBodyConverter(this, type, annotations);
+            return new Converter<ResponseBody, Object>() {
+                @Override
+                public Object convert(ResponseBody body) throws IOException {
+                    if (body.contentLength() == 0) return null;
+                    return delegate.convert(body);                }
+            };
+        }
     }
 }
