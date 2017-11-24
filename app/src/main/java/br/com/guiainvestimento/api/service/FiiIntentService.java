@@ -128,11 +128,13 @@ public class FiiIntentService extends IntentService {
                 for (String symbol: symbols){
                     Call<FiiQuote> callGet = service.getFii(symbol.toLowerCase());
                     Response<FiiQuote> responseGet = callGet.execute();
-                    FiiQuote fii = responseGet.body();
-
+                    FiiQuote fii = null;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        fii = responseGet.body();
+                    }
                     ContentValues updateFii = new ContentValues();
 
-                    if (responseGet != null && fii != null && fii.getError() == null){
+                    if (responseGet != null && responseGet.isSuccessful() && fii != null && fii.getError() == null){
                         // Success on request
                         if (fii.getLast() != null){
                             fiiDataCV.put(symbol, fii.getLast());

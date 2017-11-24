@@ -130,11 +130,14 @@ public class StockIntentService extends IntentService {
                 for (String symbol: symbols){
                     Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
                     Response<StockQuote> responseGet = callGet.execute();
-                    StockQuote stock = responseGet.body();
+                    StockQuote stock = null;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        stock = responseGet.body();
+                    }
 
                     ContentValues updateStock = new ContentValues();
 
-                    if (responseGet != null && stock != null && stock.getError() == null){
+                    if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null){
                         // Success on request
                         if (stock.getLast() != null){
                             stockDataCV.put(symbol, stock.getLast());
