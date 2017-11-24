@@ -314,11 +314,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 ProgressBar spinner = new ProgressBar(this);
                 spinner.getIndeterminateDrawable().setColorFilter(
                         ContextCompat.getColor(this,R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
-                item.setActionView(spinner);
                 if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
+                    item.setActionView(spinner);
                 } else if(mAdFailedLoading){
                     refreshPortfolio();
+                    item.setActionView(spinner);
                 } else {
                     Toast.makeText(context, context.getString(R.string.loading_ad), Toast.LENGTH_SHORT).show();
                 }
