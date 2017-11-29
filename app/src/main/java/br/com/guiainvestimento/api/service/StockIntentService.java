@@ -144,7 +144,7 @@ public class StockIntentService extends IntentService {
 
                     if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0){
                         // Success on request
-                        if (stock.getLast() != null){
+                        if (stock.getLast() != null && !stock.getLast().equalsIgnoreCase("0") && !stock.getLast().equalsIgnoreCase("0,00")){
                             stockDataCV.put(symbol, stock.getLast());
                             updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                             updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
