@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
     GoogleApiClient mGoogleApiClient;
 
-    private Menu mMenu;
+    private Menu mMenu = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,14 +90,18 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             @Override
             public void onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
-                mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                if (mMenu != null) {
+                    mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                }
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // Code to be executed when an ad request fails.
                 mAdFailedLoading = true;
-                mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                if (mMenu != null) {
+                    mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                }
             }
 
             @Override
@@ -211,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         mMenu = menu;
         if (mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded() && !mAdFailedLoading) {
             mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
+        } else if (mAdFailedLoading == true){
+            mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
         }
         return true;
     }
