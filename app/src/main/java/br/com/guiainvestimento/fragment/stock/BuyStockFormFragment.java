@@ -34,6 +34,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
     private EditText mInputQuantityView;
     private EditText mInputBuyPriceView;
     private EditText mInputDateView;
+    private EditText mInputBrokerageView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -57,6 +58,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        mInputBrokerageView = (EditText) mView.findViewById(R.id.inputBrokerage);
 
         // Sets autocomplete for stock symbol
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
@@ -88,14 +90,16 @@ public class BuyStockFormFragment extends BaseFormFragment {
         boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
         boolean isValidQuantity = isValidInt(mInputQuantityView);
         boolean isValidBuyPrice = isValidDouble(mInputBuyPriceView);
+        boolean isValidBrokerage = isValidDouble(mInputBrokerageView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the stock
-        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidQuantity && isValidBuyPrice && isValidBrokerage && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
             double buyPrice = Double.parseDouble(mInputBuyPriceView.getText().toString());
+            double brokerage = Double.parseDouble(mInputBrokerageView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -106,6 +110,7 @@ public class BuyStockFormFragment extends BaseFormFragment {
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_SYMBOL, inputSymbol);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, inputQuantity);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_PRICE, buyPrice);
+            stockCV.put(PortfolioContract.StockTransaction.COLUMN_BROKERAGE, brokerage);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP, timestamp);
             stockCV.put(PortfolioContract.StockTransaction.COLUMN_TYPE, Constants.Type.BUY);
             // Adds to the database
@@ -136,6 +141,9 @@ public class BuyStockFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyPrice){
                 mInputBuyPriceView.setError(this.getString(R.string.wrong_price));
+            }
+            if(!isValidBrokerage){
+                mInputBuyPriceView.setError(this.getString(R.string.wrong_brokerage));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

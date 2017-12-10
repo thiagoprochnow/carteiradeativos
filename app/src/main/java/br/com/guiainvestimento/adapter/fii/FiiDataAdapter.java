@@ -63,7 +63,10 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 (PortfolioContract.FiiData.COLUMN_VARIATION));
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.FiiData.COLUMN_INCOME));
-        double totalGain = fiiAppreciation + totalIncome;
+        double brokerage = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.FiiData.COLUMN_BROKERAGE));
+        double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.FiiData.COLUMN_TOTAL_GAIN));
         int updateStatus = mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.FiiData.COLUMN_UPDATE_STATUS));
         Locale locale = new Locale("pt", "BR");
@@ -120,10 +123,15 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext, R.color.red));
             viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
+
+        viewHolder.totalBrokerage.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+        viewHolder.totalBrokeragePercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL));
         double variationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(fiiAppreciation / buyTotal * 100)));
         double netIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
-        double totalGainPercent = variationPercent + netIncomePercent;
+        double brokeragePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(brokerage / buyTotal * 100)));
+        double totalGainPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalGain / buyTotal * 100)));
         // Get handled values of FiiData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .FiiData.
@@ -140,9 +148,11 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 + "%");
         viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
         viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+        viewHolder.totalBrokerage.setText(String.format(formatter.format(brokerage)));
         viewHolder.fiiAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
         viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
         viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+        viewHolder.totalBrokeragePercent.setText("(" + String.format("%.2f", brokeragePercent) + "%)");
         if (position == mCursor.getCount() - 1) {
             // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -282,6 +292,12 @@ public class FiiDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @BindView(R.id.dailyPrice)
         TextView dailyPrice;
+
+        @BindView(R.id.totalBrokerage)
+        TextView totalBrokerage;
+
+        @BindView(R.id.totalBrokeragePercent)
+        TextView totalBrokeragePercent;
 
         @BindView(R.id.dailyPercent)
         TextView dailyPercent;

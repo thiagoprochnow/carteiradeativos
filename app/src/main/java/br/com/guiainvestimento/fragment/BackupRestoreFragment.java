@@ -123,7 +123,11 @@ public class BackupRestoreFragment extends BaseFragment implements GoogleApiClie
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null){
+            mGoogleApiClient.connect();
+        } else {
+            establishDriveConnection();
+        }
     }
 
     private View.OnClickListener googleDriveBackupOnClick() {

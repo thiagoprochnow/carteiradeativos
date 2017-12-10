@@ -39,13 +39,6 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
-            <ImageView
-                android:id="@+id/updateError"
-                android:layout_width="17dp"
-                android:layout_height="17dp"
-                android:paddingTop="1dp"
-                android:src="@drawable/error_icon"
-                android:layout_marginRight="3dp"/>
             <TextView
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/symbol"
@@ -109,6 +102,11 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/brokerage" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/sold_data_gain_label" />
             </LinearLayout>
 
@@ -128,7 +126,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
-                        android:textSize="@dimen/fii_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -138,7 +135,15 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/fii_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/brokerage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$1150,00"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -148,7 +153,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
-                        android:textSize="@dimen/fii_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>
@@ -157,6 +161,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="@dimen/fii_percentage_text_margin">
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:layout_width="wrap_content"
@@ -209,12 +221,6 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:src="@drawable/sell_icon_small"
-                android:layout_marginRight="10dp"/>
-            <ImageView
-                android:id="@+id/menuEdit"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/edit_icon_small"
                 android:layout_marginRight="10dp"/>
             <ImageView
                 android:id="@+id/menuDelete"

@@ -5,6 +5,7 @@
     <string name="refresh_done">Carteira atualizada com sucesso</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="loading_ad">Por favor aguarde, propaganda está sendo carregada!</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Ação atualizada com sucesso</string>
@@ -76,6 +77,7 @@
     <string name="wrong_currency_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa moeda na carteirat</string>
     <string name="wrong_treasury_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse papel na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
+    <string name="wrong_brokerage">Corretagem deve ser um número</string>
     <string name="wrong_total">Total deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_current_price">Preço atual não é valido</string>
@@ -90,6 +92,7 @@
     <string name="wrong_income_per_treasury">Valor inválido recebido por papel</string>
     <string name="menu_done">Concluir</string>
     <string name="wrong_others_tax">Imposto total inválido.</string>
+    <string name="brokerage">Corretagem</string>
 
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividendos</string>
@@ -209,6 +212,7 @@
     <string name="data_current_label">Atual</string>
     <string name="data_appreciation_label">Valorização</string>
     <string name="data_income_label">Rendimentos</string>
+    <string name="data_brokerage_label">Corretagem</string>
     <string name="data_treasury_income_label">Cupons</string>
     <string name="data_total_gain_label">Ganho</string>
     <string name="dialog_stock_update_failed_message">Essa ação não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
@@ -239,11 +243,12 @@
 
     <!-- Portfolio -->
     <string name="portfolio_other_label">Outros</string>
-    <string name="portfolio_bought_label">Comprado</string>
+    <string name="portfolio_bought_label">Compras</string>
     <string name="portfolio_current_label">Atual</string>
-    <string name="portfolio_sold_label">Vendido</string>
+    <string name="portfolio_sold_label">Vendas</string>
     <string name="portfolio_appreciation_label">Valorização</string>
     <string name="portfolio_income_label">Rendimentos</string>
+    <string name="portfolio_brokerage_label">Corretagem</string>
     <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Fii Portolfio -->

@@ -54,24 +54,18 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
         mCursor.moveToPosition(position);
         Locale locale = new Locale( "pt", "BR" );
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-        int updateStatus = -1;
 
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL));
         // Get handled values of FiiTransaction with current symbol
         double sellGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN));
+        double brokerage = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_BROKERAGE));
         double sellGainPercent = sellGain/buyTotal*100;
         // Set text colors according to positive or negative values
 
         String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .SoldFiiData.
                 COLUMN_SYMBOL));
-
-        Cursor dataCursor = getFiiDataCursor(symbol);
-        if (dataCursor.moveToFirst()){
-            updateStatus = dataCursor.getInt(dataCursor.getColumnIndex
-                    (PortfolioContract.FiiData.COLUMN_UPDATE_STATUS));
-        }
 
         if (sellGain >=0){
             holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -81,12 +75,15 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
+        holder.brokerage.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+
         holder.symbol.setText(symbol);
         holder.fiiQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL)))));
+        holder.brokerage.setText(String.format(formatter.format(brokerage)));
         holder.sellGain.setText(String.format(formatter.format(sellGain)));
         holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
         if(position == mCursor.getCount()-1){
@@ -103,34 +100,6 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
             int bottomMargin = (int)(bottomDp * d); // margin in pixels
             params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
             holder.fiiCardView.setLayoutParams(params);
-        }
-
-        if (updateStatus == Constants.UpdateStatus.UPDATED){
-            holder.updateError.setVisibility(View.GONE);
-        } else {
-            holder.updateError.setVisibility(View.VISIBLE);
-            holder.updateError.setOnClickListener(new ImageView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Use the Builder class for convenient dialog construction
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                    dialog.setMessage(R.string.dialog_fii_update_failed_message)
-                            .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    mCursor.moveToPosition(position);
-                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldFiiData.COLUMN_SYMBOL);
-                                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-                                }
-                            })
-                            .setNegativeButton(R.string.edit_cancel, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            });
-                    // Create the AlertDialog object and return it
-                    dialog.create().show();
-                }
-            });
         }
 
         holder.fiiCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
@@ -150,20 +119,6 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-
-        if (updateStatus == Constants.UpdateStatus.UPDATED) {
-            holder.menuEdit.setVisibility(View.GONE);
-        } else {
-            holder.menuEdit.setVisibility(View.VISIBLE);
-            holder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mCursor.moveToPosition(position);
-                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SYMBOL);
-                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-                }
-            });
-        }
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -212,6 +167,9 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
 
+        @BindView(R.id.brokerage)
+        TextView brokerage;
+
         @BindView(R.id.sellTotal)
         TextView sellTotal;
 
@@ -226,12 +184,6 @@ public class SoldFiiDataAdapter extends RecyclerView.Adapter<SoldFiiDataAdapter.
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-
-        @BindView(R.id.updateError)
-        ImageView updateError;
-
-        @BindView(R.id.menuEdit)
-        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

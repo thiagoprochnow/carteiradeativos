@@ -67,7 +67,10 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 (PortfolioContract.StockData.COLUMN_VARIATION));
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_NET_INCOME));
-        double totalGain = stockAppreciation + totalIncome;
+        double brokerage = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_BROKERAGE));
+        double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_TOTAL_GAIN));
         int updateStatus = mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_UPDATE_STATUS));
         // Show daily gain or loss
@@ -120,10 +123,15 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext, R.color.red));
             viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
+
+        viewHolder.totalBrokerage.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+        viewHolder.totalBrokeragePercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
         double variationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(stockAppreciation / buyTotal * 100)));
         double netIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
-        double totalGainPercent = variationPercent + netIncomePercent;
+        double brokeragePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(brokerage / buyTotal * 100)));
+        double totalGainPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalGain / buyTotal * 100)));
         // Get handled values of StockData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .StockData.
@@ -140,9 +148,11 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 + "%");
         viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
         viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+        viewHolder.totalBrokerage.setText(String.format(formatter.format(brokerage)));
         viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
         viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
         viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+        viewHolder.totalBrokeragePercent.setText("(" + String.format("%.2f", brokeragePercent) + "%)");
 
         if (position == mCursor.getCount()-1) {
             // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
@@ -285,6 +295,12 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.dailyPrice)
         TextView dailyPrice;
+
+        @BindView(R.id.totalBrokerage)
+        TextView totalBrokerage;
+
+        @BindView(R.id.totalBrokeragePercent)
+        TextView totalBrokeragePercent;
 
         @BindView(R.id.dailyPercent)
         TextView dailyPercent;
