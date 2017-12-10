@@ -17,3 +17,5 @@
 #}
 -dontwarn okio.**
 -dontwarn retrofit2.Platform$Java8
+-dontwarn javax.annotation.**
+-dontwarn okhttp3.**
