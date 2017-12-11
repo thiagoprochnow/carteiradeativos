@@ -36,6 +36,7 @@ import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
 import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ComingSoonFragment;
+import br.com.guiainvestimento.fragment.ConsultQuotesFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
 import br.com.guiainvestimento.fragment.PortfolioMainFragment;
@@ -228,6 +229,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_others:
                 setTitle(R.string.title_others);
                 replaceFragment(new OthersTabFragment());
+                break;
+            case R.id.nav_item_consult_quotes:
+                setTitle(R.string.title_consult_quotes);
+                replaceFragment(new ConsultQuotesFragment());
                 break;
             case R.id.nav_item_about:
                 setTitle(R.string.title_about);

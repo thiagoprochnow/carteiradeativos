@@ -44,15 +44,17 @@ public class StockIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
-    private final String BFToken = "42745199c91e49ff73706f997cd8f465";
     private final String CedroL = "thiprochnow";
     private final String CedroP = "102030";
     private boolean mSuccess = false;
+    private String mResult = "";
     private String mSymbol;
+    private String mType;
     Handler mHandler;
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
+    public static final String CONSULT_SYMBOL = "consult_symbol";
 
     /**
      * Constructor matching super is needed
@@ -72,6 +74,7 @@ public class StockIntentService extends IntentService {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
+            mType = ADD_SYMBOL;
             // try the Bolsa Financeira backup API
             int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
             if (success == GcmNetworkManager.RESULT_SUCCESS){
@@ -86,6 +89,17 @@ public class StockIntentService extends IntentService {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } else if (intent.hasExtra(CONSULT_SYMBOL)){
+            mType = CONSULT_SYMBOL;
+            mResult = this.consultStockTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
+            if (mResult == ""){
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -185,11 +199,76 @@ public class StockIntentService extends IntentService {
         return resultStatus;
     }
 
+    private String consultStockTask(TaskParams params) {
+
+        String result = "";
+
+        try {
+
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(StockService.BASE_URL)
+                    .addConverterFactory(new NullOnEmptyConverterFactory())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
+                    .build();
+
+            StockService service = retrofit.create(StockService.class);
+
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
+
+            ContentValues stockDataCV = new ContentValues();
+
+            if (responseString.equals("true")){
+                String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
+
+                Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
+                Response<StockQuote> responseGet = callGet.execute();
+                StockQuote stock = null;
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    stock = responseGet.body();
+                }
+
+                if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0){
+                    // Success on request
+                    if (stock.getLast() != null && stock.getError() == null){
+                        result = stock.getLast();
+                    }
+                } else if(stock.getError() != null){
+                    result = "error";
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        if (mType == ADD_SYMBOL) {
+            this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        } else if (mType == CONSULT_SYMBOL){
+            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
+            broadcastIntent.putExtra("quote", mResult);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+        }
     }
 
     public class NullOnEmptyConverterFactory extends Converter.Factory {

@@ -70,6 +70,7 @@
                     android:textSize="14dp"
                     android:paddingTop="4dp"
                     android:paddingLeft="5dp"
+                    android:textColor="@color/white"
                     android:layout_marginRight="10dp"
                     android:text="@string/google_drive_button" />
             </LinearLayout>
@@ -127,6 +128,7 @@
                     android:textSize="14dp"
                     android:paddingTop="4dp"
                     android:paddingLeft="5dp"
+                    android:textColor="@color/white"
                     android:layout_marginRight="10dp"
                     android:text="@string/google_drive_button" />
             </LinearLayout>

@@ -42,7 +42,6 @@ public class FiiIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
-    private final String BFToken = "42745199c91e49ff73706f997cd8f465";
     private final String CedroL = "thiprochnow";
     private final String CedroP = "102030";
 

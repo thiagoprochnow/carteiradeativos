@@ -35,6 +35,7 @@
 
     <!-- Form Fragment -->
     <string name="quantity">Quantity</string>
+    <string name="price">Price: </string>
     <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Buy Price</string>
     <string name="treasury_buy_price">Unit buy price</string>
@@ -63,6 +64,7 @@
     <string name="ex_date_fii_income">Ex Income Date</string>
     <string name="ex_date_treasury_income">Receive Date</string>
     <string name="ex_date_others_income">Receive Date</string>
+    <string name="wrong_code">Invalid code</string>
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
@@ -434,6 +436,7 @@
     <string name="title_about">About</string>
     <string name="title_coming_soon">Coming Soon</string>
     <string name="title_backup_restore">Backup and Restore</string>
+    <string name="title_consult_quotes">Consult Quotes</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -494,6 +497,12 @@
     <string name="restore_download_folder_error">Database backup not found, place the GIBackup.db file in the %s path.</string>
     <string name="restore_confirm_title">Restore</string>
     <string name="restore_confirm">Are you sure you want to replace your database information with the one in the backup file? You will lose all current information in the application and it will be replace with the backup file.</string>
+
+    <!-- Consult Quotes -->
+    <string name="consult_quotes_description">Type the code of the stock, real state fund, currency or option that you wish to search.</string>
+    <string name="consult_quotes_button">Consult</string>
+    <string name="consult_quotes_error">Invalid Symbol</string>
+    <string name="error_consult_quote">Error consulting quote. Please try again later.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n

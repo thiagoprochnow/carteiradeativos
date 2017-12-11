@@ -33,8 +33,9 @@
     <string name="form_title_split">Desdobramento</string>
     <string name="form_title_grouping">Grupamento</string>
 
-    <!-- Dialog Fragment -->
+    <!-- Form Fragment -->
     <string name="quantity">Quantidade</string>
+    <string name="price">Preço: </string>
     <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Preço de compra</string>
     <string name="treasury_buy_price">Preço unitário de compra</string>
@@ -63,6 +64,7 @@
     <string name="ex_date_fii_income">Data Ex Rendimento</string>
     <string name="ex_date_treasury_income">Data Recebimento</string>
     <string name="ex_date_others_income">Data Recebimento</string>
+    <string name="wrong_code">Código inválido</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
@@ -435,6 +437,7 @@
     <string name="title_about">Sobre</string>
     <string name="title_coming_soon">Em Breve</string>
     <string name="title_backup_restore">Cópia e Restauração</string>
+    <string name="title_consult_quotes">Consulta de Cotações</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -495,6 +498,12 @@
     <string name="restore_download_folder_error">Backup do banco de dados não encontrado, coloque o arquivo GIBackup.db no caminho %s .</string>
     <string name="restore_confirm_title">Restauração</string>
     <string name="restore_confirm">Tem certeza que deseja substituir seu banco de dados com as informações no arquivo de backup? Você perderá todas os informações da aplicação e ela será substituida pelas informações do arquivo de backup.</string>
+
+    <!-- Consult Quotes -->
+    <string name="consult_quotes_description">Digite o código da ação, fundo imobiliário, moeda ou opção que deseja pesquisar.</string>
+    <string name="consult_quotes_button">Consultar</string>
+    <string name="consult_quotes_error">Ativo Inválido</string>
+    <string name="error_consult_quote">Erro ao consultar cotação. Por favor tente novamente mais tarde.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n

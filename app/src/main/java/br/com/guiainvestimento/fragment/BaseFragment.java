@@ -817,6 +817,20 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText was set with valid Stock Symbol
+    protected boolean isValidSymbol(AutoCompleteTextView symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
+        Pattern patternStock = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        Pattern patternFii = Pattern.compile("^[A-Z]{4}([0-9][0-9][A-Z]|[0-9][0-9])$");
+        Pattern patternCurrency = Pattern.compile("[a-zA-Z]*");
+        if (patternStock.matcher(editable.toString()).matches() || patternFii.matcher(editable.toString()).matches() || patternCurrency.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid Fixed Symbol
     protected boolean isValidFixedSymbol(EditText symbol) {
         Editable editable = symbol.getText();
