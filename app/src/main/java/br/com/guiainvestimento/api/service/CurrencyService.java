@@ -8,11 +8,11 @@ import retrofit2.http.Query;
 /**
  * Interface responsible for detailing the GET's URL
  */
-public interface BackupAPICurrencyService {
+public interface CurrencyService {
     String BASE_URL = "http://api.promasters.net.br";
 
     @GET("/cotacao/v1/valores")
-    Call<ResponseCurrencyBackup> getCurrencyBackupAPI(@Query("moedas") String currency, @Query("alt") String alt);
+    Call<ResponseCurrencyBackup> getCurrencyQuote(@Query("moedas") String currency, @Query("alt") String alt);
 
     // Add here other API requests
 }

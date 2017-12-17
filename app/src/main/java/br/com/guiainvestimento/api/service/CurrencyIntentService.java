@@ -15,11 +15,9 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.domain.ResponseCurrency;
 import br.com.guiainvestimento.api.domain.ResponseCurrencyBackup;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
-import br.com.guiainvestimento.domain.Currency;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -29,9 +27,9 @@ public class CurrencyIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
-    public static final String START_DATE = "start_date";
-    public static final String END_DATE = "end_date";
-
+    public static final String CONSULT_SYMBOL = "consult_symbol";
+    private String mResult = "";
+    private String mType;
     Handler mHandler;
 
     // Log variable
@@ -56,8 +54,8 @@ public class CurrencyIntentService extends IntentService {
         try{
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
-
-                int success = this.backupAddCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                mType = ADD_SYMBOL;
+                int success = this.addCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
                 if (success == GcmNetworkManager.RESULT_SUCCESS){
                     mHandler.post(new Runnable() {
                         @Override
@@ -73,8 +71,19 @@ public class CurrencyIntentService extends IntentService {
                         }
                     });
                 }
-            }else{
-                throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
+            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
+                mType = CONSULT_SYMBOL;
+                mResult = this.consultCurrencyTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
+                if (mResult == "") {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else{
+                throw new IOException("Missing one of the following Extras: ADD_SYMBOL, CONSULT_SYMBOL");
             }
         }catch (Exception e){
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
@@ -83,33 +92,31 @@ public class CurrencyIntentService extends IntentService {
 
     }
 
-    private int backupAddCurrencyTask(TaskParams params) {
+    private int addCurrencyTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
         // Build retrofit base request
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BackupAPICurrencyService.BASE_URL)
+                .baseUrl(CurrencyService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         ContentValues currencyDataCV = new ContentValues();
         try {
             // Make the request and parse the result
-            BackupAPICurrencyService service = retrofit.create(BackupAPICurrencyService.class);
+            CurrencyService service = retrofit.create(CurrencyService.class);
 
             String[] symbols = params.getExtras().getString(CurrencyIntentService.ADD_SYMBOL).split(",");
 
             Call<ResponseCurrencyBackup> call;
             Response<ResponseCurrencyBackup> response;
             ResponseCurrencyBackup responseGetRate;
-            int count = 0;
 
             for(String symbol : symbols) {
-                call = service.getCurrencyBackupAPI(symbol, "json");
+                call = service.getCurrencyQuote(symbol, "json");
                 response = call.execute();
                 responseGetRate = response.body();
-                count++;
 
                 if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
                         // Prepare the data of the current price to update the StockData table
@@ -135,10 +142,57 @@ public class CurrencyIntentService extends IntentService {
         return resultStatus;
     }
 
+    private String consultCurrencyTask(TaskParams params) {
+
+        String result = "";
+
+        // Build retrofit base request
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CurrencyService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        try {
+            // Make the request and parse the result
+            CurrencyService service = retrofit.create(CurrencyService.class);
+
+            String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
+
+            if (symbol.equalsIgnoreCase("dolar")){
+                symbol = "USD";
+            } else if(symbol.equalsIgnoreCase("euro")){
+                symbol = "EUR";
+            }
+
+            Call<ResponseCurrencyBackup> call;
+            Response<ResponseCurrencyBackup> response;
+            ResponseCurrencyBackup responseGetRate;
+
+            call = service.getCurrencyQuote(symbol, "json");
+            response = call.execute();
+            responseGetRate = response.body();
+
+            if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
+                // Prepare the data of the current price to update the StockData table
+                result = responseGetRate.getQuote(symbol);
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        if (mType == ADD_SYMBOL) {
+            this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        } else if (mType == CONSULT_SYMBOL){
+            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
+            broadcastIntent.putExtra("quote", mResult);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+        }
     }
 }
