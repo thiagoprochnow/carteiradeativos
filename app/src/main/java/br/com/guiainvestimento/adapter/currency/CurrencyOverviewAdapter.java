@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -58,6 +61,7 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
     final private Context mContext;
     private Cursor mCursor;
     private TextView mChartLabel;
+    private Spinner mChartYear;
 
     public CurrencyOverviewAdapter(Context context) {
         this.mContext = context;
@@ -197,128 +201,158 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 break;
             default:
                 mCursor.moveToPosition(0);
-                CurrencyChartViewHolder chartHolder = (CurrencyChartViewHolder) holder;
+                final CurrencyChartViewHolder chartHolder = (CurrencyChartViewHolder) holder;
                 mChartLabel = (TextView) chartHolder.chartLabel;
+                mChartYear = (Spinner) chartHolder.chartYear;
 
-                List<Entry> growthEntries = new ArrayList<Entry>();
-                List<Entry> buyEntries = new ArrayList<Entry>();
-                //TODO: Change so year can be selected or inputed by user
-                String queryYear = "2017";
-
-                Cursor growthCursor = null;
-                Cursor buyCursor = null;
-                try {
-                    growthCursor = getGrowthCursor(queryYear);
-                    buyCursor = getBuyGrowthCursor(queryYear);
-                }catch (SQLException e){
+                ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(mContext, android.R.layout.simple_spinner_dropdown_item);
+                Cursor getYear = null;
+                try{
+                    getYear = getYears();
+                } catch (SQLException e){
                     Log.e(LOG_TAG, e.toString());
                 }
 
-                if(growthCursor != null && growthCursor.getCount() > 0 && buyCursor != null && buyCursor.getCount() > 0){
-
-                    // Make growth entries
-                    growthCursor.moveToFirst();
+                if(getYear != null && getYear.getCount() > 0) {
+                    getYear.moveToFirst();
                     do{
-                        long timestamp = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
-                        long month = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.MONTH));
-                        long year = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.YEAR));
-                        float value = growthCursor.getFloat(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL));
-                        // Check if already reach others field
-                        // Show each pie data order in asc form
-                        // Do not show sold stocks
-                        growthEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
-
-                    } while (growthCursor.moveToNext());
-
-                    // Make buy entries
-                    buyCursor.moveToFirst();
-                    do{
-                        long timestamp = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP));
-                        long month = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.MONTH));
-                        long year = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.YEAR));
-                        float value = buyCursor.getFloat(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TOTAL));
-                        // Check if already reach others field
-                        // Show each pie data order in asc form
-                        // Do not show sold stocks
-                        buyEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
-
-                    } while (buyCursor.moveToNext());
-
-                    Description desc = chartHolder.chart.getDescription();
-                    desc.setEnabled(false);
-
-                    // Disable zoom
-                    chartHolder.chart.setDoubleTapToZoomEnabled(false);
-                    chartHolder.chart.setPinchZoom(false);
-                    chartHolder.chart.setScaleEnabled(false);
-
-                    chartHolder.chart.setOnChartValueSelectedListener(valueSelectedListener());
-
-                    Legend legend = chartHolder.chart.getLegend();
-                    legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-                    legend.setXEntrySpace(20);
-
-                    LineDataSet growthDS = new LineDataSet(growthEntries, "Atual"); // add entries to dataset
-                    growthDS.setHighLightColor(Color.BLACK);
-                    growthDS.setLineWidth(3);
-                    growthDS.setColor(mContext.getResources().getColor(R.color.green));
-                    growthDS.setCircleRadius(7f);
-                    growthDS.setCircleHoleRadius(5f);
-                    growthDS.setValueTextSize(10f);
-                    growthDS.setDrawValues(false);
-
-                    LineDataSet buyDS = new LineDataSet(buyEntries, "Comprado");
-                    buyDS.setHighLightColor(Color.BLACK);
-                    buyDS.setLineWidth(3);
-                    buyDS.setCircleRadius(7f);
-                    buyDS.setCircleHoleRadius(5f);
-                    buyDS.setValueTextSize(10f);
-                    buyDS.setDrawValues(false);
-
-                    final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
-
-                    XAxis xAxis = chartHolder.chart.getXAxis();
-                    xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-                    xAxis.setDrawAxisLine(false);
-                    xAxis.setDrawGridLines(false);
-                    xAxis.setValueFormatter(axisValueFormatter());
-                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                    xAxis.setLabelCount(8);
-                    xAxis.setXOffset(20f);
-                    xAxis.setAxisMinValue(0);
-                    xAxis.setAxisMaxValue(11);
-                    xAxis.setTextSize(8f);
-
-                    YAxis yAxisLeft = chartHolder.chart.getAxisLeft();
-                    yAxisLeft.setDrawAxisLine(false);
-                    //yAxisLeft.setDrawGridLines(false);
-                    yAxisLeft.setGranularity(0.1f);
-                    yAxisLeft.setTextSize(10f);
-                    yAxisLeft.setLabelCount(5);
-                    yAxisLeft.setXOffset(20f);
-                    yAxisLeft.setTextSize(8f);
-
-                    YAxis yAxisRight = chartHolder.chart.getAxisRight();
-                    yAxisRight.setDrawGridLines(false);
-                    yAxisRight.setDrawAxisLine(false);
-                    yAxisRight.setDrawLabels(false);
-                    yAxisRight.setXOffset(20f);
-
-                    // use the interface ILineDataSet
-                    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-                    dataSets.add(growthDS);
-                    dataSets.add(buyDS);
-
-                    LineData lineData = new LineData(dataSets);
-                    chartHolder.chart.setData(lineData);
-                    chartHolder.chart.invalidate();
-
-                    chartHolder.chart.setVisibility(View.VISIBLE);
-                    chartHolder.chart_cardview.setVisibility(View.VISIBLE);
-                } else {
-                    chartHolder.chart.setVisibility(View.GONE);
-                    chartHolder.chart_cardview.setVisibility(View.GONE);
+                        long year = getYear.getLong(getYear.getColumnIndex(PortfolioContract.PortfolioGrowth.YEAR));
+                        adapter.add(String.valueOf(year));
+                    } while (getYear.moveToNext());
                 }
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                mChartYear.setAdapter(adapter);
+
+                mChartYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        List<Entry> growthEntries = new ArrayList<Entry>();
+                        List<Entry> buyEntries = new ArrayList<Entry>();
+                        //TODO: Change so year can be selected or inputed by user
+
+                        Cursor growthCursor = null;
+                        Cursor buyCursor = null;
+                        try {
+                            String year = (String) parent.getItemAtPosition(position);
+                            growthCursor = getGrowthCursor(year);
+                            buyCursor = getBuyGrowthCursor(year);
+                        } catch (SQLException e) {
+                            Log.e(LOG_TAG, e.toString());
+                        }
+
+                        if (growthCursor != null && growthCursor.getCount() > 0 && buyCursor != null && buyCursor.getCount() > 0) {
+
+                            // Make growth entries
+                            growthCursor.moveToFirst();
+                            do {
+                                long timestamp = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
+                                long month = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.MONTH));
+                                long year = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.YEAR));
+                                float value = growthCursor.getFloat(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL));
+                                // Check if already reach others field
+                                // Show each pie data order in asc form
+                                // Do not show sold stocks
+                                growthEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+
+                            } while (growthCursor.moveToNext());
+
+                            // Make buy entries
+                            buyCursor.moveToFirst();
+                            do {
+                                long timestamp = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP));
+                                long month = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.MONTH));
+                                long year = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.YEAR));
+                                float value = buyCursor.getFloat(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TOTAL));
+                                // Check if already reach others field
+                                // Show each pie data order in asc form
+                                // Do not show sold stocks
+                                buyEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+
+                            } while (buyCursor.moveToNext());
+
+                            Description desc = chartHolder.chart.getDescription();
+                            desc.setEnabled(false);
+
+                            // Disable zoom
+                            chartHolder.chart.setDoubleTapToZoomEnabled(false);
+                            chartHolder.chart.setPinchZoom(false);
+                            chartHolder.chart.setScaleEnabled(false);
+
+                            chartHolder.chart.setOnChartValueSelectedListener(valueSelectedListener());
+
+                            Legend legend = chartHolder.chart.getLegend();
+                            legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                            legend.setXEntrySpace(20);
+
+                            LineDataSet growthDS = new LineDataSet(growthEntries, mContext.getResources().getString(R.string.growth_chart_current)); // add entries to dataset
+                            growthDS.setHighLightColor(Color.BLACK);
+                            growthDS.setLineWidth(3);
+                            growthDS.setColor(mContext.getResources().getColor(R.color.green));
+                            growthDS.setCircleRadius(7f);
+                            growthDS.setCircleHoleRadius(5f);
+                            growthDS.setValueTextSize(10f);
+                            growthDS.setDrawValues(false);
+
+                            LineDataSet buyDS = new LineDataSet(buyEntries, mContext.getResources().getString(R.string.growth_chart_bought));
+                            buyDS.setHighLightColor(Color.BLACK);
+                            buyDS.setLineWidth(3);
+                            buyDS.setCircleRadius(7f);
+                            buyDS.setCircleHoleRadius(5f);
+                            buyDS.setValueTextSize(10f);
+                            buyDS.setDrawValues(false);
+
+                            final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
+
+                            XAxis xAxis = chartHolder.chart.getXAxis();
+                            xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+                            xAxis.setDrawAxisLine(false);
+                            xAxis.setDrawGridLines(false);
+                            xAxis.setValueFormatter(axisValueFormatter());
+                            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                            xAxis.setLabelCount(8);
+                            xAxis.setXOffset(20f);
+                            xAxis.setAxisMinValue(0);
+                            xAxis.setAxisMaxValue(11);
+                            xAxis.setTextSize(8f);
+
+                            YAxis yAxisLeft = chartHolder.chart.getAxisLeft();
+                            yAxisLeft.setDrawAxisLine(false);
+                            //yAxisLeft.setDrawGridLines(false);
+                            yAxisLeft.setGranularity(0.1f);
+                            yAxisLeft.setTextSize(10f);
+                            yAxisLeft.setLabelCount(5);
+                            yAxisLeft.setXOffset(20f);
+                            yAxisLeft.setTextSize(8f);
+
+                            YAxis yAxisRight = chartHolder.chart.getAxisRight();
+                            yAxisRight.setDrawGridLines(false);
+                            yAxisRight.setDrawAxisLine(false);
+                            yAxisRight.setDrawLabels(false);
+                            yAxisRight.setXOffset(20f);
+
+                            // use the interface ILineDataSet
+                            List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                            dataSets.add(growthDS);
+                            dataSets.add(buyDS);
+
+                            LineData lineData = new LineData(dataSets);
+                            chartHolder.chart.setData(lineData);
+                            chartHolder.chart.invalidate();
+
+                            chartHolder.chart.setVisibility(View.VISIBLE);
+                            chartHolder.chart_cardview.setVisibility(View.VISIBLE);
+                        } else {
+                            chartHolder.chart.setVisibility(View.GONE);
+                            chartHolder.chart_cardview.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
                 break;
         }
 
@@ -414,6 +448,9 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         @BindView(R.id.chart_label)
         TextView chartLabel;
 
+        @BindView(R.id.chart_year_spinner)
+        Spinner chartYear;
+
         public CurrencyChartViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -430,6 +467,19 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mContext.getContentResolver().query(
                 PortfolioContract.CurrencyData.URI,
                 affectedColumn, null, null, sortOrder);
+    }
+
+    private Cursor getYears(){
+        String sortOrder = PortfolioContract.PortfolioGrowth.YEAR + " ASC";
+        String[] affectedRows = {"DISTINCT " + PortfolioContract.PortfolioGrowth.YEAR};
+        String selection = PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.ProductType.CURRENCY)};
+
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.PortfolioGrowth.URI,
+                affectedRows, selection, selectionArguments, sortOrder);
     }
 
     private Cursor getGrowthCursor(String year){
@@ -475,9 +525,9 @@ public class CurrencyOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 String tipo;
                 if (chart == 1){
-                    tipo = mContext.getResources().getString(R.string.portfolio_bought_label) + ": ";
+                    tipo = mContext.getResources().getString(R.string.growth_chart_bought) + ": ";
                 } else {
-                    tipo = mContext.getResources().getString(R.string.portfolio_current_label) + ": ";
+                    tipo = mContext.getResources().getString(R.string.growth_chart_current) + ": ";
                 }
                 mChartLabel.setText(tipo + String.valueOf(months[month] + ", " + year + " - " + formatter.format(e.getY())));
             }

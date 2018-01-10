@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverStock = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(LOG_TAG, "Stock: " + mCurrencyReceiver + mFiiReceiver);
                 if (mCurrencyReceiver && mFiiReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverFii = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(LOG_TAG, "Fii: " + mCurrencyReceiver + mStockReceiver);
                 if (mCurrencyReceiver && mStockReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverCurrency = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(LOG_TAG, "Currency: " + mFiiReceiver + mStockReceiver);
                 if (mFiiReceiver && mStockReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);

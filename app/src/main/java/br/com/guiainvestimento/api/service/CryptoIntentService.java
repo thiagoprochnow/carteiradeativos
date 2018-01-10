@@ -56,6 +56,7 @@ public class CryptoIntentService extends IntentService {
         try{
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
+                mType = ADD_SYMBOL;
                 int success = this.addCryptoTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
                 if (success == GcmNetworkManager.RESULT_SUCCESS){
                     mHandler.post(new Runnable() {

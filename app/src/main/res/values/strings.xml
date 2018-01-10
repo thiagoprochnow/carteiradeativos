@@ -272,6 +272,8 @@
     <string name="portfolio_label">Portfolio</string>
     <string name="asset_allocation_label">Asset Allocation</string>
     <string name="growth_chart_label">Growth Chart</string>
+    <string name="growth_chart_current">Current</string>
+    <string name="growth_chart_bought">Bought</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Overview</string>
