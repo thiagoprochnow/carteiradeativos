@@ -16,13 +16,14 @@
             android:layout_height="wrap_content"
             android:text="@string/treasury_symbol"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/treasury_symbol_hint"
-            android:maxLength="20"/>
+            android:textSize="14dp"
+            android:maxLength="50"/>
 
         <TextView
             android:fontFamily="sans-serif-light"
@@ -37,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
+            android:textSize="14dp"
             android:hint="@string/treaury_quantity_hint"/>
 
         <TextView
@@ -52,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
+            android:textSize="14dp"
             android:hint="@string/treasury_buy_price_hint"/>
 
         <TextView
@@ -66,6 +69,7 @@
             android:id="@+id/inputBuyDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="14dp"
             android:focusable="false"
             android:inputType="date"/>
     </LinearLayout>

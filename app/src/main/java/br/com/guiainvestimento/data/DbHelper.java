@@ -13,7 +13,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // TODO: Need to change db name to the final app name or to anything meaningful
     static final String NAME = "Portfolio.db";
-    private static final int VERSION = 3;
+    private static final int VERSION = 4;
 
     // Log variable
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
@@ -55,6 +55,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_ALTER_FII_DATA_2 = "ALTER TABLE "
             + PortfolioContract.FiiData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FiiData.COLUMN_CLOSING_PRICE + " REAL;";
+
+    private static final String DATABASE_ALTER_TREASURY_DATA_1 = "ALTER TABLE "
+            + PortfolioContract.TreasuryData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS + " INTEGER;";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -388,6 +391,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.TreasuryData.COLUMN_STATUS + " INTEGER, " +
                 PortfolioContract.TreasuryData.COLUMN_TAX + " REAL, " +
                 PortfolioContract.TreasuryData.COLUMN_BROKERAGE + " REAL, " +
+                PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS + " INTEGER, " +
                 PortfolioContract.TreasuryData.LAST_UPDATE + " LONG, " +
                 "UNIQUE (" + PortfolioContract.TreasuryData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
@@ -542,6 +546,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(DATABASE_ALTER_STOCK_DATA_2);
                 db.execSQL(DATABASE_ALTER_FII_DATA_1);
                 db.execSQL(DATABASE_ALTER_FII_DATA_2);
+            }
+        } catch (SQLException e){
+            Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
+        }
+
+        try {
+            if (oldVersion < 4){
+                db.execSQL(DATABASE_ALTER_TREASURY_DATA_1);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);

@@ -1122,6 +1122,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
         public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_DATA_COLUMNS = {
@@ -1141,6 +1142,7 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
+                COLUMN_UPDATE_STATUS,
                 LAST_UPDATE
         };
 

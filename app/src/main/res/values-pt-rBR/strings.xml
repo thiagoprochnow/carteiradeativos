@@ -219,6 +219,7 @@
     <string name="data_total_gain_label">Ganho</string>
     <string name="dialog_stock_update_failed_message">Essa ação não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
     <string name="dialog_fii_update_failed_message">Esse fundo imobiliário não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="dialog_treasury_update_failed_message">Esse Tesouro não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>
@@ -466,10 +467,12 @@
     <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
     <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
     <string name="success_updating_crypto_currency">Cripto moedas atualizadas com sucesso.</string>
+    <string name="success_updating_treasury">Tesouro atualizado com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_treasury">Erro ao atualizar tesouro, por favor tente novamente mais tarde.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.

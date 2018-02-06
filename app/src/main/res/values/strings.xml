@@ -218,6 +218,7 @@
     <string name="data_total_gain_label">Gain</string>
     <string name="dialog_stock_update_failed_message">This stock could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="dialog_fii_update_failed_message">This Fii could not be update automatically, please input current price manually by clicking on Edit button.</string>
+    <string name="dialog_treasury_update_failed_message">This treasury could not be update automatically, please input current price manually by clicking on Edit button.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>
@@ -465,10 +466,12 @@
     <string name="success_updating_fii">Fiis successfully updated.</string>
     <string name="success_updating_currency">Currency successfully updated.</string>
     <string name="success_updating_crypto_currency">Crypto currency successfully updated.</string>
+    <string name="success_updating_treasury">Treasury successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>
     <string name="error_updating_crypto_currency">Error updating crypto currency, please try again later.</string>
+    <string name="error_updating_treasury">Error updating treasury, please try again later.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.

@@ -195,9 +195,8 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
                             R.color.yellow, R.color.darkBlue, R.color.lightGray, R.color.wine, R.color.darkGreen, R.color.darkGray}, mContext);
 
                     Legend l = piechartHolder.pieChart.getLegend();
-                    l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
-                    l.setXEntrySpace(7f);
-                    l.setYEntrySpace(5f);
+                    l.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
+                    l.setWordWrapEnabled(true);
 
                     PieData data = new PieData(dataSet);
                     piechartHolder.pieChart.setData(data);
