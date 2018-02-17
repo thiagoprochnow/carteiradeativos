@@ -166,6 +166,9 @@ public final class Constants {
 
         public static final int BUY_GROWTH = 400;
 
+        public static final int CDI = 500;
+        public static final int CDI_WITH_DATE = 510;
+
         public static final int STOCK_PORTFOLIO = 1100;
 
         public static final int STOCK_DATA = 1200;

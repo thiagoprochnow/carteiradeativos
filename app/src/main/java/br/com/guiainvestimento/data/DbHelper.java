@@ -59,6 +59,20 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_ALTER_TREASURY_DATA_1 = "ALTER TABLE "
             + PortfolioContract.TreasuryData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS + " INTEGER;";
 
+    private static final String DATABASE_CREATE_CDI = "CREATE TABLE " + PortfolioContract.Cdi.TABLE_NAME + " (" +
+            PortfolioContract.Cdi._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.Cdi.COLUMN_VALUE + " REAL, " +
+            PortfolioContract.Cdi.COLUMN_TIMESTAMP + " LONG, " +
+            PortfolioContract.Cdi.COLUMN_DATA + " TEXT NOT NULL, " +
+            PortfolioContract.Cdi.LAST_UPDATE + " TEXT, " +
+            "UNIQUE (" + PortfolioContract.Cdi._ID + ") ON CONFLICT REPLACE);";
+
+    private static final String DATABASE_ALTER_FIXED_TRANSACTION_1 = "ALTER TABLE "
+            + PortfolioContract.FixedTransaction.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE + " REAL;";
+
+    private static final String DATABASE_ALTER_FIXED_DATA_1 = "ALTER TABLE "
+            + PortfolioContract.FixedData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FixedData.COLUMN_UPDATE_STATUS + " INTEGER;";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -344,6 +358,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedData.COLUMN_CURRENT_TOTAL + " REAL, " +
                 PortfolioContract.FixedData.COLUMN_STATUS + " INTEGER, " +
                 PortfolioContract.FixedData.COLUMN_BROKERAGE + " REAL, " +
+                PortfolioContract.FixedData.COLUMN_UPDATE_STATUS + " INTEGER, " +
                 PortfolioContract.FixedData.LAST_UPDATE + " LONG, " +
                 "UNIQUE (" + PortfolioContract.FixedData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
 
@@ -355,6 +370,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedTransaction.COLUMN_TYPE + " INTEGER, " +
                 PortfolioContract.FixedTransaction.COLUMN_TAX + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_BROKERAGE + " REAL, " +
+                PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE + " REAL, " +
                 PortfolioContract.FixedTransaction.LAST_UPDATE + " LONG, " +
                 " FOREIGN KEY (" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
@@ -522,6 +538,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_others_transaction);
         db.execSQL(builder_others_income);
         db.execSQL(DATABASE_CREATE_BUY_GROWTH);
+        db.execSQL(DATABASE_CREATE_CDI);
     }
 
 
@@ -554,6 +571,9 @@ public class DbHelper extends SQLiteOpenHelper {
         try {
             if (oldVersion < 4){
                 db.execSQL(DATABASE_ALTER_TREASURY_DATA_1);
+                db.execSQL(DATABASE_CREATE_CDI);
+                db.execSQL(DATABASE_ALTER_FIXED_TRANSACTION_1);
+                db.execSQL(DATABASE_ALTER_FIXED_DATA_1);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);

@@ -81,6 +81,7 @@
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_brokerage">Brokerage should be a number</string>
     <string name="wrong_total">Total should be a number</string>
+    <string name="wrong_gain_rate">Gain Rate should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_current_price">Current price is not valid</string>
     <string name="wrong_current_total">Current total is not valid</string>
@@ -219,6 +220,8 @@
     <string name="dialog_stock_update_failed_message">This stock could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="dialog_fii_update_failed_message">This Fii could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="dialog_treasury_update_failed_message">This treasury could not be update automatically, please input current price manually by clicking on Edit button.</string>
+    <string name="fixed_update_failed_message">Enter on this Fixed Income and edit each "Buy" to include CDI % Rate so it can be updated automatically.</string>
+
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>
@@ -397,6 +400,8 @@
     <string name="fixed_rentability_type_pre">Pre</string>
     <string name="fixed_rentability_type_index">Indexed</string>
     <string name="fixed_buy_value">Buy total value</string>
+    <string name="fixed_gain_rate">Gain Rate (%CDI)</string>
+    <string name="fixed_gain_rate_hint">Ex: 110</string>
     <string name="fixed_sell_value">Sell total value</string>
 
     <!-- Add others income Form Fragment -->
@@ -467,11 +472,14 @@
     <string name="success_updating_currency">Currency successfully updated.</string>
     <string name="success_updating_crypto_currency">Crypto currency successfully updated.</string>
     <string name="success_updating_treasury">Treasury successfully updated.</string>
+    <string name="success_updating_fixed">Fixed income successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>
     <string name="error_updating_crypto_currency">Error updating crypto currency, please try again later.</string>
     <string name="error_updating_treasury">Error updating treasury, please try again later.</string>
+    <string name="error_updating_fixed">Error updating fixed income, please try again later.</string>
+    <string name="error_updating_fixed_rate">Error updating fixed income. One or more Buy of Fixed Income are without the CDI Rate, please edit and update Buy Values to update your Fixed Income automatically.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.

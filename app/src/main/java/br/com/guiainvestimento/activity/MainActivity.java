@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CdiIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mFiiReceiver = false;
     boolean mCurrencyReceiver = false;
     boolean mTreasuryReceiver = false;
+    boolean mFixedReceiver = false;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverStock = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mFiiReceiver && mTreasuryReceiver) {
+                if (mCurrencyReceiver && mFiiReceiver && mTreasuryReceiver && mFixedReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mFiiReceiver = false;
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
+                    mFixedReceiver = false;
                 } else {
                     // Sets StockReceiver flag
                     mStockReceiver = true;
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverFii = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mStockReceiver && mTreasuryReceiver) {
+                if (mCurrencyReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mFiiReceiver = false;
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
+                    mFixedReceiver = false;
                 } else {
                     // Sets StockReceiver flag
                     mFiiReceiver = true;
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverCurrency = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mFiiReceiver && mStockReceiver && mTreasuryReceiver) {
+                if (mFiiReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mFiiReceiver = false;
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
+                    mFixedReceiver = false;
                 } else {
                     // Sets StockReceiver flag
                     mCurrencyReceiver = true;
@@ -141,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverTreasury = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver) {
+                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver && mFixedReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -149,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mFiiReceiver = false;
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
+                    mFixedReceiver = false;
                 } else {
                     // Sets StockReceiver flag
                     mTreasuryReceiver = true;
@@ -156,6 +162,26 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(receiverTreasury, new IntentFilter(Constants.Receiver.TREASURY));
+
+        BroadcastReceiver receiverFixed = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver && mTreasuryReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                    mTreasuryReceiver = false;
+                    mFixedReceiver = false;
+                } else {
+                    // Sets StockReceiver flag
+                    mFixedReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFixed, new IntentFilter(Constants.Receiver.FIXED));
     }
 
     // Send result for Fragment
@@ -601,6 +627,38 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+        }
+
+        // Fixed Income Refresh
+        Intent mCdiServiceIntent = new Intent(this, CdiIntentService
+                .class);
+
+        String[] affectedColumn5 = {PortfolioContract.FixedData.COLUMN_SYMBOL};
+        String selection5 = PortfolioContract.FixedData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments5 = {String.valueOf(Constants.Status.ACTIVE)};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.FixedData.URI, affectedColumn5,
+                selection5, selectionArguments5, null);
+
+        // For each symbol found on StockData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FixedData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FixedData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            mCdiServiceIntent.putExtra(CdiIntentService.ADD_SYMBOL, symbol);
+            startService(mCdiServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FIXED));
         }
 
         //Currency Refresh

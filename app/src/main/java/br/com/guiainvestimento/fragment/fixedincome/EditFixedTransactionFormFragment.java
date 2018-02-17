@@ -26,11 +26,13 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
     private String mId;
     private Cursor mTransactionCursor;
     private String mSymbol;
+    private double mGainRate;
     private int mType;
     private double mTotal;
     private long mDate;
     private EditText mInputTotalView;
     private EditText mInputDateView;
+    private EditText mInputGainRate;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,6 +61,7 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
             mTotal = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP));
             mSymbol = mTransactionCursor.getString(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_SYMBOL));
+            mGainRate = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE));
         } else{
             getActivity().finish();
         }
@@ -70,6 +73,12 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
                 mView = inflater.inflate(R.layout.fragment_edit_fixed_buy_form, container, false);
                 mInputTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+                mInputGainRate = (EditText) mView.findViewById(R.id.inputGainRate);
+                if (mGainRate != 0){
+                    double gainRate = mGainRate*100;
+                    gainRate = (double) Math.round(gainRate * 100) / 100;
+                    mInputGainRate.setText(String.valueOf(gainRate), EditText.BufferType.EDITABLE);
+                }
                 mInputTotalView.setText(String.valueOf(mTotal), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
@@ -93,6 +102,7 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
     private boolean updateFixedTransaction() {
         double newTotal;
         String newDate;
+        double newGainRate;
         ContentValues updateValues = new ContentValues();
         boolean isValidTotal = true;
         boolean isValidDate = true;
@@ -101,12 +111,21 @@ public class EditFixedTransactionFormFragment extends BaseFormFragment {
             case Constants.Type.BUY:
                 isValidTotal = isValidDouble(mInputTotalView);
                 isValidDate = isValidDate(mInputDateView);
+                boolean isValidGainRate = isValidDouble(mInputGainRate);
 
                 if (isValidTotal){
                     newTotal = Double.parseDouble(mInputTotalView.getText().toString());
                     updateValues.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, newTotal);
                 } else {
                     mInputTotalView.setError(this.getString(R.string.wrong_total));
+                    return false;
+                }
+
+                if (isValidGainRate){
+                    newGainRate = Double.parseDouble(mInputGainRate.getText().toString())/100;
+                    updateValues.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE, newGainRate);
+                } else {
+                    mInputGainRate.setError(this.getString(R.string.wrong_gain_rate));
                     return false;
                 }
 

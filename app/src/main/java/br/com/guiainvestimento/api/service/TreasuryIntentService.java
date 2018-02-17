@@ -170,9 +170,7 @@ public class TreasuryIntentService extends IntentService {
 
                 if (responseGet != null && responseGet.isSuccessful() && treasury != null && treasury.getError() == null && treasury.toString().length() > 0){
                     // Success on request
-                    Log.d(LOG_TAG, "Valor: " +  treasury.getValor());
                     if (treasury.getValor() != null){
-                        Log.d(LOG_TAG, "Valor: " +  treasury.getValor());
                         treasuryDataCV.put(symbol, treasury.getValor());
                         updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                     } else {

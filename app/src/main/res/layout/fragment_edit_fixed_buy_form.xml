@@ -29,6 +29,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/fixed_gain_rate"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputGainRate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="@string/fixed_gain_rate_hint"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/buy_date"/>
 
         <EditText

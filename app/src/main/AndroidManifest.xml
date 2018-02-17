@@ -41,6 +41,7 @@
         <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CryptoIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.TreasuryIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.CdiIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"

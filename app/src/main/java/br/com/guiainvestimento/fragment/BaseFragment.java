@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CdiIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
@@ -2307,6 +2308,11 @@ public abstract class BaseFragment extends Fragment {
 
             // Set fixed income as active
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.ACTIVE);
+
+            Intent mServiceIntent = new Intent(mContext, CdiIntentService
+                    .class);
+            mServiceIntent.putExtra(CdiIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
 
             // Searches for existing FixedData to update value.
             // If dosent exists, creates new one
