@@ -150,54 +150,56 @@ public class CdiIntentService extends IntentService {
             ContentValues[] cdisArray;
             ArrayList<ContentValues> cdisCV = new ArrayList<ContentValues>();
 
-            if (responseGet != null && responseGet.isSuccessful() && cdis != null && cdis.size() > 0){
-                for(Cdi cdi: cdis){
-                    ContentValues cdiCV = new ContentValues();
-                    cdiCV.put(PortfolioContract.Cdi._ID, cdi.getId());
-                    cdiCV.put(PortfolioContract.Cdi.COLUMN_VALUE, cdi.getValor());
-                    cdiCV.put(PortfolioContract.Cdi.COLUMN_DATA, cdi.getDataString());
-                    cdiCV.put(PortfolioContract.Cdi.COLUMN_TIMESTAMP, cdi.getData());
-                    cdiCV.put(PortfolioContract.Cdi.LAST_UPDATE, cdi.getAtualizado());
-                    cdisCV.add(cdiCV);
+            if (responseGet != null && responseGet.isSuccessful()){
+                if(cdis != null && cdis.size() > 0){
+                    for (Cdi cdi : cdis) {
+                        ContentValues cdiCV = new ContentValues();
+                        cdiCV.put(PortfolioContract.Cdi._ID, cdi.getId());
+                        cdiCV.put(PortfolioContract.Cdi.COLUMN_VALUE, cdi.getValor());
+                        cdiCV.put(PortfolioContract.Cdi.COLUMN_DATA, cdi.getDataString());
+                        cdiCV.put(PortfolioContract.Cdi.COLUMN_TIMESTAMP, cdi.getData());
+                        cdiCV.put(PortfolioContract.Cdi.LAST_UPDATE, cdi.getAtualizado());
+                        cdisCV.add(cdiCV);
+                    }
+                    cdisArray = new ContentValues[cdisCV.size()];
+                    cdisCV.toArray(cdisArray);
+
+                    int insert = getApplicationContext().getContentResolver().bulkInsert(
+                            PortfolioContract.Cdi.URI,
+                            cdisArray);
                 }
-            }
 
-            cdisArray = new ContentValues[cdisCV.size()];
-            cdisCV.toArray(cdisArray);
+                // After CDI update, start fixed income updates
+                String[] symbols = params.getExtras().getString(CdiIntentService.ADD_SYMBOL).split(",");
 
-            int insert = getApplicationContext().getContentResolver().bulkInsert(
-                    PortfolioContract.Cdi.URI,
-                    cdisArray);
+                boolean update = true;
+                ContentValues updateFail;
+                for (String symbol: symbols) {
+                    boolean updateSuccess = updateFixedData(symbol);
+                    if (!updateSuccess){
+                        updateFail = new ContentValues();
+                        updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
 
-            // After CDI update, start fixed income updates
+                        update = false;
+                    } else {
+                        updateFail = new ContentValues();
+                        updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                    }
+                    String updateSelection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FixedData.URI,
+                            updateFail, updateSelection, updatedSelectionArguments);
+                }
 
-            String[] symbols = params.getExtras().getString(CdiIntentService.ADD_SYMBOL).split(",");
-
-            boolean update = true;
-            ContentValues updateFail;
-            for (String symbol: symbols) {
-                boolean updateSuccess = updateFixedData(symbol);
-                if (!updateSuccess){
-                    updateFail = new ContentValues();
-                    updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-
-                    update = false;
+                if (update) {
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 } else {
-                    updateFail = new ContentValues();
-                    updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                    // One or more Fixed income are without CDI Rate
+                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
                 }
-                String updateSelection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {symbol};
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.FixedData.URI,
-                        updateFail, updateSelection, updatedSelectionArguments);
-            }
-
-            if (update) {
-                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
             } else {
-                // One or more Fixed income are without CDI Rate
-                resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());

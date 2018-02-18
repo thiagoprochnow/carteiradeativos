@@ -86,7 +86,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fixed income
-        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate && isValidGainRate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
             double gainRate = Double.parseDouble(mInputGainRateView.getText().toString())/100;
