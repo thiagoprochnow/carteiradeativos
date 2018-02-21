@@ -1,11 +1,14 @@
 package br.com.guiainvestimento.activity;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -23,8 +26,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.service.CdiIntentService;
@@ -39,6 +46,7 @@ import br.com.guiainvestimento.fragment.AboutFragment;
 import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ComingSoonFragment;
 import br.com.guiainvestimento.fragment.ConsultQuotesFragment;
+import br.com.guiainvestimento.fragment.PremiumEditionFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
 import br.com.guiainvestimento.fragment.PortfolioMainFragment;
@@ -48,6 +56,9 @@ import br.com.guiainvestimento.fragment.stock.StockTabFragment;
 import br.com.guiainvestimento.fragment.treasury.TreasuryTabFragment;
 import br.com.guiainvestimento.listener.IncomeDetailsListener;
 import br.com.guiainvestimento.listener.ProductListener;
+import br.com.guiainvestimento.purchaseutil.IabHelper;
+import br.com.guiainvestimento.purchaseutil.IabResult;
+import br.com.guiainvestimento.purchaseutil.Inventory;
 
 // Main app Activity
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
@@ -56,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     protected DrawerLayout mDrawerLayout;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+
+    private final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlkgmReCxrtpx7ZEU1oTxzwlEedEFKy41W+J9KMSVB74mrzxFCBq+BNnA72RKEcOAhBkYPzDF6Ku8LErZK+/1JkszJ6EgBjF7AXyf6Auav9uDsn1PvBzt6kUNa5blJtmsEJ+WTFW82uVJ9O+1QL3nMzdUPx+cpDf6Vx7gSzy2DSu2JVjHZVTW98flsSeYHieWiL1+OFQwv68PpFbQ8QS4hwEzQsPIbqdKCw9IT061OgAIcBhh37kBWmfbc5PfxHkUupv0eiHk2Df9lrNpMcWiZQH8m6wiennbSLYNj+qOSngoy0xaeYIOti0JiuLluiNswOour6CFzcEbuQ//MrkXPQIDAQAB";
+
+    IabHelper mHelper;
 
     boolean mStockReceiver = false;
     boolean mFiiReceiver = false;
@@ -75,6 +90,17 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        // Connect to Billing service
+        mHelper = new IabHelper(this, base64EncodedPublicKey);
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    // There was a problem.
+                    Log.d(LOG_TAG, "Problem setting up In-app Billing: " + result);
+                }
+            }
+        });
 
         // Checks if savedInstanceState is null so it will not load portfolio fragment on screen
         // rotation
@@ -211,6 +237,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mHelper != null) {
+            try{
+                mHelper.dispose();
+            } catch (IabHelper.IabAsyncInProgressException e){
+                Log.e(LOG_TAG, "Billing Error: " + e.toString());
+            }
+        };
+        mHelper = null;
     }
 
     // Configure the toolbar
@@ -280,6 +314,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 setTitle(R.string.title_others);
                 replaceFragment(new OthersTabFragment());
                 break;
+            case R.id.nav_item_premium_edition:
+                setTitle(R.string.title_premium_edition);
+                replaceFragment(new PremiumEditionFragment());
+                break;
             case R.id.nav_item_consult_quotes:
                 setTitle(R.string.title_consult_quotes);
                 replaceFragment(new ConsultQuotesFragment());
@@ -287,10 +325,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_about:
                 setTitle(R.string.title_about);
                 replaceFragment(new AboutFragment());
-                break;
-            case R.id.nav_item_coming_soon:
-                setTitle(R.string.title_coming_soon);
-                replaceFragment(new ComingSoonFragment());
                 break;
             case R.id.nav_item_backup_restore:
                 setTitle(R.string.title_backup_restore);
@@ -803,5 +837,34 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             default:
                 break;
         }
+    }
+
+    IabHelper.QueryInventoryFinishedListener
+            mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+        {
+            if (result.isFailure()) {
+                Log.e(LOG_TAG, result.getMessage());
+                return;
+            }
+
+            String price = inventory.getSkuDetails("mensal").getPrice();
+
+            Log.d(LOG_TAG, "Price: " + price);
+
+            // update the UI
+        }
+    };
+
+    public boolean getPrice(){
+        List additionalSkuList = new ArrayList();
+        additionalSkuList.add("mensal");
+        try {
+            mHelper.queryInventoryAsync(true, additionalSkuList, additionalSkuList,
+                    mQueryFinishedListener);
+        } catch (IabHelper.IabAsyncInProgressException e){
+            Log.e(LOG_TAG, e.toString());
+        }
+        return true;
     }
 }
