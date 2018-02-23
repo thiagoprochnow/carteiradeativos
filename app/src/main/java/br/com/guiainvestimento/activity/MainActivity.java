@@ -59,6 +59,7 @@ import br.com.guiainvestimento.listener.ProductListener;
 import br.com.guiainvestimento.purchaseutil.IabHelper;
 import br.com.guiainvestimento.purchaseutil.IabResult;
 import br.com.guiainvestimento.purchaseutil.Inventory;
+import br.com.guiainvestimento.purchaseutil.Purchase;
 
 // Main app Activity
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
@@ -98,6 +99,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 if (!result.isSuccess()) {
                     // There was a problem.
                     Log.d(LOG_TAG, "Problem setting up In-app Billing: " + result);
+                } else {
+                    try{
+                        mHelper.queryInventoryAsync(mGotInventoryListener);
+                    } catch (IabHelper.IabAsyncInProgressException e){
+                        Log.e(LOG_TAG, e.toString());
+                    }
                 }
             }
         });
@@ -223,6 +230,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             if (fragment != null) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
+        } else if (requestCode == Constants.Intent.PURCHASE_SUBSCRIPTION){
+            mHelper.flagEndAsync();
+            mHelper.handleActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -839,32 +849,55 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
     }
 
-    IabHelper.QueryInventoryFinishedListener
-            mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
-        {
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener
+            = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result,
+                                             Inventory inventory) {
+            boolean mIsPremium;
             if (result.isFailure()) {
-                Log.e(LOG_TAG, result.getMessage());
-                return;
+                // handle error here
             }
+            else {
+                // does the user have the premium upgrade?
+                mIsPremium = inventory.hasPurchase("mensal");
+                if (mIsPremium){
+                    Log.d(LOG_TAG, "PREMIUM");
+                    Log.d(LOG_TAG, "TIME: " + inventory.getPurchase("mensal").getPurchaseTime());
+                    Log.d(LOG_TAG, "CANCELED: " + inventory.getPurchase("mensal").isAutoRenewing());
+                } else {
+                    Log.d(LOG_TAG, "NOT PREMIUM");
+                }
 
-            String price = inventory.getSkuDetails("mensal").getPrice();
-
-            Log.d(LOG_TAG, "Price: " + price);
-
-            // update the UI
+                // update UI accordingly
+            }
         }
     };
 
-    public boolean getPrice(){
-        List additionalSkuList = new ArrayList();
-        additionalSkuList.add("mensal");
+    public void signPremium(){
         try {
-            mHelper.queryInventoryAsync(true, additionalSkuList, additionalSkuList,
-                    mQueryFinishedListener);
+            mHelper.launchSubscriptionPurchaseFlow(this, "mensal", Constants.Intent.PURCHASE_SUBSCRIPTION,
+                    mPurchaseFinishedListener, "");
         } catch (IabHelper.IabAsyncInProgressException e){
             Log.e(LOG_TAG, e.toString());
         }
-        return true;
     }
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
+            = new IabHelper.OnIabPurchaseFinishedListener(){
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+        {
+            mHelper.flagEndAsync();
+            if (result.isFailure()) {
+                Log.d(LOG_TAG, "Error purchasing: " + result);
+                return;
+            }
+            else if (purchase.getSku().equals("mensal")) {
+                // give user access to premium content and update the UI
+                finish();
+                startActivity(getIntent());
+                System.exit(0);
+            }
+        }
+    };
 }

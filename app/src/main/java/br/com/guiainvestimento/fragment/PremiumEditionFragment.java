@@ -31,6 +31,9 @@ import butterknife.ButterKnife;
 public class PremiumEditionFragment extends BaseFragment{
     private static final String LOG_TAG = PremiumEditionFragment.class.getSimpleName();
 
+    @BindView(R.id.premium_sign_button)
+    LinearLayout mSignButton;
+
     private View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +41,15 @@ public class PremiumEditionFragment extends BaseFragment{
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_premium_edition, container, false);
         ButterKnife.bind(this, mView);
-        ((MainActivity)getActivity()).getPrice();
+        mSignButton.setOnClickListener(signButtonOnClick);
         // Sets autocomplete for stock symbol
         return mView;
     }
+
+    public View.OnClickListener signButtonOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((MainActivity)getActivity()).signPremium();
+        }
+    };
 }

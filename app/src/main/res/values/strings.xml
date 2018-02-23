@@ -546,6 +546,11 @@
     </string>
 
     <!-- Premium -->
+    <string name="premium_contribue">Contribua com o Desenvolvimento!</string>
+    <string name="premium_payment_warning">*The payment is done by Google Payments, no financial information is passed through the application.</string>
+    <string name="premium_sign_button">Sign Now!</string>
+    <string name="premium_sign_label">Sign Premium</string>
+    <string name="premium_price">R$4,90/month</string>
     <string name="premium_itens">
         \u2022 Unlimited portfolio update.\n
         \u2022 Rremove of Ads.\n
@@ -553,7 +558,7 @@
     </string>
 
     <string name="premium_description">
-        Espero que esteja gostando do aplicativo. Desenvolvi ele pois vi a falta de uma maneira fácil e prática para controlar e ver os resultados da carteira de investimento. Hoje tenho custos mensais de servidor e para pegar as cotações da Bovespa, portanto peço sua contribuição na continuação do desenvolvimento.
+        Espero que esteja gostando do aplicativo. Desenvolvi ele pois senti a falta de uma maneira fácil e prática para controlar minha carteira de investimento. Hoje tenho custos mensais de servidor e para acessar as cotações da Bovespa, portanto peço sua contribuição na continuação do desenvolvimento.
         \n\n
         Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
 
