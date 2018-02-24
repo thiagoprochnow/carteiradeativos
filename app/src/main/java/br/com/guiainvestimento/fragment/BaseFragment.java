@@ -27,10 +27,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CdiIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
+import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.util.Util;
@@ -856,11 +858,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Validate if an EditText was set with valid Treasury Symbol
-    protected boolean isValidTreasurySymbol(EditText symbol) {
+    protected boolean isValidTreasurySymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Treasury income (Only letters and numbers)
         Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;
@@ -2307,6 +2309,11 @@ public abstract class BaseFragment extends Fragment {
             // Set fixed income as active
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.ACTIVE);
 
+            Intent mServiceIntent = new Intent(mContext, CdiIntentService
+                    .class);
+            mServiceIntent.putExtra(CdiIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
+
             // Searches for existing FixedData to update value.
             // If dosent exists, creates new one
             Cursor queryCursor = mContext.getContentResolver().query(
@@ -2431,6 +2438,11 @@ public abstract class BaseFragment extends Fragment {
                     variation = currentTotal - buyTotal;
                 }
             }
+
+            Intent mServiceIntent = new Intent(mContext, TreasuryIntentService
+                    .class);
+            mServiceIntent.putExtra(TreasuryIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
 
             // Query Income table to get total of this treasury income
             String[] affectedColumn = {"sum("+ PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID+")",

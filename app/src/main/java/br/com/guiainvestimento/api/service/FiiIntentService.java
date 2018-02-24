@@ -140,7 +140,7 @@ public class FiiIntentService extends IntentService {
 
                     if (responseGet != null && responseGet.isSuccessful() && fii != null && fii.getError() == null && fii.toString().length() > 0){
                         // Success on request
-                        if (fii.getLast() != null && !fii.getLast().equalsIgnoreCase("0") && !fii.getLast().equalsIgnoreCase("0,00")){
+                        if (fii.getLast() != null && Double.valueOf(fii.getLast()) > 0){
                             fiiDataCV.put(symbol, fii.getLast());
                             updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                             updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());

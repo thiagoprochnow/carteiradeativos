@@ -30,7 +30,9 @@ public class CryptoIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
-
+    public static final String CONSULT_SYMBOL = "consult_symbol";
+    private String mResult = "";
+    private String mType;
     Handler mHandler;
 
     // Log variable
@@ -54,7 +56,8 @@ public class CryptoIntentService extends IntentService {
         try{
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
-                int success = this.addCurrencyTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                mType = ADD_SYMBOL;
+                int success = this.addCryptoTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
                 if (success == GcmNetworkManager.RESULT_SUCCESS){
                     mHandler.post(new Runnable() {
                         @Override
@@ -70,7 +73,18 @@ public class CryptoIntentService extends IntentService {
                         }
                     });
                 }
-            }else{
+            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
+                mType = CONSULT_SYMBOL;
+                mResult = this.consultCryptoTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
+                if (mResult == "") {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else{
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
             }
         }catch (Exception e){
@@ -80,7 +94,7 @@ public class CryptoIntentService extends IntentService {
 
     }
 
-    private int addCurrencyTask(TaskParams params) {
+    private int addCryptoTask(TaskParams params) {
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
         // Build retrofit base request
@@ -130,10 +144,61 @@ public class CryptoIntentService extends IntentService {
         return resultStatus;
     }
 
+    private String consultCryptoTask(TaskParams params) {
+        String result = "";
+
+        // Build retrofit base request
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CryptoService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        try {
+            // Make the request and parse the result
+            CryptoService service = retrofit.create(CryptoService.class);
+
+            String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
+
+            Call<ResponseCrypto> call;
+            Response<ResponseCrypto> response;
+            ResponseCrypto responseGetRate;
+            int count = 0;
+
+            if (symbol.equalsIgnoreCase("bitcoin")){
+                symbol = "BTC";
+            } else if(symbol.equalsIgnoreCase("litecoin")){
+                symbol = "LTC";
+            }
+
+            do {
+                call = service.getCrypto(symbol);
+                response = call.execute();
+                responseGetRate = response.body();
+                count++;
+            } while (response.code() == 400 && count < 20);
+            if (response.isSuccessful() && responseGetRate.getCryptoQuote() != null) {
+                for (Crypto currency : responseGetRate.getCryptoQuote()) {
+
+                    result = currency.getQuote();
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        if (mType == ADD_SYMBOL) {
+            this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        } else if (mType == CONSULT_SYMBOL){
+            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
+            broadcastIntent.putExtra("quote", mResult);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+        }
     }
 }

@@ -72,37 +72,44 @@ public class StockIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        // Only calls the service if the symbol is present
-        if (intent.hasExtra(ADD_SYMBOL)) {
-            mType = ADD_SYMBOL;
-            // try the Bolsa Financeira backup API
-            int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
-            if (success == GcmNetworkManager.RESULT_SUCCESS){
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        try {
+            // Only calls the service if the symbol is present
+            if (intent.hasExtra(ADD_SYMBOL)) {
+                mType = ADD_SYMBOL;
+                // try the Bolsa Financeira backup API
+                int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+                if (success == GcmNetworkManager.RESULT_SUCCESS) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
+                mType = CONSULT_SYMBOL;
+                mResult = this.consultStockTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
+                if (mResult == "") {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } else {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                throw new IOException("Missing one of the following Extras: ADD_SYMBOL, CONSULT_SYMBOL");
             }
-        } else if (intent.hasExtra(CONSULT_SYMBOL)){
-            mType = CONSULT_SYMBOL;
-            mResult = this.consultStockTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
-            if (mResult == ""){
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -158,7 +165,7 @@ public class StockIntentService extends IntentService {
 
                     if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0){
                         // Success on request
-                        if (stock.getLast() != null && !stock.getLast().equalsIgnoreCase("0") && !stock.getLast().equalsIgnoreCase("0,00")){
+                        if (stock.getLast() != null && Double.valueOf(stock.getLast()) > 0){
                             stockDataCV.put(symbol, stock.getLast());
                             updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                             updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
@@ -229,8 +236,6 @@ public class StockIntentService extends IntentService {
             Call<String> callPost = service.getConnection(CedroL, CedroP);
             Response<String> responsePost = callPost.execute();
             String responseString = responsePost.body();
-
-            ContentValues stockDataCV = new ContentValues();
 
             if (responseString.equals("true")){
                 String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);

@@ -29,8 +29,8 @@
     <dimen name="fixed_price">14dp</dimen>
     <dimen name="fixed_percentage_image_margin">0dp</dimen>
     <dimen name="fixed_percentage_text_margin">10dp</dimen>
-    <dimen name="treasury_quantity">14dp</dimen>
-    <dimen name="treasury_symbol">14dp</dimen>
+    <dimen name="treasury_quantity">12dp</dimen>
+    <dimen name="treasury_symbol">12dp</dimen>
     <dimen name="treasury_text">16dp</dimen>
     <dimen name="treasury_price">14dp</dimen>
     <dimen name="treasury_percentage_image_margin">0dp</dimen>
@@ -184,6 +184,6 @@
     <dimen name="navDrawerData_layout_height">56dp</dimen>
     <dimen name="navDrawerData_layout_marginBottom">8dp</dimen>
 
-    <dimen name="fragment_form_margin">40dp</dimen>
+    <dimen name="fragment_form_margin">30dp</dimen>
     <dimen name="fragment_form_margin_top_subhead">7dp</dimen>
 </resources>

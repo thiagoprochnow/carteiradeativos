@@ -21,6 +21,8 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.CryptoIntentService;
+import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import butterknife.BindView;
@@ -88,7 +90,7 @@ public class ConsultQuotesFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 // Validate for each inputted value
-                boolean isValidSymbol = isValidStockSymbol(mInputSymbolView);
+                boolean isValidSymbol = isValidSymbol(mInputSymbolView);
                 if (isValidSymbol) {
                     String symbol = mInputSymbolView.getText().toString();
 
@@ -96,11 +98,16 @@ public class ConsultQuotesFragment extends BaseFragment{
                     mConsultProgressBar.setVisibility(View.VISIBLE);
 
                     if (symbol.equalsIgnoreCase("Dolar") || symbol.equalsIgnoreCase("Euro")){
-
+                        Intent mCurrencyServiceIntent = new Intent(mContext, CurrencyIntentService
+                                .class);
+                        mCurrencyServiceIntent.putExtra(CurrencyIntentService.CONSULT_SYMBOL, symbol);
+                        mContext.startService(mCurrencyServiceIntent);
                     } else if (symbol.equalsIgnoreCase("Bitcoin") || symbol.equalsIgnoreCase("Litecoin")){
-
+                        Intent mCryptoServiceIntent = new Intent(mContext, CryptoIntentService
+                                .class);
+                        mCryptoServiceIntent.putExtra(CryptoIntentService.CONSULT_SYMBOL, symbol);
+                        mContext.startService(mCryptoServiceIntent);
                     } else {
-
                         Intent mStockServiceIntent = new Intent(mContext, StockIntentService
                                 .class);
                         mStockServiceIntent.putExtra(StockIntentService.CONSULT_SYMBOL, symbol);

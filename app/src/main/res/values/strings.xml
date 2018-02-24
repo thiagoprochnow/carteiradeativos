@@ -81,6 +81,7 @@
     <string name="wrong_price">Price should be a number</string>
     <string name="wrong_brokerage">Brokerage should be a number</string>
     <string name="wrong_total">Total should be a number</string>
+    <string name="wrong_gain_rate">Gain Rate should be a number</string>
     <string name="wrong_percentual_objective">Objective should be equals or less than 100</string>
     <string name="wrong_current_price">Current price is not valid</string>
     <string name="wrong_current_total">Current total is not valid</string>
@@ -218,6 +219,9 @@
     <string name="data_total_gain_label">Gain</string>
     <string name="dialog_stock_update_failed_message">This stock could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="dialog_fii_update_failed_message">This Fii could not be update automatically, please input current price manually by clicking on Edit button.</string>
+    <string name="dialog_treasury_update_failed_message">This treasury could not be update automatically, please input current price manually by clicking on Edit button.</string>
+    <string name="fixed_update_failed_message">Enter on this Fixed Income and edit each "Buy" to include CDI % Rate so it can be updated automatically.</string>
+
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>
@@ -272,6 +276,8 @@
     <string name="portfolio_label">Portfolio</string>
     <string name="asset_allocation_label">Asset Allocation</string>
     <string name="growth_chart_label">Growth Chart</string>
+    <string name="growth_chart_current">Current</string>
+    <string name="growth_chart_bought">Bought</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Overview</string>
@@ -394,6 +400,8 @@
     <string name="fixed_rentability_type_pre">Pre</string>
     <string name="fixed_rentability_type_index">Indexed</string>
     <string name="fixed_buy_value">Buy total value</string>
+    <string name="fixed_gain_rate">Gain Rate (%CDI)</string>
+    <string name="fixed_gain_rate_hint">Ex: 110</string>
     <string name="fixed_sell_value">Sell total value</string>
 
     <!-- Add others income Form Fragment -->
@@ -437,6 +445,7 @@
     <string name="title_coming_soon">Coming Soon</string>
     <string name="title_backup_restore">Backup and Restore</string>
     <string name="title_consult_quotes">Consult Quotes</string>
+    <string name="title_premium_edition">Premium Edition</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -463,10 +472,15 @@
     <string name="success_updating_fii">Fiis successfully updated.</string>
     <string name="success_updating_currency">Currency successfully updated.</string>
     <string name="success_updating_crypto_currency">Crypto currency successfully updated.</string>
+    <string name="success_updating_treasury">Treasury successfully updated.</string>
+    <string name="success_updating_fixed">Fixed income successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>
     <string name="error_updating_crypto_currency">Error updating crypto currency, please try again later.</string>
+    <string name="error_updating_treasury">Error updating treasury, please try again later.</string>
+    <string name="error_updating_fixed">Error updating fixed income, please try again later.</string>
+    <string name="error_updating_fixed_rate">Error updating fixed income. One or more Buy of Fixed Income are without the CDI Rate, please edit and update Buy Values to update your Fixed Income automatically.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.
@@ -529,6 +543,38 @@
 
         If you see any bug or problem or have any ideias for upgrades that you are missing in this application and think would be useful, please don\'t hesitate to contact us.
         We want to make this application the most useful possible for investors.\n\n
+    </string>
+
+    <!-- Premium -->
+    <string name="premium_contribue">Contribua com o Desenvolvimento!</string>
+    <string name="premium_payment_warning">*The payment is done by Google Payments, no financial information is passed through the application.</string>
+    <string name="premium_sign_button">Sign Now!</string>
+    <string name="premium_sign_label">Sign Premium</string>
+    <string name="premium_price">R$4,90/month</string>
+    <string name="premium_itens">
+        \u2022 Unlimited portfolio update.\n
+        \u2022 Rremove of Ads.\n
+        \u2022 Access to new resources as soon as they are developed.\n
+    </string>
+
+    <string name="premium_description">
+        Espero que esteja gostando do aplicativo. Desenvolvi ele pois senti a falta de uma maneira fácil e prática para controlar minha carteira de investimento. Hoje tenho custos mensais de servidor e para acessar as cotações da Bovespa, portanto peço sua contribuição na continuação do desenvolvimento.
+        \n\n
+        Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
+
+        \u2022 Área para o lançamento de Opções, compra e venda de PUT e CALL.\n
+        \u2022 Renda fixa atrelada ao IPCA automatizada.\n
+        \u2022 Área para o lançamento de Fundos de investimento automatizados.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
+        \u2022 Tabela mostrando o crescimento do patrimônio e a variação mensal.\n
+        \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
+        \u2022 Tutorial.\n
+        \u2022 Botão de ajuda explicando cada informação fornecida.\n
+        \u2022 Constante correção de problemas.\n
+        \u2022 Melhorias constantes baseado nos feedbacks.\n\n
+
+        Aqueles quer forem premium, terão acesso a essas funcionalidades assim que forem desenvolvidas.
     </string>
 
     <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>

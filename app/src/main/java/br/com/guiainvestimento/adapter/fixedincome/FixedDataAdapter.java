@@ -1,8 +1,10 @@
 package br.com.guiainvestimento.adapter.fixedincome;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -59,6 +62,8 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         FixedDataViewHolder viewHolder = (FixedDataViewHolder) holder;
         double totalGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_TOTAL_GAIN));
+        int updateStatus = mCursor.getInt(mCursor.getColumnIndex
+                (PortfolioContract.FixedData.COLUMN_UPDATE_STATUS));
         Locale locale = new Locale("pt", "BR");
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -102,6 +107,21 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
             viewHolder.fixedCardView.setLayoutParams(params);
         }
+
+        // If the stock could not be updated automatically, give notice and option to update it manually
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            viewHolder.updateError.setVisibility(View.GONE);
+        } else {
+            viewHolder.updateError.setVisibility(View.VISIBLE);
+            viewHolder.updateError.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Use the Builder class for convenient dialog construction
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.fixed_update_failed_message), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
         viewHolder.fixedCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -192,6 +212,9 @@ public class FixedDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
+
+        @BindView(R.id.updateError)
+        ImageView updateError;
 
         @BindView(R.id.menuEdit)
         ImageView menuEdit;

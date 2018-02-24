@@ -31,6 +31,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
     private EditText mInputSymbolView;
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
+    private EditText mInputGainRateView;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -53,6 +54,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        mInputGainRateView = (EditText) mView.findViewById(R.id.inputGainRate);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -69,6 +71,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
         // Adding input filters
         mInputBuyTotalView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
+        mInputGainRateView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -78,13 +81,15 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         // Validate for each inputted value
         boolean isValidSymbol = isValidFixedSymbol(mInputSymbolView);
         boolean isValidBuyTotal = isValidDouble(mInputBuyTotalView);
+        boolean isValidGainRate = isValidDouble(mInputGainRateView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fixed income
-        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate && isValidGainRate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
+            double gainRate = Double.parseDouble(mInputGainRateView.getText().toString())/100;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -95,6 +100,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, buyTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE, gainRate);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.BUY);
 
             // Adds to the database
@@ -121,6 +127,9 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyTotal){
                 mInputBuyTotalView.setError(this.getString(R.string.wrong_total));
+            }
+            if(!isValidGainRate){
+                mInputGainRateView.setError(this.getString(R.string.wrong_gain_rate));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

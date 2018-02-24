@@ -31,6 +31,8 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, Constants.Provider.PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO_GROWTH, Constants.Provider.PORTFOLIO_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_BUY_GROWTH, Constants.Provider.BUY_GROWTH);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI, Constants.Provider.CDI);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI_WITH_DATE, Constants.Provider.CDI_WITH_DATE);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_INCOME_GROWTH, Constants.Provider.INCOME_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
@@ -611,6 +613,30 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.CDI:
+                returnCursor = db.query(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.CDI_WITH_DATE:
+                returnCursor = db.query(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        projection,
+                        PortfolioContract.Cdi.COLUMN_TIMESTAMP + " > ?",
+                        new String[]{PortfolioContract.Cdi.getCdiFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1020,6 +1046,19 @@ public class PortfolioProvider extends ContentProvider {
                 returnUri = PortfolioContract.OthersIncome.URI;
                 break;
 
+            case Constants.Provider.CDI:
+                _id = db.insert(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.Cdi.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1357,6 +1396,14 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.CDI:
+                rowsDeleted = db.delete(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1645,6 +1692,12 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
+            case Constants.Provider.CDI:
+                rowsUpdated = db.update(PortfolioContract.Cdi.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -1766,6 +1819,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.OthersTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.CDI:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.Cdi.TABLE_NAME,
                                 null,
                                 value
                         );

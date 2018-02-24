@@ -7,6 +7,7 @@
     <!-- Optional permission for App measurement to run. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -40,6 +41,8 @@
         <service android:name="br.com.guiainvestimento.api.service.FiiIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CryptoIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.TreasuryIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.CdiIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"

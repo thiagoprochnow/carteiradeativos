@@ -15,7 +15,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;

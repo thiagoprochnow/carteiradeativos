@@ -81,6 +81,7 @@
     <string name="wrong_price">Preço deve ser um número</string>
     <string name="wrong_brokerage">Corretagem deve ser um número</string>
     <string name="wrong_total">Total deve ser um número</string>
+    <string name="wrong_gain_rate">Ganho deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_current_price">Preço atual não é valido</string>
     <string name="wrong_current_total">Total atual não é valido</string>
@@ -219,6 +220,8 @@
     <string name="data_total_gain_label">Ganho</string>
     <string name="dialog_stock_update_failed_message">Essa ação não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
     <string name="dialog_fii_update_failed_message">Esse fundo imobiliário não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="dialog_treasury_update_failed_message">Esse Tesouro não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="fixed_update_failed_message">Entre nessa Renda Fixa e edite cada "Compra" e inclua a % do CDI para que seja atualizado automaticamente.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>
@@ -273,6 +276,8 @@
     <string name="portfolio_label">Carteira Completa</string>
     <string name="asset_allocation_label">Alocação de Ativos</string>
     <string name="growth_chart_label">Gráfico de Crescimento</string>
+    <string name="growth_chart_current">Atual</string>
+    <string name="growth_chart_bought">Comprado</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
@@ -395,6 +400,8 @@
     <string name="fixed_rentability_type_pre">Pré</string>
     <string name="fixed_rentability_type_index">Indexado</string>
     <string name="fixed_buy_value">Valor total comprado</string>
+    <string name="fixed_gain_rate">Ganho (%CDI)</string>
+    <string name="fixed_gain_rate_hint">Ex: 110</string>
     <string name="fixed_sell_value">Valor total vendido</string>
 
     <!-- Add others income Form Fragment -->
@@ -438,6 +445,7 @@
     <string name="title_coming_soon">Em Breve</string>
     <string name="title_backup_restore">Cópia e Restauração</string>
     <string name="title_consult_quotes">Consulta de Cotações</string>
+    <string name="title_premium_edition">Versão Premium</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -464,10 +472,15 @@
     <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
     <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
     <string name="success_updating_crypto_currency">Cripto moedas atualizadas com sucesso.</string>
+    <string name="success_updating_treasury">Tesouro atualizado com sucesso.</string>
+    <string name="success_updating_fixed">Renda fixa atualizada com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_treasury">Erro ao atualizar tesouro, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fixed">Erro ao atualizar renda fixa, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fixed_rate">Erro ao atualizar renda fixa. Um ou mais Compras de Renda Fixa estão sem a % do CDI, por favor edite e atualize seus valores de compras para atualizar a renda fixa automaticamente.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
@@ -530,6 +543,38 @@
 
         Se você encontrou algum problema ou tem alguma ideia de melhoria para o aplicativo e acha que seria interessante, por favor não hesite em nos contatar.
         Queremos fazer esse aplicativo o melhor possível para os investidores.\n\n
+    </string>
+
+    <!-- Premium -->
+    <string name="premium_contribue">Contribua com o Desenvolvimento!</string>
+    <string name="premium_payment_warning">*Pagamento é feito pelo Google Payments, nenhuma informação financeira é passada para o aplicativo.</string>
+    <string name="premium_sign_button">Quero Assinar!</string>
+    <string name="premium_sign_label">Assine o Premium</string>
+    <string name="premium_price">R$4,90/mês</string>
+    <string name="premium_itens">
+        \u2022 Acesso ilimitado a atualizações automatica do portfólio.\n
+        \u2022 Remoção de propagandas.\n
+        \u2022 Acesso a novos recursos assim que forem desenvolvidos.\n
+    </string>
+
+    <string name="premium_description">
+        Espero que esteja gostando do aplicativo. Desenvolvi ele pois senti a falta de uma maneira fácil e prática para controlar minha carteira de investimento. Hoje tenho custos mensais de servidor e para acessar as cotações da Bovespa, portanto peço sua contribuição na continuação do desenvolvimento.
+        \n\n
+        Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
+
+        \u2022 Área para o lançamento de Opções, compra e venda de PUT e CALL.\n
+        \u2022 Renda fixa atrelada ao IPCA automatizada.\n
+        \u2022 Área para o lançamento de Fundos de investimento automatizados.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
+        \u2022 Tabela mostrando o crescimento do patrimônio e a variação mensal.\n
+        \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
+        \u2022 Tutorial.\n
+        \u2022 Botão de ajuda explicando cada informação fornecida.\n
+        \u2022 Constante correção de problemas.\n
+        \u2022 Melhorias constantes baseado nos feedbacks.\n\n
+
+        Aqueles quer forem premium, terão acesso a essas funcionalidades assim que forem desenvolvidas.
     </string>
 
     <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>
