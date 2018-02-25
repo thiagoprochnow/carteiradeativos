@@ -475,6 +475,7 @@
     <string name="success_updating_treasury">Treasury successfully updated.</string>
     <string name="success_updating_fixed">Fixed income successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
+    <string name="error_updating_stocks_limit">Stock update limit of 5 stocks reached. Update manually or upgrade to PREMIUM version for unlimited update.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
     <string name="error_updating_currency">Error updating currency, please try again later.</string>
     <string name="error_updating_crypto_currency">Error updating crypto currency, please try again later.</string>

@@ -475,6 +475,7 @@
     <string name="success_updating_treasury">Tesouro atualizado com sucesso.</string>
     <string name="success_updating_fixed">Renda fixa atualizada com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_stocks_limit">Limite de atualização automática de 5 ações atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>

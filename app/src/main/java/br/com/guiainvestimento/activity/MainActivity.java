@@ -26,6 +26,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+
 import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -68,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     protected DrawerLayout mDrawerLayout;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    private InterstitialAd mInterstitialAd;
+    private String testAppID = "ca-app-pub-3940256099942544~3347511713";
+    private String testInterstitialID = "ca-app-pub-3940256099942544/1033173712";
+    private String productionAppID = "ca-app-pub-8553334286086825~3289173909";
+    private String productionInterstitialID = "ca-app-pub-8553334286086825/2909899959";
 
     private final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlkgmReCxrtpx7ZEU1oTxzwlEedEFKy41W+J9KMSVB74mrzxFCBq+BNnA72RKEcOAhBkYPzDF6Ku8LErZK+/1JkszJ6EgBjF7AXyf6Auav9uDsn1PvBzt6kUNa5blJtmsEJ+WTFW82uVJ9O+1QL3nMzdUPx+cpDf6Vx7gSzy2DSu2JVjHZVTW98flsSeYHieWiL1+OFQwv68PpFbQ8QS4hwEzQsPIbqdKCw9IT061OgAIcBhh37kBWmfbc5PfxHkUupv0eiHk2Df9lrNpMcWiZQH8m6wiennbSLYNj+qOSngoy0xaeYIOti0JiuLluiNswOour6CFzcEbuQ//MrkXPQIDAQAB";
 
@@ -78,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mCurrencyReceiver = false;
     boolean mTreasuryReceiver = false;
     boolean mFixedReceiver = false;
+    private boolean mIsPremium = true;
+    boolean mAdFailedLoading = false;
+    private Context context;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -88,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         setContentView(R.layout.activity_main);
         setUpToolbar();
         setupNavDrawer();
+        context = this;
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -355,8 +369,20 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 ProgressBar spinner = new ProgressBar(this);
                 spinner.getIndeterminateDrawable().setColorFilter(
                         ContextCompat.getColor(this,R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
-                item.setActionView(spinner);
-                refreshPortfolio();
+                if (!isPremium()){
+                    if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                        item.setActionView(spinner);
+                    } else if(mAdFailedLoading){
+                        refreshPortfolio();
+                        item.setActionView(spinner);
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.loading_ad), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    item.setActionView(spinner);
+                    refreshPortfolio();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -576,7 +602,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
     // Refresh the portfolio by getting the values from their respective services and updating on the tables
     public void refreshPortfolio(){
-
         //Stock Refresh
         Intent mStockServiceIntent = new Intent(this, StockIntentService
                 .class);
@@ -603,6 +628,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
             } while (queryCursor.moveToNext());
             mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
+            mStockServiceIntent.putExtra(StockIntentService.PREMIUM, isPremium());
             startService(mStockServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely
@@ -853,22 +879,22 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result,
                                              Inventory inventory) {
-            boolean mIsPremium;
             if (result.isFailure()) {
                 // handle error here
             }
             else {
                 // does the user have the premium upgrade?
                 mIsPremium = inventory.hasPurchase("mensal");
-                if (mIsPremium){
-                    Log.d(LOG_TAG, "PREMIUM");
-                    Log.d(LOG_TAG, "TIME: " + inventory.getPurchase("mensal").getPurchaseTime());
-                    Log.d(LOG_TAG, "CANCELED: " + inventory.getPurchase("mensal").isAutoRenewing());
-                } else {
-                    Log.d(LOG_TAG, "NOT PREMIUM");
-                }
-
                 // update UI accordingly
+                if (!mIsPremium) {
+                    initializeAds();
+                    // Menu of loading ads
+                    if (mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded() && !mAdFailedLoading) {
+                        mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
+                    } else if (mAdFailedLoading == true) {
+                        mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                    }
+                }
             }
         }
     };
@@ -900,4 +926,59 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             }
         }
     };
+
+    public boolean isPremium(){
+        return mIsPremium;
+    }
+
+    public void initializeAds(){
+        //Initialize MobileAds
+        MobileAds.initialize(this, testAppID);
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(testInterstitialID);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                if (mMenu != null) {
+                    mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                }
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                mAdFailedLoading = true;
+                if (mMenu != null) {
+                    mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                }
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                refreshPortfolio();
+                // Code to be executed when when the interstitial ad is closed.
+                if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    mInterstitialAd.loadAd(adRequest);
+                }
+            }
+       });
+
+        if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mInterstitialAd.loadAd(adRequest);
+        }
+    }
 }

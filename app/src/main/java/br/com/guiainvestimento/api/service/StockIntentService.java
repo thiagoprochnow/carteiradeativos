@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.LogRecord;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.activity.MainActivity;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.StockQuote;
@@ -54,6 +55,7 @@ public class StockIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
+    public static final String PREMIUM = "premium";
     public static final String CONSULT_SYMBOL = "consult_symbol";
 
     /**
@@ -83,6 +85,13 @@ public class StockIntentService extends IntentService {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (success == GcmNetworkManager.RESULT_RESCHEDULE){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks_limit), Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
@@ -116,7 +125,8 @@ public class StockIntentService extends IntentService {
     private int addStockTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
+        boolean isPremium = params.getExtras().getBoolean(StockIntentService.PREMIUM, true);
+        int limit = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
@@ -154,36 +164,52 @@ public class StockIntentService extends IntentService {
                 String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
                 for (String symbol: symbols){
-                    Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
-                    Response<StockQuote> responseGet = callGet.execute();
-                    StockQuote stock = null;
-                    if (responseGet != null && responseGet.isSuccessful()) {
-                        stock = responseGet.body();
-                    }
+                    if (limit < 5) {
+                        Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
+                        Response<StockQuote> responseGet = callGet.execute();
+                        StockQuote stock = null;
+                        if (responseGet != null && responseGet.isSuccessful()) {
+                            stock = responseGet.body();
+                        }
 
-                    ContentValues updateStock = new ContentValues();
+                        ContentValues updateStock = new ContentValues();
 
-                    if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0){
-                        // Success on request
-                        if (stock.getLast() != null && Double.valueOf(stock.getLast()) > 0){
-                            stockDataCV.put(symbol, stock.getLast());
-                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
+                        if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0) {
+                            // Success on request
+                            if (stock.getLast() != null && Double.valueOf(stock.getLast()) > 0) {
+                                stockDataCV.put(symbol, stock.getLast());
+                                updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                                updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
+                            } else {
+                                updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                                updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+                            }
                         } else {
+                            // Mark symbol as failer and set NOT UPDATED on sql db
                             updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                             updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
                         }
+
+                        String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                        String[] updatedSelectionArguments = {symbol};
+                        int updatedRows = this.getContentResolver().update(
+                                PortfolioContract.StockData.URI,
+                                updateStock, updateSelection, updatedSelectionArguments);
+                        if (!isPremium) {
+                            limit++;
+                        }
                     } else {
-                        // Mark symbol as failer and set NOT UPDATED on sql db
+                        // Limit reach, change Not Updated status
+                        ContentValues updateStock = new ContentValues();
                         updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                         updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
-                    }
 
-                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
-                    String[] updatedSelectionArguments = {symbol};
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.URI,
-                            updateStock, updateSelection, updatedSelectionArguments);
+                        String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                        String[] updatedSelectionArguments = {symbol};
+                        int updatedRows = this.getContentResolver().update(
+                                PortfolioContract.StockData.URI,
+                                updateStock, updateSelection, updatedSelectionArguments);
+                    }
                 }
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
@@ -194,7 +220,11 @@ public class StockIntentService extends IntentService {
                 int updatedRows = this.getContentResolver().update(
                         PortfolioContract.StockData.BULK_UPDATE_URI,
                         stockDataCV, null, null);
-                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                if (limit <= 5) {
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
+                }
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
