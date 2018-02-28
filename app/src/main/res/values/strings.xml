@@ -553,6 +553,7 @@
     <string name="premium_payment_warning">*The payment is done by Google Payments, no financial information is passed through the application.</string>
     <string name="premium_sign_button">Sign Now!</string>
     <string name="premium_sign_label">Sign Premium</string>
+    <string name="premium_try">Try 1 Month Free!</string>
     <string name="premium_price">R$4,90/month</string>
     <string name="premium_itens">
         \u2022 Unlimited portfolio update.\n
