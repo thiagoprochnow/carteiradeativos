@@ -477,9 +477,11 @@
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
     <string name="error_updating_stocks_limit">Limite de atualização automática de 5 ações atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii_limit">Limite de atualização automática de 3 fundos imobiliários atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_treasury">Erro ao atualizar tesouro, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_treasury_limit">Limite de atualização automática de 2 tesouros atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_fixed">Erro ao atualizar renda fixa, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fixed_rate">Erro ao atualizar renda fixa. Um ou mais Compras de Renda Fixa estão sem a % do CDI, por favor edite e atualize seus valores de compras para atualizar a renda fixa automaticamente.</string>
 

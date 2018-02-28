@@ -195,9 +195,6 @@ public class StockIntentService extends IntentService {
                         int updatedRows = this.getContentResolver().update(
                                 PortfolioContract.StockData.URI,
                                 updateStock, updateSelection, updatedSelectionArguments);
-                        if (!isPremium) {
-                            limit++;
-                        }
                     } else {
                         // Limit reach, change Not Updated status
                         ContentValues updateStock = new ContentValues();
@@ -209,6 +206,10 @@ public class StockIntentService extends IntentService {
                         int updatedRows = this.getContentResolver().update(
                                 PortfolioContract.StockData.URI,
                                 updateStock, updateSelection, updatedSelectionArguments);
+                    }
+
+                    if (!isPremium) {
+                        limit++;
                     }
                 }
             } else {

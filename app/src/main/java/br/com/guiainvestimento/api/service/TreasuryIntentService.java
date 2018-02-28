@@ -59,6 +59,7 @@ public class TreasuryIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
+    public static final String PREMIUM = "premium";
     public static final String CONSULT_SYMBOL = "consult_symbol";
 
     /**
@@ -88,6 +89,13 @@ public class TreasuryIntentService extends IntentService {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_treasury), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (success == GcmNetworkManager.RESULT_RESCHEDULE){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_treasury_limit), Toast.LENGTH_LONG).show();
                         }
                     });
                 } else {
@@ -122,6 +130,8 @@ public class TreasuryIntentService extends IntentService {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
+        boolean isPremium = params.getExtras().getBoolean(TreasuryIntentService.PREMIUM, true);
+        int limit = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(TreasuryIntentService.ADD_SYMBOL).isEmpty()) {
@@ -149,43 +159,58 @@ public class TreasuryIntentService extends IntentService {
             ContentValues treasuryDataCV = new ContentValues();
 
             for (String symbol: symbols){
+                if (limit < 2) {
+                    // Find id of symbol
+                    String[] treasuryTreasury = Constants.Symbols.TREASURY;
+                    int index = Arrays.asList(treasuryTreasury).indexOf(symbol);
+                    String treasuryId = "0";
+                    if (index >= 0) {
+                        String[] treasuryIds = Constants.Symbols.TREASURY_ID;
+                        treasuryId = treasuryIds[index];
+                    }
 
-                // Find id of symbol
-                String[] treasuryTreasury = Constants.Symbols.TREASURY;
-                int index = Arrays.asList(treasuryTreasury).indexOf(symbol);
-                String treasuryId = "0";
-                if (index >= 0){
-                    String[] treasuryIds = Constants.Symbols.TREASURY_ID;
-                    treasuryId = treasuryIds[index];
-                }
+                    Call<TreasuryQuote> callGet = service.getTreasury(treasuryId);
+                    retrofit2.Response<TreasuryQuote> responseGet = callGet.execute();
+                    TreasuryQuote treasury = null;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        treasury = responseGet.body();
+                    }
 
-                Call<TreasuryQuote> callGet = service.getTreasury(treasuryId);
-                retrofit2.Response<TreasuryQuote> responseGet = callGet.execute();
-                TreasuryQuote treasury = null;
-                if (responseGet != null && responseGet.isSuccessful()) {
-                    treasury = responseGet.body();
-                }
+                    ContentValues updateTreasury = new ContentValues();
 
-                ContentValues updateTreasury = new ContentValues();
-
-                if (responseGet != null && responseGet.isSuccessful() && treasury != null && treasury.getError() == null && treasury.toString().length() > 0){
-                    // Success on request
-                    if (treasury.getValor() != null){
-                        treasuryDataCV.put(symbol, treasury.getValor());
-                        updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                    if (responseGet != null && responseGet.isSuccessful() && treasury != null && treasury.getError() == null && treasury.toString().length() > 0) {
+                        // Success on request
+                        if (treasury.getValor() != null) {
+                            treasuryDataCV.put(symbol, treasury.getValor());
+                            updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                        } else {
+                            updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        }
                     } else {
+                        // Mark symbol as failer and set NOT UPDATED on sql db
                         updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                     }
+
+                    String updateSelection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.TreasuryData.URI,
+                            updateTreasury, updateSelection, updatedSelectionArguments);
                 } else {
-                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    // Limit reach, change Not Updated status
+                    ContentValues updateTreasury = new ContentValues();
                     updateTreasury.put(PortfolioContract.TreasuryData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+
+                    String updateSelection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.TreasuryData.URI,
+                            updateTreasury, updateSelection, updatedSelectionArguments);
                 }
 
-                String updateSelection = PortfolioContract.TreasuryData.COLUMN_SYMBOL + " = ?";
-                String[] updatedSelectionArguments = {symbol};
-                int updatedRows = this.getContentResolver().update(
-                        PortfolioContract.TreasuryData.URI,
-                        updateTreasury, updateSelection, updatedSelectionArguments);
+                if (!isPremium) {
+                    limit++;
+                }
             }
 
             if (treasuryDataCV.size() > 0){
@@ -193,7 +218,11 @@ public class TreasuryIntentService extends IntentService {
                 int updatedRows = this.getContentResolver().update(
                         PortfolioContract.TreasuryData.BULK_UPDATE_URI,
                         treasuryDataCV, null, null);
-                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                if (limit <= 2) {
+                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+                } else {
+                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
+                }
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }

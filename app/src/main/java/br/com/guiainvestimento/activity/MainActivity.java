@@ -661,6 +661,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
             } while (queryCursor.moveToNext());
             mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium());
             startService(mFiiServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely
@@ -693,6 +694,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
             } while (queryCursor.moveToNext());
             mTreasuryServiceIntent.putExtra(TreasuryIntentService.ADD_SYMBOL, symbol);
+            mTreasuryServiceIntent.putExtra(TreasuryIntentService.PREMIUM, isPremium());
             startService(mTreasuryServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely
