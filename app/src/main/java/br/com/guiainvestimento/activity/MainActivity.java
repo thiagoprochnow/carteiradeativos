@@ -891,9 +891,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 if (!mIsPremium) {
                     initializeAds();
                     // Menu of loading ads
-                    if (mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded() && !mAdFailedLoading) {
+                    if (mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded() && !mAdFailedLoading && mMenu != null) {
                         mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
-                    } else if (mAdFailedLoading == true) {
+                    } else if (mAdFailedLoading == true && mMenu != null) {
                         mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
                     }
                 }
@@ -935,9 +935,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
     public void initializeAds(){
         //Initialize MobileAds
-        MobileAds.initialize(this, testAppID);
+        MobileAds.initialize(this, productionAppID);
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(testInterstitialID);
+        mInterstitialAd.setAdUnitId(productionInterstitialID);
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
