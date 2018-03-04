@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mTreasuryReceiver = false;
     boolean mFixedReceiver = false;
     private boolean mIsPremium = true;
+    private String mPremiumType = "";
     boolean mAdFailedLoading = false;
     private Context context;
 
@@ -886,7 +887,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             }
             else {
                 // does the user have the premium upgrade?
-                mIsPremium = inventory.hasPurchase("mensal");
+                mIsPremium = (inventory.hasPurchase("mensal") || inventory.hasPurchase("semestral"));
+
+                if (inventory.hasPurchase("mensal")){
+                    mPremiumType = "mensal";
+                } else if(inventory.hasPurchase("semestral")){
+                    mPremiumType = "semestral";
+                }
+
                 // update UI accordingly
                 if (!mIsPremium) {
                     initializeAds();
@@ -901,10 +909,17 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
     };
 
-    public void signPremium(){
+    public void signPremium(String type){
         try {
-            mHelper.launchSubscriptionPurchaseFlow(this, "mensal", Constants.Intent.PURCHASE_SUBSCRIPTION,
-                    mPurchaseFinishedListener, "");
+            if(mIsPremium){
+                List<String> oldSkus = new ArrayList<String>();
+                oldSkus.add(mPremiumType);
+                mHelper.launchPurchaseFlow(this,type,"subs",oldSkus,Constants.Intent.PURCHASE_SUBSCRIPTION,
+                        mPurchaseFinishedListener,"");
+            } else {
+                mHelper.launchSubscriptionPurchaseFlow(this, type, Constants.Intent.PURCHASE_SUBSCRIPTION,
+                        mPurchaseFinishedListener, "");
+            }
         } catch (IabHelper.IabAsyncInProgressException e){
             Log.e(LOG_TAG, e.toString());
         }
@@ -920,7 +935,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 Log.d(LOG_TAG, "Error purchasing: " + result);
                 return;
             }
-            else if (purchase.getSku().equals("mensal")) {
+            else if (purchase.getSku().equals("mensal") || purchase.getSku().equals("semestral")) {
                 // give user access to premium content and update the UI
                 finish();
                 startActivity(getIntent());

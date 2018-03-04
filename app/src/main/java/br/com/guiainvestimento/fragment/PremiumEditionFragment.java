@@ -34,6 +34,9 @@ public class PremiumEditionFragment extends BaseFragment{
     @BindView(R.id.premium_sign_button)
     LinearLayout mSignButton;
 
+    @BindView(R.id.premium_sign_semester_button)
+    LinearLayout mSignSemesterButton;
+
     private View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +45,7 @@ public class PremiumEditionFragment extends BaseFragment{
         mView = inflater.inflate(R.layout.fragment_premium_edition, container, false);
         ButterKnife.bind(this, mView);
         mSignButton.setOnClickListener(signButtonOnClick);
+        mSignSemesterButton.setOnClickListener(signSemesterButtonOnClick);
         // Sets autocomplete for stock symbol
         return mView;
     }
@@ -49,7 +53,14 @@ public class PremiumEditionFragment extends BaseFragment{
     public View.OnClickListener signButtonOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((MainActivity)getActivity()).signPremium();
+            ((MainActivity)getActivity()).signPremium("mensal");
+        }
+    };
+
+    public View.OnClickListener signSemesterButtonOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((MainActivity)getActivity()).signPremium("semestral");
         }
     };
 }

@@ -551,10 +551,12 @@
     <!-- Premium -->
     <string name="premium_contribue">Contribua com o Desenvolvimento!</string>
     <string name="premium_payment_warning">*The payment is done by Google Payments, no financial information is passed through the application.</string>
-    <string name="premium_sign_button">Sign Now!</string>
+    <string name="premium_sign_button">Sign Monthly!</string>
+    <string name="premium_sign_semester_button">Sign Semesterly!</string>
     <string name="premium_sign_label">Sign Premium</string>
     <string name="premium_try">Try 1 Month Free!</string>
     <string name="premium_price">R$4,90/month</string>
+    <string name="premium_semester_price">R$14,90/Semester</string>
     <string name="premium_itens">
         \u2022 Unlimited portfolio update.\n
         \u2022 Rremove of Ads.\n
