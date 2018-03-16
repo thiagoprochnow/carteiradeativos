@@ -236,7 +236,7 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         TextView mes = new TextView(mContext);
                         mes.setText(mesAbv);
-                        mes.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+                        mes.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
                         mes.setGravity(Gravity.CENTER);
                         mes.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                         mes.setWidth(0);
@@ -245,7 +245,7 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         TextView total = new TextView(mContext);
                         total.setText(String.format(formatter.format(valueTotal)));
-                        total.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+                        total.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
                         total.setGravity(Gravity.CENTER);
                         total.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                         total.setWidth(0);
@@ -267,11 +267,20 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                             cal.setTimeInMillis(timestampLookahead);
                             lookaheadMonth = DateFormat.format("MM-yyyy", cal).toString();
                             buyGain = getBuyGain(currentMonth, lookaheadMonth);
+                        } else {
+                            String currentMonth = "";
+                            String lookaheadMonth = "";
+
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(timestamp);
+                            currentMonth = DateFormat.format("MM-yyyy", cal).toString();
+
+                            buyGain = getBuyGain(currentMonth, "0");
                         }
 
                         TextView compra = new TextView(mContext);
                         compra.setText(String.format(formatter.format(buyGain)));
-                        compra.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+                        compra.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
                         compra.setGravity(Gravity.CENTER);
                         compra.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                         compra.setWidth(0);
@@ -283,7 +292,7 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                         TextView ganho = new TextView(mContext);
                         ganho.setText(String.format(formatter.format(gain)));
-                        ganho.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+                        ganho.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
                         ganho.setGravity(Gravity.CENTER);
                         ganho.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                         ganho.setWidth(0);
@@ -295,7 +304,7 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }
                         TextView ganhoPer = new TextView(mContext);
                         ganhoPer.setText(String.format("%.2f", gainPercent) + "%");
-                        ganhoPer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+                        ganhoPer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
                         ganhoPer.setGravity(Gravity.CENTER);
                         ganhoPer.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
                         ganhoPer.setWidth(0);
@@ -481,9 +490,13 @@ public class FixedOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         try {
             Date date = formatter.parse(currentDate);
-            Date date2 = formatter.parse(lookaheadDate);
             timestamp = date.getTime();
-            timestampAhead = date2.getTime();
+            if (lookaheadDate.equals("0")) {
+                Date date2 = formatter.parse(lookaheadDate);
+                timestampAhead = date2.getTime();
+            } else {
+                timestampAhead = System.currentTimeMillis();
+            }
         } catch (ParseException e){
             Log.d(LOG_TAG, e.toString());
         }
