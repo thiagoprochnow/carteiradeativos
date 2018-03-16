@@ -531,7 +531,7 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         try {
             Date date = formatter.parse(currentDate);
             timestamp = date.getTime();
-            if (lookaheadDate.equals("0")) {
+            if (!lookaheadMonth.equals("0")) {
                 Date date2 = formatter.parse(lookaheadDate);
                 timestampAhead = date2.getTime();
             } else {

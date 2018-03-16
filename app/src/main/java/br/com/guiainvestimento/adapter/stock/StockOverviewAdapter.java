@@ -547,7 +547,7 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
         try {
             Date date = formatter.parse(currentDate);
             timestamp = date.getTime();
-            if (lookaheadDate.equals("0")) {
+            if (!lookaheadMonth.equals("0")) {
                 Date date2 = formatter.parse(lookaheadDate);
                 timestampAhead = date2.getTime();
             } else {
