@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/chart_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="3dp"
+    app:cardPreventCornerOverlap="false"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="80dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardUseCompatPadding="false"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="2dp"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/chart_header_label"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:textColor="@color/white"
+            android:text="@string/growth_chart_label"
+            android:textSize="@dimen/treasury_symbol"
+            android:background="@color/header_title"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:layout_margin="5dp">
+                <TextView
+                    android:text="Mês"
+                    android:gravity="center"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:text="Total(R$)"
+                    android:gravity="center"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:text="Compra/Venda(R$)"
+                    android:gravity="center"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dip"/>
+                <TextView
+                    android:text="Ganho(R$)"
+                    android:gravity="center"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"/>
+                <TextView
+                    android:text="Ganho(%)"
+                    android:gravity="center"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"/>
+            </TableRow>
+            <View
+                android:layout_height="0.5dp"
+                android:background="#4e4e4e" />
+        </TableLayout>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableChart">
+
+        </TableLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
