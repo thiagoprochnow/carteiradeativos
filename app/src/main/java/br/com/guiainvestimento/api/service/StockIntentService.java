@@ -17,6 +17,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.LogRecord;
 
@@ -127,6 +129,7 @@ public class StockIntentService extends IntentService {
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
         boolean isPremium = params.getExtras().getBoolean(StockIntentService.PREMIUM, true);
         int limit = 0;
+        int size = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
@@ -160,41 +163,20 @@ public class StockIntentService extends IntentService {
 
             ContentValues stockDataCV = new ContentValues();
 
-            if (responseString.equals("true")){
-                String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
+            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
+            String path = "";
+            if (responseString.equals("true")){
                 for (String symbol: symbols){
                     if (limit < 5) {
-                        Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
-                        Response<StockQuote> responseGet = callGet.execute();
-                        StockQuote stock = null;
-                        if (responseGet != null && responseGet.isSuccessful()) {
-                            stock = responseGet.body();
-                        }
-
-                        ContentValues updateStock = new ContentValues();
-
-                        if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0) {
-                            // Success on request
-                            if (stock.getLast() != null && Double.valueOf(stock.getLast()) > 0) {
-                                stockDataCV.put(symbol, stock.getLast());
-                                updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                                updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
-                            } else {
-                                updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                                updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
-                            }
+                        if(limit == 0){
+                            path = symbol;
+                            limit++;
+                            size++;
                         } else {
-                            // Mark symbol as failer and set NOT UPDATED on sql db
-                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+                            path += "/"+symbol;
+                            size++;
                         }
-
-                        String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
-                        String[] updatedSelectionArguments = {symbol};
-                        int updatedRows = this.getContentResolver().update(
-                                PortfolioContract.StockData.URI,
-                                updateStock, updateSelection, updatedSelectionArguments);
                     } else {
                         // Limit reach, change Not Updated status
                         ContentValues updateStock = new ContentValues();
@@ -213,6 +195,96 @@ public class StockIntentService extends IntentService {
                     }
                 }
             } else {
+
+                for (String symbol: symbols) {
+                    ContentValues updateStock = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+            path = path.toLowerCase();
+            List<StockQuote> stocks = null;
+            if(size <= 1){
+                boolean success = false;
+                int count = 0;
+                do {
+                    Call<StockQuote> callGet = service.getStock(path);
+                    Response<StockQuote> responseGet = callGet.execute();
+                    count++;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        success = true;
+                        StockQuote stock = responseGet.body();
+                        stocks = new ArrayList<StockQuote>();
+                        stocks.add(stock);
+                    } else {
+                        stocks = null;
+                    }
+                } while (!success || count > 5);
+            } else {
+                boolean success = false;
+                int count = 0;
+                do {
+                    Call<List<StockQuote>> callGet = service.getStocks(path);
+                    Response<List<StockQuote>> responseGet = callGet.execute();
+                    count++;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        stocks = responseGet.body();
+                        success = true;
+                    } else {
+                        stocks = null;
+                    }
+                } while (!success || count > 5);
+            }
+
+            if (stocks != null && stocks.size() > 0) {
+                for (String symbol: symbols) {
+                    boolean success = false;
+                    ContentValues updateStock = new ContentValues();
+                    for (StockQuote stock : stocks) {
+                        if (stock != null && stock.getError() == null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null && Double.valueOf(stock.getLast()) > 0) {
+                            // Success on request
+                            stockDataCV.put(symbol, stock.getLast());
+                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
+                            success = true;
+                        }
+                    }
+
+                    if(!success){
+                        // Mark symbol as failer and set NOT UPDATED on sql db
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+                    }
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+
+                for (String symbol: symbols) {
+                    ContentValues updateStock = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 

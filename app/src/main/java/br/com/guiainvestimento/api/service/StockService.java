@@ -1,5 +1,7 @@
 package br.com.guiainvestimento.api.service;
 
+import java.util.List;
+
 import br.com.guiainvestimento.domain.StockQuote;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,4 +21,8 @@ public interface StockService {
 
     @GET("services/quotes/quote/{symbol}")
     Call<StockQuote> getStock(@Path("symbol") String symbol);
+
+    @GET("services/quotes/quote/{symbol}")
+    Call<List<StockQuote>> getStocks(@Path(value="symbol", encoded = true) String symbol);
+
 }

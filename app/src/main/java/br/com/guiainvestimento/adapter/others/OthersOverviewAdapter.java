@@ -249,7 +249,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         TableLayout.LayoutParams rowParams =
                                 new TableLayout.LayoutParams
                                         (TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                        rowParams.setMargins(5, 20, 5, 20);
+                        rowParams.setMargins(5, 30, 5, 30);
                         row.setLayoutParams(rowParams);
 
                         long month = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.MONTH));

@@ -16,6 +16,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import br.com.guiainvestimento.R;
@@ -103,6 +105,7 @@ public class FiiIntentService extends IntentService {
 
         boolean isPremium = params.getExtras().getBoolean(FiiIntentService.PREMIUM, true);
         int limit = 0;
+        int size = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(FiiIntentService.ADD_SYMBOL).isEmpty()) {
@@ -136,40 +139,21 @@ public class FiiIntentService extends IntentService {
 
             ContentValues fiiDataCV = new ContentValues();
 
+            String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
+
+            String path = "";
             if (responseString.equals("true")){
-                String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
                 for (String symbol: symbols){
                     if (limit < 3) {
-                        Call<FiiQuote> callGet = service.getFii(symbol.toLowerCase());
-                        Response<FiiQuote> responseGet = callGet.execute();
-                        FiiQuote fii = null;
-                        if (responseGet != null && responseGet.isSuccessful()) {
-                            fii = responseGet.body();
-                        }
-                        ContentValues updateFii = new ContentValues();
-
-                        if (responseGet != null && responseGet.isSuccessful() && fii != null && fii.getError() == null && fii.toString().length() > 0) {
-                            // Success on request
-                            if (fii.getLast() != null && Double.valueOf(fii.getLast()) > 0) {
-                                fiiDataCV.put(symbol, fii.getLast());
-                                updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                                updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());
-                            } else {
-                                updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                                updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
-                            }
+                        if(limit == 0){
+                            path = symbol;
+                            limit++;
+                            size++;
                         } else {
-                            // Mark symbol as failer and set NOT UPDATED on sql db
-                            updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                            updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+                            path += "/"+symbol;
+                            size++;
                         }
-
-                        String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
-                        String[] updatedSelectionArguments = {symbol};
-                        int updatedRows = this.getContentResolver().update(
-                                PortfolioContract.FiiData.URI,
-                                updateFii, updateSelection, updatedSelectionArguments);
                     } else {
                         // Limit reach, change Not Updated status
                         ContentValues updateFii = new ContentValues();
@@ -188,6 +172,96 @@ public class FiiIntentService extends IntentService {
                     }
                 }
             } else {
+                for (String symbol: symbols) {
+                    ContentValues updateFii = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+
+
+            path = path.toLowerCase();
+            List<FiiQuote> fiis = null;
+
+            if(size <= 1) {
+                boolean success = false;
+                int count = 0;
+                do {
+                    Call<FiiQuote> callGet = service.getFii(path);
+                    Response<FiiQuote> responseGet = callGet.execute();
+                    count++;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        success = true;
+                        FiiQuote fii = responseGet.body();
+                        fiis = new ArrayList<FiiQuote>();
+                        fiis.add(fii);
+                    } else {
+                        fiis = null;
+                    }
+                } while (!success || count > 5);
+            } else {
+                boolean success = false;
+                int count = 0;
+                do {
+                    Call<List<FiiQuote>> callGet = service.getFiis(path);
+                    Response<List<FiiQuote>> responseGet = callGet.execute();
+                    count++;
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        fiis = responseGet.body();
+                        success = true;
+                    } else {
+                        fiis = null;
+                    }
+                } while (!success || count > 5);
+            }
+
+            if (fiis != null && fiis.size() > 0) {
+                for (String symbol: symbols) {
+                    boolean success = false;
+                    ContentValues updateFii = new ContentValues();
+                    for (FiiQuote fii : fiis) {
+                        if (fii != null && fii.getError() == null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null && Double.valueOf(fii.getLast()) > 0) {
+                            // Success on request
+                            fiiDataCV.put(symbol, fii.getLast());
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());
+                            success = true;
+                        }
+                    }
+
+                    if(!success){
+                        // Mark symbol as failer and set NOT UPDATED on sql db
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+                    }
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+                for (String symbol: symbols) {
+                    ContentValues updateFii = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 

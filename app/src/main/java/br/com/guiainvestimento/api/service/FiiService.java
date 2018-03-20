@@ -1,5 +1,7 @@
 package br.com.guiainvestimento.api.service;
 
+import java.util.List;
+
 import br.com.guiainvestimento.domain.FiiQuote;
 
 import retrofit2.Call;
@@ -19,4 +21,7 @@ public interface FiiService {
 
     @GET("services/quotes/quote/{symbol}")
     Call<FiiQuote> getFii(@Path("symbol") String symbol);
+
+    @GET("services/quotes/quote/{symbol}")
+    Call<List<FiiQuote>> getFiis(@Path(value="symbol", encoded = true) String symbol);
 }
