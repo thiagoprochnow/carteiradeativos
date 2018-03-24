@@ -193,11 +193,9 @@ public class FiiIntentService extends IntentService {
 
             if(size <= 1) {
                 boolean success = false;
-                int count = 0;
                 do {
                     Call<FiiQuote> callGet = service.getFii(path);
                     Response<FiiQuote> responseGet = callGet.execute();
-                    count++;
                     if (responseGet != null && responseGet.isSuccessful()) {
                         success = true;
                         FiiQuote fii = responseGet.body();
@@ -206,21 +204,19 @@ public class FiiIntentService extends IntentService {
                     } else {
                         fiis = null;
                     }
-                } while (!success || count > 5);
+                } while (!success);
             } else {
                 boolean success = false;
-                int count = 0;
                 do {
                     Call<List<FiiQuote>> callGet = service.getFiis(path);
                     Response<List<FiiQuote>> responseGet = callGet.execute();
-                    count++;
                     if (responseGet != null && responseGet.isSuccessful()) {
                         fiis = responseGet.body();
                         success = true;
                     } else {
                         fiis = null;
                     }
-                } while (!success || count > 5);
+                } while (!success);
             }
 
             if (fiis != null && fiis.size() > 0) {
@@ -228,9 +224,16 @@ public class FiiIntentService extends IntentService {
                     boolean success = false;
                     ContentValues updateFii = new ContentValues();
                     for (FiiQuote fii : fiis) {
-                        if (fii != null && fii.getError() == null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null && Double.valueOf(fii.getLast()) > 0) {
+                        if (fii != null && fii.getError() == null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null) {
+                            String lastPrice = "0.0";
+                            if(Double.valueOf(fii.getLast()) > 0){
+                                lastPrice = fii.getLast();
+                            } else {
+                                lastPrice = fii.getPrevious();
+                            }
+
                             // Success on request
-                            fiiDataCV.put(symbol, fii.getLast());
+                            fiiDataCV.put(symbol, lastPrice);
                             updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                             updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());
                             success = true;
@@ -281,6 +284,7 @@ public class FiiIntentService extends IntentService {
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            this.addFiiTask(params);
             e.printStackTrace();
         }
         return resultStatus;

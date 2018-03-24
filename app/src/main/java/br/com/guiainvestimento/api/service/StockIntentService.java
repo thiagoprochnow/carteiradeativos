@@ -215,11 +215,9 @@ public class StockIntentService extends IntentService {
             List<StockQuote> stocks = null;
             if(size <= 1){
                 boolean success = false;
-                int count = 0;
                 do {
                     Call<StockQuote> callGet = service.getStock(path);
                     Response<StockQuote> responseGet = callGet.execute();
-                    count++;
                     if (responseGet != null && responseGet.isSuccessful()) {
                         success = true;
                         StockQuote stock = responseGet.body();
@@ -228,21 +226,19 @@ public class StockIntentService extends IntentService {
                     } else {
                         stocks = null;
                     }
-                } while (!success || count > 5);
+                } while (!success);
             } else {
                 boolean success = false;
-                int count = 0;
                 do {
                     Call<List<StockQuote>> callGet = service.getStocks(path);
                     Response<List<StockQuote>> responseGet = callGet.execute();
-                    count++;
                     if (responseGet != null && responseGet.isSuccessful()) {
                         stocks = responseGet.body();
                         success = true;
                     } else {
                         stocks = null;
                     }
-                } while (!success || count > 5);
+                } while (!success);
             }
 
             if (stocks != null && stocks.size() > 0) {
@@ -250,9 +246,16 @@ public class StockIntentService extends IntentService {
                     boolean success = false;
                     ContentValues updateStock = new ContentValues();
                     for (StockQuote stock : stocks) {
-                        if (stock != null && stock.getError() == null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null && Double.valueOf(stock.getLast()) > 0) {
+                        if (stock != null && stock.getError() == null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null) {
+                            String lastPrice = "0.0";
+                            if(Double.valueOf(stock.getLast()) > 0){
+                                lastPrice = stock.getLast();
+                            } else {
+                                lastPrice = stock.getPrevious();
+                            }
+
                             // Success on request
-                            stockDataCV.put(symbol, stock.getLast());
+                            stockDataCV.put(symbol, lastPrice);
                             updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
                             updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
                             success = true;

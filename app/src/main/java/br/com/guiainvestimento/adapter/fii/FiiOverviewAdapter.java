@@ -254,6 +254,7 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     growthLookahead.moveToFirst();
                     double previousTotal = 0;
                     do {
+                        boolean first = false;
                         TableRow row = new TableRow(mContext);
                         TableLayout.LayoutParams rowParams =
                                 new TableLayout.LayoutParams
@@ -288,6 +289,7 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         if (growthCursor.isFirst()){
                             previousTotal = valueTotal;
+                            first = true;
                         }
 
                         double buyGain = 0;
@@ -323,7 +325,7 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         double gain = 0;
 
-                        if (previousTotal != 0) {
+                        if (previousTotal != 0 && !first) {
                             gain = valueTotal - previousTotal - buyGain;
                         }
                         TextView ganho = new TextView(mContext);

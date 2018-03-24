@@ -786,7 +786,7 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidStockSymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
-        Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        Pattern pattern = Pattern.compile("^[A-Z0-9]{4}([0-9]|[0-9][0-9])$");
         if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {

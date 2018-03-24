@@ -245,6 +245,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     growthLookahead.moveToFirst();
                     double previousTotal = 0;
                     do {
+                        boolean first = false;
                         TableRow row = new TableRow(mContext);
                         TableLayout.LayoutParams rowParams =
                                 new TableLayout.LayoutParams
@@ -279,6 +280,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                         if (growthCursor.isFirst()){
                             previousTotal = valueTotal;
+                            first = true;
                         }
 
                         double buyGain = 0;
@@ -314,7 +316,7 @@ public class OthersOverviewAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                         double gain = 0;
 
-                        if (previousTotal != 0) {
+                        if (previousTotal != 0 && !first) {
                             gain = valueTotal - previousTotal - buyGain;
                         }
                         TextView ganho = new TextView(mContext);

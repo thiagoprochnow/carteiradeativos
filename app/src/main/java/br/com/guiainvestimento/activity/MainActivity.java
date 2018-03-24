@@ -43,6 +43,7 @@ import br.com.guiainvestimento.api.service.CdiIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
+import br.com.guiainvestimento.api.service.PingIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
@@ -103,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         setUpToolbar();
         setupNavDrawer();
         context = this;
+
+        // Ping Cedro server
+        Intent mPingServiceIntent = new Intent(this, PingIntentService
+                .class);
+        startService(mPingServiceIntent);
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -636,39 +642,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
         }
 
-        //Fii Refresh
-        Intent mFiiServiceIntent = new Intent(this, FiiIntentService
-                .class);
-
-        String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
-        String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
-        String[] selectionArguments2 = {String.valueOf(Constants.Status.ACTIVE)};
-
-        queryCursor = this.getContentResolver().query(
-                PortfolioContract.FiiData.URI, affectedColumn2,
-                selection2, selectionArguments2, null);
-
-        // For each symbol found on FiiData, add to service make webservice query and update
-        if (queryCursor.getCount() > 0) {
-            String symbol = "";
-            queryCursor.moveToFirst();
-            do {
-                if (!queryCursor.isLast()){
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.FiiData.COLUMN_SYMBOL))+",";
-                } else{
-                    symbol += queryCursor.getString(queryCursor.getColumnIndex
-                            (PortfolioContract.FiiData.COLUMN_SYMBOL));
-                }
-            } while (queryCursor.moveToNext());
-            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
-            mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium());
-            startService(mFiiServiceIntent);
-        } else{
-            // Clear menu progressbar so it is not set indefinitely
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
-        }
-
         // Treasury Refresh
         Intent mTreasuryServiceIntent = new Intent(this, TreasuryIntentService
                 .class);
@@ -787,6 +760,39 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+        }
+
+        //Fii Refresh
+        Intent mFiiServiceIntent = new Intent(this, FiiIntentService
+                .class);
+
+        String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
+        String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments2 = {String.valueOf(Constants.Status.ACTIVE)};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.FiiData.URI, affectedColumn2,
+                selection2, selectionArguments2, null);
+
+        // For each symbol found on FiiData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FiiData.COLUMN_SYMBOL));
+                }
+            } while (queryCursor.moveToNext());
+            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium());
+            startService(mFiiServiceIntent);
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
         }
     }
 
