@@ -275,7 +275,7 @@
     <!-- Portfolio -->
     <string name="portfolio_label">Portfolio</string>
     <string name="asset_allocation_label">Asset Allocation</string>
-    <string name="growth_chart_label">Growth Chart</string>
+    <string name="growth_chart_label">Asset Growth</string>
     <string name="growth_chart_current">Current</string>
     <string name="growth_chart_bought">Bought</string>
 
@@ -573,7 +573,6 @@
         \u2022 Área para o lançamento de Fundos de investimento automatizados.\n
         \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
-        \u2022 Tabela mostrando o crescimento do patrimônio e a variação mensal.\n
         \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
         \u2022 Tutorial.\n
         \u2022 Botão de ajuda explicando cada informação fornecida.\n

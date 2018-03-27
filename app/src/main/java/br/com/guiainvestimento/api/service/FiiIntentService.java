@@ -73,8 +73,13 @@ public class FiiIntentService extends IntentService {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            // try the Bolsa Financeira backup API
-            int success = this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int count = 0;
+            int success = -1;
+            TaskParams params = new TaskParams(ADD_SYMBOL, intent.getExtras());
+            do {
+                success = this.addFiiTask(params);
+                count++;
+            } while (success != GcmNetworkManager.RESULT_SUCCESS && success != GcmNetworkManager.RESULT_RESCHEDULE && count <= 3);
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
@@ -116,9 +121,9 @@ public class FiiIntentService extends IntentService {
             CookieHandler.setDefault(cookieManager);
 
             OkHttpClient mClient = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
                     .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
                     .build();
 
@@ -145,7 +150,7 @@ public class FiiIntentService extends IntentService {
             if (responseString.equals("true")){
 
                 for (String symbol: symbols){
-                    if (limit < 3) {
+                    if (limit <= 3) {
                         if(limit == 0){
                             path = symbol;
                             limit++;
@@ -171,6 +176,8 @@ public class FiiIntentService extends IntentService {
                         limit++;
                     }
                 }
+                // Remove the one that was added first in case it was first element
+                limit--;
             } else {
                 for (String symbol: symbols) {
                     ContentValues updateFii = new ContentValues();
