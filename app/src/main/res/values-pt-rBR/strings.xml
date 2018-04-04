@@ -484,6 +484,12 @@
     <string name="error_updating_treasury_limit">Limite de atualização automática de 2 tesouros atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_fixed">Erro ao atualizar renda fixa, por favor tente novamente mais tarde.</string>
     <string name="error_updating_fixed_rate">Erro ao atualizar renda fixa. Um ou mais Compras de Renda Fixa estão sem a % do CDI, por favor edite e atualize seus valores de compras para atualizar a renda fixa automaticamente.</string>
+    <string name="error_updating_income_premium">Proventos de ações apenas são atualizados automaticamente na versão PREMIUM, assine agora ou insira-os manualmente.</string>
+    <string name="success_updating_income">Proventos de ações atualizados com sucesso.</string>
+    <string name="error_updating_income">Erro ao atualizar proventos de ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii_income_premium">Proventos de fundos imobiliários apenas são atualizados automaticamente na versão PREMIUM, assine agora ou insira-os manualmente.</string>
+    <string name="success_updating_fii_income">Proventos de fundos imobiliários atualizados com sucesso.</string>
+    <string name="error_updating_fii_income">Erro ao atualizar proventos de fundos imobiliários, por favor tente novamente mais tarde.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.

@@ -484,6 +484,12 @@
     <string name="error_updating_treasury_limit">Treasury update limit of 2 treasuries reached. Update manually or upgrade to PREMIUM version for unlimited update.</string>
     <string name="error_updating_fixed">Error updating fixed income, please try again later.</string>
     <string name="error_updating_fixed_rate">Error updating fixed income. One or more Buy of Fixed Income are without the CDI Rate, please edit and update Buy Values to update your Fixed Income automatically.</string>
+    <string name="error_updating_income_premium">Stock Income automatic update only on PREMIUM version, sign now or update stock incomes manually.</string>
+    <string name="success_updating_income">Stock Incomes successfully updated.</string>
+    <string name="error_updating_income">Error updating stock incomes, please try again later.</string>
+    <string name="error_updating_fii_income_premium">Fii Income automatic update only on PREMIUM version, sign now or update stock incomes manually.</string>
+    <string name="success_updating_fii_income">Fii Incomes successfully updated.</string>
+    <string name="error_updating_fii_income">Error updating Fii incomes, please try again later.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description"> Here you can make a copy of your data to import in another device if necessary.

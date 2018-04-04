@@ -1,14 +1,11 @@
 package br.com.guiainvestimento.activity;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -21,8 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -31,7 +26,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 
-import com.android.vending.billing.IInAppBillingService;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -42,15 +36,15 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.service.CdiIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
+import br.com.guiainvestimento.api.service.FiiIncomeIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
-import br.com.guiainvestimento.api.service.PingIntentService;
+import br.com.guiainvestimento.api.service.StockIncomeIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
 import br.com.guiainvestimento.fragment.BackupRestoreFragment;
-import br.com.guiainvestimento.fragment.ComingSoonFragment;
 import br.com.guiainvestimento.fragment.ConsultQuotesFragment;
 import br.com.guiainvestimento.fragment.PremiumEditionFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
@@ -104,11 +98,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         setUpToolbar();
         setupNavDrawer();
         context = this;
-
-        // Ping Cedro server
-        Intent mPingServiceIntent = new Intent(this, PingIntentService
-                .class);
-        startService(mPingServiceIntent);
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -610,8 +599,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     // Refresh the portfolio by getting the values from their respective services and updating on the tables
     public void refreshPortfolio(){
         //Stock Refresh
-        Intent mStockServiceIntent = new Intent(this, StockIntentService
-                .class);
+        Intent mStockIncomeService = new Intent(this, StockIncomeIntentService.class);
 
         String[] affectedColumn = {PortfolioContract.StockData.COLUMN_SYMBOL};
         String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
@@ -634,9 +622,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.StockData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
-            mStockServiceIntent.putExtra(StockIntentService.PREMIUM, isPremium());
-            startService(mStockServiceIntent);
+            // Stock quotes called inside StockIncomeIntentService
+
+            //Stock Incomes
+            mStockIncomeService.putExtra(StockIncomeIntentService.ADD_SYMBOL, symbol);
+            mStockIncomeService.putExtra(StockIncomeIntentService.PREMIUM, isPremium());
+            startService(mStockIncomeService);
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
@@ -763,8 +754,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         //Fii Refresh
-        Intent mFiiServiceIntent = new Intent(this, FiiIntentService
-                .class);
+        Intent mFiiIncomeService = new Intent(this, FiiIncomeIntentService.class);
 
         String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
         String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
@@ -787,9 +777,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.FiiData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
-            mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium());
-            startService(mFiiServiceIntent);
+            // Fii quotes called inside StockIncomeIntentService
+
+            //Fii Incomes
+            mFiiIncomeService.putExtra(FiiIncomeIntentService.ADD_SYMBOL, symbol);
+            mFiiIncomeService.putExtra(FiiIncomeIntentService.PREMIUM, isPremium());
+            startService(mFiiIncomeService);
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));

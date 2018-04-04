@@ -24,7 +24,6 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Income;
-import br.com.guiainvestimento.fragment.BaseFragment;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -41,10 +40,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class will also write the result in the database and update the adapter
  */
 
-public class StockIncomeIntentService extends IntentService {
+public class FiiIncomeIntentService extends IntentService {
 
     // Log variable
-    private static final String LOG_TAG = StockIncomeIntentService.class.getSimpleName();
+    private static final String LOG_TAG = FiiIncomeIntentService.class.getSimpleName();
     private final String username = "mainuser";
     private final String password = "user1133";
     private String mResult = "";
@@ -59,8 +58,8 @@ public class StockIncomeIntentService extends IntentService {
     /**
      * Constructor matching super is needed
      */
-    public StockIncomeIntentService() {
-        super(StockIncomeIntentService.class.getName());
+    public FiiIncomeIntentService() {
+        super(FiiIncomeIntentService.class.getName());
     }
 
     @Override
@@ -73,7 +72,7 @@ public class StockIncomeIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         try {
-            boolean isPremium = intent.getExtras().getBoolean(StockIntentService.PREMIUM, true);
+            boolean isPremium = intent.getExtras().getBoolean(FiiIntentService.PREMIUM, true);
             // Only calls the service if the symbol is present
             if (intent.hasExtra(ADD_SYMBOL)) {
                 mType = ADD_SYMBOL;
@@ -83,14 +82,14 @@ public class StockIncomeIntentService extends IntentService {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_income), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii_income), Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_income), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii_income), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -99,18 +98,18 @@ public class StockIncomeIntentService extends IntentService {
                         // Show not premium message
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_income_premium), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii_income_premium), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
 
-                Intent mStockServiceIntent = new Intent(this, StockIntentService
+                Intent mFiiServiceIntent = new Intent(this, FiiIntentService
                         .class);
 
-                // Stock quotes update
-                mStockServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, intent.getStringExtra(ADD_SYMBOL));
-                mStockServiceIntent.putExtra(StockIntentService.PREMIUM, isPremium);
-                startService(mStockServiceIntent);
+                // Fii quotes update
+                mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, intent.getStringExtra(ADD_SYMBOL));
+                mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium);
+                startService(mFiiServiceIntent);
             } else {
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL");
             }
@@ -125,7 +124,7 @@ public class StockIncomeIntentService extends IntentService {
 
         try {
             // Validate if Symbol was added
-            if (params.getExtras() == null || params.getExtras().getString(StockIncomeIntentService.ADD_SYMBOL).isEmpty()) {
+            if (params.getExtras() == null || params.getExtras().getString(FiiIncomeIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
@@ -146,12 +145,12 @@ public class StockIncomeIntentService extends IntentService {
 
             IncomeService service = retrofit.create(IncomeService.class);
 
-            String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
+            String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
             for (String symbol: symbols) {
                 String timestamp = getLastIncomeTime(symbol);
 
-                // Update Stock Income table
+                // Update Fii Income table
                 Call<List<Income>> callGet = service.getProvento(symbol.toUpperCase(),timestamp);
                 retrofit2.Response<List<Income>> responseGet = callGet.execute();
                 List<Income> proventos = null;
@@ -166,44 +165,35 @@ public class StockIncomeIntentService extends IntentService {
 
                             String type = provento.getTipo();
                             int tipo = Constants.IncomeType.INVALID;
-                            if (type.equalsIgnoreCase("DIV")) {
-                                tipo = Constants.IncomeType.DIVIDEND;
-                            } else if (type.equalsIgnoreCase("JCP")) {
-                                tipo = Constants.IncomeType.JCP;
+                            if (type.equalsIgnoreCase("FII")) {
+                                tipo = Constants.IncomeType.FII;
                             }
 
                             if (tipo != Constants.IncomeType.INVALID) {
-                                double perStock = Double.valueOf(provento.getValor());
+                                double perFii = Double.valueOf(provento.getValor());
                                 long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
-                                int affected = getStockQuantity(symbol, exdividend);
+                                int affected = getFiiQuantity(symbol, exdividend);
 
-                                double receiveValue = affected * perStock;
+                                double receiveValue = affected * perFii;
                                 double liquidValue = receiveValue;
                                 double brokerage = 0;
 
-                                // If it is JCP, needs to calculate the tax and liquid value to be received
-                                if (tipo == Constants.IncomeType.JCP) {
-                                    tax = calculateTax(receiveValue);
-                                    liquidValue = receiveValue - tax;
-                                }
-
                                 ContentValues incomeCV = new ContentValues();
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_SYMBOL, symbol);
                                 // TODO: Type is hardcoded
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, tipo);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, affected);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
-                                // TODO: Calculate the percent based on total stocks value that received the income
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TYPE, tipo);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_PER_FII, perFii);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY, affected);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
+                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
                                 // Adds to the database
-                                Uri insertedUri = this.getContentResolver().insert(PortfolioContract.StockIncome.URI,
+                                Uri insertedUri = this.getContentResolver().insert(PortfolioContract.FiiIncome.URI,
                                         incomeCV);
                                 // If error occurs to add, shows error message
                                 if (insertedUri != null) {
-                                    boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue, tax);
+                                    boolean updateFiiDataIncome = updateFiiDataIncome(symbol, liquidValue, tax);
                                 }
                             }
                         }
@@ -223,8 +213,8 @@ public class StockIncomeIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        this.sendBroadcast(new Intent(Constants.Receiver.FII));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
     }
 
     public class BasicAuthInterceptor implements Interceptor {
@@ -261,14 +251,14 @@ public class StockIncomeIntentService extends IntentService {
     }
 
     private String getLastIncomeTime(String symbol){
-        // Stock Income
-        String[] affectedColumn = {PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP};
-        String sortOrder = PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
-        String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
+        // Fii Income
+        String[] affectedColumn = {PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP};
+        String sortOrder = PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
+        String selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
         String[] selectionArguments = {symbol};
 
         Cursor cursor = getApplicationContext().getContentResolver().query(
-                PortfolioContract.StockIncome.URI,
+                PortfolioContract.FiiIncome.URI,
                 affectedColumn, selection, selectionArguments, sortOrder);
 
         if (cursor.getCount() > 0){
@@ -280,47 +270,33 @@ public class StockIncomeIntentService extends IntentService {
         return "1262131200";
     }
 
-    private double calculateTax(double receiveValue){
-        // Tax for JCP is of 15% of total receive value
-        return receiveValue*0.15;
-    }
-
-    // Get stock quantity that will receive the dividend per stock
+    // Get fii quantity that will receive the dividend per fii
     // symbol is to query by specific symbol only
-    // income timestamp is to query only the quantity of stocks transactions before the timestamp
-    public int getStockQuantity(String symbol, Long incomeTimestamp){
-        // Return column should be only quantity of stock
-        String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
-                + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
+    // income timestamp is to query only the quantity of fiis transactions before the timestamp
+    public int getFiiQuantity(String symbol, Long incomeTimestamp){
+        // Return column should be only quantity of fii
+        String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " < ?";
         String[] selectionArguments = {symbol,String.valueOf(incomeTimestamp)};
-        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
 
         // Check if the symbol exists in the db
         Cursor queryCursor = this.getContentResolver().query(
-                PortfolioContract.StockTransaction.URI,
+                PortfolioContract.FiiTransaction.URI,
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
             int quantityTotal = 0;
             int currentType = 0;
             do {
-                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
+                currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
                 // Does correct operation to values depending on Transaction type
                 switch (currentType){
                     case Constants.Type.BUY:
-                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SELL:
-                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        break;
-                    case Constants.Type.BONIFICATION:
-                        quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        break;
-                    case Constants.Type.SPLIT:
-                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        break;
-                    case Constants.Type.GROUPING:
-                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -331,30 +307,29 @@ public class StockIncomeIntentService extends IntentService {
         }
     }
 
-    // Update Total Income on Stock Data by new income added
-    private boolean updateStockDataIncome(String symbol, double valueReceived, double tax){
-        // Prepare query to update stock data income
+    // Update Total Income on Fii Data by new income added
+    private boolean updateFiiDataIncome(String symbol, double valueReceived, double tax){
+        // Prepare query to update fii data income
         // and the total income received
-        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+        String selection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
         String[] selectionArguments = {symbol};
 
         Cursor queryCursor = this.getContentResolver().query(
-                PortfolioContract.StockData.URI,
+                PortfolioContract.FiiData.URI,
                 null, selection, selectionArguments, null);
         if(queryCursor.getCount() > 0){
             queryCursor.moveToFirst();
-            double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_NET_INCOME));
-            double dbTax = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_INCOME_TAX));
+            double dbIncome = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_INCOME));
             double totalIncome = dbIncome + valueReceived;
-            double totalTax = dbTax + tax;
+            double totalTax = 0;
 
             ContentValues updateCV = new ContentValues();
 
-            updateCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME, totalIncome);
-            updateCV.put(PortfolioContract.StockData.COLUMN_INCOME_TAX, totalTax);
+            updateCV.put(PortfolioContract.FiiData.COLUMN_INCOME, totalIncome);
+            updateCV.put(PortfolioContract.FiiData.COLUMN_INCOME_TAX, totalTax);
 
             int updateQueryCursor = this.getContentResolver().update(
-                    PortfolioContract.StockData.URI,
+                    PortfolioContract.FiiData.URI,
                     updateCV, selection, selectionArguments);
         }
         return false;

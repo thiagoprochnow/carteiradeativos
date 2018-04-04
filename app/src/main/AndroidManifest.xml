@@ -37,13 +37,13 @@
             android:exported="false" />
 
         <service android:name="br.com.guiainvestimento.api.service.StockIntentService" />
-        <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.FiiIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CurrencyIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CryptoIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.TreasuryIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.CdiIntentService" />
-        <service android:name="br.com.guiainvestimento.api.service.PingIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.FiiIncomeIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"
