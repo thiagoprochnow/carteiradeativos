@@ -160,50 +160,55 @@ public class StockIncomeIntentService extends IntentService {
                 }
 
                 if(proventos != null && responseGet != null && responseGet.isSuccessful()) {
+                    Cursor insertedIncomes = getInsertedIncomes(symbol);
                     for (Income provento : proventos) {
                         if (provento != null) {
-                            double tax = 0;
+                            boolean isInserted = isIncomeInserted(provento, insertedIncomes);
+                            // Check if this income was already inserted and will not generate a duplicate
+                            if(!isInserted){
+                                double tax = 0;
 
-                            String type = provento.getTipo();
-                            int tipo = Constants.IncomeType.INVALID;
-                            if (type.equalsIgnoreCase("DIV")) {
-                                tipo = Constants.IncomeType.DIVIDEND;
-                            } else if (type.equalsIgnoreCase("JCP")) {
-                                tipo = Constants.IncomeType.JCP;
-                            }
-
-                            if (tipo != Constants.IncomeType.INVALID) {
-                                double perStock = Double.valueOf(provento.getValor());
-                                long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
-                                int affected = getStockQuantity(symbol, exdividend);
-
-                                double receiveValue = affected * perStock;
-                                double liquidValue = receiveValue;
-                                double brokerage = 0;
-
-                                // If it is JCP, needs to calculate the tax and liquid value to be received
-                                if (tipo == Constants.IncomeType.JCP) {
-                                    tax = calculateTax(receiveValue);
-                                    liquidValue = receiveValue - tax;
+                                String type = provento.getTipo();
+                                int tipo = Constants.IncomeType.INVALID;
+                                if (type.equalsIgnoreCase("DIV")) {
+                                    tipo = Constants.IncomeType.DIVIDEND;
+                                } else if (type.equalsIgnoreCase("JCP")) {
+                                    tipo = Constants.IncomeType.JCP;
                                 }
 
-                                ContentValues incomeCV = new ContentValues();
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
-                                // TODO: Type is hardcoded
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, tipo);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, affected);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
-                                incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
-                                // TODO: Calculate the percent based on total stocks value that received the income
-                                // Adds to the database
-                                Uri insertedUri = this.getContentResolver().insert(PortfolioContract.StockIncome.URI,
-                                        incomeCV);
-                                // If error occurs to add, shows error message
-                                if (insertedUri != null) {
-                                    boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue, tax);
+                                if (tipo != Constants.IncomeType.INVALID) {
+                                    double perStock = Double.valueOf(provento.getValor());
+                                    long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
+                                    int affected = getStockQuantity(symbol, exdividend);
+
+                                    double receiveValue = affected * perStock;
+                                    double liquidValue = receiveValue;
+                                    double brokerage = 0;
+
+                                    // If it is JCP, needs to calculate the tax and liquid value to be received
+                                    if (tipo == Constants.IncomeType.JCP) {
+                                        tax = calculateTax(receiveValue);
+                                        liquidValue = receiveValue - tax;
+                                    }
+
+                                    ContentValues incomeCV = new ContentValues();
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_SYMBOL, symbol);
+                                    // TODO: Type is hardcoded
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_TYPE, tipo);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_PER_STOCK, perStock);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY, affected);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_TAX, tax);
+                                    incomeCV.put(PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
+                                    // TODO: Calculate the percent based on total stocks value that received the income
+                                    // Adds to the database
+                                    Uri insertedUri = this.getContentResolver().insert(PortfolioContract.StockIncome.URI,
+                                            incomeCV);
+                                    // If error occurs to add, shows error message
+                                    if (insertedUri != null) {
+                                        boolean updateStockDataIncome = updateStockDataIncome(symbol, liquidValue, tax);
+                                    }
                                 }
                             }
                         }
@@ -260,8 +265,10 @@ public class StockIncomeIntentService extends IntentService {
         }
     }
 
+    // Changed so it will always get all incomes and check if they were already inserted.
     private String getLastIncomeTime(String symbol){
         // Stock Income
+        /*
         String[] affectedColumn = {PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP};
         String sortOrder = PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
         String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ?";
@@ -276,7 +283,7 @@ public class StockIncomeIntentService extends IntentService {
             long timestamp = Long.parseLong(cursor.getString(0))/1000;
             return String.valueOf(timestamp);
         }
-
+        */
         return "1262131200";
     }
 
@@ -358,5 +365,44 @@ public class StockIncomeIntentService extends IntentService {
                     updateCV, selection, selectionArguments);
         }
         return false;
+    }
+
+    private Cursor getInsertedIncomes(String symbol){
+        String selectionData = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ? ";
+        String[] selectionDataArguments = {symbol};
+        Cursor cursor = this.getContentResolver().query(
+                PortfolioContract.StockIncome.URI,
+                null, selectionData, selectionDataArguments, null);
+        return cursor;
+    }
+
+    private boolean isIncomeInserted(Income provento, Cursor insertedIncomes){
+        double value = Double.valueOf(provento.getValor());
+        long timestamp = Long.parseLong(provento.getTimestamp())*1000;
+        String type = provento.getTipo();
+        int tipo = Constants.IncomeType.INVALID;
+        if (type.equalsIgnoreCase("DIV")) {
+            tipo = Constants.IncomeType.DIVIDEND;
+        } else if (type.equalsIgnoreCase("JCP")) {
+            tipo = Constants.IncomeType.JCP;
+        }
+
+        if (insertedIncomes.getCount() > 0){
+            insertedIncomes.moveToFirst();
+            do{
+                double insertedValue = insertedIncomes.getDouble(insertedIncomes.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK));
+                long insertedTimestamp = insertedIncomes.getLong(insertedIncomes.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int insertedTipo = insertedIncomes.getInt(insertedIncomes.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE));
+                if (value == insertedValue && timestamp == insertedTimestamp && tipo == insertedTipo){
+                    return true;
+                }
+            } while (insertedIncomes.moveToNext());
+
+            // If provento was not found as inserted already, return false to be inserted
+            return false;
+        } else {
+            // No inserted incomes yet, safe to insert
+            return false;
+        }
     }
 }

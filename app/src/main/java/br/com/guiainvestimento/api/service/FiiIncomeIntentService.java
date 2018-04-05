@@ -159,41 +159,46 @@ public class FiiIncomeIntentService extends IntentService {
                 }
 
                 if(proventos != null && responseGet != null && responseGet.isSuccessful()) {
+                    Cursor insertedIncomes = getInsertedIncomes(symbol);
                     for (Income provento : proventos) {
                         if (provento != null) {
-                            double tax = 0;
+                            boolean isInserted = isIncomeInserted(provento, insertedIncomes);
+                            // Check if this income was already inserted and will not generate a duplicate
+                            if(!isInserted) {
+                                double tax = 0;
 
-                            String type = provento.getTipo();
-                            int tipo = Constants.IncomeType.INVALID;
-                            if (type.equalsIgnoreCase("FII")) {
-                                tipo = Constants.IncomeType.FII;
-                            }
+                                String type = provento.getTipo();
+                                int tipo = Constants.IncomeType.INVALID;
+                                if (type.equalsIgnoreCase("FII")) {
+                                    tipo = Constants.IncomeType.FII;
+                                }
 
-                            if (tipo != Constants.IncomeType.INVALID) {
-                                double perFii = Double.valueOf(provento.getValor());
-                                long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
-                                int affected = getFiiQuantity(symbol, exdividend);
+                                if (tipo != Constants.IncomeType.INVALID) {
+                                    double perFii = Double.valueOf(provento.getValor());
+                                    long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
+                                    int affected = getFiiQuantity(symbol, exdividend);
 
-                                double receiveValue = affected * perFii;
-                                double liquidValue = receiveValue;
-                                double brokerage = 0;
+                                    double receiveValue = affected * perFii;
+                                    double liquidValue = receiveValue;
+                                    double brokerage = 0;
 
-                                ContentValues incomeCV = new ContentValues();
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_SYMBOL, symbol);
-                                // TODO: Type is hardcoded
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TYPE, tipo);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_PER_FII, perFii);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY, affected);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
-                                incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
-                                // Adds to the database
-                                Uri insertedUri = this.getContentResolver().insert(PortfolioContract.FiiIncome.URI,
-                                        incomeCV);
-                                // If error occurs to add, shows error message
-                                if (insertedUri != null) {
-                                    boolean updateFiiDataIncome = updateFiiDataIncome(symbol, liquidValue, tax);
+                                    ContentValues incomeCV = new ContentValues();
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_SYMBOL, symbol);
+                                    // TODO: Type is hardcoded
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TYPE, tipo);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_PER_FII, perFii);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP, exdividend);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY, affected);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_TOTAL, receiveValue);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_TAX, tax);
+                                    incomeCV.put(PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID, liquidValue);
+                                    // Adds to the database
+                                    Uri insertedUri = this.getContentResolver().insert(PortfolioContract.FiiIncome.URI,
+                                            incomeCV);
+                                    // If error occurs to add, shows error message
+                                    if (insertedUri != null) {
+                                        boolean updateFiiDataIncome = updateFiiDataIncome(symbol, liquidValue, tax);
+                                    }
                                 }
                             }
                         }
@@ -250,8 +255,10 @@ public class FiiIncomeIntentService extends IntentService {
         }
     }
 
+    // Changed so it will always get all incomes and check if they were already inserted.
     private String getLastIncomeTime(String symbol){
         // Fii Income
+        /*
         String[] affectedColumn = {PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP};
         String sortOrder = PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
         String selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
@@ -266,7 +273,7 @@ public class FiiIncomeIntentService extends IntentService {
             long timestamp = Long.parseLong(cursor.getString(0))/1000;
             return String.valueOf(timestamp);
         }
-
+        */
         return "1262131200";
     }
 
@@ -333,5 +340,42 @@ public class FiiIncomeIntentService extends IntentService {
                     updateCV, selection, selectionArguments);
         }
         return false;
+    }
+
+    private Cursor getInsertedIncomes(String symbol){
+        String selectionData = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ? ";
+        String[] selectionDataArguments = {symbol};
+        Cursor cursor = this.getContentResolver().query(
+                PortfolioContract.FiiIncome.URI,
+                null, selectionData, selectionDataArguments, null);
+        return cursor;
+    }
+
+    private boolean isIncomeInserted(Income provento, Cursor insertedIncomes){
+        double value = Double.valueOf(provento.getValor());
+        long timestamp = Long.parseLong(provento.getTimestamp())*1000;
+        String type = provento.getTipo();
+        int tipo = Constants.IncomeType.INVALID;
+        if (type.equalsIgnoreCase("FII")) {
+            tipo = Constants.IncomeType.FII;
+        }
+
+        if (insertedIncomes.getCount() > 0){
+            insertedIncomes.moveToFirst();
+            do{
+                double insertedValue = insertedIncomes.getDouble(insertedIncomes.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_PER_FII));
+                long insertedTimestamp = insertedIncomes.getLong(insertedIncomes.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
+                int insertedTipo = insertedIncomes.getInt(insertedIncomes.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE));
+                if (value == insertedValue && timestamp == insertedTimestamp && tipo == insertedTipo){
+                    return true;
+                }
+            } while (insertedIncomes.moveToNext());
+
+            // If provento was not found as inserted already, return false to be inserted
+            return false;
+        } else {
+            // No inserted incomes yet, safe to insert
+            return false;
+        }
     }
 }
