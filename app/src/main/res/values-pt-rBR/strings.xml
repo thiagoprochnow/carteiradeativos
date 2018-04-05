@@ -559,12 +559,17 @@
     <string name="premium_payment_warning">*Pagamento é feito pelo Google Payments, nenhuma informação financeira é passada para o aplicativo.</string>
     <string name="premium_sign_button">Quero Assinar Mensal!</string>
     <string name="premium_sign_semester_button">Quero Assinar Semestral!</string>
+    <string name="premium_sign_now">Assinar Agora!</string>
     <string name="premium_sign_label">Assine o Premium</string>
-    <string name="premium_try">Experimente 1 Mês Grátis!</string>
+    <string name="premium_try">Experimente 30 dias Grátis!</string>
     <string name="premium_price">R$4,90/Mês</string>
     <string name="premium_semester_price">R$14,90/Semestre</string>
+    <string name="premium_item1">\u2022 Acesso ilimitado a atualizações</string>
+    <string name="premium_item2">\u2022 Rendimentos automáticos</string>
+    <string name="premium_item3">\u2022 Remoção de propagandas</string>
     <string name="premium_itens">
         \u2022 Acesso ilimitado a atualizações automatica do portfólio.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
         \u2022 Remoção de propagandas.\n
         \u2022 Acesso a novos recursos assim que forem desenvolvidos.\n
     </string>
@@ -574,10 +579,9 @@
         \n\n
         Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
 
-        \u2022 Área para o lançamento de Opções, compra e venda de PUT e CALL.\n
+        \u2022 Área para o lançamento de opções, compra e venda de PUT e CALL.\n
         \u2022 Renda fixa atrelada ao IPCA automatizada.\n
-        \u2022 Área para o lançamento de Fundos de investimento automatizados.\n
-        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Área para o lançamento de fundos de investimento automatizados.\n
         \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
         \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
         \u2022 Tutorial.\n

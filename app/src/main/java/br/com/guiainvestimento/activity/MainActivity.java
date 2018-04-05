@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         // rotation
         // and hard keyboard opening
         if (savedInstanceState == null) {
-            replaceFragment(new PortfolioMainFragment());
+            replaceFragment(new PortfolioMainFragment(), "PortfolioMainFragment");
         }
 
         BroadcastReceiver receiverStock = new BroadcastReceiver() {
@@ -308,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         switch (menuItem.getItemId()) {
             case R.id.nav_item_complete_portfolio:
                 setTitle(R.string.title_complete_portfolio);
-                replaceFragment(new PortfolioMainFragment());
+                replaceFragment(new PortfolioMainFragment(), "PortfolioMainFragment");
                 break;
             case R.id.nav_item_treasury:
                 setTitle(R.string.title_treasury);
@@ -385,9 +386,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     }
 
     // Sets the fragment on the container according to the selected item in menu
-    protected void replaceFragment(Fragment frag) {
+    public void replaceFragment(Fragment frag) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, frag,
                 "TAG").commit();
+    }
+
+    public void replaceFragment(Fragment frag, String tag) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, frag,
+                tag).commit();
     }
 
     // Open the Drawer
@@ -902,6 +908,13 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                         mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(100);
                     } else if (mAdFailedLoading == true && mMenu != null) {
                         mMenu.findItem(R.id.menu_refresh).getIcon().setAlpha(255);
+                    }
+
+                    // Show premium board on Portfolio Fragment
+                    FragmentManager supportFragmentManager = getSupportFragmentManager();
+                    Fragment fragment = supportFragmentManager.findFragmentByTag("PortfolioMainFragment");
+                    if (fragment != null) {
+                        ((PortfolioMainFragment) fragment).showPremium();
                     }
                 }
             }

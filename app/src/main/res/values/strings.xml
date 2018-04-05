@@ -559,13 +559,18 @@
     <string name="premium_payment_warning">*The payment is done by Google Payments, no financial information is passed through the application.</string>
     <string name="premium_sign_button">Sign Monthly!</string>
     <string name="premium_sign_semester_button">Sign Semesterly!</string>
+    <string name="premium_sign_now">Sign Now!</string>
     <string name="premium_sign_label">Sign Premium</string>
-    <string name="premium_try">Try 1 Month Free!</string>
+    <string name="premium_try">Try 30 days Free!</string>
     <string name="premium_price">R$4,90/month</string>
     <string name="premium_semester_price">R$14,90/Semester</string>
+    <string name="premium_item1">\u2022 Unlimited portfolio update</string>
+    <string name="premium_item2">\u2022 Automatic incomes</string>
+    <string name="premium_item3">\u2022 Remove Ads</string>
     <string name="premium_itens">
         \u2022 Unlimited portfolio update.\n
-        \u2022 Rremove of Ads.\n
+        \u2022 Automatic incomes update for stocks and Fiis.\n
+        \u2022 Remove Ads.\n
         \u2022 Access to new resources as soon as they are developed.\n
     </string>
 
@@ -576,8 +581,7 @@
 
         \u2022 Área para o lançamento de Opções, compra e venda de PUT e CALL.\n
         \u2022 Renda fixa atrelada ao IPCA automatizada.\n
-        \u2022 Área para o lançamento de Fundos de investimento automatizados.\n
-        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Área para o lançamento de fundos de investimento automatizados.\n
         \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
         \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
         \u2022 Tutorial.\n
