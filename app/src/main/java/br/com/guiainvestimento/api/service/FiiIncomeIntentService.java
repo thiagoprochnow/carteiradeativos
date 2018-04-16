@@ -258,7 +258,6 @@ public class FiiIncomeIntentService extends IntentService {
     // Changed so it will always get all incomes and check if they were already inserted.
     private String getLastIncomeTime(String symbol){
         // Fii Income
-        /*
         String[] affectedColumn = {PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP};
         String sortOrder = PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
         String selection = PortfolioContract.FiiIncome.COLUMN_SYMBOL + " = ?";
@@ -270,10 +269,9 @@ public class FiiIncomeIntentService extends IntentService {
 
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
-            long timestamp = Long.parseLong(cursor.getString(0))/1000;
+            long timestamp = Long.parseLong(cursor.getString(0))/1000 - 1;
             return String.valueOf(timestamp);
         }
-        */
         return "1262131200";
     }
 
