@@ -48,7 +48,7 @@ public class StockIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
     private final String CedroL = "thiprochnow";
-    private final String CedroP = "102030";
+    private final String CedroP = "4schGOS";
     private boolean mSuccess = false;
     private String mResult = "";
     private String mSymbol;
@@ -222,18 +222,16 @@ public class StockIntentService extends IntentService {
             List<StockQuote> stocks = null;
             if(size <= 1){
                 boolean success = false;
-                do {
-                    Call<StockQuote> callGet = service.getStock(path);
-                    Response<StockQuote> responseGet = callGet.execute();
-                    if (responseGet != null && responseGet.isSuccessful()) {
-                        success = true;
-                        StockQuote stock = responseGet.body();
-                        stocks = new ArrayList<StockQuote>();
-                        stocks.add(stock);
-                    } else {
-                        stocks = null;
-                    }
-                } while (!success);
+                Call<StockQuote> callGet = service.getStock(path);
+                Response<StockQuote> responseGet = callGet.execute();
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    success = true;
+                    StockQuote stock = responseGet.body();
+                    stocks = new ArrayList<StockQuote>();
+                    stocks.add(stock);
+                } else {
+                    stocks = null;
+                }
             } else {
                 boolean success = false;
                 do {

@@ -45,7 +45,7 @@ public class FiiIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
     private final String CedroL = "thiprochnow";
-    private final String CedroP = "102030";
+    private final String CedroP = "4schGOS";
 
     private boolean mSuccess = false;
     private String mSymbol;
@@ -200,18 +200,17 @@ public class FiiIntentService extends IntentService {
 
             if(size <= 1) {
                 boolean success = false;
-                do {
-                    Call<FiiQuote> callGet = service.getFii(path);
-                    Response<FiiQuote> responseGet = callGet.execute();
-                    if (responseGet != null && responseGet.isSuccessful()) {
-                        success = true;
-                        FiiQuote fii = responseGet.body();
-                        fiis = new ArrayList<FiiQuote>();
-                        fiis.add(fii);
-                    } else {
-                        fiis = null;
-                    }
-                } while (!success);
+
+                Call<FiiQuote> callGet = service.getFii(path);
+                Response<FiiQuote> responseGet = callGet.execute();
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    success = true;
+                    FiiQuote fii = responseGet.body();
+                    fiis = new ArrayList<FiiQuote>();
+                    fiis.add(fii);
+                } else {
+                    fiis = null;
+                }
             } else {
                 boolean success = false;
                 do {
