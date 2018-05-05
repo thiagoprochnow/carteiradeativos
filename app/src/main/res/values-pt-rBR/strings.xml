@@ -400,8 +400,13 @@
     <string name="fixed_rentability_type_pre">Pré</string>
     <string name="fixed_rentability_type_index">Indexado</string>
     <string name="fixed_buy_value">Valor total comprado</string>
-    <string name="fixed_gain_rate">Ganho (%CDI)</string>
+    <string name="fixed_type_label">Indexador</string>
+    <string name="fixed_gain_rate">Taxa de Ganho (%CDI)</string>
+    <string name="fixed_gain_rate_ipca">Taxa de Ganho (IPCA + %)</string>
+    <string name="fixed_gain_rate_pre">Taxa de Ganho (% Pré Fixada)</string>
     <string name="fixed_gain_rate_hint">Ex: 110</string>
+    <string name="fixed_gain_rate_ipca_hint">Ex: 6.33</string>
+    <string name="fixed_gain_rate_pre_hint">Ex: 10.54</string>
     <string name="fixed_sell_value">Valor total vendido</string>
 
     <!-- Add others income Form Fragment -->

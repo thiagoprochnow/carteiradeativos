@@ -14,7 +14,9 @@ import br.com.guiainvestimento.fragment.currency.EditCurrencyTransactionFormFrag
 import br.com.guiainvestimento.fragment.fii.EditFiiFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiIncomeFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fii.FiiGroupingFormFragment;
 import br.com.guiainvestimento.fragment.fii.FiiIncomeFormFragment;
+import br.com.guiainvestimento.fragment.fii.FiiSplitFormFragment;
 import br.com.guiainvestimento.fragment.fii.SellFiiFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.BuyFixedFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.EditFixedFormFragment;
@@ -170,6 +172,11 @@ public class FormActivity extends AppCompatActivity {
                     Constants.Type.INVALID);
             int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE,
                     Constants.IncomeType.INVALID);
+            int productType = Constants.ProductType.INVALID;
+            if(intent.hasExtra(Constants.Extra.EXTRA_PRODUCT_TYPE)) {
+                productType = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
+                        Constants.ProductType.INVALID);
+            }
             if (productStatus == Constants.Type.EDIT_INCOME){
                 switch (incomeType) {
                     case Constants.IncomeType.DIVIDEND:
@@ -203,10 +210,18 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new BonificationFormFragment());
                         break;
                     case Constants.IncomeType.SPLIT:
-                        replaceFragment(new SplitFormFragment());
+                        if(productType == Constants.ProductType.FII){
+                            replaceFragment(new FiiSplitFormFragment());
+                        } else {
+                            replaceFragment(new SplitFormFragment());
+                        }
                         break;
                     case Constants.IncomeType.GROUPING:
-                        replaceFragment(new GroupingFormFragment());
+                        if(productType == Constants.ProductType.FII){
+                            replaceFragment(new FiiGroupingFormFragment());
+                        } else {
+                            replaceFragment(new GroupingFormFragment());
+                        }
                         break;
                     case Constants.IncomeType.FII:
                         replaceFragment(new FiiIncomeFormFragment());
@@ -216,6 +231,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.IncomeType.OTHERS:
                         replaceFragment(new OthersIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.FII_SPLIT:
+                        replaceFragment(new FiiSplitFormFragment());
                         break;
                     default:
                         finish();

@@ -1032,6 +1032,7 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String COLUMN_GAIN_RATE = "gain_rate";
+        public static final String COLUMN_GAIN_TYPE = "gain_type";
         public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_TRANSACTION_COLUMNS = {
@@ -1043,6 +1044,7 @@ public class PortfolioContract {
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
                 COLUMN_GAIN_RATE,
+                COLUMN_GAIN_TYPE,
                 LAST_UPDATE
         };
 

@@ -165,10 +165,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 startActivity(intent);
                 break;
             case R.id.menu_item_split:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, mProductType);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.SPLIT);
                 startActivity(intent);
                 break;
             case R.id.menu_item_grouping:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, mProductType);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
                 break;
@@ -210,10 +212,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 startActivity(intent);
                 break;
             case R.id.menu_item_split:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, mProductType);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.SPLIT);
                 startActivity(intent);
                 break;
             case R.id.menu_item_grouping:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, mProductType);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.GROUPING);
                 startActivity(intent);
                 break;

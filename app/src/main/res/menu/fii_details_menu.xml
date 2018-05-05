@@ -4,4 +4,12 @@
         android:id="@+id/menu_item_income"
         android:title="@string/menu_item_income"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_split"
+        android:title="@string/menu_item_split"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_grouping"
+        android:title="@string/menu_item_grouping"
+        app:showAsAction="never"/>
 </menu>

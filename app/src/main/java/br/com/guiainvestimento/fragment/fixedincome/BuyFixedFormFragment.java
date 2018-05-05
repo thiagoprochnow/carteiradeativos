@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +36,9 @@ public class BuyFixedFormFragment extends BaseFormFragment {
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
     private EditText mInputGainRateView;
+    private Spinner mInputGainTypeView;
+    private TextView mGainRateLabelView;
+    private int mType = Constants.FixedType.CDI;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -55,6 +62,40 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
         mInputGainRateView = (EditText) mView.findViewById(R.id.inputGainRate);
+        mInputGainTypeView = (Spinner) mView.findViewById(R.id.inputType);
+        mGainRateLabelView = (TextView) mView.findViewById(R.id.gainRateLabel);
+
+        String[] tipos = new String[]{"CDI","IPCA","Pré Fixado"};
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_dropdown_item,tipos);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mInputGainTypeView.setAdapter(adapter);
+
+        mInputGainTypeView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0){
+                    mType = Constants.FixedType.CDI;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_hint);
+                } else if(position == 1){
+                    mType = Constants.FixedType.IPCA;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate_ipca);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_ipca_hint);
+                } else {
+                    mType = Constants.FixedType.PRE;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate_pre);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_pre_hint);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();

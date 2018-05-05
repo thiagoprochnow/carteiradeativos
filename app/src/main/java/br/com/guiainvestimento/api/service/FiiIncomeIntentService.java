@@ -303,6 +303,12 @@ public class FiiIncomeIntentService extends IntentService {
                     case Constants.Type.SELL:
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
+                    case Constants.Type.SPLIT:
+                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
                     default:
                 }
             } while (queryCursor.moveToNext());

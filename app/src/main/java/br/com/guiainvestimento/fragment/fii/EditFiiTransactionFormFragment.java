@@ -97,6 +97,24 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
                 break;
+            case Constants.Type.GROUPING:
+                getActivity().setTitle(getResources().getString(R.string.stock_grouping));
+                mView = inflater.inflate(R.layout.fragment_edit_stock_grouping_form, container, false);
+                mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
+                mInputDateView = (EditText) mView.findViewById(R.id.inputGroupingDate);
+                mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
+                mInputDateView.setText(simpleDateFormat.format(mDate));
+                mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
+                break;
+            case Constants.Type.SPLIT:
+                getActivity().setTitle(getResources().getString(R.string.stock_split));
+                mView = inflater.inflate(R.layout.fragment_edit_stock_split_form, container, false);
+                mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
+                mInputDateView = (EditText) mView.findViewById(R.id.inputSplitDate);
+                mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
+                mInputDateView.setText(simpleDateFormat.format(mDate));
+                mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
+                break;
             default:
                 getActivity().finish();
         }
@@ -194,6 +212,48 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
                     return false;
                 }
 
+                break;
+            case Constants.Type.GROUPING:
+
+                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidDate = isValidDate(mInputDateView);
+                if (isValidQuantity){
+                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    updateValues.put(PortfolioContract.FiiTransaction.COLUMN_QUANTITY, newQuantity);
+                } else {
+                    mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
+                    return false;
+                }
+
+                if (isValidDate){
+                    newDate = mInputDateView.getText().toString();
+                    Long timestamp = DateToTimestamp(newDate);
+                    updateValues.put(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP, timestamp);
+                } else {
+                    mInputDateView.setError(this.getString(R.string.wrong_date));
+                    return false;
+                }
+                break;
+            case Constants.Type.SPLIT:
+
+                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidDate = isValidDate(mInputDateView);
+                if (isValidQuantity){
+                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    updateValues.put(PortfolioContract.FiiTransaction.COLUMN_QUANTITY, newQuantity);
+                } else {
+                    mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
+                    return false;
+                }
+
+                if (isValidDate){
+                    newDate = mInputDateView.getText().toString();
+                    Long timestamp = DateToTimestamp(newDate);
+                    updateValues.put(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP, timestamp);
+                } else {
+                    mInputDateView.setError(this.getString(R.string.wrong_date));
+                    return false;
+                }
                 break;
             default:
                 return false;

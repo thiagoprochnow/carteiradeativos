@@ -111,10 +111,10 @@
     <string name="buy_stock_fail">Error adding stock</string>
     <string name="bonification_success">Bonification added successfully</string>
     <string name="bonification_fail">Error adding bonification</string>
-    <string name="split_success">Stock split successfully</string>
-    <string name="split_fail">Stock split failed</string>
-    <string name="grouping_success">Stock grouping successfully</string>
-    <string name="grouping_fail">Stock grouping failed</string>
+    <string name="split_success">Split successfully</string>
+    <string name="split_fail">Split failed</string>
+    <string name="grouping_success">Grouping successfully</string>
+    <string name="grouping_fail">Grouping failed</string>
     <string name="sell_stock_success">Stock sold successfully</string>
     <string name="sell_stock_fail">Error selling stock</string>
     <string name="delete_stock_title">Delete stock from your portfolio?</string>
@@ -400,8 +400,13 @@
     <string name="fixed_rentability_type_pre">Pre</string>
     <string name="fixed_rentability_type_index">Indexed</string>
     <string name="fixed_buy_value">Buy total value</string>
+    <string name="fixed_type_label">Type</string>
     <string name="fixed_gain_rate">Gain Rate (%CDI)</string>
+    <string name="fixed_gain_rate_ipca">Gain Rate (IPCA + %)</string>
+    <string name="fixed_gain_rate_pre">Gain Rate (% Pré Fixada)</string>
     <string name="fixed_gain_rate_hint">Ex: 110</string>
+    <string name="fixed_gain_rate_ipca_hint">Ex: 6.33</string>
+    <string name="fixed_gain_rate_pre_hint">Ex: 10.54</string>
     <string name="fixed_sell_value">Sell total value</string>
 
     <!-- Add others income Form Fragment -->

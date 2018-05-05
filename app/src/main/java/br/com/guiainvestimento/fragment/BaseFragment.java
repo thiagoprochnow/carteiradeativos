@@ -1906,7 +1906,16 @@ public abstract class BaseFragment extends Fragment {
                         buyBrokerage -=partialSell;
                         sellBrokerage += partialSell + STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
                         buyQuantityBrokerage -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
-
+                        break;
+                    case Constants.Type.SPLIT:
+                        buyQuantity = buyQuantity*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        buyQuantity = buyQuantity/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -2205,6 +2214,12 @@ public abstract class BaseFragment extends Fragment {
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SPLIT:
+                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }

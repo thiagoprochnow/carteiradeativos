@@ -73,6 +73,7 @@ public final class Constants {
         public static final int FIXED = 6;
         public static final int TREASURY = 7;
         public static final int OTHERS = 8;
+        public static final int FII_SPLIT = 9;
     }
 
     // Status of the a specific investment
@@ -109,13 +110,9 @@ public final class Constants {
     // FixedIncome Types
     public static class FixedType{
         public static final int INVALID = -1;
-        public static final int CDB = 0;
-        public static final int LCI = 1;
-        public static final int LCA = 2;
-        public static final int DEBENTURE = 3;
-        public static final int LC = 4;
-        public static final int CRI = 5;
-        public static final int CRA = 6;
+        public static final int CDI = 0;
+        public static final int IPCA = 1;
+        public static final int PRE = 2;
     }
 
     // Constants for Loaders IDs

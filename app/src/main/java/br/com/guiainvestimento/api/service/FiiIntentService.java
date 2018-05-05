@@ -230,7 +230,7 @@ public class FiiIntentService extends IntentService {
                     boolean success = false;
                     ContentValues updateFii = new ContentValues();
                     for (FiiQuote fii : fiis) {
-                        if (fii != null && fii.getError() == null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null) {
+                        if (fii != null && fii.getError() == null && fii.toString() != null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null) {
                             String lastPrice = "0.0";
                             if(Double.valueOf(fii.getLast()) > 0){
                                 lastPrice = fii.getLast();

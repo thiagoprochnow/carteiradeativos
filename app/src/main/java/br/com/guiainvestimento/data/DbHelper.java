@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import br.com.guiainvestimento.common.Constants;
+
 /* DbHelper class that creates all tables and perform the db upgrade logic */
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -13,7 +15,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     // TODO: Need to change db name to the final app name or to anything meaningful
     static final String NAME = "Portfolio.db";
-    private static final int VERSION = 4;
+    private static final int VERSION = 5;
 
     // Log variable
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
@@ -72,6 +74,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_ALTER_FIXED_DATA_1 = "ALTER TABLE "
             + PortfolioContract.FixedData.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FixedData.COLUMN_UPDATE_STATUS + " INTEGER;";
+
+    private static final String DATABASE_ALTER_FIXED_TRANSACTION_2 = "ALTER TABLE "
+            + PortfolioContract.FixedTransaction.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE + " INTEGER DEFAULT " + Constants.FixedType.CDI +";";
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -371,6 +376,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.FixedTransaction.COLUMN_TAX + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE + " REAL, " +
+                PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE + " INTEGER, " +
                 PortfolioContract.FixedTransaction.LAST_UPDATE + " LONG, " +
                 " FOREIGN KEY (" + PortfolioContract.FixedTransaction.COLUMN_SYMBOL + ") REFERENCES "
                 + PortfolioContract.FixedData.TABLE_NAME + " (" + PortfolioContract.FixedData._ID + "));";
@@ -574,6 +580,14 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(DATABASE_CREATE_CDI);
                 db.execSQL(DATABASE_ALTER_FIXED_TRANSACTION_1);
                 db.execSQL(DATABASE_ALTER_FIXED_DATA_1);
+            }
+        } catch (SQLException e){
+            Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
+        }
+
+        try {
+            if (oldVersion < 5){
+                db.execSQL(DATABASE_ALTER_FIXED_TRANSACTION_2);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
