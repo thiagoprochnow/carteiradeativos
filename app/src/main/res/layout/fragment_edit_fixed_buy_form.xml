@@ -29,6 +29,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/fixed_type_label"/>
+
+        <Spinner
+            android:id="@+id/inputType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></Spinner>
+
+        <TextView
+            android:id="@+id/gainRateLabel"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
             android:text="@string/fixed_gain_rate"/>
 
         <EditText

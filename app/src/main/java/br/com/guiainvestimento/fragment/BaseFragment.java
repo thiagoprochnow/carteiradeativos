@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -27,7 +26,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.service.CdiIntentService;
+import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
@@ -2324,9 +2323,9 @@ public abstract class BaseFragment extends Fragment {
             // Set fixed income as active
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.ACTIVE);
 
-            Intent mServiceIntent = new Intent(mContext, CdiIntentService
+            Intent mServiceIntent = new Intent(mContext, FixedIntentService
                     .class);
-            mServiceIntent.putExtra(CdiIntentService.ADD_SYMBOL, symbol);
+            mServiceIntent.putExtra(FixedIntentService.ADD_SYMBOL, symbol);
             getActivity().startService(mServiceIntent);
 
             // Searches for existing FixedData to update value.

@@ -34,13 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.service.CdiIntentService;
+import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIncomeIntentService;
-import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIncomeIntentService;
-import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
@@ -673,7 +671,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         // Fixed Income Refresh
-        Intent mCdiServiceIntent = new Intent(this, CdiIntentService
+        Intent mCdiServiceIntent = new Intent(this, FixedIntentService
                 .class);
 
         String[] affectedColumn5 = {PortfolioContract.FixedData.COLUMN_SYMBOL};
@@ -697,7 +695,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                             (PortfolioContract.FixedData.COLUMN_SYMBOL));
                 }
             } while (queryCursor.moveToNext());
-            mCdiServiceIntent.putExtra(CdiIntentService.ADD_SYMBOL, symbol);
+            mCdiServiceIntent.putExtra(FixedIntentService.ADD_SYMBOL, symbol);
             startService(mCdiServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely

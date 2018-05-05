@@ -93,7 +93,6 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -143,6 +142,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE, gainRate);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.BUY);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE, mType);
 
             // Adds to the database
             Uri insertedFixedTransactionUri = mContext.getContentResolver().insert(PortfolioContract

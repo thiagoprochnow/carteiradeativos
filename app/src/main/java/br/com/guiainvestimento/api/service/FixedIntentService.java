@@ -15,19 +15,15 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.math.RoundingMode;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Cdi;
-import br.com.guiainvestimento.domain.TreasuryQuote;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -44,10 +40,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * This class will also write the result in the database and update the adapter
  */
 
-public class CdiIntentService extends IntentService {
+public class FixedIntentService extends IntentService {
 
     // Log variable
-    private static final String LOG_TAG = CdiIntentService.class.getSimpleName();
+    private static final String LOG_TAG = FixedIntentService.class.getSimpleName();
     private final String username = "mainuser";
     private final String password = "user1133";
     private String mResult = "";
@@ -61,8 +57,8 @@ public class CdiIntentService extends IntentService {
     /**
      * Constructor matching super is needed
      */
-    public CdiIntentService() {
-        super(CdiIntentService.class.getName());
+    public FixedIntentService() {
+        super(FixedIntentService.class.getName());
     }
 
     @Override
@@ -116,7 +112,7 @@ public class CdiIntentService extends IntentService {
 
         try {
             // Validate if Symbol was added
-            if (params.getExtras() == null || params.getExtras().getString(CdiIntentService.ADD_SYMBOL).isEmpty()) {
+            if (params.getExtras() == null || params.getExtras().getString(FixedIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
@@ -170,7 +166,7 @@ public class CdiIntentService extends IntentService {
                 }
 
                 // After CDI update, start fixed income updates
-                String[] symbols = params.getExtras().getString(CdiIntentService.ADD_SYMBOL).split(",");
+                String[] symbols = params.getExtras().getString(FixedIntentService.ADD_SYMBOL).split(",");
 
                 boolean update = true;
                 ContentValues updateFail;
@@ -269,59 +265,121 @@ public class CdiIntentService extends IntentService {
         do {
             double value = transaction.getDouble(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
             int type = transaction.getInt(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TYPE));
+            int gainType = transaction.getInt(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE));
             String timestamp = String.valueOf(transaction.getLong(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP))).substring(0,10);
 
-            String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
-            // Informações do cdi posteriores a data timestamp
-            Cursor cdi = getApplicationContext().getContentResolver().query(
-                    PortfolioContract.Cdi.makeUriForCdi(timestamp),
-                    null, null, null, sortOrder);
+            // CDI
+            if(gainType == Constants.FixedType.CDI) {
+                String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
+                // Informações do cdi posteriores a data timestamp
+                Cursor cdi = getApplicationContext().getContentResolver().query(
+                        PortfolioContract.Cdi.makeUriForCdi(timestamp),
+                        null, null, null, sortOrder);
 
-            if (type == Constants.Type.BUY){
-                currentFixedValue += value;
-                gainRate = transaction.getDouble(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE));
-            } else {
-                // SELL
-                currentFixedValue -= value;
-            }
+                if (type == Constants.Type.BUY) {
+                    currentFixedValue += value;
+                    gainRate = transaction.getDouble(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE));
+                } else {
+                    // SELL
+                    currentFixedValue -= value;
+                }
 
-            if (gainRate == 0){
-                return false;
-            }
+                if (gainRate == 0) {
+                    return false;
+                }
 
-            if (!cdi.moveToFirst()){
-                // was not able to update cdi from server or there is not cdi for this transaction timestamp yet
-                continue;
-            }
+                if (!cdi.moveToFirst()) {
+                    // was not able to update cdi from server or there is not cdi for this transaction timestamp yet
+                    continue;
+                }
 
-            if (nextTransaction.moveToNext()) {
-                // Has Next Transaction (Buy, Sell)
-                long cdiTimestamp = 0;
-                String nextTimeString = nextTransaction.getString(nextTransaction.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP)).substring(0,10);;
-                long nextTimestamp = Long.valueOf(nextTimeString);
-                do{
-                    double cdiValue = cdi.getDouble(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_VALUE));
-                    double cdiDaily = getCdiDaily(cdiValue, gainRate);
+                if (nextTransaction.moveToNext()) {
+                    // Has Next Transaction (Buy, Sell)
+                    long cdiTimestamp = 0;
+                    String nextTimeString = nextTransaction.getString(nextTransaction.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP)).substring(0, 10);
+                    ;
+                    long nextTimestamp = Long.valueOf(nextTimeString);
+                    do {
+                        double cdiValue = cdi.getDouble(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_VALUE));
+                        double cdiDaily = getCdiDaily(cdiValue, gainRate);
 
-                    currentFixedValue = currentFixedValue * cdiDaily;
+                        currentFixedValue = currentFixedValue * cdiDaily;
 
-                    if(cdi.moveToNext()) {
-                        cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));
-                    } else {
-                        // Transaction timestamp is bigger then last cdi timestamp
-                        cdi.moveToLast();
-                        break;
-                    }
-                } while (cdiTimestamp < nextTimestamp);
-            } else {
-                // Last one, only needs to sum or subtract and updated until end of CDI
-                // Last transaction
-                do {
-                    double cdiValue = cdi.getDouble(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_VALUE));
-                    double cdiDaily = getCdiDaily(cdiValue, gainRate);
+                        if (cdi.moveToNext()) {
+                            cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));
+                        } else {
+                            // Transaction timestamp is bigger then last cdi timestamp
+                            cdi.moveToLast();
+                            break;
+                        }
+                    } while (cdiTimestamp < nextTimestamp);
+                } else {
+                    // Last one, only needs to sum or subtract and updated until end of CDI
+                    // Last transaction
+                    do {
+                        double cdiValue = cdi.getDouble(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_VALUE));
+                        double cdiDaily = getCdiDaily(cdiValue, gainRate);
 
-                    currentFixedValue = currentFixedValue * cdiDaily;
-                } while (cdi.moveToNext());
+                        currentFixedValue = currentFixedValue * cdiDaily;
+                    } while (cdi.moveToNext());
+                }
+            } else if(gainType == Constants.FixedType.IPCA){
+                // IPCA
+            } else if(gainType == Constants.FixedType.PRE){
+                // Pré Fixado
+                String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
+                // Informações do cdi posteriores a data timestamp
+                Cursor cdi = getApplicationContext().getContentResolver().query(
+                        PortfolioContract.Cdi.makeUriForCdi(timestamp),
+                        null, null, null, sortOrder);
+
+                if (type == Constants.Type.BUY) {
+                    currentFixedValue += value;
+                    gainRate = transaction.getDouble(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE));
+                    gainRate = gainRate*100;
+                } else {
+                    // SELL
+                    currentFixedValue -= value;
+                }
+
+                if (gainRate == 0) {
+                    return false;
+                }
+
+                if (!cdi.moveToFirst()) {
+                    // was not able to update cdi from server or there is not cdi for this transaction timestamp yet
+                    continue;
+                }
+
+                if (nextTransaction.moveToNext()) {
+                    // Has Next Transaction (Buy, Sell)
+                    long cdiTimestamp = 0;
+                    String nextTimeString = nextTransaction.getString(nextTransaction.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP)).substring(0, 10);
+                    ;
+                    long nextTimestamp = Long.valueOf(nextTimeString);
+                    do {
+                        double cdiDaily = getCdiDaily(gainRate, 1);
+
+                        currentFixedValue = currentFixedValue * cdiDaily;
+
+                        if (cdi.moveToNext()) {
+                            cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));
+                        } else {
+                            // Transaction timestamp is bigger then last cdi timestamp
+                            cdi.moveToLast();
+                            break;
+                        }
+                    } while (cdiTimestamp < nextTimestamp);
+                } else {
+                    // Last one, only needs to sum or subtract and updated until end of CDI
+                    // Last transaction
+                    do {
+                        double cdiValue = cdi.getDouble(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_VALUE));
+                        double cdiDaily = getCdiDaily(gainRate, 1);
+
+                        currentFixedValue = currentFixedValue * cdiDaily;
+                    } while (cdi.moveToNext());
+                }
             }
         } while (transaction.moveToNext());
 
