@@ -78,6 +78,14 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_ALTER_FIXED_TRANSACTION_2 = "ALTER TABLE "
             + PortfolioContract.FixedTransaction.TABLE_NAME + " ADD COLUMN " + PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE + " INTEGER DEFAULT " + Constants.FixedType.CDI +";";
 
+    private static final String DATABASE_CREATE_IPCA = "CREATE TABLE " + PortfolioContract.Ipca.TABLE_NAME + " (" +
+            PortfolioContract.Ipca._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.Ipca.COLUMN_ANO + " INTEGER, " +
+            PortfolioContract.Ipca.COLUMN_MES + " INTEGER, " +
+            PortfolioContract.Ipca.COLUMN_VALUE + " REAL, " +
+            PortfolioContract.Ipca.LAST_UPDATE + " TEXT, " +
+            "UNIQUE (" + PortfolioContract.Ipca._ID + ") ON CONFLICT REPLACE);";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -545,6 +553,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(builder_others_income);
         db.execSQL(DATABASE_CREATE_BUY_GROWTH);
         db.execSQL(DATABASE_CREATE_CDI);
+        db.execSQL(DATABASE_CREATE_IPCA);
     }
 
 
@@ -588,6 +597,7 @@ public class DbHelper extends SQLiteOpenHelper {
         try {
             if (oldVersion < 5){
                 db.execSQL(DATABASE_ALTER_FIXED_TRANSACTION_2);
+                db.execSQL(DATABASE_CREATE_IPCA);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);

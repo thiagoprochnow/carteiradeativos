@@ -109,6 +109,8 @@ public class PortfolioContract {
     public static final String PATH_CDI = "cdi";
     public static final String PATH_CDI_WITH_DATE = "cdi/*";
 
+    public static final String PATH_IPCA = "ipca";
+
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
 
@@ -1475,7 +1477,7 @@ public class PortfolioContract {
         public static final String COLUMN_DATA = "data";
         public static final String LAST_UPDATE = "last_update";
 
-        public static final String[] OTHERS_INCOME_COLUMNS = {
+        public static final String[] CDI_COLUMNS = {
                 _ID,
                 COLUMN_VALUE,
                 COLUMN_TIMESTAMP,
@@ -1492,6 +1494,38 @@ public class PortfolioContract {
         }
 
         public static String getCdiFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of ipca
+    public static final class Ipca implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_IPCA).build();
+
+        public static final String TABLE_NAME = "ipca";
+
+        public static final String COLUMN_ANO = "ano";
+        public static final String COLUMN_MES = "mes";
+        public static final String COLUMN_VALUE = "valor";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] IPCA_COLUMNS = {
+                _ID,
+                COLUMN_VALUE,
+                COLUMN_ANO,
+                COLUMN_MES,
+                LAST_UPDATE
+        };
+
+        public static Uri makeUriForIpca(String timestamp) {
+            return URI.buildUpon().appendPath(timestamp).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getIpcaFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

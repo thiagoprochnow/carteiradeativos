@@ -33,6 +33,7 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_BUY_GROWTH, Constants.Provider.BUY_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI, Constants.Provider.CDI);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI_WITH_DATE, Constants.Provider.CDI_WITH_DATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_IPCA, Constants.Provider.IPCA);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_INCOME_GROWTH, Constants.Provider.INCOME_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
@@ -637,6 +638,18 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.IPCA:
+                returnCursor = db.query(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1059,6 +1072,19 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+            case Constants.Provider.IPCA:
+                _id = db.insert(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.Ipca.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1404,6 +1430,14 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.IPCA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1698,6 +1732,12 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
+            case Constants.Provider.IPCA:
+                rowsUpdated = db.update(PortfolioContract.Ipca.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -1838,6 +1878,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.Cdi.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.IPCA:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.Ipca.TABLE_NAME,
                                 null,
                                 value
                         );

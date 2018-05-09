@@ -17,13 +17,16 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Cdi;
+import br.com.guiainvestimento.domain.Ipca;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -165,37 +168,73 @@ public class FixedIntentService extends IntentService {
                             cdisArray);
                 }
 
-                // After CDI update, start fixed income updates
-                String[] symbols = params.getExtras().getString(FixedIntentService.ADD_SYMBOL).split(",");
-
-                boolean update = true;
-                ContentValues updateFail;
-                for (String symbol: symbols) {
-                    boolean updateSuccess = updateFixedData(symbol);
-                    if (!updateSuccess){
-                        updateFail = new ContentValues();
-                        updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-
-                        update = false;
-                    } else {
-                        updateFail = new ContentValues();
-                        updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
-                    }
-                    String updateSelection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ?";
-                    String[] updatedSelectionArguments = {symbol};
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.FixedData.URI,
-                            updateFail, updateSelection, updatedSelectionArguments);
-                }
-
-                if (update) {
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    // One or more Fixed income are without CDI Rate
-                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
-                }
             } else {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            // Update IPCA table
+            Call<List<Ipca>> callGetIpca = service.getIpca();
+            retrofit2.Response<List<Ipca>> responseGetIpca = callGetIpca.execute();
+            List<Ipca> ipcas = null;
+            if (responseGetIpca != null && responseGetIpca.isSuccessful()) {
+                ipcas = responseGetIpca.body();
+            }
+
+            ContentValues[] ipcaArray;
+            ArrayList<ContentValues> ipcasCV = new ArrayList<ContentValues>();
+
+            if (responseGetIpca != null && responseGetIpca.isSuccessful()){
+                if(ipcas != null && ipcas.size() > 0){
+                    for (Ipca ipca : ipcas) {
+                        ContentValues ipcaCV = new ContentValues();
+                        ipcaCV.put(PortfolioContract.Ipca._ID, ipca.getId());
+                        ipcaCV.put(PortfolioContract.Ipca.COLUMN_ANO, ipca.getAno());
+                        ipcaCV.put(PortfolioContract.Ipca.COLUMN_MES, ipca.getMes());
+                        ipcaCV.put(PortfolioContract.Ipca.COLUMN_VALUE, ipca.getValor());
+                        ipcaCV.put(PortfolioContract.Ipca.LAST_UPDATE, ipca.getAtualizado());
+                        ipcasCV.add(ipcaCV);
+                    }
+                    ipcaArray = new ContentValues[ipcasCV.size()];
+                    ipcasCV.toArray(ipcaArray);
+
+                    int delete = getApplicationContext().getContentResolver().delete(
+                            PortfolioContract.Ipca.URI,
+                            null, null);
+
+                    int insert = getApplicationContext().getContentResolver().bulkInsert(
+                            PortfolioContract.Ipca.URI,
+                            ipcaArray);
+                }
+            }
+
+            // After CDI and IPCA update, start fixed income updates
+            String[] symbols = params.getExtras().getString(FixedIntentService.ADD_SYMBOL).split(",");
+
+            boolean update = true;
+            ContentValues updateFail;
+            for (String symbol: symbols) {
+                boolean updateSuccess = updateFixedData(symbol);
+                if (!updateSuccess){
+                    updateFail = new ContentValues();
+                    updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+
+                    update = false;
+                } else {
+                    updateFail = new ContentValues();
+                    updateFail.put(PortfolioContract.FixedData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                }
+                String updateSelection = PortfolioContract.FixedData.COLUMN_SYMBOL + " = ?";
+                String[] updatedSelectionArguments = {symbol};
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.FixedData.URI,
+                        updateFail, updateSelection, updatedSelectionArguments);
+            }
+
+            if (update) {
+                resultStatus = GcmNetworkManager.RESULT_SUCCESS;
+            } else {
+                // One or more Fixed income are without CDI Rate
+                resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
@@ -325,8 +364,6 @@ public class FixedIntentService extends IntentService {
                 }
             } else if(gainType == Constants.FixedType.IPCA){
                 // IPCA
-            } else if(gainType == Constants.FixedType.PRE){
-                // Pré Fixado
                 String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
                 // Informações do cdi posteriores a data timestamp
                 Cursor cdi = getApplicationContext().getContentResolver().query(
@@ -342,8 +379,58 @@ public class FixedIntentService extends IntentService {
                     currentFixedValue -= value;
                 }
 
-                if (gainRate == 0) {
-                    return false;
+                if (!cdi.moveToFirst()) {
+                    // was not able to update cdi from server or there is not cdi for this transaction timestamp yet
+                    continue;
+                }
+
+                if (nextTransaction.moveToNext()) {
+                    // Has Next Transaction (Buy, Sell)
+                    long cdiTimestamp = 0;
+                    String nextTimeString = nextTransaction.getString(nextTransaction.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP)).substring(0, 10);
+                    ;
+                    long nextTimestamp = Long.valueOf(nextTimeString);
+                    do {
+                        double ipcaGainRate = getIpcaGain(cdiTimestamp);
+                        double cdiDaily = getCdiDaily(gainRate+ipcaGainRate, 1);
+
+                        currentFixedValue = currentFixedValue * cdiDaily;
+
+                        if (cdi.moveToNext()) {
+                            cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));
+                        } else {
+                            // Transaction timestamp is bigger then last cdi timestamp
+                            cdi.moveToLast();
+                            break;
+                        }
+                    } while (cdiTimestamp < nextTimestamp);
+                } else {
+                    // Last one, only needs to sum or subtract and updated until end of CDI
+                    // Last transaction
+                    do {
+                        long cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));;
+                        double ipcaGainRate = getIpcaGain(cdiTimestamp);
+                        ipcaGainRate = (double)Math.round(ipcaGainRate * 100d) / 100d;
+                        double cdiDaily = getCdiDaily(gainRate+ipcaGainRate, 1);
+
+                        currentFixedValue = currentFixedValue * cdiDaily;
+                    } while (cdi.moveToNext());
+                }
+            } else if(gainType == Constants.FixedType.PRE){
+                // Pré Fixado
+                String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
+                // Informações do cdi posteriores a data timestamp
+                Cursor cdi = getApplicationContext().getContentResolver().query(
+                        PortfolioContract.Cdi.makeUriForCdi(timestamp),
+                        null, null, null, sortOrder);
+
+                if (type == Constants.Type.BUY) {
+                    currentFixedValue += value;
+                    gainRate = transaction.getDouble(transaction.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE));
+                    gainRate = gainRate*100;
+                } else {
+                    // SELL
+                    currentFixedValue -= value;
                 }
 
                 if (!cdi.moveToFirst()) {
@@ -421,5 +508,40 @@ public class FixedIntentService extends IntentService {
         }
 
         return "";
+    }
+
+    private double getIpcaGain(long cdiTimestamp){
+
+        // Get month and year of cdi to use on query for IPCA value
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(cdiTimestamp*1000);
+        String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
+        String year = String.valueOf(cal.get(Calendar.YEAR));
+        String yearLimit = String.valueOf(cal.get(Calendar.YEAR)-1);
+
+        // Select IPCA value based on its year and month
+        String[] affectedColumn = {PortfolioContract.Ipca.COLUMN_VALUE};
+        String selection = "("+PortfolioContract.Ipca.COLUMN_MES + " <= ? AND "
+                + PortfolioContract.Ipca.COLUMN_ANO + " = ?) OR ("
+                + PortfolioContract.Ipca.COLUMN_MES + " > ? AND "
+                + PortfolioContract.Ipca.COLUMN_ANO + " = ?)";
+        String[] selectionArguments = {month, year, month, yearLimit};
+
+        Cursor ipca = getApplicationContext().getContentResolver().query(
+                PortfolioContract.Ipca.URI,
+                null, selection, selectionArguments, null);
+
+        // If a value was found, return it, else return zero
+        if (ipca.moveToFirst()){
+            // Sums for the hole last twelve month of IPCA. Cannot sum on query because of Compost IPCA
+            double ipcaValue = 0;
+            do{
+                double rate = ipca.getDouble(ipca.getColumnIndex(PortfolioContract.Ipca.COLUMN_VALUE));
+                ipcaValue = ipcaValue + rate + (ipcaValue *rate/100);
+            } while (ipca.moveToNext());
+            return ipcaValue;
+        }
+
+        return 0;
     }
 }

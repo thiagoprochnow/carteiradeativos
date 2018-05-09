@@ -3,6 +3,7 @@ package br.com.guiainvestimento.api.service;
 import java.util.List;
 
 import br.com.guiainvestimento.domain.Cdi;
+import br.com.guiainvestimento.domain.Ipca;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -15,4 +16,7 @@ public interface CdiService {
 
     @GET("getcdi/{timestamp}")
     Call<List<Cdi>> getCdi(@Path("timestamp") String timestamp);
+
+    @GET("getipca")
+    Call<List<Ipca>> getIpca();
 }
