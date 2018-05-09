@@ -12,8 +12,6 @@ import br.com.guiainvestimento.common.Constants;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-
-    // TODO: Need to change db name to the final app name or to anything meaningful
     static final String NAME = "Portfolio.db";
     private static final int VERSION = 5;
 

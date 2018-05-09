@@ -60,23 +60,28 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     Constants.ProductType.INVALID);
             switch (mProductType) {
                 case Constants.ProductType.STOCK:
-                    // TODO: Make tabs to switch between incomes and details.
                     replaceFragment(new StockTabFragment());
+                    fab.setVisibility(View.VISIBLE);
                     break;
                 case Constants.ProductType.FII:
                     replaceFragment(new FiiTabFragment());
+                    fab.setVisibility(View.VISIBLE);
                     break;
                 case Constants.ProductType.FIXED:
                     replaceFragment(new FixedDetailsFragment());
+                    fab.setVisibility(View.GONE);
                     break;
                 case Constants.ProductType.CURRENCY:
                     replaceFragment(new CurrencyDetailsFragment());
+                    fab.setVisibility(View.GONE);
                     break;
                 case Constants.ProductType.TREASURY:
                     replaceFragment(new TreasuryTabFragment());
+                    fab.setVisibility(View.VISIBLE);
                     break;
                 case Constants.ProductType.OTHERS:
                     replaceFragment(new OthersTabFragment());
+                    fab.setVisibility(View.VISIBLE);
                     break;
                 default:
                     finish();
