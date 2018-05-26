@@ -74,7 +74,7 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
         String currencyLabel = Util.convertCurrencySymbol(mContext, symbol);
         holder.symbol.setText(currencyLabel);
         if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")) {
-            holder.currencyQuantity.setText(String.format("%.4f", mCursor.getDouble(mCursor.getColumnIndex
+            holder.currencyQuantity.setText(String.format("%.6f", mCursor.getDouble(mCursor.getColumnIndex
                     (PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL))));
         } else {
             holder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
