@@ -18,3 +18,7 @@
 -dontwarn okio.**
 -dontwarn retrofit2.Platform$Java8
 -dontwarn okhttp3.**
+-keep class com.facebook.ads.** { *; }
+-dontwarn com.facebook.ads.**
+-dontwarn  com.google.ads.**
+-dontwarn  com.google.android.exoplayer2.**

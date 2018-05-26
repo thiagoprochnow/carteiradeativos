@@ -74,7 +74,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
-                mInputQuantityView.setText(String.format("%.6f",mQuantity), EditText.BufferType.EDITABLE);
+                mInputQuantityView.setText(String.format("%.6f",mQuantity).replace(",","."), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
@@ -85,7 +85,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
-                mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
+                mInputQuantityView.setText(String.format("%.6f",mQuantity).replace(",","."), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
