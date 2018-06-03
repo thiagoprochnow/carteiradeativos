@@ -171,7 +171,7 @@ public class StockIntentService extends IntentService {
             String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
             String path = "";
-            if (responseString.equals("true")){
+            if (responseString != null && responseString.equals("true")){
                 for (String symbol: symbols){
                     if (limit <= 5) {
                         if(limit == 0){

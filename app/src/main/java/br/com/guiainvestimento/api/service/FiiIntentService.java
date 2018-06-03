@@ -147,7 +147,7 @@ public class FiiIntentService extends IntentService {
             String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
             String path = "";
-            if (responseString.equals("true")){
+            if (responseString != null && responseString.equals("true")){
 
                 for (String symbol: symbols){
                     if (limit <= 3) {

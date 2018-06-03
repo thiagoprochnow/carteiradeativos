@@ -7,8 +7,8 @@ android {
         applicationId "br.com.guiainvestimento"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 34
-        versionName "1.24"
+        versionCode 36
+        versionName "1.25"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,8 +29,6 @@ android {
 
 dependencies {
     implementation 'com.google.firebase:firebase-ads:11.0.4'
-    implementation 'com.facebook.android:audience-network-sdk:4.27.1'
-    implementation 'com.google.ads.mediation:facebook:4.27.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
