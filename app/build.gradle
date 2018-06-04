@@ -36,7 +36,6 @@ dependencies {
 
     //API requests
 
-
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.android.support:design:23.4.0'

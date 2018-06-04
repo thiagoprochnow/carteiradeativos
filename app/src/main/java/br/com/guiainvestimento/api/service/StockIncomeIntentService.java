@@ -179,7 +179,7 @@ public class StockIncomeIntentService extends IntentService {
                                 if (tipo != Constants.IncomeType.INVALID) {
                                     double perStock = Double.valueOf(provento.getValor());
                                     long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
-                                    int affected = getStockQuantity(symbol, exdividend);
+                                    double affected = getStockQuantity(symbol, exdividend);
 
                                     double receiveValue = affected * perStock;
                                     double liquidValue = receiveValue;
@@ -293,7 +293,7 @@ public class StockIncomeIntentService extends IntentService {
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of stocks transactions before the timestamp
-    public int getStockQuantity(String symbol, Long incomeTimestamp){
+    public double getStockQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of stock
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
@@ -306,7 +306,7 @@ public class StockIncomeIntentService extends IntentService {
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             int currentType = 0;
             do {
                 currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
@@ -322,10 +322,10 @@ public class StockIncomeIntentService extends IntentService {
                         quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }

@@ -1197,7 +1197,7 @@ public abstract class BaseFragment extends Fragment {
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of stocks transactions before the timestamp
-    public int getStockQuantity(String symbol, Long incomeTimestamp){
+    public double getStockQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of stock
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
@@ -1210,7 +1210,7 @@ public abstract class BaseFragment extends Fragment {
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             int currentType = 0;
             do {
                 currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
@@ -1226,10 +1226,10 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -1260,7 +1260,7 @@ public abstract class BaseFragment extends Fragment {
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome._ID)));
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                int quantity = getStockQuantity(symbol, incomeTimestamp);
+                double quantity = getStockQuantity(symbol, incomeTimestamp);
                 double perStock = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK)));
                 int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
                 double receiveTotal = quantity * perStock;
@@ -1308,7 +1308,7 @@ public abstract class BaseFragment extends Fragment {
         if(STQueryCursor.getCount() > 0){
             STQueryCursor.moveToFirst();
             // Final values to be inserted in StockData
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             double buyValue = 0;
             // Buy quantity and total is to calculate correct medium buy price
             // Medium price is only for buys
@@ -1318,7 +1318,7 @@ public abstract class BaseFragment extends Fragment {
             double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
-            int bonificationQuantity = 0;
+            double bonificationQuantity = 0;
             // Used for brokerage calculation for buy and sell
             // See file calculo brokerage.txt for math
             double buyBrokerage = 0;
@@ -1361,14 +1361,16 @@ public abstract class BaseFragment extends Fragment {
                         bonificationQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        buyQuantity = buyQuantity*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyQuantity = buyQuantity*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        bonificationQuantity = bonificationQuantity*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        buyQuantity = buyQuantity/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyQuantity = buyQuantity/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        bonificationQuantity = bonificationQuantity/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }

@@ -99,7 +99,7 @@ public class EditJCPDividendFormFragment extends BaseFormFragment {
 
             // Get the stock quantity bought before the jcp/dividend is ex
             // Will be used to calculate the total R$ received of jcp/dividend
-            int stockQuantity = getStockQuantity(mSymbol, timestamp);
+            double stockQuantity = getStockQuantity(mSymbol, timestamp);
             double perStock = Double.parseDouble(mInputPerStockView.getText().toString());
             double receiveValue = stockQuantity * perStock;
             double liquidValue = receiveValue;
