@@ -66,13 +66,13 @@ public class FiiGroupingFormFragment extends BaseFormFragment {
     private boolean addGrouping() {
 
         // Validate for each inputted value
-        boolean isValidQuantity = isValidInt(mInputQuantityView);
+        boolean isValidQuantity = isValidDouble(mInputQuantityView);
         boolean isValidDate = isValidDate(mInputDateView);
 
         // If all validations pass, try to add the stock
         if (isValidQuantity && isValidDate) {
             String inputSymbol = mSymbol;
-            int inputQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+            double inputQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
             double buyPrice = 0;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();

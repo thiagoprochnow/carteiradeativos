@@ -176,7 +176,7 @@ public class FiiIncomeIntentService extends IntentService {
                                 if (tipo != Constants.IncomeType.INVALID) {
                                     double perFii = Double.valueOf(provento.getValor());
                                     long exdividend = Long.parseLong(provento.getTimestamp()) * 1000;
-                                    int affected = getFiiQuantity(symbol, exdividend);
+                                    double affected = getFiiQuantity(symbol, exdividend);
 
                                     double receiveValue = affected * perFii;
                                     double liquidValue = receiveValue;
@@ -278,7 +278,7 @@ public class FiiIncomeIntentService extends IntentService {
     // Get fii quantity that will receive the dividend per fii
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of fiis transactions before the timestamp
-    public int getFiiQuantity(String symbol, Long incomeTimestamp){
+    public double getFiiQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of fii
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " < ?";
@@ -291,7 +291,7 @@ public class FiiIncomeIntentService extends IntentService {
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             int currentType = 0;
             do {
                 currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
@@ -304,10 +304,10 @@ public class FiiIncomeIntentService extends IntentService {
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }

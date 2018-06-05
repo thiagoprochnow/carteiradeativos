@@ -88,7 +88,7 @@ public class FiiIncomeFormFragment extends BaseFormFragment {
 
             // Get the fii quantity bought before the jcp/dividend is ex
             // Will be used to calculate the total R$ received of jcp/dividend
-            int fiiQuantity = getFiiQuantity(symbol, timestamp);
+            double fiiQuantity = getFiiQuantity(symbol, timestamp);
             double perFii = Double.parseDouble(mInputPerFiiView.getText().toString());
             double receiveValue = fiiQuantity * perFii;
             double liquidValue = receiveValue;

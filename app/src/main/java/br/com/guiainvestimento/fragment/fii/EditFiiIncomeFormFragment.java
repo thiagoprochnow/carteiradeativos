@@ -95,7 +95,7 @@ public class EditFiiIncomeFormFragment extends BaseFormFragment {
 
             // Get the fii quantity bought before the income is ex
             // Will be used to calculate the total R$ received of income
-            int fiiQuantity = getFiiQuantity(mSymbol, timestamp);
+            double fiiQuantity = getFiiQuantity(mSymbol, timestamp);
             double perFii = Double.parseDouble(mInputPerFiiView.getText().toString());
             double receiveValue = fiiQuantity * perFii;
             double liquidValue = receiveValue;

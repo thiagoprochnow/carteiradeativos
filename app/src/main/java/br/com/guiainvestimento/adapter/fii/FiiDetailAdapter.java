@@ -106,7 +106,7 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                double quantity = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                 double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                 // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
                 if (price > 0) {

@@ -27,7 +27,7 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
     private Cursor mTransactionCursor;
     private String mSymbol;
     private int mType;
-    private int mQuantity;
+    private double mQuantity;
     private double mPrice;
     private double mBrokerage;
     private long mDate;
@@ -60,7 +60,7 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
         mType = getTransactionType(mTransactionCursor);
 
         if (mTransactionCursor.moveToFirst()) {
-            mQuantity = mTransactionCursor.getInt(mTransactionCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+            mQuantity = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
             mPrice = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
             mBrokerage = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP));
@@ -123,7 +123,7 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
 
     // Validate inputted values on the form
     private boolean updateFiiTransaction() {
-        int newQuantity;
+        double newQuantity;
         double newPrice;
         String newDate;
         double newBrokerage;
@@ -215,10 +215,10 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
                 break;
             case Constants.Type.GROUPING:
 
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.FiiTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
@@ -236,10 +236,10 @@ public class EditFiiTransactionFormFragment extends BaseFormFragment {
                 break;
             case Constants.Type.SPLIT:
 
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.FiiTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
