@@ -251,7 +251,7 @@ public class StockIntentService extends IntentService {
                     boolean success = false;
                     ContentValues updateStock = new ContentValues();
                     for (StockQuote stock : stocks) {
-                        if (stock != null && stock.getError() == null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null) {
+                        if (stock != null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null) {
                             String lastPrice = "0.0";
                             if(Double.valueOf(stock.getLast()) > 0){
                                 lastPrice = stock.getLast();
@@ -358,12 +358,12 @@ public class StockIntentService extends IntentService {
                     stock = responseGet.body();
                 }
 
-                if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.getError() == null && stock.toString().length() > 0){
+                if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.toString().length() > 0){
                     // Success on request
-                    if (stock.getLast() != null && stock.getError() == null){
+                    if (stock.getLast() != null){
                         result = stock.getLast();
                     }
-                } else if(stock.getError() != null){
+                } else{
                     result = "error";
                 }
             }
