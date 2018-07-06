@@ -40,6 +40,7 @@ import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
 import br.com.guiainvestimento.fragment.BackupRestoreFragment;
 import br.com.guiainvestimento.fragment.ConsultQuotesFragment;
+import br.com.guiainvestimento.fragment.FaqFragment;
 import br.com.guiainvestimento.fragment.PremiumEditionFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
@@ -338,6 +339,10 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_backup_restore:
                 setTitle(R.string.title_backup_restore);
                 replaceFragment(new BackupRestoreFragment());
+                break;
+            case R.id.nav_item_faq:
+                setTitle(R.string.title_faq);
+                replaceFragment(new FaqFragment());
                 break;
         }
     }

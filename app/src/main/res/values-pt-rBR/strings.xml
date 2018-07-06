@@ -447,6 +447,7 @@
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
+    <string name="title_faq">Perguntas Frequentes</string>
     <string name="title_coming_soon">Em Breve</string>
     <string name="title_backup_restore">Cópia e Restauração</string>
     <string name="title_consult_quotes">Consulta de Cotações</string>
@@ -584,7 +585,6 @@
         Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
 
         \u2022 Área para o lançamento de opções, compra e venda de PUT e CALL.\n
-        \u2022 Renda fixa atrelada ao IPCA automatizada.\n
         \u2022 Área para o lançamento de fundos de investimento automatizados.\n
         \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
         \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
@@ -594,6 +594,73 @@
         \u2022 Melhorias constantes baseado nos feedbacks.\n\n
 
         Aqueles quer forem premium, terão acesso a essas funcionalidades assim que forem desenvolvidas.
+    </string>
+
+    <string name="faq_resume">
+         <b>1 - Meus titulos do tesouro não estão atualizando automaticamente.\n
+         2 - Como faço para importar e exportar meus dados para outro ou o mesmo aparelho?\n
+         3 - De que empresa é o aplicativo?\n
+         4 - Porque o aplicativo é pago?\n
+         5 - Não achei a solução do meu problema.\n
+         6 - Tenho sugestões para o aplicativo.\n
+         7 - Cara, seus textos estão cheios de erros de português.\n</b>
+    </string>
+
+    <string name="faq_one">
+        <b>1 - Meus titulos do tesouro não estão atualizando automaticamente.\n\n</b>
+
+        Para que os seus titulos do tesouro sejam atualizados automaticamente, é necessario que o nome seja exatamente como o sugerido pelo app na hora de inserir.
+        Quando começar a digitar o nome, comece por "Tesouro..." que logo o app ira sugerir o nome de todos os titulos disponiveis. Se não encontrar o seu, entre em contato para que possamos adiciona-lo
+        Se você inserir por nomes como NTNB 2024 ou LFT 2023, o app não conseguirá pegar as cotações automaticamente, mas você poderá atualiza-las manualmente caso deseje.\n\n
+    </string>
+
+    <string name="faq_two">
+        <b>2 - Como faço para importar e exportar meus dados para outro ou o mesmo aparelho?\n\n</b>
+
+        Todos os seus dados são salvos apenas localmente no seu telefone. Nenhum dado é exportado para nenhum servidor externo na nuvem. Com isso, se você desinstalar o app ou trocar de telefone, os dados não estarão mais lá.
+        Para solucionar isso, existe a opção de "Cópia e Restauração" no app no seu menu. Nela você terá as opções:\n\n
+
+        \u2022 Backup: Vai gerar um arquivo com a cópia dos seus dados que será salvo automaticamente no seu Google Drive.\n
+        \u2022 Restauração: Abrirá o seu Google Drive, e você poderá usar o arquivo gerado na opção "Backup", com o nome de GIBackup.db, para restaurar seus dados, assim como os salvou.\n\n
+
+        Sugiro que antes de desinstalar o app no aparelho que fez backup, garanta que a restauração funcionou no novo aparelho.\n\n
+
+        Obs: Google Drive é um ambiente do Google onde você pode salvar arquivos na nuvem. Ele é atrelado a sua conta e ninguem mais poderá ver esses dados a não ser você.\n\n
+    </string>
+
+    <string name="faq_three">
+        <b>3 - De que empresa é o aplicativo?\n\n</b>
+
+        O aplicativo Guia Investimento é feito por um desenvolvedor independente que gosta muito da area de investimento e viu a necessidade de um aplicativo para controlar e ver seus ganhos de sua carteira.
+        Sei que ainda tem muitas melhorias e alguns pequenos bugs a serem resolvidos, mas com a sua contribuição e sugestões, aos poucos o aplicativo vai ficando cada vez melhor e com mais funcionalidades.\n\n
+    </string>
+
+    <string name="faq_four">
+        <b>4 - Porque o aplicativo é pago?\n\n</b>
+
+        O desenvolvimento do aplicativo tem um custo mensal moderado para pegar as cotações da Bovespa. Infelizmentea bovespa não oferece um serviço para ler cotações grátis, nem mesmo com atraso de 15 minutos. O custo é relativamente alto para um desenvolvedor independente. Hoje, ainda com as assinaturas ativas, eu ainda estou pagando para manter e desenvolver o app.
+        Com isso eu limitei a atualização automática a 5 ações, 3 fundos imobiliarios e 1 tesouro para a versão grátis. Assim, pequenos desenvolvedores conseguem usar o aplicativo sem problema, e conforme forem crescendo, vão poder ter condições de assinar a versão paga e contribuir com o app.
+    </string>
+
+    <string name="faq_five">
+        <b>5 - Não achei a solução do meu problema.\n\n</b>
+
+        Se você está com algum problema ou duvida no app, e não conseguiu achar a solução, fique a vontade em me mandar um email, tento ajudar assim como eu puder. Normalmente respondo em no máximo 1-2 dias com uma resposta completa de como você poderá resolver seu problema./n/n
+
+        Entre em contato por: <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a>\n\n
+    </string>
+
+    <string name="faq_six">
+        <b>6 - Tenho sugestões para o aplicativo.\n\n</b>
+
+        Sugestões são sempre bem vindas. Alias esse Perguntas Frequentes foi feito a partir de uma sugestão de um cliente. Não deixe de entrar em contato para me dizer algo que queira que tenha no app e conversamos se isso será feito em breve.
+        Tenho uma lista grande de novidades e melhorias ainda por vir. Mas não deixe de dar sua sugestão que ela poderá ser feita em breve.\n\n
+    </string>
+
+    <string name="faq_seven">
+        <b>7 - Cara, seus textos estão cheios de erros de português.\n\n</b>
+
+        É bem possivel que você tenha razão. Se viu algum erro de texto ou português ou não entendeu alguma frase, me mande um email que corrigirei o mais rapido possivel. Agradeço toda sua ajuda :)\n\n
     </string>
 
     <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>

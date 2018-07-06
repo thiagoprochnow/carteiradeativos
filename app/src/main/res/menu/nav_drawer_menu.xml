@@ -77,5 +77,10 @@
             android:id="@+id/nav_item_about"
             android:checked="false"
             android:title="@string/title_about"/>
+        <!-- FAQ Item Menu -->
+        <item
+            android:id="@+id/nav_item_faq"
+            android:checked="false"
+            android:title="@string/title_faq"/>
     </group>
 </menu>
