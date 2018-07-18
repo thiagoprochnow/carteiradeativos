@@ -18,6 +18,15 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="#2b69af"
+                    android:textStyle="bold"
+                    android:text="@string/premium_try" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

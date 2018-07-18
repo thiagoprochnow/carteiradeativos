@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import br.com.guiainvestimento.common.Constants;
@@ -16,8 +18,6 @@ public class StockReceiver extends BroadcastReceiver {
     private static final String LOG_TAG = StockReceiver.class.getSimpleName();
 
     private Context mContext;
-
-    private double mCurrentTotal = 0;
 
     @Override
     public void onReceive(Context c, Intent intent){
@@ -34,6 +34,7 @@ public class StockReceiver extends BroadcastReceiver {
         double variationTotal = 0;
         double sellTotal = 0;
         double brokerage = 0;
+        double mCurrentTotal = 0;
         // Return column should be the sum of buy total, sell total, sell gain
         String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL +"), " +
@@ -115,6 +116,7 @@ public class StockReceiver extends BroadcastReceiver {
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
             mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

@@ -55,6 +55,13 @@ import br.com.guiainvestimento.purchaseutil.IabHelper;
 import br.com.guiainvestimento.purchaseutil.IabResult;
 import br.com.guiainvestimento.purchaseutil.Inventory;
 import br.com.guiainvestimento.purchaseutil.Purchase;
+import br.com.guiainvestimento.receiver.CurrencyReceiver;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.OthersReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
+import br.com.guiainvestimento.receiver.TreasuryReceiver;
 
 // Main app Activity
 public class MainActivity extends AppCompatActivity implements ProductListener, IncomeDetailsListener {
@@ -116,6 +123,22 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             replaceFragment(new PortfolioMainFragment(), "PortfolioMainFragment");
         }
 
+        // Register all Local broadcast receivers
+        BroadcastReceiver receiverCurrencyMain = new CurrencyReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverCurrencyMain, new IntentFilter(Constants.Receiver.CURRENCY));
+        BroadcastReceiver receiverFiiMain = new FiiReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFiiMain, new IntentFilter(Constants.Receiver.FII));
+        BroadcastReceiver receiverFixedMain = new FixedReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFixedMain, new IntentFilter(Constants.Receiver.FIXED));
+        BroadcastReceiver receiverOthersMain = new OthersReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverOthersMain, new IntentFilter(Constants.Receiver.OTHERS));
+        BroadcastReceiver receiverPortfolioMain = new PortfolioReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverPortfolioMain, new IntentFilter(Constants.Receiver.PORTFOLIO));
+        BroadcastReceiver receiverStockMain = new StockReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverStockMain, new IntentFilter(Constants.Receiver.STOCK));
+        BroadcastReceiver receiverTreasuryMain = new TreasuryReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverTreasuryMain, new IntentFilter(Constants.Receiver.TREASURY));
+
         BroadcastReceiver receiverStock = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -128,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 } else {
                     // Sets StockReceiver flag
                     mStockReceiver = true;
@@ -148,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 } else {
                     // Sets StockReceiver flag
                     mFiiReceiver = true;
@@ -168,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 } else {
                     // Sets StockReceiver flag
                     mCurrencyReceiver = true;
@@ -188,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 } else {
                     // Sets StockReceiver flag
                     mTreasuryReceiver = true;
@@ -208,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 } else {
                     // Sets StockReceiver flag
                     mFixedReceiver = true;

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import br.com.guiainvestimento.common.Constants;
@@ -16,8 +17,6 @@ public class CurrencyReceiver extends BroadcastReceiver {
     private static final String LOG_TAG = CurrencyReceiver.class.getSimpleName();
 
     private Context mContext;
-
-    private double mCurrentTotal = 0;
 
     @Override
     public void onReceive(Context c, Intent intent){
@@ -33,6 +32,7 @@ public class CurrencyReceiver extends BroadcastReceiver {
         double totalGain = 0;
         double variationTotal = 0;
         double sellTotal = 0;
+        double mCurrentTotal = 0;
         // Return column should be the sum of buy total, sell total, sell gain
         String[] soldAffectedColumn = {"sum("+ PortfolioContract.SoldCurrencyData.COLUMN_BUY_VALUE_TOTAL +"), " +
                 "sum("+ PortfolioContract.SoldCurrencyData.COLUMN_SELL_TOTAL +"), " +
@@ -106,6 +106,7 @@ public class CurrencyReceiver extends BroadcastReceiver {
                     updateCurrentURI, null, null, null);
             // Send Broadcast to update other values on Portfolio
             mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

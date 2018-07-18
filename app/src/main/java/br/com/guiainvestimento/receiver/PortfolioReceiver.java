@@ -21,8 +21,6 @@ public class PortfolioReceiver extends BroadcastReceiver {
 
     private Context mContext;
 
-    private double mCurrentTotal = 0;
-
     @Override
     public void onReceive(Context c, Intent intent){
         mContext = c;
@@ -43,6 +41,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         double treasuryVariation = 0;
         double treasuryIncome = 0;
         double treasuryGain = 0;
+        double mCurrentTotal = 0;
 
         if (treasuryPortfolioCursor.getCount() > 0) {
             treasuryPortfolioCursor.moveToFirst();

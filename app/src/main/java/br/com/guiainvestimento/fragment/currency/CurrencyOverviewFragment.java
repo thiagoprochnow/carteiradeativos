@@ -99,12 +99,14 @@ public class CurrencyOverviewFragment extends BaseFragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        data.moveToFirst();
         if (data != null && mEmptyListTextView != null) {
-            if (data.getCount() != 0) {
+            if (data.getCount() != 0 && data.getDouble(data.getColumnIndex(PortfolioContract.CurrencyPortfolio.COLUMN_BUY_TOTAL)) > 0) {
                 mEmptyListTextView.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
             } else {
                 mEmptyListTextView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
             }
         }
 
