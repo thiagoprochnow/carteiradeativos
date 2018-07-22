@@ -115,7 +115,6 @@ public class StockReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.StockData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }

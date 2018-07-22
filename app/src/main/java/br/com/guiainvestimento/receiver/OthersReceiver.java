@@ -92,7 +92,6 @@ public class OthersReceiver extends BroadcastReceiver {
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
             // Send Broadcast to update other values on Portfolio
-            mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }

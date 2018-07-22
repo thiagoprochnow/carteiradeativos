@@ -193,7 +193,6 @@ public class CryptoIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         if (mType == ADD_SYMBOL) {
-            this.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
         } else if (mType == CONSULT_SYMBOL){
             Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver

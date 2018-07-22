@@ -75,7 +75,6 @@ public class EditTreasuryFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on TreasuryPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 }
             }

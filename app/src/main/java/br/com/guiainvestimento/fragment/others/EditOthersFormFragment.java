@@ -77,7 +77,6 @@ public class EditOthersFormFragment extends BaseFormFragment {
                         currentTotalCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on OthersPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
                 }
             }

@@ -73,7 +73,6 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on CurrencyPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                 }
             }

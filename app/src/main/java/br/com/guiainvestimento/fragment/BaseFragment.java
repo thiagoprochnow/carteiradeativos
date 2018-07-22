@@ -74,7 +74,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.STOCK));
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -208,7 +207,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.FiiIncome
                 .makeUriForFiiIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FII));
             Toast.makeText(mContext, getString(R.string.toast_fii_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -233,7 +231,6 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForSoldCurrencyData(symbol), null, null);
         String label = Util.convertCurrencySymbol(mContext, symbol);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
             Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, label)
                     , Toast.LENGTH_SHORT).show();
@@ -255,7 +252,6 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForFixedData(symbol), null, null);
 
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FIXED));
             Toast.makeText(mContext, getString(R.string.toast_fixed_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -283,7 +279,6 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.TreasuryIncome
                 .makeUriForTreasuryIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
             Toast.makeText(mContext, getString(R.string.toast_treasury_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -305,7 +300,6 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForOthersData(symbol), null, null);
 
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
             Toast.makeText(mContext, getString(R.string.toast_others_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
@@ -1589,7 +1583,6 @@ public abstract class BaseFragment extends Fragment {
                 if (updatedRows > 0) {
                     // Update Stock Portfolio
                     // Send broadcast so StockReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.STOCK));
                     return true;
                 } else {
@@ -1842,7 +1835,6 @@ public abstract class BaseFragment extends Fragment {
                 if (updatedRows > 0) {
                     // Update Currency Portfolio
                     // Send broadcast so CurrencyReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                     return true;
                 } else {
@@ -2133,7 +2125,6 @@ public abstract class BaseFragment extends Fragment {
                 if (updatedRows > 0) {
                     // Update Fii Portfolio
                     // Send broadcast so FiiReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FII));
                     return true;
                 } else {
@@ -2363,7 +2354,6 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Send broadcast so FixedReceiver can update the rest
                 // Send to update Fixed Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 return true;
             } else {
@@ -2535,7 +2525,6 @@ public abstract class BaseFragment extends Fragment {
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
                 // Send to update Treasury Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 updateSoldTreasuryData(symbol, soldBuyValue);
                 return true;
             } else {
@@ -2638,7 +2627,6 @@ public abstract class BaseFragment extends Fragment {
                 if (updatedRows > 0) {
                     // Update Treasury Portfolio
                     // Send broadcast so TreasuryReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                     return true;
                 } else {
@@ -2875,7 +2863,6 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Send broadcast so OthersReceiver can update the rest
                 // Send to update others Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
                 return true;
             } else {

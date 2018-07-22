@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -157,7 +158,7 @@ public class TreasuryIncomeFormFragment extends BaseFormFragment {
                     treasuryBulkCV, null, null);
             if (updateQueryCursor == 1){
                 // Send broadcast so TreasuryReceiver can update the rest
-                mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 return true;
             }
         }

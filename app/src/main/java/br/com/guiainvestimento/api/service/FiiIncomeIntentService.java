@@ -218,7 +218,6 @@ public class FiiIncomeIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.FII));
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
     }
 

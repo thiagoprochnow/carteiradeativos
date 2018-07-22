@@ -77,7 +77,6 @@ public class EditStockFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on StockPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.STOCK));
                 }
             }

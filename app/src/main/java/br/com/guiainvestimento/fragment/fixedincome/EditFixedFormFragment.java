@@ -77,7 +77,6 @@ public class EditFixedFormFragment extends BaseFormFragment {
                         currentTotalCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on FixedPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 }
             }

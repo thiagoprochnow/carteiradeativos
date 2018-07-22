@@ -79,7 +79,6 @@ public class EditFiiFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on FiiPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FII));
                 }
             }

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -171,6 +172,7 @@ public class EditTreasuryIncomeFormFragment extends BaseFormFragment {
                     updateCV, selection, selectionArguments);
             if (updateQueryCursor == 1){
                 mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 return true;
             }
         }
