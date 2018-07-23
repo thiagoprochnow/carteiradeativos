@@ -1,6 +1,6 @@
 <resources>
     <!-- Tema para o navigation drawer -->
     <style name="AppTheme.NoActionBar.NavDrawer">
-        <item name="android:fontFamily">"sans-serif-light"</item>
+        <item name="android:fontFamily">@string/sans_serif_light</item>
     </style>
 </resources>

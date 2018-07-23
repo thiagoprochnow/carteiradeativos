@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Guia Investimento</string>
+    <string name="sans_serif_light" untranslateable="true">sans-serif-light</string>
 
     <!-- Main Activity -->
     <string name="refresh_done">Portfolio updated successfully</string>
