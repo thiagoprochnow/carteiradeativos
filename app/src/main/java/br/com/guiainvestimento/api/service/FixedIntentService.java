@@ -27,6 +27,8 @@ import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Cdi;
 import br.com.guiainvestimento.domain.Ipca;
+import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -246,7 +248,15 @@ public class FixedIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // Send broadcast so FixedReceiver can update the rest
+        // Send to update Fixed Income Portfolio and show overview
+        FixedReceiver fixedReceiver = new FixedReceiver(this);
+        fixedReceiver.updateFixedPortfolio();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FIXED));
+
+        PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+        portfolioReceiver.updatePortfolio();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
     }
 
     public class BasicAuthInterceptor implements Interceptor {
@@ -361,6 +371,7 @@ public class FixedIntentService extends IntentService {
                         currentFixedValue = currentFixedValue * cdiDaily;
                     } while (cdi.moveToNext());
                 }
+                cdi.close();
             } else if(gainType == Constants.FixedType.IPCA){
                 // IPCA
                 String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
@@ -415,6 +426,7 @@ public class FixedIntentService extends IntentService {
                         currentFixedValue = currentFixedValue * cdiDaily;
                     } while (cdi.moveToNext());
                 }
+                cdi.close();
             } else if(gainType == Constants.FixedType.PRE){
                 // Pré Fixado
                 String sortOrder = PortfolioContract.Cdi.COLUMN_TIMESTAMP + " ASC";
@@ -466,6 +478,7 @@ public class FixedIntentService extends IntentService {
                         currentFixedValue = currentFixedValue * cdiDaily;
                     } while (cdi.moveToNext());
                 }
+                cdi.close();
             }
         } while (transaction.moveToNext());
 
@@ -540,7 +553,7 @@ public class FixedIntentService extends IntentService {
             } while (ipca.moveToNext());
             return ipcaValue;
         }
-
+        ipca.close();
         return 0;
     }
 }

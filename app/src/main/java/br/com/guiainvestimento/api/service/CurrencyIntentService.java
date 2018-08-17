@@ -18,6 +18,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.api.domain.ResponseCurrencyBackup;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.receiver.CurrencyReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -187,7 +189,13 @@ public class CurrencyIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         if (mType == ADD_SYMBOL) {
+            CurrencyReceiver currencyReceiver = new CurrencyReceiver(this);
+            currencyReceiver.updateCurrencyPortfolio();
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         } else if (mType == CONSULT_SYMBOL){
             Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
             broadcastIntent.putExtra("quote", mResult);

@@ -15,16 +15,14 @@ import java.util.Calendar;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class PortfolioReceiver extends BroadcastReceiver {
+public class PortfolioReceiver {
 
     private static final String LOG_TAG = PortfolioReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updatePortfolio();
+    public PortfolioReceiver(Context context){
+        mContext = context;
     }
 
 
@@ -54,6 +52,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        treasuryPortfolioCursor.close();
+
         // Fixed
         Cursor fixedPortfolioCursor = getFixedPortfolio();
 
@@ -75,6 +75,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        fixedPortfolioCursor.close();
+
         // Others
         Cursor othersPortfolioCursor = getOthersPortfolio();
 
@@ -95,6 +97,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
             othersGain = othersPortfolioCursor.getDouble(5);
         } else {
         }
+
+        othersPortfolioCursor.close();
 
         // Stock
         Cursor stockPortfolioCursor = getStockPortfolio();
@@ -119,6 +123,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        stockPortfolioCursor.close();
+
         // Fii
         Cursor fiiPortfolioCursor = getFiiPortfolio();
 
@@ -142,6 +148,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        fiiPortfolioCursor.close();
+
         // Currency
         Cursor currencyPortfolioCursor = getCurrencyPortfolio();
 
@@ -160,6 +168,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
             currencyGain = currencyPortfolioCursor.getDouble(4);
         } else {
         }
+
+        currencyPortfolioCursor.close();
 
         // Sums all portfolio to get main portfolio
         double portfolioBuy = treasuryBuy + fixedBuy + stockBuy + fiiBuy + currencyBuy + othersBuy;

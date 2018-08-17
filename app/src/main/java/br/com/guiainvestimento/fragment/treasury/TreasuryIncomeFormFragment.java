@@ -22,6 +22,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.TreasuryReceiver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -158,7 +160,13 @@ public class TreasuryIncomeFormFragment extends BaseFormFragment {
                     treasuryBulkCV, null, null);
             if (updateQueryCursor == 1){
                 // Send broadcast so TreasuryReceiver can update the rest
+                TreasuryReceiver treasuryReceiver = new TreasuryReceiver(mContext);
+                treasuryReceiver.updateTreasuryPortfolio();
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+
+                PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                portfolioReceiver.updatePortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 return true;
             }
         }

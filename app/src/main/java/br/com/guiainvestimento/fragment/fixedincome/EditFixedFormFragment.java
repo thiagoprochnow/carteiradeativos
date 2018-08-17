@@ -17,6 +17,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 
 
 public class EditFixedFormFragment extends BaseFormFragment {
@@ -77,7 +79,13 @@ public class EditFixedFormFragment extends BaseFormFragment {
                         currentTotalCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on FixedPortfolio
+                    FixedReceiver fixedReceiver = new FixedReceiver(mContext);
+                    fixedReceiver.updateFixedPortfolio();
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FIXED));
+
+                    PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                    portfolioReceiver.updatePortfolio();
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 }
             }
 

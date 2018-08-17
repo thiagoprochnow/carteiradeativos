@@ -14,6 +14,8 @@ import com.google.android.gms.gcm.TaskParams;
 import java.io.IOException;
 
 import br.com.guiainvestimento.domain.TreasuryQuote;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.TreasuryReceiver;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -295,7 +297,13 @@ public class TreasuryIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         if (mType == ADD_SYMBOL) {
+            TreasuryReceiver treasuryReceiver = new TreasuryReceiver(this);
+            treasuryReceiver.updateTreasuryPortfolio();
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         } else if (mType == CONSULT_SYMBOL){
             Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
             broadcastIntent.putExtra("quote", mResult);

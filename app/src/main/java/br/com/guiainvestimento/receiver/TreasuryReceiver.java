@@ -12,16 +12,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class TreasuryReceiver extends BroadcastReceiver {
+public class TreasuryReceiver {
 
     private static final String LOG_TAG = TreasuryReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateTreasuryPortfolio();
+    public TreasuryReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Treasury Data value and sets the calculation on TreasuryPortfolio table
@@ -108,8 +106,6 @@ public class TreasuryReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.TreasuryData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

@@ -27,6 +27,8 @@ import br.com.guiainvestimento.activity.MainActivity;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.StockQuote;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -378,7 +380,14 @@ public class StockIntentService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         if (mType == ADD_SYMBOL) {
+            super.onDestroy();
+            StockReceiver stockReceiver = new StockReceiver(this);
+            stockReceiver.updateStockPortfolio();
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         } else if (mType == CONSULT_SYMBOL){
             Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
             broadcastIntent.putExtra("quote", mResult);

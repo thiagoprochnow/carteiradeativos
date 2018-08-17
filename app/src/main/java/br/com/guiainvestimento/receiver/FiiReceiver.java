@@ -12,16 +12,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class FiiReceiver extends BroadcastReceiver {
+public class FiiReceiver {
 
     private static final String LOG_TAG = FiiReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateFiiPortfolio();
+    public FiiReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Fii Data value and sets the calculation on FiiPortfolio table
@@ -114,8 +112,6 @@ public class FiiReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.FiiData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

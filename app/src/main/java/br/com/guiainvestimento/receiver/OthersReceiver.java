@@ -12,16 +12,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class OthersReceiver extends BroadcastReceiver {
+public class OthersReceiver {
 
     private static final String LOG_TAG = OthersReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateOthersPortfolio();
+    public OthersReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Others Data value and sets the calculation on OthersPortfolio table
@@ -91,8 +89,6 @@ public class OthersReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.OthersData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

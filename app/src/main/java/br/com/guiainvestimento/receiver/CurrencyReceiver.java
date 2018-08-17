@@ -12,16 +12,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class CurrencyReceiver extends BroadcastReceiver {
+public class CurrencyReceiver {
 
     private static final String LOG_TAG = CurrencyReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateCurrencyPortfolio();
+    public CurrencyReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Currencies Data value and sets the calculation on CurrencyPortfolio table
@@ -104,8 +102,6 @@ public class CurrencyReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.CurrencyData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

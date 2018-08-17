@@ -24,6 +24,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Income;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -218,7 +220,13 @@ public class FiiIncomeIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        FiiReceiver fiiReceiver = new FiiReceiver(this);
+        fiiReceiver.updateFiiPortfolio();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+
+        PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+        portfolioReceiver.updatePortfolio();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
     }
 
     public class BasicAuthInterceptor implements Interceptor {

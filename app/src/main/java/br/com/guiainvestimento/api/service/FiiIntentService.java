@@ -25,6 +25,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.FiiQuote;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -298,7 +300,13 @@ public class FiiIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        FiiReceiver fiiReceiver = new FiiReceiver(this);
+        fiiReceiver.updateFiiPortfolio();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+
+        PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+        portfolioReceiver.updatePortfolio();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
     }
 
     public class NullOnEmptyConverterFactory extends Converter.Factory {

@@ -12,16 +12,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class FixedReceiver extends BroadcastReceiver {
+public class FixedReceiver {
 
     private static final String LOG_TAG = FixedReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateFixedPortfolio();
+    public FixedReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Fixed Data value and sets the calculation on FixedPortfolio table
@@ -83,8 +81,6 @@ public class FixedReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.FixedData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

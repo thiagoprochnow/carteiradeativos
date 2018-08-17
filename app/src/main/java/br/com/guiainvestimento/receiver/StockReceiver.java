@@ -13,16 +13,14 @@ import android.util.Log;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class StockReceiver extends BroadcastReceiver {
+public class StockReceiver {
 
     private static final String LOG_TAG = StockReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateStockPortfolio();
+    public StockReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Stock Data value and sets the calculation on StockPortfolio table
@@ -115,7 +113,6 @@ public class StockReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.StockData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

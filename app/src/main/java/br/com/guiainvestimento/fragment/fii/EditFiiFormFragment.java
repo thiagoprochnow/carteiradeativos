@@ -17,6 +17,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 
 
 public class EditFiiFormFragment extends BaseFormFragment {
@@ -79,7 +81,13 @@ public class EditFiiFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on FiiPortfolio
+                    FiiReceiver fiiReceiver = new FiiReceiver(mContext);
+                    fiiReceiver.updateFiiPortfolio();
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FII));
+
+                    PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                    portfolioReceiver.updatePortfolio();
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 }
             }
 

@@ -25,6 +25,8 @@ import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.Income;
 import br.com.guiainvestimento.fragment.BaseFragment;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -228,7 +230,13 @@ public class StockIncomeIntentService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        StockReceiver stockReceiver = new StockReceiver(this);
+        stockReceiver.updateStockPortfolio();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+
+        PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+        portfolioReceiver.updatePortfolio();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
     }
 
     public class BasicAuthInterceptor implements Interceptor {
