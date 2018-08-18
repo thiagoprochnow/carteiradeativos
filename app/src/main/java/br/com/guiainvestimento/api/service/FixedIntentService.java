@@ -394,6 +394,9 @@ public class FixedIntentService extends IntentService {
                     continue;
                 }
 
+                Cursor ipca = getApplicationContext().getContentResolver().query(
+                        PortfolioContract.Ipca.URI,
+                        null, null, null, null);
                 if (nextTransaction.moveToNext()) {
                     // Has Next Transaction (Buy, Sell)
                     long cdiTimestamp = 0;
@@ -401,7 +404,7 @@ public class FixedIntentService extends IntentService {
                     ;
                     long nextTimestamp = Long.valueOf(nextTimeString);
                     do {
-                        double ipcaGainRate = getIpcaGain(cdiTimestamp);
+                        double ipcaGainRate = getIpcaGain(cdiTimestamp,ipca);
                         double cdiDaily = getCdiDaily(gainRate+ipcaGainRate, 1);
 
                         currentFixedValue = currentFixedValue * cdiDaily;
@@ -419,13 +422,14 @@ public class FixedIntentService extends IntentService {
                     // Last transaction
                     do {
                         long cdiTimestamp = cdi.getLong(cdi.getColumnIndex(PortfolioContract.Cdi.COLUMN_TIMESTAMP));;
-                        double ipcaGainRate = getIpcaGain(cdiTimestamp);
+                        double ipcaGainRate = getIpcaGain(cdiTimestamp,ipca);
                         ipcaGainRate = (double)Math.round(ipcaGainRate * 100d) / 100d;
                         double cdiDaily = getCdiDaily(gainRate+ipcaGainRate, 1);
 
                         currentFixedValue = currentFixedValue * cdiDaily;
                     } while (cdi.moveToNext());
                 }
+                ipca.close();
                 cdi.close();
             } else if(gainType == Constants.FixedType.PRE){
                 // Pré Fixado
@@ -522,38 +526,29 @@ public class FixedIntentService extends IntentService {
         return "";
     }
 
-    private double getIpcaGain(long cdiTimestamp){
+    private double getIpcaGain(long cdiTimestamp, Cursor ipca){
 
         // Get month and year of cdi to use on query for IPCA value
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(cdiTimestamp*1000);
-        String month = String.valueOf(cal.get(Calendar.MONTH) + 1);
-        String year = String.valueOf(cal.get(Calendar.YEAR));
-        String yearLimit = String.valueOf(cal.get(Calendar.YEAR)-1);
-
-        // Select IPCA value based on its year and month
-        String[] affectedColumn = {PortfolioContract.Ipca.COLUMN_VALUE};
-        String selection = "("+PortfolioContract.Ipca.COLUMN_MES + " <= ? AND "
-                + PortfolioContract.Ipca.COLUMN_ANO + " = ?) OR ("
-                + PortfolioContract.Ipca.COLUMN_MES + " > ? AND "
-                + PortfolioContract.Ipca.COLUMN_ANO + " = ?)";
-        String[] selectionArguments = {month, year, month, yearLimit};
-
-        Cursor ipca = getApplicationContext().getContentResolver().query(
-                PortfolioContract.Ipca.URI,
-                null, selection, selectionArguments, null);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        int yearLimit = cal.get(Calendar.YEAR)-1;
 
         // If a value was found, return it, else return zero
         if (ipca.moveToFirst()){
             // Sums for the hole last twelve month of IPCA. Cannot sum on query because of Compost IPCA
             double ipcaValue = 0;
             do{
-                double rate = ipca.getDouble(ipca.getColumnIndex(PortfolioContract.Ipca.COLUMN_VALUE));
-                ipcaValue = ipcaValue + rate + (ipcaValue *rate/100);
+                double ipcaMonth = ipca.getDouble(ipca.getColumnIndex(PortfolioContract.Ipca.COLUMN_MES));
+                double ipcaYear = ipca.getDouble(ipca.getColumnIndex(PortfolioContract.Ipca.COLUMN_ANO));
+                if((ipcaMonth <= month && ipcaYear == year) || (ipcaMonth > month && ipcaYear == yearLimit)) {
+                    double rate = ipca.getDouble(ipca.getColumnIndex(PortfolioContract.Ipca.COLUMN_VALUE));
+                    ipcaValue = ipcaValue + rate + (ipcaValue * rate / 100);
+                }
             } while (ipca.moveToNext());
             return ipcaValue;
         }
-        ipca.close();
         return 0;
     }
 }
