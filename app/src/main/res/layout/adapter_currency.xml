@@ -237,6 +237,12 @@
                     android:src="@drawable/sell_icon_small"
                     android:layout_marginRight="10dp"/>
                 <ImageView
+                    android:id="@+id/menuEdit"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/edit_icon_small"
+                    android:layout_marginRight="10dp"/>
+                <ImageView
                     android:id="@+id/menuDelete"
                     android:layout_width="25dp"
                     android:layout_height="23dp"

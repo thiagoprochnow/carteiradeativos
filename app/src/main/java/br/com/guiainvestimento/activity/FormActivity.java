@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.fragment.currency.BuyCurrencyFormFragment;
+import br.com.guiainvestimento.fragment.currency.EditCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.currency.SellCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.fii.BuyFiiFormFragment;
 import br.com.guiainvestimento.fragment.currency.EditCurrencyTransactionFormFragment;
@@ -123,9 +124,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FII:
                         replaceFragment(new EditFiiFormFragment());
                         break;
-                    /*case Constants.ProductType.CURRENCY:
+                    case Constants.ProductType.CURRENCY:
                         replaceFragment(new EditCurrencyFormFragment());
-                        break;*/
+                        break;
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedFormFragment());
                         break;
