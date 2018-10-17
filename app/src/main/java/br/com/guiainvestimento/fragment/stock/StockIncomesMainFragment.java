@@ -142,7 +142,7 @@ public class StockIncomesMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
         String selection = PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " > ?";
         String[] selectionArguments = {"0"};
         CursorLoader Loader = new CursorLoader(mContext,

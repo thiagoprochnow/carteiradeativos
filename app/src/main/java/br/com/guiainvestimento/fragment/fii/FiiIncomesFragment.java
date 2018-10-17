@@ -142,7 +142,7 @@ public class FiiIncomesFragment extends BaseFragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Receives symbol to make query of incomes for specific symbol
         String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " DESC";
         CursorLoader Loader = new CursorLoader(mContext,
                 PortfolioContract.FiiIncome
                         .makeUriForFiiIncome(symbol),
