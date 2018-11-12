@@ -475,12 +475,14 @@ public class TreasuryOverviewAdapter extends RecyclerView.Adapter<RecyclerView.V
         String[] affectedColumn = {PortfolioContract.TreasuryData.COLUMN_CURRENT_PERCENT,
                 PortfolioContract.TreasuryData.COLUMN_SYMBOL};
         String sortOrder = PortfolioContract.TreasuryData.COLUMN_CURRENT_PERCENT + " DESC";
+        String selection = PortfolioContract.TreasuryData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.Status.ACTIVE)};
 
         // Searches for existing TreasuryData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
                 PortfolioContract.TreasuryData.URI,
-                affectedColumn, null, null, sortOrder);
+                affectedColumn, selection, selectionArguments, sortOrder);
     }
 
     private Cursor getYears(){

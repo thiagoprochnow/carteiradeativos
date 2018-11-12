@@ -194,6 +194,8 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
                             } else {
                                 // Check if is last stock data
                                 otherPercent += currentPercent;
+                                int positiosn = dataCursor.getPosition();
+                                int countt = dataCursor.getCount();
                                 if (dataCursor.getPosition() == dataCursor.getCount() - 1) {
                                     entries.add(new PieEntry(otherPercent, mContext.getResources().getString(R.string.portfolio_other_label)));
                                 }
@@ -491,12 +493,14 @@ public class StockOverviewAdapter extends RecyclerView.Adapter<RecyclerView.View
         String[] affectedColumn = {PortfolioContract.StockData.COLUMN_CURRENT_PERCENT,
             PortfolioContract.StockData.COLUMN_SYMBOL};
         String sortOrder = PortfolioContract.StockData.COLUMN_CURRENT_PERCENT + " DESC";
+        String selection = PortfolioContract.StockData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.Status.ACTIVE)};
 
         // Searches for existing StockData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
                 PortfolioContract.StockData.URI,
-                affectedColumn, null, null, sortOrder);
+                affectedColumn, selection, selectionArguments, sortOrder);
     }
 
     private Cursor getYears(){

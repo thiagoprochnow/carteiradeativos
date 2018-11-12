@@ -490,12 +490,14 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String[] affectedColumn = {PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT,
                 PortfolioContract.FiiData.COLUMN_SYMBOL};
         String sortOrder = PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT + " DESC";
+        String selection = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.Status.ACTIVE)};
 
         // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
                 PortfolioContract.FiiData.URI,
-                affectedColumn, null, null, sortOrder);
+                affectedColumn, selection, selectionArguments, sortOrder);
     }
 
     private Cursor getYears(){
