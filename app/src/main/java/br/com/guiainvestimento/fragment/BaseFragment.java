@@ -8,9 +8,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -27,12 +27,22 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
+import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.domain.Currency;
+import br.com.guiainvestimento.receiver.CurrencyReceiver;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.OthersReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
+import br.com.guiainvestimento.receiver.TreasuryReceiver;
 import br.com.guiainvestimento.util.Util;
 
 public abstract class BaseFragment extends Fragment {
@@ -72,7 +82,13 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.StockIncome
                 .makeUriForStockIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+            StockReceiver stockReceiver = new StockReceiver(mContext);
+            stockReceiver.updateStockPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_stock_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -205,7 +221,13 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.FiiIncome
                 .makeUriForFiiIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
+            FiiReceiver fiiReceiver = new FiiReceiver(mContext);
+            fiiReceiver.updateFiiPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FII));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_fii_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -229,7 +251,13 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForSoldCurrencyData(symbol), null, null);
         String label = Util.convertCurrencySymbol(mContext, symbol);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+            CurrencyReceiver currencyReceiver = new CurrencyReceiver(mContext);
+            currencyReceiver.updateCurrencyPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_currency_successfully_removed, label)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -250,7 +278,13 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForFixedData(symbol), null, null);
 
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
+            FixedReceiver fixedReceiver = new FixedReceiver(mContext);
+            fixedReceiver.updateFixedPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FIXED));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_fixed_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -277,7 +311,13 @@ public abstract class BaseFragment extends Fragment {
         int deletedIncome = getActivity().getContentResolver().delete(PortfolioContract.TreasuryIncome
                 .makeUriForTreasuryIncome(symbol), null, null);
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+            TreasuryReceiver treasuryReceiver = new TreasuryReceiver(mContext);
+            treasuryReceiver.updateTreasuryPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.TREASURY));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_treasury_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -298,7 +338,13 @@ public abstract class BaseFragment extends Fragment {
                 .makeUriForOthersData(symbol), null, null);
 
         if (deletedData > 0) {
-            mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+            OthersReceiver othersReceiver = new OthersReceiver(mContext);
+            othersReceiver.updateOthersPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
             Toast.makeText(mContext, getString(R.string.toast_others_successfully_removed, symbol)
                     , Toast.LENGTH_SHORT).show();
             return true;
@@ -784,7 +830,7 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidStockSymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
-        Pattern pattern = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        Pattern pattern = Pattern.compile("^[A-Z0-9]{4}([0-9]|[0-9][0-9])$");
         if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
@@ -817,6 +863,20 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText was set with valid Stock Symbol
+    protected boolean isValidSymbol(AutoCompleteTextView symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Stock (EX: PETR4) or ETF (EX: BOVA11 or SMAL11)
+        Pattern patternStock = Pattern.compile("^[A-Z]{4}([0-9]|[0-9][0-9])$");
+        Pattern patternFii = Pattern.compile("^[A-Z]{4}([0-9][0-9][A-Z]|[0-9][0-9])$");
+        Pattern patternCurrency = Pattern.compile("[a-zA-Z]*");
+        if (patternStock.matcher(editable.toString()).matches() || patternFii.matcher(editable.toString()).matches() || patternCurrency.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid Fixed Symbol
     protected boolean isValidFixedSymbol(EditText symbol) {
         Editable editable = symbol.getText();
@@ -842,11 +902,11 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Validate if an EditText was set with valid Treasury Symbol
-    protected boolean isValidTreasurySymbol(EditText symbol) {
+    protected boolean isValidTreasurySymbol(AutoCompleteTextView symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Treasury income (Only letters and numbers)
         Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (!isAutoTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
             return false;
@@ -1182,7 +1242,7 @@ public abstract class BaseFragment extends Fragment {
     // Get stock quantity that will receive the dividend per stock
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of stocks transactions before the timestamp
-    public int getStockQuantity(String symbol, Long incomeTimestamp){
+    public double getStockQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of stock
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " < ?";
@@ -1195,7 +1255,7 @@ public abstract class BaseFragment extends Fragment {
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             int currentType = 0;
             do {
                 currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TYPE));
@@ -1211,10 +1271,10 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        quantityTotal = quantityTotal*queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        quantityTotal = quantityTotal/queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -1245,7 +1305,7 @@ public abstract class BaseFragment extends Fragment {
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.StockIncome._ID)));
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                int quantity = getStockQuantity(symbol, incomeTimestamp);
+                double quantity = getStockQuantity(symbol, incomeTimestamp);
                 double perStock = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_PER_STOCK)));
                 int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.StockIncome.COLUMN_TYPE)));
                 double receiveTotal = quantity * perStock;
@@ -1293,7 +1353,7 @@ public abstract class BaseFragment extends Fragment {
         if(STQueryCursor.getCount() > 0){
             STQueryCursor.moveToFirst();
             // Final values to be inserted in StockData
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             double buyValue = 0;
             // Buy quantity and total is to calculate correct medium buy price
             // Medium price is only for buys
@@ -1303,7 +1363,12 @@ public abstract class BaseFragment extends Fragment {
             double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
-            int bonificationQuantity = 0;
+            double bonificationQuantity = 0;
+            // Used for brokerage calculation for buy and sell
+            // See file calculo brokerage.txt for math
+            double buyBrokerage = 0;
+            double buyQuantityBrokerage = 0;
+            double sellBrokerage = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -1321,25 +1386,36 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                         mediumPrice = buyValue/quantityTotal;
+                        // Brokerage
+                        buyBrokerage += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        // Brokerage
+                        double partialSell = 0;
+                        partialSell = buyBrokerage/buyQuantityBrokerage * STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyBrokerage -=partialSell;
+                        sellBrokerage += partialSell + STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.BONIFICATION:
                         bonificationQuantity += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SPLIT:
-                        buyQuantity = buyQuantity*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyQuantity = buyQuantity*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        bonificationQuantity = bonificationQuantity*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.GROUPING:
-                        buyQuantity = buyQuantity/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        quantityTotal = quantityTotal/STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
-                        mediumPrice = mediumPrice*STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        buyQuantity = buyQuantity/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        bonificationQuantity = bonificationQuantity/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -1376,7 +1452,7 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, StockDetailsOverview will not update current total and total gain, unless refreshing the View
-                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION){
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION || type == Constants.Type.SELL){
                     queryDataCursor.moveToFirst();
                     double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
@@ -1409,13 +1485,14 @@ public abstract class BaseFragment extends Fragment {
             stockDataCV.put(PortfolioContract.StockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL, buyValue);
 
-            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION) && queryDataCursor.getCount() > 0){
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.BONIFICATION || type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_CURRENT_TOTAL, currentTotal);
                 stockDataCV.put(PortfolioContract.StockData.COLUMN_VARIATION, variation);
             }
             stockDataCV.put(PortfolioContract.StockData.COLUMN_NET_INCOME, receiveIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_INCOME_TAX, taxIncome);
             stockDataCV.put(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE, mediumPrice);
+            stockDataCV.put(PortfolioContract.StockData.COLUMN_BROKERAGE, buyBrokerage);
 
             if(quantityTotal > 0){
                 // Set stock as active
@@ -1447,7 +1524,7 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Update Stock Portfolio
                 // Send broadcast so StockReceiver can update the rest
-                updateSoldStockData(symbol, soldBuyValue);
+                updateSoldStockData(symbol, soldBuyValue, sellBrokerage);
                 return true;
             } else {
                 return false;
@@ -1458,7 +1535,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the StockTransaction entries and calculates value for StockData table for this symbol
-    public boolean updateSoldStockData(String symbol, double soldBuyValue){
+    public boolean updateSoldStockData(String symbol, double soldBuyValue, double sellBrokerage){
 
         String selection = PortfolioContract.StockTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -1519,12 +1596,13 @@ public abstract class BaseFragment extends Fragment {
                     }
                 }
 
-                double sellGain = soldTotal - soldBuyValue;
+                double sellGain = soldTotal - soldBuyValue - sellBrokerage;
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL, quantityTotal);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL, soldTotal);
                 stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN, sellGain);
+                stockDataCV.put(PortfolioContract.SoldStockData.COLUMN_BROKERAGE, sellBrokerage);
 
                 // Searches for existing StockData to update value.
                 // If dosent exists, creates new one
@@ -1547,9 +1625,6 @@ public abstract class BaseFragment extends Fragment {
                         stockDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    // Update Stock Portfolio
-                    // Send broadcast so StockReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
                     return true;
                 } else {
                     return false;
@@ -1799,9 +1874,6 @@ public abstract class BaseFragment extends Fragment {
                         currencyDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    // Update Currency Portfolio
-                    // Send broadcast so CurrencyReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
                     return true;
                 } else {
                     return false;
@@ -1827,7 +1899,7 @@ public abstract class BaseFragment extends Fragment {
         if(STQueryCursor.getCount() > 0){
             STQueryCursor.moveToFirst();
             // Final values to be inserted in FiiData
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             double buyValue = 0;
             // Buy quantity and total is to calculate correct medium buy price
             // Medium price is only for buys
@@ -1837,6 +1909,11 @@ public abstract class BaseFragment extends Fragment {
             double taxIncome = 0;
             double mediumPrice = 0;
             int currentType;
+            // Used for brokerage calculation for buy and sell
+            // See file calculo brokerage.txt for math
+            double buyBrokerage = 0;
+            double buyQuantityBrokerage = 0;
+            double sellBrokerage = 0;
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -1854,12 +1931,31 @@ public abstract class BaseFragment extends Fragment {
                         quantityTotal += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                         mediumPrice = buyValue/quantityTotal;
+                        // Brokerage
+                        buyBrokerage += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         buyValue -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
                         // Add the value sold times the current medium buy price
                         soldBuyValue += STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*mediumPrice;
+                        // Brokerage
+                        double partialSell = 0;
+                        partialSell = buyBrokerage/buyQuantityBrokerage * STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        buyBrokerage -=partialSell;
+                        sellBrokerage += partialSell + STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_BROKERAGE));
+                        buyQuantityBrokerage -= STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SPLIT:
+                        buyQuantity = buyQuantity*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        buyQuantity = buyQuantity/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        quantityTotal = quantityTotal/STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        mediumPrice = mediumPrice*STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -1893,7 +1989,7 @@ public abstract class BaseFragment extends Fragment {
             } else {
                 // Needs to update current total and total gain with latest current price
                 // If not, FiiDetailsOverview will not update current total and total gain, unless refreshing the View
-                if (type == Constants.Type.DELETE_TRANSACION){
+                if (type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.SELL){
                     queryDataCursor.moveToFirst();
                     double currentPrice = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE));
                     currentTotal = currentPrice*quantityTotal;
@@ -1925,13 +2021,14 @@ public abstract class BaseFragment extends Fragment {
 
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BUY_VALUE_TOTAL, buyValue);
-            if ((type == Constants.Type.DELETE_TRANSACION) && queryDataCursor.getCount() > 0){
+            if ((type == Constants.Type.DELETE_TRANSACION || type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_TOTAL, currentTotal);
                 fiiDataCV.put(PortfolioContract.FiiData.COLUMN_VARIATION, variation);
             }
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME, receiveIncome);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_INCOME_TAX, taxIncome);
             fiiDataCV.put(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE, mediumPrice);
+            fiiDataCV.put(PortfolioContract.FiiData.COLUMN_BROKERAGE, buyBrokerage);
 
             if(quantityTotal > 0){
                 // Set fii as active
@@ -1963,7 +2060,7 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Update Fii Portfolio
                 // Send broadcast so FiiReceiver can update the rest
-                updateSoldFiiData(symbol, soldBuyValue);
+                updateSoldFiiData(symbol, soldBuyValue, sellBrokerage);
                 return true;
             } else {
                 return false;
@@ -1974,7 +2071,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     // Reads the FiiTransaction entries and calculates value for SoldFiiData table for this symbol
-    public boolean updateSoldFiiData(String symbol, double soldBuyValue){
+    public boolean updateSoldFiiData(String symbol, double soldBuyValue, double sellBrokerage){
 
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? ";
         String[] selectionArguments = {symbol};
@@ -2035,12 +2132,13 @@ public abstract class BaseFragment extends Fragment {
                     }
                 }
 
-                double sellGain = soldTotal - soldBuyValue;
+                double sellGain = soldTotal - soldBuyValue - sellBrokerage;
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_QUANTITY_TOTAL, quantityTotal);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_BUY_VALUE_TOTAL, soldBuyValue);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_MEDIUM_PRICE, sellMediumPrice);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_TOTAL, soldTotal);
                 fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_SELL_GAIN, sellGain);
+                fiiDataCV.put(PortfolioContract.SoldFiiData.COLUMN_BROKERAGE, sellBrokerage);
 
                 // Searches for existing FiiData to update value.
                 // If dosent exists, creates new one
@@ -2063,9 +2161,6 @@ public abstract class BaseFragment extends Fragment {
                         fiiDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    // Update Fii Portfolio
-                    // Send broadcast so FiiReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.FII));
                     return true;
                 } else {
                     return false;
@@ -2097,7 +2192,7 @@ public abstract class BaseFragment extends Fragment {
             do{
                 String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiIncome._ID)));
                 long incomeTimestamp = queryCursor.getLong(queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP));
-                int quantity = getFiiQuantity(symbol, incomeTimestamp);
+                double quantity = getFiiQuantity(symbol, incomeTimestamp);
                 double perFii = queryCursor.getDouble((queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_PER_FII)));
                 int incomeType = queryCursor.getInt((queryCursor.getColumnIndex(PortfolioContract.FiiIncome.COLUMN_TYPE)));
                 double receiveTotal = quantity * perFii;
@@ -2132,7 +2227,7 @@ public abstract class BaseFragment extends Fragment {
     // Get fii quantity that will receive the dividend per fii
     // symbol is to query by specific symbol only
     // income timestamp is to query only the quantity of fiis transactions before the timestamp
-    public int getFiiQuantity(String symbol, Long incomeTimestamp){
+    public double getFiiQuantity(String symbol, Long incomeTimestamp){
         // Return column should be only quantity of fii
         String selection = PortfolioContract.FiiTransaction.COLUMN_SYMBOL + " = ? AND "
                 + PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " < ?";
@@ -2145,7 +2240,7 @@ public abstract class BaseFragment extends Fragment {
                 null, selection, selectionArguments, sortOrder);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            int quantityTotal = 0;
+            double quantityTotal = 0;
             int currentType = 0;
             do {
                 currentType = queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TYPE));
@@ -2156,6 +2251,12 @@ public abstract class BaseFragment extends Fragment {
                         break;
                     case Constants.Type.SELL:
                         quantityTotal -= queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.SPLIT:
+                        quantityTotal = quantityTotal*queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                        break;
+                    case Constants.Type.GROUPING:
+                        quantityTotal = quantityTotal/queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                         break;
                     default:
                 }
@@ -2260,6 +2361,11 @@ public abstract class BaseFragment extends Fragment {
             // Set fixed income as active
             fixedDataCV.put(PortfolioContract.FixedData.COLUMN_STATUS, Constants.Status.ACTIVE);
 
+            Intent mServiceIntent = new Intent(mContext, FixedIntentService
+                    .class);
+            mServiceIntent.putExtra(FixedIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
+
             // Searches for existing FixedData to update value.
             // If dosent exists, creates new one
             Cursor queryCursor = mContext.getContentResolver().query(
@@ -2281,9 +2387,6 @@ public abstract class BaseFragment extends Fragment {
                     fixedDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
-                // Send broadcast so FixedReceiver can update the rest
-                // Send to update Fixed Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.FIXED));
                 return true;
             } else {
                 return false;
@@ -2385,6 +2488,11 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
+            Intent mServiceIntent = new Intent(mContext, TreasuryIntentService
+                    .class);
+            mServiceIntent.putExtra(TreasuryIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);
+
             // Query Income table to get total of this treasury income
             String[] affectedColumn = {"sum("+ PortfolioContract.TreasuryIncome.COLUMN_RECEIVE_LIQUID+")",
                     "sum("+ PortfolioContract.TreasuryIncome.COLUMN_TAX+")"};
@@ -2449,7 +2557,6 @@ public abstract class BaseFragment extends Fragment {
                 // Update Treasury Portfolio
                 // Send broadcast so TreasuryReceiver can update the rest
                 // Send to update Treasury Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                 updateSoldTreasuryData(symbol, soldBuyValue);
                 return true;
             } else {
@@ -2550,9 +2657,6 @@ public abstract class BaseFragment extends Fragment {
                         treasuryDataCV, updateSelection, updatedSelectionArguments);
                 // Log update success/fail result
                 if (updatedRows > 0) {
-                    // Update Treasury Portfolio
-                    // Send broadcast so TreasuryReceiver can update the rest
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.TREASURY));
                     return true;
                 } else {
                     return false;
@@ -2788,7 +2892,13 @@ public abstract class BaseFragment extends Fragment {
             if (updatedRows > 0){
                 // Send broadcast so OthersReceiver can update the rest
                 // Send to update others Income Portfolio and show overview
-                mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+                OthersReceiver othersReceiver = new OthersReceiver(mContext);
+                othersReceiver.updateOthersPortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+
+                PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                portfolioReceiver.updatePortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 return true;
             } else {
                 return false;

@@ -13,18 +13,32 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.LogRecord;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.domain.ResponseStock;
-import br.com.guiainvestimento.api.domain.ResponseStocks;
+import br.com.guiainvestimento.activity.MainActivity;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
-import br.com.guiainvestimento.domain.Stock;
+import br.com.guiainvestimento.domain.StockQuote;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Service responsible for making the Api request and parser the result.
@@ -35,13 +49,18 @@ public class StockIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
-
+    private final String CedroL = "thiprochnow";
+    private final String CedroP = "4schGOS";
     private boolean mSuccess = false;
+    private String mResult = "";
     private String mSymbol;
+    private String mType;
     Handler mHandler;
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
+    public static final String PREMIUM = "premium";
+    public static final String CONSULT_SYMBOL = "consult_symbol";
 
     /**
      * Constructor matching super is needed
@@ -59,124 +78,238 @@ public class StockIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        // Only calls the service if the symbol is present
-        if (intent.hasExtra(ADD_SYMBOL)) {
-            int success = this.addStockTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
-            if (success == GcmNetworkManager.RESULT_SUCCESS){
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        try {
+            // Only calls the service if the symbol is present
+            if (intent.hasExtra(ADD_SYMBOL)) {
+                mType = ADD_SYMBOL;
+                int count = 0;
+                int success = -1;
+                TaskParams params = new TaskParams(ADD_SYMBOL, intent.getExtras());
+                do {
+                    success = this.addStockTask(params);
+                    count++;
+                } while (success != GcmNetworkManager.RESULT_SUCCESS && success != GcmNetworkManager.RESULT_RESCHEDULE && count <= 3);
+                if (success == GcmNetworkManager.RESULT_SUCCESS) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else if (success == GcmNetworkManager.RESULT_RESCHEDULE){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks_limit), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
+                mType = CONSULT_SYMBOL;
+                mResult = this.consultStockTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
+                if (mResult == "") {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } else {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_stocks), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                throw new IOException("Missing one of the following Extras: ADD_SYMBOL, CONSULT_SYMBOL");
             }
+        } catch (Exception e){
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private int addStockTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(StockService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        boolean isPremium = params.getExtras().getBoolean(StockIntentService.PREMIUM, true);
+        int limit = 0;
+        int size = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(StockIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
-            // Make the request and parse the result
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(StockService.BASE_URL)
+                    .addConverterFactory(new NullOnEmptyConverterFactory())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
+                    .build();
+
             StockService service = retrofit.create(StockService.class);
+
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
+
+            ContentValues stockDataCV = new ContentValues();
 
             String[] symbols = params.getExtras().getString(StockIntentService.ADD_SYMBOL).split(",");
 
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.quotes where symbol in ("
-                    + buildQuery(symbols) + ")";
-            if(symbols.length == 1) {
-                Call<ResponseStock> call;
-                Response<ResponseStock> response;
-                ResponseStock responseGetStock;
-                int count = 0;
-                do {
-                    call = service.getStock(query);
-                    response = call.execute();
-                    responseGetStock = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetStock.getStockQuotes() != null && !responseGetStock.getStockQuotes().isEmpty() &&
-                        responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly() != null) {
-
-                    // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
-                    String tableSymbol = responseGetStock.getStockQuotes().get(0).getSymbol();
-                    if( (tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                        tableSymbol = tableSymbol.substring(0, tableSymbol.length() -3);
-                    }
-
-                    // Prepare the data of the current price to update the StockData table
-                    ContentValues stockDataCV = new ContentValues();
-                    stockDataCV.put(tableSymbol,
-                            responseGetStock.getStockQuotes().get(0).getLastTradePriceOnly());
-
-                    // Update value on stock data
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.BULK_UPDATE_URI,
-                            stockDataCV, null, null);
-                    // Log update success/fail result
-                    if (updatedRows > 0) {
-                        // Update Stock Portfolio
-                        mSuccess = true;
-                    }
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }else{
-                Call<ResponseStocks> call;
-                Response<ResponseStocks> response;
-                ResponseStocks responseGetStocks;
-                int count = 0;
-                do {
-                    call = service.getStocks(query);
-                    response = call.execute();
-                    responseGetStocks = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetStocks != null && responseGetStocks.getStockQuotes() != null && !responseGetStocks.getStockQuotes().isEmpty()) {
-                    String tableSymbol = "";
-                    ContentValues stockDataCV = new ContentValues();
-                    for(Stock stock : responseGetStocks.getStockQuotes()) {
-                        // Remove .SA (Brazil stocks) from symbol to match the symbol in Database
-                        tableSymbol = stock.getSymbol();
-                        if ((tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                            tableSymbol = tableSymbol.substring(0, tableSymbol.length() - 3);
+            String path = "";
+            if (responseString != null && responseString.equals("true")){
+                for (String symbol: symbols){
+                    if (limit <= 5) {
+                        if(limit == 0){
+                            path = symbol;
+                            limit++;
+                            size++;
+                        } else {
+                            path += "/"+symbol;
+                            size++;
                         }
-                        stockDataCV.put(tableSymbol,
-                                stock.getLastTradePriceOnly());
+                    } else {
+                        // Limit reach, change Not Updated status
+                        ContentValues updateStock = new ContentValues();
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                        String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                        String[] updatedSelectionArguments = {symbol};
+                        int updatedRows = this.getContentResolver().update(
+                                PortfolioContract.StockData.URI,
+                                updateStock, updateSelection, updatedSelectionArguments);
                     }
 
+                    if (!isPremium) {
+                        limit++;
+                    }
+                }
+                // Remove the one that was added first in case it was first element
+                limit--;
+            } else {
+
+                for (String symbol: symbols) {
+                    ContentValues updateStock = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
                     int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.StockData.BULK_UPDATE_URI,
-                            stockDataCV, null, null);
-                    // Success request
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+            path = path.toLowerCase();
+            List<StockQuote> stocks = null;
+            if(size <= 1){
+                boolean success = false;
+                Call<StockQuote> callGet = service.getStock(path);
+                Response<StockQuote> responseGet = callGet.execute();
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    success = true;
+                    StockQuote stock = responseGet.body();
+                    stocks = new ArrayList<StockQuote>();
+                    stocks.add(stock);
+                } else {
+                    stocks = null;
+                }
+            } else {
+                boolean success = false;
+                do {
+                    Call<List<StockQuote>> callGet = service.getStocks(path);
+                    Response<List<StockQuote>> responseGet = callGet.execute();
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        stocks = responseGet.body();
+                        success = true;
+                    } else {
+                        stocks = null;
+                    }
+                } while (!success);
+            }
+
+            if (stocks != null && stocks.size() > 0) {
+                for (String symbol: symbols) {
+                    boolean success = false;
+                    ContentValues updateStock = new ContentValues();
+                    for (StockQuote stock : stocks) {
+                        if (stock != null && stock.toString().length() > 0 && symbol.equalsIgnoreCase(stock.getSymbol()) && stock.getLast() != null) {
+                            String lastPrice = "0.0";
+                            if(Double.valueOf(stock.getLast()) > 0){
+                                lastPrice = stock.getLast();
+                            } else {
+                                lastPrice = stock.getPrevious();
+                            }
+
+                            // Success on request
+                            stockDataCV.put(symbol, lastPrice);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, stock.getPrevious());
+                            success = true;
+                        }
+                    }
+
+                    if(!success){
+                        // Mark symbol as failer and set NOT UPDATED on sql db
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+                    }
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+
+                for (String symbol: symbols) {
+                    ContentValues updateStock = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.StockData.URI,
+                            updateStock, updateSelection, updatedSelectionArguments);
+                }
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            if (stockDataCV.size() > 0){
+                // Update value on stock data
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.StockData.BULK_UPDATE_URI,
+                        stockDataCV, null, null);
+                if (limit <= 5) {
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
+                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
                 }
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 
         } catch (IOException e) {
@@ -186,30 +319,93 @@ public class StockIntentService extends IntentService {
         return resultStatus;
     }
 
-    private String buildQuery(String[] symbols) {
-        String resultQuery = "";
+    private String consultStockTask(TaskParams params) {
 
-        if (symbols.length == 1) {
+        String result = "";
 
-            resultQuery = "\"" + symbols[0] + ".SA" + "\"";
-        } else {
-            for (String symbol : symbols) {
-                if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + ".SA" + "\"";
-                } else {
-                    resultQuery += ",\"" + symbol + ".SA" + "\"";
+        try {
+
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(StockService.BASE_URL)
+                    .addConverterFactory(new NullOnEmptyConverterFactory())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
+                    .build();
+
+            StockService service = retrofit.create(StockService.class);
+
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
+
+            if (responseString.equals("true")){
+                String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
+
+                Call<StockQuote> callGet = service.getStock(symbol.toLowerCase());
+                Response<StockQuote> responseGet = callGet.execute();
+                StockQuote stock = null;
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    stock = responseGet.body();
+                }
+
+                if (responseGet != null && responseGet.isSuccessful() && stock != null && stock.toString().length() > 0){
+                    // Success on request
+                    if (stock.getLast() != null){
+                        result = stock.getLast();
+                    }
+                } else{
+                    result = "error";
                 }
             }
-
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            e.printStackTrace();
         }
-
-        return resultQuery;
+        return result;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.STOCK));
-        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+        if (mType == ADD_SYMBOL) {
+            super.onDestroy();
+            StockReceiver stockReceiver = new StockReceiver(this);
+            stockReceiver.updateStockPortfolio();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+        } else if (mType == CONSULT_SYMBOL){
+            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
+            broadcastIntent.putExtra("quote", mResult);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+        }
+    }
+
+    public class NullOnEmptyConverterFactory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+            final Converter<ResponseBody, ?> delegate = retrofit.nextResponseBodyConverter(this, type, annotations);
+            return new Converter<ResponseBody, Object>() {
+                @Override
+                public Object convert(ResponseBody body) throws IOException {
+                    if (body.contentLength() == 0) return null;
+                    return delegate.convert(body);                }
+            };
+        }
     }
 }

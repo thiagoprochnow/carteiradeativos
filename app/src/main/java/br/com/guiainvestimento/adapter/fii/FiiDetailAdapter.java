@@ -90,9 +90,6 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
 
-                        viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.FiiData
-                                        .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.FiiData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
@@ -109,7 +106,7 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
+                double quantity = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY));
                 double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
                 // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
                 if (price > 0) {
@@ -192,9 +189,6 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     class FiiDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.currentPrice)
-        TextView currentPrice;
-
         @BindView(R.id.mediumPrice)
         TextView mediumPrice;
 
@@ -220,6 +214,10 @@ public class FiiDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 return mContext.getResources().getString(R.string.stock_buy);
             case Constants.Type.SELL:
                 return mContext.getResources().getString(R.string.stock_sell);
+            case Constants.Type.SPLIT:
+                return mContext.getResources().getString(R.string.stock_split);
+            case Constants.Type.GROUPING:
+                return mContext.getResources().getString(R.string.stock_grouping);
             default:
                 return mContext.getResources().getString(R.string.stock_buy);
         }

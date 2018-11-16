@@ -17,6 +17,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.CurrencyReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 
 
 public class EditCurrencyFormFragment extends BaseFormFragment {
@@ -73,8 +75,13 @@ public class EditCurrencyFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on CurrencyPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+                    CurrencyReceiver currencyReceiver = new CurrencyReceiver(mContext);
+                    currencyReceiver.updateCurrencyPortfolio();
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.CURRENCY));
+
+                    PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                    portfolioReceiver.updatePortfolio();
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 }
             }
 

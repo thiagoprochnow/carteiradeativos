@@ -1,6 +1,8 @@
 package br.com.guiainvestimento.api.domain;
 
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +16,7 @@ public class ResponseCurrency {
 
     @SerializedName("query")
     private ResponseCurrency.Result mResult;
+    private static final String LOG_TAG = ResponseCurrency.class.getSimpleName();
 
     /**
      * Get list of Currencies attributes present in response
@@ -22,13 +25,17 @@ public class ResponseCurrency {
     public List<Currency> getDividendQuotes() {
         List<Currency> result = new ArrayList<>();
         List<Currency> currencyQuotes =  mResult.getQuotes();
-        for (Currency currency : currencyQuotes){
-            if (currency.getDate() != null
-                    && currency.getRate() != null) {
-                result.add(currency);
+        if (currencyQuotes != null) {
+            for (Currency currency : currencyQuotes) {
+                if (currency.getDate() != null
+                        && currency.getRate() != null) {
+                    result.add(currency);
+                }
             }
+            return result;
+        } else {
+            return null;
         }
-        return result;
     }
 
     /**
@@ -45,6 +52,10 @@ public class ResponseCurrency {
         private List<Currency> getQuotes() {
             Gson gson = new Gson();
             String rawJson = gson.toJson(mRawQuote);
+
+            if (mCount == 0){
+                return null;
+            }
 
             // Api return two different types of response - one if there is only one element in the
             // list, and if there is more than one. A JSON list is returned.

@@ -15,18 +15,14 @@ import java.util.Calendar;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class PortfolioReceiver extends BroadcastReceiver {
+public class PortfolioReceiver {
 
     private static final String LOG_TAG = PortfolioReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    private double mCurrentTotal = 0;
-
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updatePortfolio();
+    public PortfolioReceiver(Context context){
+        mContext = context;
     }
 
 
@@ -43,6 +39,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         double treasuryVariation = 0;
         double treasuryIncome = 0;
         double treasuryGain = 0;
+        double mCurrentTotal = 0;
 
         if (treasuryPortfolioCursor.getCount() > 0) {
             treasuryPortfolioCursor.moveToFirst();
@@ -54,6 +51,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
             treasuryGain = treasuryPortfolioCursor.getDouble(5);
         } else {
         }
+
+        treasuryPortfolioCursor.close();
 
         // Fixed
         Cursor fixedPortfolioCursor = getFixedPortfolio();
@@ -76,6 +75,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        fixedPortfolioCursor.close();
+
         // Others
         Cursor othersPortfolioCursor = getOthersPortfolio();
 
@@ -97,6 +98,8 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        othersPortfolioCursor.close();
+
         // Stock
         Cursor stockPortfolioCursor = getStockPortfolio();
 
@@ -105,6 +108,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         double stockCurrent = 0;
         double stockVariation = 0;
         double stockIncome = 0;
+        double stockBrokerage = 0;
         double stockGain = 0;
 
         if (stockPortfolioCursor.getCount() > 0) {
@@ -114,9 +118,12 @@ public class PortfolioReceiver extends BroadcastReceiver {
             stockCurrent = stockPortfolioCursor.getDouble(2);
             stockVariation = stockPortfolioCursor.getDouble(3);
             stockIncome = stockPortfolioCursor.getDouble(4);
-            stockGain = stockPortfolioCursor.getDouble(5);
+            stockBrokerage = stockPortfolioCursor.getDouble(5);
+            stockGain = stockPortfolioCursor.getDouble(6);
         } else {
         }
+
+        stockPortfolioCursor.close();
 
         // Fii
         Cursor fiiPortfolioCursor = getFiiPortfolio();
@@ -126,6 +133,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         double fiiCurrent = 0;
         double fiiVariation = 0;
         double fiiIncome = 0;
+        double fiiBrokerage = 0;
         double fiiGain = 0;
 
         if (fiiPortfolioCursor.getCount() > 0) {
@@ -135,9 +143,12 @@ public class PortfolioReceiver extends BroadcastReceiver {
             fiiCurrent = fiiPortfolioCursor.getDouble(2);
             fiiVariation = fiiPortfolioCursor.getDouble(3);
             fiiIncome = fiiPortfolioCursor.getDouble(4);
-            fiiGain = fiiPortfolioCursor.getDouble(5);
+            fiiBrokerage = fiiPortfolioCursor.getDouble(5);
+            fiiGain = fiiPortfolioCursor.getDouble(6);
         } else {
         }
+
+        fiiPortfolioCursor.close();
 
         // Currency
         Cursor currencyPortfolioCursor = getCurrencyPortfolio();
@@ -158,12 +169,15 @@ public class PortfolioReceiver extends BroadcastReceiver {
         } else {
         }
 
+        currencyPortfolioCursor.close();
+
         // Sums all portfolio to get main portfolio
         double portfolioBuy = treasuryBuy + fixedBuy + stockBuy + fiiBuy + currencyBuy + othersBuy;
         double portfolioSold = treasurySold + fixedSold + stockSold + fiiSold + currencySold + othersSold;
         double portfolioCurrent = treasuryCurrent + fixedCurrent + stockCurrent + fiiCurrent + currencyCurrent + othersCurrent;
         double portfolioVariation = treasuryVariation + fixedVariation + stockVariation + fiiVariation + currencyVariation + othersVariation;
         double portfolioIncome = treasuryIncome + fixedIncome + stockIncome + fiiIncome + othersIncome;
+        double portfolioBrokerage = stockBrokerage + fiiBrokerage;
         double portfolioGain =  treasuryGain + fixedGain + stockGain + fiiGain + currencyGain + othersGain;
         double treasuryPercent = treasuryCurrent/portfolioCurrent*100;
         double fixedPercent = fixedCurrent/portfolioCurrent*100;
@@ -179,6 +193,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_CURRENT_TOTAL, portfolioCurrent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_VARIATION_TOTAL, portfolioVariation);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_INCOME_TOTAL, portfolioIncome);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_BROKERAGE, portfolioBrokerage);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN, portfolioGain);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TREASURY_PERCENT, treasuryPercent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FIXED_PERCENT, fixedPercent);
@@ -656,6 +671,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
                 "sum("+ PortfolioContract.StockPortfolio.COLUMN_CURRENT_TOTAL+")",
                 "sum("+ PortfolioContract.StockPortfolio.COLUMN_VARIATION_TOTAL+")",
                 "sum("+ PortfolioContract.StockPortfolio.COLUMN_INCOME_TOTAL+")",
+                "sum("+ PortfolioContract.StockPortfolio.COLUMN_BROKERAGE+")",
                 "sum("+ PortfolioContract.StockPortfolio.COLUMN_TOTAL_GAIN+")"};
 
         return mContext.getContentResolver().query(
@@ -670,6 +686,7 @@ public class PortfolioReceiver extends BroadcastReceiver {
                 "sum("+ PortfolioContract.FiiPortfolio.COLUMN_CURRENT_TOTAL+")",
                 "sum("+ PortfolioContract.FiiPortfolio.COLUMN_VARIATION_TOTAL+")",
                 "sum("+ PortfolioContract.FiiPortfolio.COLUMN_INCOME_TOTAL+")",
+                "sum("+ PortfolioContract.FiiPortfolio.COLUMN_BROKERAGE+")",
                 "sum("+ PortfolioContract.FiiPortfolio.COLUMN_TOTAL_GAIN+")"};
 
         return mContext.getContentResolver().query(

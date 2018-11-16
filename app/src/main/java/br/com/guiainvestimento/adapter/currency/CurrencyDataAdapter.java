@@ -83,8 +83,13 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 COLUMN_SYMBOL));
         String currencyLabel = Util.convertCurrencySymbol(mContext,symbol);
         viewHolder.symbol.setText(currencyLabel);
-        viewHolder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
-                (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));
+        if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")) {
+            viewHolder.currencyQuantity.setText(String.format("%.6f", mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));
+        } else {
+            viewHolder.currencyQuantity.setText(String.format("%.2f", mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.CurrencyData.COLUMN_QUANTITY_TOTAL))));
+        }
         viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         viewHolder.currentTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_CURRENT_TOTAL)))));
@@ -128,7 +133,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-        /*
+
         viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +141,7 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 int symbolColumn = mCursor.getColumnIndex(PortfolioContract.CurrencyData.COLUMN_SYMBOL);
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
             }
-        });*/
+        });
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -202,9 +207,9 @@ public class CurrencyDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-        /*
+
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;*/
+        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

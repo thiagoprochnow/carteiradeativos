@@ -9,13 +9,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.format.DateFormat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -39,7 +47,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +68,7 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final String LOG_TAG = FiiOverviewAdapter.class.getSimpleName();
     final private Context mContext;
     private Cursor mCursor;
-    private TextView mChartLabel;
+    private TableLayout mChartTable;
 
     public FiiOverviewAdapter(Context context) {
         this.mContext = context;
@@ -84,13 +96,15 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 item = LayoutInflater.from(mContext).inflate(R.layout.adapter_piechart, parent, false);
                 return new FiiPieChartViewHolder(item);
             default:
-                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_chart, parent, false);
+                item = LayoutInflater.from(mContext).inflate(R.layout.adapter_table, parent, false);
                 return new FiiChartViewHolder(item);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Locale locale = new Locale("pt", "BR");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         switch (holder.getItemViewType()) {
             case 0:
                 FiiOverviewViewHolder viewHolder = (FiiOverviewViewHolder) holder;
@@ -100,9 +114,10 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         (PortfolioContract.FiiPortfolio.COLUMN_VARIATION_TOTAL));
                 double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                         (PortfolioContract.FiiPortfolio.COLUMN_INCOME_TOTAL));
-                double totalGain = totalAppreciation + totalIncome;
-                Locale locale = new Locale("pt", "BR");
-                NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+                double totalBrokerage = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.FiiPortfolio.COLUMN_BROKERAGE));
+                double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                        (PortfolioContract.FiiPortfolio.COLUMN_TOTAL_GAIN));
 
                 // Set text colors according to positive or negative values
                 if (totalAppreciation >= 0){
@@ -128,15 +143,21 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                     viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
                 }
+
+                viewHolder.totalBrokerage.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+                viewHolder.totalBrokeragePercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+
                 double buyTotal =  mCursor.getDouble(
                         mCursor.getColumnIndex(PortfolioContract.FiiPortfolio.COLUMN_BUY_TOTAL));
                 double fiiAppreciationPercent = 0;
                 double totalGainPercent = 0;
                 double incomePercent = 0;
+                double brokeragePercent = 0;
                 if(buyTotal != 0) {
                     fiiAppreciationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalAppreciation / buyTotal * 100)));
                     incomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
-                    totalGainPercent = fiiAppreciationPercent + incomePercent;
+                    brokeragePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalBrokerage / buyTotal * 100)));
+                    totalGainPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalGain / buyTotal * 100)));
                 }
                 viewHolder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
                 viewHolder.soldTotal.setText(String.format(formatter.format(mCursor.getDouble(
@@ -145,9 +166,11 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         mCursor.getColumnIndex(PortfolioContract.FiiPortfolio.COLUMN_CURRENT_TOTAL)))));
                 viewHolder.fiiAppreciation.setText(String.format(formatter.format(totalAppreciation)));
                 viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
+                viewHolder.totalBrokerage.setText(String.format(formatter.format(totalBrokerage)));
                 viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
                 viewHolder.fiiAppreciationPercent.setText("(" + String.format("%.2f", fiiAppreciationPercent) + "%)");
                 viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", incomePercent) + "%)");
+                viewHolder.totalBrokeragePercent.setText("(" + String.format("%.2f", brokeragePercent) + "%)");
                 viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
                 break;
             case 1:
@@ -216,132 +239,145 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 break;
             default:
                 mCursor.moveToPosition(0);
-                FiiChartViewHolder chartHolder = (FiiChartViewHolder) holder;
-                mChartLabel = (TextView) chartHolder.chartLabel;
+                final FiiChartViewHolder chartHolder = (FiiChartViewHolder) holder;
+                mChartTable = (TableLayout) chartHolder.tableChart;
+                mChartTable.removeAllViews();
 
-                List<Entry> growthEntries = new ArrayList<Entry>();
-                List<Entry> buyEntries = new ArrayList<Entry>();
-                //TODO: Change so year can be selected or inputed by user
-                String queryYear = "2017";
+                Cursor growthCursor = getGrowthCursor();
+                Cursor growthLookahead = getGrowthCursor();
 
-                Cursor growthCursor = null;
-                Cursor buyCursor = null;
+                ArrayList<TableRow> rowList = new ArrayList<>();
 
-                try {
-                    growthCursor = getGrowthCursor(queryYear);
-                    buyCursor = getBuyGrowthCursor(queryYear);
-                } catch (SQLException e){
-                    Log.e(LOG_TAG, e.toString());
-                }
+                if (growthCursor != null && growthCursor.getCount() > 0) {
 
-                if(growthCursor != null && growthCursor.getCount() > 0 && buyCursor != null && buyCursor.getCount() > 0){
-
-                    // Make growth entries
                     growthCursor.moveToFirst();
-                    do{
-                        long timestamp = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
+                    growthLookahead.moveToFirst();
+                    double previousTotal = 0;
+                    do {
+                        boolean first = false;
+                        TableRow row = new TableRow(mContext);
+                        TableLayout.LayoutParams rowParams =
+                                new TableLayout.LayoutParams
+                                        (TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+                        rowParams.setMargins(5, 30, 5, 30);
+                        row.setLayoutParams(rowParams);
+
                         long month = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.MONTH));
                         long year = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.YEAR));
-                        float value = growthCursor.getFloat(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL));
-                        // Check if already reach others field
-                        // Show each pie data order in asc form
-                        // Do not show sold stocks
-                        growthEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+                        long timestamp = growthCursor.getLong(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
 
+                        final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
+                        int imonth = (int) month;
+                        String monthAbv = months[imonth];
+                        String mesAbv = monthAbv+"/"+String.valueOf(year);
+
+                        TextView mes = new TextView(mContext);
+                        mes.setText(mesAbv);
+                        mes.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                        mes.setGravity(Gravity.CENTER);
+                        mes.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                        mes.setWidth(0);
+
+                        double valueTotal = growthCursor.getDouble(growthCursor.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL));
+
+                        TextView total = new TextView(mContext);
+                        total.setText(String.format(formatter.format(valueTotal)));
+                        total.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                        total.setGravity(Gravity.CENTER);
+                        total.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                        total.setWidth(0);
+
+                        if (growthCursor.isFirst()){
+                            previousTotal = valueTotal;
+                            first = true;
+                        }
+
+                        double buyGain = 0;
+                        if (growthLookahead.moveToNext()){
+                            String currentMonth = "";
+                            String lookaheadMonth = "";
+
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(timestamp);
+                            currentMonth = DateFormat.format("MM-yyyy", cal).toString();
+
+                            long timestampLookahead = growthLookahead.getLong(growthLookahead.getColumnIndex(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP));
+                            cal.setTimeInMillis(timestampLookahead);
+                            lookaheadMonth = DateFormat.format("MM-yyyy", cal).toString();
+                            buyGain = getBuyGain(currentMonth, lookaheadMonth);
+                        } else {
+                            String currentMonth = "";
+                            String lookaheadMonth = "";
+
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTimeInMillis(timestamp);
+                            currentMonth = DateFormat.format("MM-yyyy", cal).toString();
+
+                            buyGain = getBuyGain(currentMonth, "0");
+                        }
+
+                        TextView compra = new TextView(mContext);
+                        compra.setText(String.format(formatter.format(buyGain)));
+                        compra.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                        compra.setGravity(Gravity.CENTER);
+                        compra.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                        compra.setWidth(0);
+
+                        double gain = 0;
+
+                        if (previousTotal != 0 && !first) {
+                            gain = valueTotal - previousTotal - buyGain;
+                        }
+                        TextView ganho = new TextView(mContext);
+                        ganho.setText(String.format(formatter.format(gain)));
+                        ganho.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                        ganho.setGravity(Gravity.CENTER);
+                        ganho.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                        ganho.setWidth(0);
+
+                        double gainPercent = 0;
+
+                        if (gain != 0 && previousTotal > 0) {
+                            gainPercent = gain / previousTotal * 100;
+                        }
+                        TextView ganhoPer = new TextView(mContext);
+                        ganhoPer.setText(String.format("%.2f", gainPercent) + "%");
+                        ganhoPer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10f);
+                        ganhoPer.setGravity(Gravity.CENTER);
+                        ganhoPer.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+                        ganhoPer.setWidth(0);
+
+                        row.addView(mes);
+                        row.addView(total);
+                        row.addView(compra);
+                        row.addView(ganho);
+                        row.addView(ganhoPer);
+
+                        // Sets for next iteration
+                        previousTotal = valueTotal;
+
+                        if (valueTotal > 0) {
+                            rowList.add(row);
+                        }
                     } while (growthCursor.moveToNext());
 
-                    // Make buy entries
-                    buyCursor.moveToFirst();
-                    do{
-                        long timestamp = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP));
-                        long month = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.MONTH));
-                        long year = buyCursor.getLong(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.YEAR));
-                        float value = buyCursor.getFloat(buyCursor.getColumnIndex(PortfolioContract.BuyGrowth.COLUMN_TOTAL));
-                        // Check if already reach others field
-                        // Show each pie data order in asc form
-                        // Do not show sold stocks
-                        buyEntries.add(new Entry(new Long(month).floatValue(), value, String.valueOf(year)));
+                    // Invert Table
+                    int size = rowList.size();
+                    for (int i = size-1; i >=0; i--){
+                        TableRow row = rowList.get(i);
+                        mChartTable.addView(row);
 
-                    } while (buyCursor.moveToNext());
+                        if (i != 0) {
+                            View line = new View(mContext);
+                            line.setBackgroundColor(0xFF4E4E4E);
+                            line.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 1));
 
-                    Description desc = chartHolder.chart.getDescription();
-                    desc.setEnabled(false);
-
-                    // Disable zoom
-                    chartHolder.chart.setDoubleTapToZoomEnabled(false);
-                    chartHolder.chart.setPinchZoom(false);
-                    chartHolder.chart.setScaleEnabled(false);
-
-                    chartHolder.chart.setOnChartValueSelectedListener(valueSelectedListener());
-
-                    Legend legend = chartHolder.chart.getLegend();
-                    legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-                    legend.setXEntrySpace(20);
-
-                    LineDataSet growthDS = new LineDataSet(growthEntries, "Atual"); // add entries to dataset
-                    growthDS.setHighLightColor(Color.BLACK);
-                    growthDS.setLineWidth(3);
-                    growthDS.setColor(mContext.getResources().getColor(R.color.green));
-                    growthDS.setCircleRadius(7f);
-                    growthDS.setCircleHoleRadius(5f);
-                    growthDS.setValueTextSize(10f);
-                    growthDS.setDrawValues(false);
-
-                    LineDataSet buyDS = new LineDataSet(buyEntries, "Comprado");
-                    buyDS.setHighLightColor(Color.BLACK);
-                    buyDS.setLineWidth(3);
-                    buyDS.setCircleRadius(7f);
-                    buyDS.setCircleHoleRadius(5f);
-                    buyDS.setValueTextSize(10f);
-                    buyDS.setDrawValues(false);
-
-                    final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
-
-                    XAxis xAxis = chartHolder.chart.getXAxis();
-                    xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-                    xAxis.setDrawAxisLine(false);
-                    xAxis.setDrawGridLines(false);
-                    xAxis.setValueFormatter(axisValueFormatter());
-                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                    xAxis.setLabelCount(8);
-                    xAxis.setXOffset(20f);
-                    xAxis.setAxisMinValue(0);
-                    xAxis.setAxisMaxValue(11);
-                    xAxis.setTextSize(8f);
-
-                    YAxis yAxisLeft = chartHolder.chart.getAxisLeft();
-                    yAxisLeft.setDrawAxisLine(false);
-                    //yAxisLeft.setDrawGridLines(false);
-                    yAxisLeft.setGranularity(0.1f);
-                    yAxisLeft.setTextSize(10f);
-                    yAxisLeft.setLabelCount(5);
-                    yAxisLeft.setXOffset(20f);
-                    yAxisLeft.setTextSize(8f);
-
-                    YAxis yAxisRight = chartHolder.chart.getAxisRight();
-                    yAxisRight.setDrawGridLines(false);
-                    yAxisRight.setDrawAxisLine(false);
-                    yAxisRight.setDrawLabels(false);
-                    yAxisRight.setXOffset(20f);
-
-                    // use the interface ILineDataSet
-                    List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-                    dataSets.add(growthDS);
-                    dataSets.add(buyDS);
-
-                    LineData lineData = new LineData(dataSets);
-                    chartHolder.chart.setData(lineData);
-                    chartHolder.chart.invalidate();
-
-                    chartHolder.chart.setVisibility(View.VISIBLE);
-                    chartHolder.chart_cardview.setVisibility(View.VISIBLE);
-                } else {
-                    chartHolder.chart.setVisibility(View.GONE);
-                    chartHolder.chart_cardview.setVisibility(View.GONE);
+                            mChartTable.addView(line);
+                        }
+                    }
                 }
                 break;
         }
-
     }
 
     @Override
@@ -372,6 +408,9 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @BindView(R.id.totalIncome)
         TextView totalIncome;
 
+        @BindView(R.id.totalBrokerage)
+        TextView totalBrokerage;
+
         @BindView(R.id.totalGain)
         TextView totalGain;
 
@@ -380,6 +419,9 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @BindView(R.id.totalIncomePercent)
         TextView totalIncomePercent;
+
+        @BindView(R.id.totalBrokeragePercent)
+        TextView totalBrokeragePercent;
 
         @BindView(R.id.totalGainPercent)
         TextView totalGainPercent;
@@ -435,14 +477,8 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class FiiChartViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.chart_cardview)
-        CardView chart_cardview;
-
-        @BindView(R.id.chart)
-        LineChart chart;
-
-        @BindView(R.id.chart_label)
-        TextView chartLabel;
+        @BindView(R.id.tableChart)
+        TableLayout tableChart;
 
         public FiiChartViewHolder(View itemView) {
             super(itemView);
@@ -454,20 +490,34 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         String[] affectedColumn = {PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT,
                 PortfolioContract.FiiData.COLUMN_SYMBOL};
         String sortOrder = PortfolioContract.FiiData.COLUMN_CURRENT_PERCENT + " DESC";
+        String selection = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.Status.ACTIVE)};
 
         // Searches for existing FiiData to update value.
         // If dosent exists, creates new one
         return mContext.getContentResolver().query(
                 PortfolioContract.FiiData.URI,
-                affectedColumn, null, null, sortOrder);
+                affectedColumn, selection, selectionArguments, sortOrder);
     }
 
-    private Cursor getGrowthCursor(String year){
-        String sortOrder = PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP + " ASC Limit 12";
+    private Cursor getYears(){
+        String sortOrder = PortfolioContract.PortfolioGrowth.YEAR + " ASC";
+        String[] affectedRows = {"DISTINCT " + PortfolioContract.PortfolioGrowth.YEAR};
+        String selection = PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.ProductType.FII)};
 
-        String selection = PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " = ? AND "
-                + PortfolioContract.PortfolioGrowth.YEAR + " = ?";
-        String[] selectionArguments = {String.valueOf(Constants.ProductType.FII), year};
+        // Searches for existing StockData to update value.
+        // If dosent exists, creates new one
+        return mContext.getContentResolver().query(
+                PortfolioContract.PortfolioGrowth.URI,
+                affectedRows, selection, selectionArguments, sortOrder);
+    }
+
+    private Cursor getGrowthCursor(){
+        String sortOrder = PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP + " ASC";
+
+        String selection = PortfolioContract.PortfolioGrowth.COLUMN_TYPE + " = ?";
+        String[] selectionArguments = {String.valueOf(Constants.ProductType.FII)};
 
         // Searches for existing StockData to update value.
         // If dosent exists, creates new one
@@ -489,47 +539,52 @@ public class FiiOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 null, selection, selectionArguments, sortOrder);
     }
 
-    private OnChartValueSelectedListener valueSelectedListener(){
-        OnChartValueSelectedListener valueSelectedListener = new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                int month = (int) e.getX();
-                float value = e.getY();
-                String year = e.getData().toString();
-                int chart = h.getDataSetIndex();
+    private double getBuyGain(String currentMonth, String lookaheadMonth){
+        double buyGain = 0;
 
-                final String[] months = mContext.getResources().getStringArray(R.array.chart_months);
-
-                Locale locale = new Locale("pt", "BR");
-                NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
-
-                String tipo;
-                if (chart == 1){
-                    tipo = mContext.getResources().getString(R.string.portfolio_bought_label) + ": ";
-                } else {
-                    tipo = mContext.getResources().getString(R.string.portfolio_current_label) + ": ";
-                }
-                mChartLabel.setText(tipo + String.valueOf(months[month] + ", " + year + " - " + formatter.format(e.getY())));
+        long timestamp = 0;
+        long timestampAhead = 0;
+        String currentDate="01-"+currentMonth;
+        String lookaheadDate = "01-"+lookaheadMonth;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date date = formatter.parse(currentDate);
+            timestamp = date.getTime();
+            if (!lookaheadMonth.equals("0")) {
+                Date date2 = formatter.parse(lookaheadDate);
+                timestampAhead = date2.getTime();
+            } else {
+                timestampAhead = System.currentTimeMillis();
             }
+        } catch (ParseException e){
+            Log.d(LOG_TAG, e.toString());
+        }
 
-            @Override
-            public void onNothingSelected() {
-                mChartLabel.setText("");
-            }
-        };
+        // FII
+        String selection = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " >= ? AND " + PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " < ? AND "
+                + PortfolioContract.FiiTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArguments = {String.valueOf(timestamp), String.valueOf(timestampAhead), String.valueOf(Constants.Type.BUY)};
+        String[] selectionArguments2 = {String.valueOf(timestamp), String.valueOf(timestampAhead), String.valueOf(Constants.Type.SELL)};
 
-        return valueSelectedListener;
+        Cursor fiiBuysCursor =  mContext.getContentResolver().query(PortfolioContract.FiiTransaction.URI,
+                null, selection, selectionArguments, null);
+
+
+        Cursor fiiSellsCursor =  mContext.getContentResolver().query(PortfolioContract.FiiTransaction.URI,
+                null, selection, selectionArguments2, null);
+
+        if(fiiBuysCursor.moveToFirst()){
+            do{
+                buyGain += fiiBuysCursor.getInt(fiiBuysCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*fiiBuysCursor.getDouble(fiiBuysCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+            } while (fiiBuysCursor.moveToNext());
+        }
+
+        if(fiiSellsCursor.moveToFirst()){
+            do{
+                buyGain -= fiiSellsCursor.getInt(fiiSellsCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_QUANTITY))*fiiSellsCursor.getDouble(fiiSellsCursor.getColumnIndex(PortfolioContract.FiiTransaction.COLUMN_PRICE));
+            } while (fiiSellsCursor.moveToNext());
+        }
+
+        return buyGain;
     }
-
-    private IAxisValueFormatter axisValueFormatter() {
-        IAxisValueFormatter axisValueFormatter = new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                final String[] months = mContext.getResources().getStringArray(R.array.chart_months_abv);
-                int month = (int) value;
-                return months[month];
-            }
-        };
-        return axisValueFormatter;
-    };
 }

@@ -1,26 +1,27 @@
 package br.com.guiainvestimento.api.service;
 
-import br.com.guiainvestimento.api.domain.ResponseFii;
-import br.com.guiainvestimento.api.domain.ResponseFiis;
+import java.util.List;
+
+import br.com.guiainvestimento.domain.FiiQuote;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
  * Interface responsible for detailing the GET's URL
  */
 public interface FiiService {
-    String BASE_URL = "https://query.yahooapis.com";
+    String BASE_URL = "http://webfeeder.cedrofinances.com.br";
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseFii> getFii(@Query("q") String query);
+    @POST("SignIn")
+    Call<String> getConnection(@Query("login") String login, @Query("password") String password);
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseFiis> getFiis(@Query("q") String query);
+    @GET("services/quotes/quote/{symbol}")
+    Call<FiiQuote> getFii(@Path("symbol") String symbol);
 
-    // Add here other API requests
+    @GET("services/quotes/quote/{symbol}")
+    Call<List<FiiQuote>> getFiis(@Path(value="symbol", encoded = true) String symbol);
 }

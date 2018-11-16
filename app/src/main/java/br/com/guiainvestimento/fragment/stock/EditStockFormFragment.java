@@ -17,6 +17,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import br.com.guiainvestimento.receiver.StockReceiver;
 
 
 public class EditStockFormFragment extends BaseFormFragment {
@@ -77,8 +79,13 @@ public class EditStockFormFragment extends BaseFormFragment {
                         currentPriceCV, null, null);
                 if (updatedCurrentRows > 0) {
                     // Send Broadcast to update other values on StockPortfolio
-                    mContext.sendBroadcast(new Intent(Constants.Receiver.STOCK));
+                    StockReceiver stockReceiver = new StockReceiver(mContext);
+                    stockReceiver.updateStockPortfolio();
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.STOCK));
+
+                    PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                    portfolioReceiver.updatePortfolio();
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 }
             }
 

@@ -39,12 +39,43 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="3dp">
+            <ImageView
+                android:id="@+id/updateError"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:paddingTop="1dp"
+                android:src="@drawable/error_icon"
+                android:layout_marginRight="3dp"/>
             <TextView
                 android:fontFamily="sans-serif-light"
                 android:id="@+id/symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="DUMY4"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fii_symbol"
+                android:layout_marginRight="3dp"/>
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|"
+                android:textColor="@color/white"
+                android:textSize="@dimen/stock_symbol"
+                android:layout_marginRight="3dp"/>
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/dailyPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/stock_symbol"
+                android:layout_marginRight="3dp"/>
+            <TextView
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/dailyPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="@dimen/fii_symbol" />
             <LinearLayout
@@ -114,6 +145,11 @@
                     android:fontFamily="sans-serif-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="@string/data_brokerage_label" />
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/data_total_gain_label" />
             </LinearLayout>
             <LinearLayout
@@ -133,7 +169,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -143,7 +178,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -153,7 +187,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1000,00"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -163,7 +196,15 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$150,00"
-                        android:textSize="@dimen/stock_price"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalBrokerage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="R$150,00"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -173,7 +214,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>
@@ -204,12 +244,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
-                        android:text="(158,53%)"
+                        android:text="(0,0%)"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
                         android:fontFamily="sans-serif-light"
                         android:id="@+id/totalIncomePercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:text="(0,0%)"
+                        android:ellipsize="end"
+                        android:maxLines="1"/>
+                    <TextView
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/totalBrokeragePercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="left"
@@ -285,6 +334,12 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/sell_icon_small"
+                    android:layout_marginRight="10dp"/>
+                <ImageView
+                    android:id="@+id/menuEdit"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/edit_icon_small"
                     android:layout_marginRight="10dp"/>
                 <ImageView
                     android:id="@+id/menuDelete"

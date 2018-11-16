@@ -1,8 +1,10 @@
 package br.com.guiainvestimento.adapter.stock;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,13 +60,44 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mCursor.moveToPosition(position);
         StockDataViewHolder viewHolder = (StockDataViewHolder) holder;
 
+        Locale locale = new Locale("pt", "BR");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+
         double stockAppreciation = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_VARIATION));
         double totalIncome = mCursor.getDouble(mCursor.getColumnIndex
                 (PortfolioContract.StockData.COLUMN_NET_INCOME));
-        double totalGain = stockAppreciation + totalIncome;
-        Locale locale = new Locale("pt", "BR");
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+        double brokerage = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_BROKERAGE));
+        double totalGain = mCursor.getDouble(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_TOTAL_GAIN));
+        int updateStatus = mCursor.getInt(mCursor.getColumnIndex
+                (PortfolioContract.StockData.COLUMN_UPDATE_STATUS));
+        // Show daily gain or loss
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            double currentPrice = mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.StockData.COLUMN_CURRENT_PRICE));
+            double closingPrice = mCursor.getDouble(mCursor.getColumnIndex
+                    (PortfolioContract.StockData.COLUMN_CLOSING_PRICE));
+            double dailyGain = (currentPrice - closingPrice)/closingPrice * 100;
+            String dailyGainString = String.format("%.2f", dailyGain);
+            String dailyPrice = formatter.format(currentPrice);
+            if (dailyGain >= 0){
+                viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+                viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            } else {
+                viewHolder.dailyPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
+                viewHolder.dailyPercent.setText("(" + dailyGainString + "%)");
+            }
+
+            if (currentPrice >= closingPrice){
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+                viewHolder.dailyPrice.setText(dailyPrice);
+            } else {
+                viewHolder.dailyPrice.setTextColor(ContextCompat.getColor(mContext, R.color.red2));
+                viewHolder.dailyPrice.setText(dailyPrice);
+            }
+        }
 
         // Set text colors according to positive or negative values
         if (stockAppreciation >= 0) {
@@ -90,10 +123,15 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             viewHolder.totalGain.setTextColor(ContextCompat.getColor(mContext, R.color.red));
             viewHolder.totalGainPercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
+
+        viewHolder.totalBrokerage.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+        viewHolder.totalBrokeragePercent.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+
         double buyTotal = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_BUY_VALUE_TOTAL));
         double variationPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(stockAppreciation / buyTotal * 100)));
         double netIncomePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalIncome / buyTotal * 100)));
-        double totalGainPercent = variationPercent + netIncomePercent;
+        double brokeragePercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(brokerage / buyTotal * 100)));
+        double totalGainPercent = Double.parseDouble(String.format(java.util.Locale.US,"%.2f",(totalGain / buyTotal * 100)));
         // Get handled values of StockData with current symbol
         viewHolder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
                 .StockData.
@@ -110,9 +148,11 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 + "%");
         viewHolder.totalIncome.setText(String.format(formatter.format(totalIncome)));
         viewHolder.totalGain.setText(String.format(formatter.format(totalGain)));
+        viewHolder.totalBrokerage.setText(String.format(formatter.format(brokerage)));
         viewHolder.stockAppreciationPercent.setText("(" + String.format("%.2f", variationPercent) + "%)");
         viewHolder.totalIncomePercent.setText("(" + String.format("%.2f", netIncomePercent) + "%)");
         viewHolder.totalGainPercent.setText("(" + String.format("%.2f", totalGainPercent) + "%)");
+        viewHolder.totalBrokeragePercent.setText("(" + String.format("%.2f", brokeragePercent) + "%)");
 
         if (position == mCursor.getCount()-1) {
             // If last item, apply margin in bottom to keep empty space for Floating button to occupy.
@@ -128,6 +168,35 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int topMargin = (int) (topDp * d); // margin in pixels
             params.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
             viewHolder.stockCardView.setLayoutParams(params);
+        }
+
+        // If the stock could not be updated automatically, give notice and option to update it manually
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            viewHolder.updateError.setVisibility(View.GONE);
+        } else {
+            viewHolder.updateError.setVisibility(View.VISIBLE);
+            viewHolder.updateError.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Use the Builder class for convenient dialog construction
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                    dialog.setMessage(R.string.dialog_stock_update_failed_message)
+                            .setPositiveButton(R.string.menu_edit, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mCursor.moveToPosition(position);
+                                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
+                                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                                }
+                            })
+                            .setNegativeButton(R.string.edit_cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    // Create the AlertDialog object and return it
+                    dialog.create().show();
+                }
+            });
         }
 
         viewHolder.stockCardViewClickable.setOnClickListener(new LinearLayout.OnClickListener() {
@@ -147,15 +216,20 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-        /*
-        viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCursor.moveToPosition(position);
-                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
-                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-            }
-        });*/
+
+        if (updateStatus == Constants.UpdateStatus.UPDATED){
+            viewHolder.menuEdit.setVisibility(View.GONE);
+        } else {
+            viewHolder.menuEdit.setVisibility(View.VISIBLE);
+            viewHolder.menuEdit.setOnClickListener(new ImageView.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCursor.moveToPosition(position);
+                    int symbolColumn = mCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_SYMBOL);
+                    mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
+                }
+            });
+        }
 
         viewHolder.menuSell.setOnClickListener(new ImageView.OnClickListener() {
             @Override
@@ -219,6 +293,18 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @BindView(R.id.totalGain)
         TextView totalGain;
 
+        @BindView(R.id.dailyPrice)
+        TextView dailyPrice;
+
+        @BindView(R.id.totalBrokerage)
+        TextView totalBrokerage;
+
+        @BindView(R.id.totalBrokeragePercent)
+        TextView totalBrokeragePercent;
+
+        @BindView(R.id.dailyPercent)
+        TextView dailyPercent;
+
         @BindView(R.id.stockAppreciationPercent)
         TextView stockAppreciationPercent;
 
@@ -233,9 +319,12 @@ public class StockDataAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-        /*
+
+        @BindView(R.id.updateError)
+        ImageView updateError;
+
         @BindView(R.id.menuEdit)
-        ImageView menuEdit;*/
+        ImageView menuEdit;
 
         @BindView(R.id.menuSell)
         ImageView menuSell;

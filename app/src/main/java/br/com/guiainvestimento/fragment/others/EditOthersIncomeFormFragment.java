@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.OthersReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 
 
 public class EditOthersIncomeFormFragment extends BaseFormFragment {
@@ -172,7 +175,13 @@ public class EditOthersIncomeFormFragment extends BaseFormFragment {
                     PortfolioContract.OthersData.URI,
                     updateCV, selection, selectionArguments);
             if (updateQueryCursor == 1){
-                mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+                OthersReceiver othersReceiver = new OthersReceiver(mContext);
+                othersReceiver.updateOthersPortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+
+                PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                portfolioReceiver.updatePortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 return true;
             }
         }

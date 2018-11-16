@@ -6,23 +6,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 
-public class FixedReceiver extends BroadcastReceiver {
+public class FixedReceiver {
 
     private static final String LOG_TAG = FixedReceiver.class.getSimpleName();
 
     private Context mContext;
 
-    private double mCurrentTotal = 0;
-
-    @Override
-    public void onReceive(Context c, Intent intent){
-        mContext = c;
-        updateFixedPortfolio();
+    public FixedReceiver(Context context){
+        mContext = context;
     }
 
     // Reads all of Fixed Data value and sets the calculation on FixedPortfolio table
@@ -32,6 +29,7 @@ public class FixedReceiver extends BroadcastReceiver {
         double buyTotal = 0;
         double totalGain = 0;
         double sellTotal = 0;
+        double mCurrentTotal = 0;
 
         // Return column should be the sum of value total, income total, value gain
         String[] affectedColumn = {"sum("+ PortfolioContract.FixedData.COLUMN_BUY_VALUE_TOTAL +"), " +
@@ -83,8 +81,6 @@ public class FixedReceiver extends BroadcastReceiver {
             Uri updateCurrentURI = PortfolioContract.FixedData.BULK_UPDATE_URI.buildUpon().appendPath(Double.toString(mCurrentTotal)).build();
             int updatedRows = mContext.getContentResolver().update(
                     updateCurrentURI, null, null, null);
-            // Send Broadcast to update other values on Portfolio
-            mContext.sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
         }
     }
 }

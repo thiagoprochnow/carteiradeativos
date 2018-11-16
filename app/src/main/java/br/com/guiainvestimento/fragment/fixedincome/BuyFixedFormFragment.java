@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +35,10 @@ public class BuyFixedFormFragment extends BaseFormFragment {
     private EditText mInputSymbolView;
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
+    private EditText mInputGainRateView;
+    private Spinner mInputGainTypeView;
+    private TextView mGainRateLabelView;
+    private int mType = Constants.FixedType.CDI;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -53,6 +61,40 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+        mInputGainRateView = (EditText) mView.findViewById(R.id.inputGainRate);
+        mInputGainTypeView = (Spinner) mView.findViewById(R.id.inputType);
+        mGainRateLabelView = (TextView) mView.findViewById(R.id.gainRateLabel);
+
+        String[] tipos = new String[]{"CDI","IPCA","Pré Fixado"};
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_dropdown_item,tipos);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mInputGainTypeView.setAdapter(adapter);
+
+        mInputGainTypeView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0){
+                    mType = Constants.FixedType.CDI;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_hint);
+                } else if(position == 1){
+                    mType = Constants.FixedType.IPCA;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate_ipca);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_ipca_hint);
+                } else {
+                    mType = Constants.FixedType.PRE;
+                    mGainRateLabelView.setText(R.string.fixed_gain_rate_pre);
+                    mInputGainRateView.setHint(R.string.fixed_gain_rate_pre_hint);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -69,6 +111,7 @@ public class BuyFixedFormFragment extends BaseFormFragment {
 
         // Adding input filters
         mInputBuyTotalView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
+        mInputGainRateView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -78,13 +121,15 @@ public class BuyFixedFormFragment extends BaseFormFragment {
         // Validate for each inputted value
         boolean isValidSymbol = isValidFixedSymbol(mInputSymbolView);
         boolean isValidBuyTotal = isValidDouble(mInputBuyTotalView);
+        boolean isValidGainRate = isValidDouble(mInputGainRateView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fixed income
-        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate && isValidGainRate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
+            double gainRate = Double.parseDouble(mInputGainRateView.getText().toString())/100;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -95,7 +140,9 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_SYMBOL, inputSymbol);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TOTAL, buyTotal);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TIMESTAMP, timestamp);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_RATE, gainRate);
             fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_TYPE, Constants.Type.BUY);
+            fixedCV.put(PortfolioContract.FixedTransaction.COLUMN_GAIN_TYPE, mType);
 
             // Adds to the database
             Uri insertedFixedTransactionUri = mContext.getContentResolver().insert(PortfolioContract
@@ -121,6 +168,9 @@ public class BuyFixedFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyTotal){
                 mInputBuyTotalView.setError(this.getString(R.string.wrong_total));
+            }
+            if(!isValidGainRate){
+                mInputGainRateView.setError(this.getString(R.string.wrong_gain_rate));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));

@@ -1,38 +1,28 @@
 package br.com.guiainvestimento.api.service;
 
-import br.com.guiainvestimento.api.domain.ResponseCurrency;
-import br.com.guiainvestimento.api.domain.ResponseStockIncome;
-import br.com.guiainvestimento.api.domain.ResponseStock;
-import br.com.guiainvestimento.api.domain.ResponseStocks;
+import java.util.List;
+
+import br.com.guiainvestimento.domain.StockQuote;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
  * Interface responsible for detailing the GET's URL
  */
 public interface StockService {
-    String BASE_URL = "https://query.yahooapis.com";
+    String BASE_URL = "http://webfeeder.cedrofinances.com.br";
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseStock> getStock(@Query("q") String query);
+    @POST("SignIn")
+    Call<String> getConnection(@Query("login") String login, @Query("password") String password);
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseStocks> getStocks(@Query("q") String query);
+    @GET("services/quotes/quote/{symbol}")
+    Call<StockQuote> getStock(@Path("symbol") String symbol);
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseStockIncome> getDividend(@Query("q") String query);
+    @GET("services/quotes/quote/{symbol}")
+    Call<List<StockQuote>> getStocks(@Path(value="symbol", encoded = true) String symbol);
 
-    @GET("/v1/public/yql?" +
-            "format=json&diagnostics=true&" +
-            "env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=")
-    Call<ResponseCurrency> getCurrency(@Query("q") String query);
-
-    // Add here other API requests
 }

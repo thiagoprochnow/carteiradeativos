@@ -88,9 +88,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if (dataCursor.getCount() > 0) {
                         dataCursor.moveToFirst();
 
-                        viewOverviewHolder.currentPrice.setText(formatter.format(dataCursor.getDouble(
-                                (dataCursor.getColumnIndex(PortfolioContract.StockData
-                                        .COLUMN_CURRENT_PRICE)))));
                         viewOverviewHolder.mediumPrice.setText(formatter.format(dataCursor.getDouble(
                                 (dataCursor.getColumnIndex(PortfolioContract.StockData.COLUMN_MEDIUM_PRICE)))));
                         viewOverviewHolder.soldPrice.setText(formatter.format(soldPrice));
@@ -107,7 +104,7 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
-                int quantity = mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+                double quantity = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
                 double price = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
                 // If price is 0, then it is bonification, grouping or split which should not show price or totalValue
                 if (price > 0) {
@@ -189,9 +186,6 @@ public class StockDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class StockDetailsOverviewViewHolder extends RecyclerView.ViewHolder{
-
-        @BindView(R.id.currentPrice)
-        TextView currentPrice;
 
         @BindView(R.id.mediumPrice)
         TextView mediumPrice;

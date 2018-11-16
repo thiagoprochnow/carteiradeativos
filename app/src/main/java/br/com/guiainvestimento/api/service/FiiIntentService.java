@@ -12,18 +12,30 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.api.domain.ResponseFii;
 
-import br.com.guiainvestimento.api.domain.ResponseFiis;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
-import br.com.guiainvestimento.domain.Fii;
+import br.com.guiainvestimento.domain.FiiQuote;
+import br.com.guiainvestimento.receiver.FiiReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Service responsible for making the Api request and parser the result.
@@ -34,6 +46,8 @@ public class FiiIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
+    private final String CedroL = "thiprochnow";
+    private final String CedroP = "4schGOS";
 
     private boolean mSuccess = false;
     private String mSymbol;
@@ -41,6 +55,7 @@ public class FiiIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
+    public static final String PREMIUM = "premium";
 
     /**
      * Constructor matching super is needed
@@ -60,12 +75,25 @@ public class FiiIntentService extends IntentService {
 
         // Only calls the service if the symbol is present
         if (intent.hasExtra(ADD_SYMBOL)) {
-            int success = this.addFiiTask(new TaskParams(ADD_SYMBOL, intent.getExtras()));
+            int count = 0;
+            int success = -1;
+            TaskParams params = new TaskParams(ADD_SYMBOL, intent.getExtras());
+            do {
+                success = this.addFiiTask(params);
+                count++;
+            } while (success != GcmNetworkManager.RESULT_SUCCESS && success != GcmNetworkManager.RESULT_RESCHEDULE && count <= 3);
             if (success == GcmNetworkManager.RESULT_SUCCESS){
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else if (success == GcmNetworkManager.RESULT_RESCHEDULE){
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_fii_limit), Toast.LENGTH_LONG).show();
                     }
                 });
             } else {
@@ -78,140 +106,220 @@ public class FiiIntentService extends IntentService {
             }
         }
     }
-
     private int addFiiTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
 
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(FiiService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        boolean isPremium = params.getExtras().getBoolean(FiiIntentService.PREMIUM, true);
+        int limit = 0;
+        int size = 0;
         try {
             // Validate if Symbol was added
             if (params.getExtras() == null || params.getExtras().getString(FiiIntentService.ADD_SYMBOL).isEmpty()) {
                 throw new IOException("Missing Extra ADD_SYMBOL");
             }
 
-            // Make the request and parse the result
+            CookieManager cookieManager = new CookieManager();
+            CookieHandler.setDefault(cookieManager);
+
+            OkHttpClient mClient = new OkHttpClient.Builder()
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .cookieJar(new JavaNetCookieJar(CookieHandler.getDefault()))
+                    .build();
+
+            // Build retrofit base request
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(FiiService.BASE_URL)
+                    .addConverterFactory(new NullOnEmptyConverterFactory())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mClient)
+                    .build();
+
             FiiService service = retrofit.create(FiiService.class);
+
+            Call<String> callPost = service.getConnection(CedroL, CedroP);
+            Response<String> responsePost = callPost.execute();
+            String responseString = responsePost.body();
+
+            ContentValues fiiDataCV = new ContentValues();
 
             String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
-            // Prepare the query to be added in YQL (Yahoo API)
-            String query = "select * from yahoo.finance.quotes where symbol in ("
-                    + buildQuery(symbols) + ")";
-            if(symbols.length == 1) {
+            String path = "";
+            if (responseString != null && responseString.equals("true")){
 
-                Call<ResponseFii> call;
-                Response<ResponseFii> response;
-                ResponseFii responseGetFii;
-                int count = 0;
-
-                do {
-                    call = service.getFii(query);
-                    response = call.execute();
-                    responseGetFii = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetFii.getFiiQuotes() != null && !responseGetFii.getFiiQuotes().isEmpty() &&
-                        responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly() != null) {
-
-                    // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
-                    String tableSymbol = responseGetFii.getFiiQuotes().get(0).getSymbol();
-                    if( (tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                        tableSymbol = tableSymbol.substring(0, tableSymbol.length() -3);
-                    }
-
-                    // Prepare the data of the current price to update the FiiData table
-                    ContentValues fiiDataCV = new ContentValues();
-                    fiiDataCV.put(tableSymbol,
-                            responseGetFii.getFiiQuotes().get(0).getLastTradePriceOnly());
-
-                    // Update value on fii data
-                    int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.FiiData.BULK_UPDATE_URI,
-                            fiiDataCV, null, null);
-                    // Log update success/fail result
-                    if (updatedRows > 0) {
-                        // Update Fii Portfolio
-                        mSuccess = true;
-                    }
-                    // Success request
-                    resultStatus = GcmNetworkManager.RESULT_SUCCESS;
-                } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
-                }
-            }else{
-                Call<ResponseFiis> call;
-                Response<ResponseFiis> response;
-                ResponseFiis responseGetFiis;
-                int count = 0;
-
-                do {
-                    call = service.getFiis(query);
-                    response = call.execute();
-                    responseGetFiis = response.body();
-                    count++;
-                } while (response.code() == 400 && count < 20);
-
-                if(response.isSuccessful() && responseGetFiis != null && responseGetFiis.getFiiQuotes() != null && !responseGetFiis.getFiiQuotes().isEmpty()) {
-                    String tableSymbol = "";
-                    ContentValues fiiDataCV = new ContentValues();
-                    for(Fii fii : responseGetFiis.getFiiQuotes()) {
-                        // Remove .SA (Brazil fiis) from symbol to match the symbol in Database
-                        tableSymbol = fii.getSymbol();
-                        if ((tableSymbol.substring(tableSymbol.length() - 3, tableSymbol.length()).equals(".SA"))) {
-                            tableSymbol = tableSymbol.substring(0, tableSymbol.length() - 3);
+                for (String symbol: symbols){
+                    if (limit <= 3) {
+                        if(limit == 0){
+                            path = symbol;
+                            limit++;
+                            size++;
+                        } else {
+                            path += "/"+symbol;
+                            size++;
                         }
-                        fiiDataCV.put(tableSymbol,
-                                fii.getLastTradePriceOnly());
+                    } else {
+                        // Limit reach, change Not Updated status
+                        ContentValues updateFii = new ContentValues();
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+
+                        String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                        String[] updatedSelectionArguments = {symbol};
+                        int updatedRows = this.getContentResolver().update(
+                                PortfolioContract.FiiData.URI,
+                                updateFii, updateSelection, updatedSelectionArguments);
                     }
 
+                    if (!isPremium) {
+                        limit++;
+                    }
+                }
+                // Remove the one that was added first in case it was first element
+                limit--;
+            } else {
+                for (String symbol: symbols) {
+                    ContentValues updateFii = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
                     int updatedRows = this.getContentResolver().update(
-                            PortfolioContract.FiiData.BULK_UPDATE_URI,
-                            fiiDataCV, null, null);
-                    // Success request
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+
+
+            path = path.toLowerCase();
+            List<FiiQuote> fiis = null;
+
+            if(size <= 1) {
+                boolean success = false;
+
+                Call<FiiQuote> callGet = service.getFii(path);
+                Response<FiiQuote> responseGet = callGet.execute();
+                if (responseGet != null && responseGet.isSuccessful()) {
+                    success = true;
+                    FiiQuote fii = responseGet.body();
+                    fiis = new ArrayList<FiiQuote>();
+                    fiis.add(fii);
+                } else {
+                    fiis = null;
+                }
+            } else {
+                boolean success = false;
+                do {
+                    Call<List<FiiQuote>> callGet = service.getFiis(path);
+                    Response<List<FiiQuote>> responseGet = callGet.execute();
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        fiis = responseGet.body();
+                        success = true;
+                    } else {
+                        fiis = null;
+                    }
+                } while (!success);
+            }
+
+            if (fiis != null && fiis.size() > 0) {
+                for (String symbol: symbols) {
+                    boolean success = false;
+                    ContentValues updateFii = new ContentValues();
+                    for (FiiQuote fii : fiis) {
+                        if (fii != null && fii.toString() != null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null) {
+                            String lastPrice = "0.0";
+                            if(Double.valueOf(fii.getLast()) > 0){
+                                lastPrice = fii.getLast();
+                            } else {
+                                lastPrice = fii.getPrevious();
+                            }
+
+                            // Success on request
+                            fiiDataCV.put(symbol, lastPrice);
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
+                            updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, fii.getPrevious());
+                            success = true;
+                        }
+                    }
+
+                    if(!success){
+                        // Mark symbol as failer and set NOT UPDATED on sql db
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+                    }
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+            } else {
+                for (String symbol: symbols) {
+                    ContentValues updateFii = new ContentValues();
+                    // Mark symbol as failer and set NOT UPDATED on sql db
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                    updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+
+                    String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                    String[] updatedSelectionArguments = {symbol};
+                    int updatedRows = this.getContentResolver().update(
+                            PortfolioContract.FiiData.URI,
+                            updateFii, updateSelection, updatedSelectionArguments);
+                }
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
+            }
+
+            if (fiiDataCV.size() > 0){
+                // Update value on fii data
+                int updatedRows = this.getContentResolver().update(
+                        PortfolioContract.FiiData.BULK_UPDATE_URI,
+                        fiiDataCV, null, null);
+                if (limit <= 3) {
                     resultStatus = GcmNetworkManager.RESULT_SUCCESS;
                 } else {
-                    return GcmNetworkManager.RESULT_FAILURE;
+                    resultStatus = GcmNetworkManager.RESULT_RESCHEDULE;
                 }
+            } else {
+                resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error in request " + e.getMessage());
+            this.addFiiTask(params);
             e.printStackTrace();
         }
         return resultStatus;
     }
-
-    private String buildQuery(String[] symbols) {
-        String resultQuery = "";
-
-        if (symbols.length == 1) {
-
-            resultQuery = "\"" + symbols[0] + ".SA" + "\"";
-        } else {
-            for (String symbol : symbols) {
-                if (resultQuery.isEmpty()) {
-                    resultQuery = "\"" + symbol + ".SA" + "\"";
-                } else {
-                    resultQuery += ",\"" + symbol + ".SA" + "\"";
-                }
-            }
-
-        }
-
-        return resultQuery;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.sendBroadcast(new Intent(Constants.Receiver.FII));
+        FiiReceiver fiiReceiver = new FiiReceiver(this);
+        fiiReceiver.updateFiiPortfolio();
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));
+
+        PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
+        portfolioReceiver.updatePortfolio();
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+    }
+
+    public class NullOnEmptyConverterFactory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+            final Converter<ResponseBody, ?> delegate = retrofit.nextResponseBodyConverter(this, type, annotations);
+            return new Converter<ResponseBody, Object>() {
+                @Override
+                public Object convert(ResponseBody body) throws IOException {
+                    if (body.contentLength() == 0) return null;
+                    return delegate.convert(body);                }
+            };
+        }
     }
 }

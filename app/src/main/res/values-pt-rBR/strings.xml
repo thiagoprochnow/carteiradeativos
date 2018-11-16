@@ -5,6 +5,7 @@
     <string name="refresh_done">Carteira atualizada com sucesso</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="loading_ad">Por favor aguarde, propaganda está sendo carregada!</string>
 
     <!-- Form Activity -->
     <string name="stock_update_success">Ação atualizada com sucesso</string>
@@ -32,8 +33,9 @@
     <string name="form_title_split">Desdobramento</string>
     <string name="form_title_grouping">Grupamento</string>
 
-    <!-- Dialog Fragment -->
+    <!-- Form Fragment -->
     <string name="quantity">Quantidade</string>
+    <string name="price">Preço: </string>
     <string name="treaury_quantity_hint">Ex: 1.32</string>
     <string name="buy_price">Preço de compra</string>
     <string name="treasury_buy_price">Preço unitário de compra</string>
@@ -62,6 +64,7 @@
     <string name="ex_date_fii_income">Data Ex Rendimento</string>
     <string name="ex_date_treasury_income">Data Recebimento</string>
     <string name="ex_date_others_income">Data Recebimento</string>
+    <string name="wrong_code">Código inválido</string>
     <string name="wrong_stock_code">Código da ação inválida</string>
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
@@ -76,7 +79,9 @@
     <string name="wrong_currency_sell_quantity">Quantidade deve ser um número e deve ter o suficiente dessa moeda na carteirat</string>
     <string name="wrong_treasury_sell_quantity">Quantidade deve ser um número e deve ter o suficiente desse papel na carteira</string>
     <string name="wrong_price">Preço deve ser um número</string>
+    <string name="wrong_brokerage">Corretagem deve ser um número</string>
     <string name="wrong_total">Total deve ser um número</string>
+    <string name="wrong_gain_rate">Ganho deve ser um número</string>
     <string name="wrong_percentual_objective">Objetivo deve ser menor ou igual 100</string>
     <string name="wrong_current_price">Preço atual não é valido</string>
     <string name="wrong_current_total">Total atual não é valido</string>
@@ -90,6 +95,7 @@
     <string name="wrong_income_per_treasury">Valor inválido recebido por papel</string>
     <string name="menu_done">Concluir</string>
     <string name="wrong_others_tax">Imposto total inválido.</string>
+    <string name="brokerage">Corretagem</string>
 
     <!-- Details Fragment -->
     <string name="menu_item_dividends">Dividendos</string>
@@ -123,6 +129,7 @@
     <string name="delete_stock_dialog">Se vendeu a ação, escolha "Vender" no menu de opções. Deletar essa ação irá remover todos os dados sobre ela, inclusive proventos recebidos.</string>
     <string name="delete_confirm">Deletar</string>
     <string name="delete_cancel">Cancelar</string>
+    <string name="edit_cancel">Cancelar</string>
     <string name="menu_buy">Comprar</string>
     <string name="menu_edit">Editar</string>
     <string name="menu_sell">Vender</string>
@@ -196,7 +203,7 @@
     <string name="treasury_history">Histórico</string>
     <string name="treasury_incomes">Cupons</string>
 
-    <!-- Stock Adapter -->
+    <!-- Adapter -->
     <string name="current_percent_label">Percent:</string>
     <string name="target_percent_label">Target:</string>
     <string name="incomes">Rendimentos</string>
@@ -208,8 +215,13 @@
     <string name="data_current_label">Atual</string>
     <string name="data_appreciation_label">Valorização</string>
     <string name="data_income_label">Rendimentos</string>
+    <string name="data_brokerage_label">Corretagem</string>
     <string name="data_treasury_income_label">Cupons</string>
     <string name="data_total_gain_label">Ganho</string>
+    <string name="dialog_stock_update_failed_message">Essa ação não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="dialog_fii_update_failed_message">Esse fundo imobiliário não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="dialog_treasury_update_failed_message">Esse Tesouro não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
+    <string name="fixed_update_failed_message">Entre nessa Renda Fixa e edite cada "Compra" e inclua a % do CDI para que seja atualizado automaticamente.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>
@@ -236,11 +248,12 @@
 
     <!-- Portfolio -->
     <string name="portfolio_other_label">Outros</string>
-    <string name="portfolio_bought_label">Comprado</string>
+    <string name="portfolio_bought_label">Compras</string>
     <string name="portfolio_current_label">Atual</string>
-    <string name="portfolio_sold_label">Vendido</string>
+    <string name="portfolio_sold_label">Vendas</string>
     <string name="portfolio_appreciation_label">Valorização</string>
     <string name="portfolio_income_label">Rendimentos</string>
+    <string name="portfolio_brokerage_label">Corretagem</string>
     <string name="portfolio_total_gain_label">Ganho</string>
 
     <!-- Fii Portolfio -->
@@ -262,7 +275,9 @@
     <!-- Portfolio -->
     <string name="portfolio_label">Carteira Completa</string>
     <string name="asset_allocation_label">Alocação de Ativos</string>
-    <string name="growth_chart_label">Gráfico de Crescimento</string>
+    <string name="growth_chart_label">Crescimento de Patrimônio</string>
+    <string name="growth_chart_current">Atual</string>
+    <string name="growth_chart_bought">Comprado</string>
 
     <!-- Income Adapter -->
     <string name="income_overview_label">Visão Geral</string>
@@ -385,6 +400,13 @@
     <string name="fixed_rentability_type_pre">Pré</string>
     <string name="fixed_rentability_type_index">Indexado</string>
     <string name="fixed_buy_value">Valor total comprado</string>
+    <string name="fixed_type_label">Indexador</string>
+    <string name="fixed_gain_rate">Taxa de Ganho (%CDI)</string>
+    <string name="fixed_gain_rate_ipca">Taxa de Ganho (IPCA + %)</string>
+    <string name="fixed_gain_rate_pre">Taxa de Ganho (% Pré Fixada)</string>
+    <string name="fixed_gain_rate_hint">Ex: 110</string>
+    <string name="fixed_gain_rate_ipca_hint">Ex: 6.33</string>
+    <string name="fixed_gain_rate_pre_hint">Ex: 10.54</string>
     <string name="fixed_sell_value">Valor total vendido</string>
 
     <!-- Add others income Form Fragment -->
@@ -425,8 +447,11 @@
     <string name="title_stocks">Ações</string>
     <string name="title_currency">Moedas</string>
     <string name="title_about">Sobre</string>
+    <string name="title_faq">Perguntas Frequentes</string>
     <string name="title_coming_soon">Em Breve</string>
     <string name="title_backup_restore">Cópia e Restauração</string>
+    <string name="title_consult_quotes">Consulta de Cotações</string>
+    <string name="title_premium_edition">Versão Premium</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -453,10 +478,24 @@
     <string name="success_updating_fii">Fundos Imobiliários atualizados com sucesso.</string>
     <string name="success_updating_currency">Moedas atualizadas com sucesso.</string>
     <string name="success_updating_crypto_currency">Cripto moedas atualizadas com sucesso.</string>
+    <string name="success_updating_treasury">Tesouro atualizado com sucesso.</string>
+    <string name="success_updating_fixed">Renda fixa atualizada com sucesso.</string>
     <string name="error_updating_stocks">Erro ao atualizar ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_stocks_limit">Limite de atualização automática de 5 ações atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_fii">Erro ao atualizar fundos imobiliários, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii_limit">Limite de atualização automática de 3 fundos imobiliários atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
     <string name="error_updating_currency">Erro ao atualizar moedas, por favor tente novamente mais tarde.</string>
     <string name="error_updating_crypto_currency">Erro ao atualizar cripto moedas, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_treasury">Erro ao atualizar tesouro, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_treasury_limit">Limite de atualização automática de 2 tesouros atingido. Atualize manualmente ou assine a versão PREMIUM para atualizações ilimitadas.</string>
+    <string name="error_updating_fixed">Erro ao atualizar renda fixa, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fixed_rate">Erro ao atualizar renda fixa. Um ou mais Compras de Renda Fixa estão sem a % do CDI, por favor edite e atualize seus valores de compras para atualizar a renda fixa automaticamente.</string>
+    <string name="error_updating_income_premium">Proventos de ações apenas são atualizados automaticamente na versão PREMIUM, assine agora ou insira-os manualmente.</string>
+    <string name="success_updating_income">Proventos de ações atualizados com sucesso.</string>
+    <string name="error_updating_income">Erro ao atualizar proventos de ações, por favor tente novamente mais tarde.</string>
+    <string name="error_updating_fii_income_premium">Proventos de fundos imobiliários apenas são atualizados automaticamente na versão PREMIUM, assine agora ou insira-os manualmente.</string>
+    <string name="success_updating_fii_income">Proventos de fundos imobiliários atualizados com sucesso.</string>
+    <string name="error_updating_fii_income">Erro ao atualizar proventos de fundos imobiliários, por favor tente novamente mais tarde.</string>
 
     <!-- Backup and Restore -->
     <string name="backup_restore_description">Aqui você pode fazer um backup dos seus dados para importar em outro dispositivo caso necessite.
@@ -488,6 +527,12 @@
     <string name="restore_confirm_title">Restauração</string>
     <string name="restore_confirm">Tem certeza que deseja substituir seu banco de dados com as informações no arquivo de backup? Você perderá todas os informações da aplicação e ela será substituida pelas informações do arquivo de backup.</string>
 
+    <!-- Consult Quotes -->
+    <string name="consult_quotes_description">Digite o código da ação, fundo imobiliário, moeda ou opção que deseja pesquisar.</string>
+    <string name="consult_quotes_button">Consultar</string>
+    <string name="consult_quotes_error">Ativo Inválido</string>
+    <string name="error_consult_quote">Erro ao consultar cotação. Por favor tente novamente mais tarde.</string>
+
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
 
@@ -513,6 +558,111 @@
 
         Se você encontrou algum problema ou tem alguma ideia de melhoria para o aplicativo e acha que seria interessante, por favor não hesite em nos contatar.
         Queremos fazer esse aplicativo o melhor possível para os investidores.\n\n
+    </string>
+
+    <!-- Premium -->
+    <string name="premium_contribue">Contribua com o Desenvolvimento!</string>
+    <string name="premium_payment_warning">*Pagamento é feito pelo Google Payments, nenhuma informação financeira é passada para o aplicativo.</string>
+    <string name="premium_sign_button">Quero Assinar Mensal!</string>
+    <string name="premium_sign_semester_button">Quero Assinar Semestral!</string>
+    <string name="premium_sign_now">Assinar Agora!</string>
+    <string name="premium_sign_label">Assine o Premium</string>
+    <string name="premium_try">Experimente 30 dias Grátis!</string>
+    <string name="premium_price">R$4,90/Mês</string>
+    <string name="premium_semester_price">R$14,90/Semestre</string>
+    <string name="premium_item1">\u2022 Acesso ilimitado a atualizações</string>
+    <string name="premium_item2">\u2022 Rendimentos automáticos</string>
+    <string name="premium_item3">\u2022 Remoção de propagandas</string>
+    <string name="premium_itens">
+        \u2022 Acesso ilimitado a atualizações automatica do portfólio.\n
+        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Acesso a novos recursos assim que forem desenvolvidos.\n
+    </string>
+
+    <string name="premium_description">
+        Espero que esteja gostando do aplicativo. Desenvolvi ele pois senti a falta de uma maneira fácil e prática para controlar minha carteira de investimento. Hoje tenho custos mensais de servidor e para acessar as cotações da Bovespa, portanto peço sua contribuição na continuação do desenvolvimento.
+        \n\n
+        Aqui estão algumas das funcionalidades que quero desenvolver:\n\n
+
+        \u2022 Área para o lançamento de opções, compra e venda de PUT e CALL.\n
+        \u2022 Área para o lançamento de fundos de investimento automatizados.\n
+        \u2022 Login opcional via Google ou Facebook para proteger suas informações.\n
+        \u2022 Gráfico mostrando a distribuição de proventos mês a mês e ano a ano.\n
+        \u2022 Tutorial.\n
+        \u2022 Botão de ajuda explicando cada informação fornecida.\n
+        \u2022 Constante correção de problemas.\n
+        \u2022 Melhorias constantes baseado nos feedbacks.\n\n
+
+        Aqueles quer forem premium, terão acesso a essas funcionalidades assim que forem desenvolvidas.
+    </string>
+
+    <string name="faq_resume">
+         <b>1 - Meus titulos do tesouro não estão atualizando automaticamente.\n
+         2 - Como faço para importar e exportar meus dados para outro ou o mesmo aparelho?\n
+         3 - Como vendo, deleto ou edito meus ativos?\n
+         4 - De que empresa é o aplicativo?\n
+         5 - Porque o aplicativo é pago?\n
+         6 - Não achei a solução do meu problema.\n
+         7 - Tenho sugestões para o aplicativo.\n</b>
+    </string>
+
+    <string name="faq_one">
+        <b>1 - Meus titulos do tesouro não estão atualizando automaticamente.\n\n</b>
+
+        Para que os seus titulos do tesouro sejam atualizados automaticamente, é necessario que o nome seja exatamente como o sugerido pelo app na hora de inserir.
+        Quando começar a digitar o nome, comece por "Tesouro..." que logo o app ira sugerir o nome de todos os titulos disponiveis. Se não encontrar o seu, entre em contato para que possamos adiciona-lo
+        Se você inserir por nomes como NTNB 2024 ou LFT 2023, o app não conseguirá pegar as cotações automaticamente, mas você poderá atualiza-las manualmente caso deseje.\n\n
+    </string>
+
+    <string name="faq_two">
+        <b>2 - Como faço para importar e exportar meus dados para outro ou o mesmo aparelho?\n\n</b>
+
+        Todos os seus dados são salvos apenas localmente no seu telefone. Nenhum dado é exportado para nenhum servidor externo na nuvem. Com isso, se você desinstalar o app ou trocar de telefone, os dados não estarão mais lá.
+        Para solucionar isso, existe a opção de "Cópia e Restauração" no app no seu menu. Nela você terá as opções:\n\n
+
+        \u2022 Backup: Vai gerar um arquivo com a cópia dos seus dados que será salvo automaticamente no seu Google Drive.\n
+        \u2022 Restauração: Abrirá o seu Google Drive, e você poderá usar o arquivo gerado na opção "Backup", com o nome de GIBackup.db, para restaurar seus dados, assim como os salvou.\n\n
+
+        Sugiro que antes de desinstalar o app no aparelho que fez backup, garanta que a restauração funcionou no novo aparelho.\n\n
+
+        Obs: Google Drive é um ambiente do Google onde você pode salvar arquivos na nuvem. Ele é atrelado a sua conta e ninguem mais poderá ver esses dados a não ser você.\n\n
+    </string>
+
+    <string name="faq_three">
+        <b>\n3 - Como vendo, deleto ou edito meus ativos?\n\n</b>
+
+        Na aba Carteira, Histórico e Rendimentos, serão mostrado as informações dos seus ativos comprados, vendidos e seus rendimentos. Nelas você encontrará desenhos de um mais(+), menos(-), caneta e uma lixeira.
+        Cada um desses desenhos são clicáveis e efetuam as operações de comprar, vender, editar e deletar seus ativos e rendimentos respectivos quando clicados.
+        Portanto basta clicar neles para efetuar as operções que deseja de seus ativos e rendimentos.\n\n
+    </string>
+
+    <string name="faq_four">
+        <b>4 - De que empresa é o aplicativo?\n\n</b>
+
+        O aplicativo Guia Investimento é feito por um desenvolvedor independente que gosta muito da area de investimento e viu a necessidade de um aplicativo para controlar e ver seus ganhos de sua carteira.
+        Sei que ainda tem muitas melhorias e alguns pequenos bugs a serem resolvidos, mas com a sua contribuição e sugestões, aos poucos o aplicativo vai ficando cada vez melhor e com mais funcionalidades.\n\n
+    </string>
+
+    <string name="faq_five">
+        <b>5 - Porque o aplicativo é pago?\n\n</b>
+
+        O desenvolvimento do aplicativo tem um custo mensal moderado para pegar as cotações da Bovespa. Infelizmentea bovespa não oferece um serviço para ler cotações grátis, nem mesmo com atraso de 15 minutos. O custo é relativamente alto para um desenvolvedor independente. Hoje, ainda com as assinaturas ativas, eu ainda estou pagando para manter e desenvolver o app.
+        Com isso eu limitei a atualização automática a 5 ações, 3 fundos imobiliarios e 1 tesouro para a versão grátis. Assim, pequenos desenvolvedores conseguem usar o aplicativo sem problema, e conforme forem crescendo, vão poder ter condições de assinar a versão paga e contribuir com o app.\n\n
+    </string>
+
+    <string name="faq_six">
+        <b>6 - Não achei a solução do meu problema.\n\n</b>
+
+        Se você está com algum problema ou duvida no app, e não conseguiu achar a solução, fique a vontade em me mandar um email, tento ajudar assim como eu puder. Normalmente respondo em no máximo 1-2 dias com uma resposta completa de como você poderá resolver seu problema.\n\n
+
+        Entre em contato por: <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a>\n\n
+    </string>
+
+    <string name="faq_seven">
+        <b>7 - Tenho sugestões para o aplicativo.\n\n</b>
+
+        Sugestões são sempre bem vindas. Alias esse Perguntas Frequentes foi feito a partir de uma sugestão de um cliente. Não deixe de entrar em contato para me dizer algo que queira que tenha no app e conversamos se isso será feito em breve.
+        Tenho uma lista grande de novidades e melhorias ainda por vir. Mas não deixe de dar sua sugestão que ela poderá ser feita em breve.\n\n
     </string>
 
     <string name="email_contact">E-mail <a href="mailto:contato@guiainvestimento.com.br">contato@guiainvestimento.com.br</a></string>

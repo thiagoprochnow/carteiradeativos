@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -31,12 +32,14 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
     private Cursor mTransactionCursor;
     private String mSymbol;
     private int mType;
-    private int mQuantity;
+    private double mQuantity;
     private double mPrice;
+    private double mBrokerage;
     private long mDate;
     private EditText mInputQuantityView;
     private EditText mInputPriceView;
     private EditText mInputDateView;
+    private EditText mInputBrokerage;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -62,8 +65,9 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
         mType = getTransactionType(mTransactionCursor);
 
         if (mTransactionCursor.moveToFirst()) {
-            mQuantity = mTransactionCursor.getInt(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
+            mQuantity = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_QUANTITY));
             mPrice = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_PRICE));
+            mBrokerage = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_BROKERAGE));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_TIMESTAMP));
             mSymbol = mTransactionCursor.getString(mTransactionCursor.getColumnIndex(PortfolioContract.StockTransaction.COLUMN_SYMBOL));
         } else{
@@ -76,9 +80,11 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                 mView = inflater.inflate(R.layout.fragment_edit_stock_buy_form, container, false);
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
+                mInputBrokerage = (EditText) mView.findViewById(R.id.inputBrokerage);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
                 mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
+                mInputBrokerage.setText(String.valueOf(mBrokerage), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
                 break;
@@ -87,9 +93,11 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                 mView = inflater.inflate(R.layout.fragment_edit_stock_sell_form, container, false);
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
+                mInputBrokerage = (EditText) mView.findViewById(R.id.inputBrokerage);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
                 mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
+                mInputBrokerage.setText(String.valueOf(mBrokerage), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
                 break;
@@ -128,19 +136,22 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
 
     // Validate inputted values on the form
     private boolean updateStockTransaction() {
-        int newQuantity;
+        double newQuantity;
         double newPrice;
         String newDate;
+        double newBrokerage;
         ContentValues updateValues = new ContentValues();
         boolean isValidQuantity = true;
         boolean isValidPrice = true;
         boolean isValidDate = true;
+        boolean isValidBrokerage = true;
 
         switch (mType) {
             case Constants.Type.BUY:
                 isValidQuantity = isValidInt(mInputQuantityView);
                 isValidPrice = isValidDouble(mInputPriceView);
                 isValidDate = isValidDate(mInputDateView);
+                isValidBrokerage = isValidDouble(mInputBrokerage);
                 if (isValidQuantity){
                     newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, newQuantity);
@@ -154,6 +165,14 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_PRICE, newPrice);
                 } else {
                     mInputPriceView.setError(this.getString(R.string.wrong_price));
+                    return false;
+                }
+
+                if (isValidBrokerage){
+                    newBrokerage = Double.parseDouble(mInputBrokerage.getText().toString());
+                    updateValues.put(PortfolioContract.StockTransaction.COLUMN_BROKERAGE, newBrokerage);
+                } else {
+                    mInputPriceView.setError(this.getString(R.string.wrong_brokerage));
                     return false;
                 }
 
@@ -172,6 +191,7 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                 isValidQuantity = isValidInt(mInputQuantityView);
                 isValidPrice = isValidDouble(mInputPriceView);
                 isValidDate = isValidDate(mInputDateView);
+                isValidBrokerage = isValidDouble(mInputBrokerage);
                 if (isValidQuantity){
                     newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, newQuantity);
@@ -185,6 +205,14 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_PRICE, newPrice);
                 } else {
                     mInputPriceView.setError(this.getString(R.string.wrong_price));
+                    return false;
+                }
+
+                if (isValidBrokerage){
+                    newBrokerage = Double.parseDouble(mInputBrokerage.getText().toString());
+                    updateValues.put(PortfolioContract.StockTransaction.COLUMN_BROKERAGE, newBrokerage);
+                } else {
+                    mInputPriceView.setError(this.getString(R.string.wrong_brokerage));
                     return false;
                 }
 
@@ -221,10 +249,10 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                 break;
             case Constants.Type.GROUPING:
 
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
@@ -242,10 +270,10 @@ public class EditStockTransactionFormFragment extends BaseFormFragment {
                 break;
             case Constants.Type.SPLIT:
 
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.StockTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));

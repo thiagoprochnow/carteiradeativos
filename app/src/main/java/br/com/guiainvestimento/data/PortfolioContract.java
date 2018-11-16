@@ -106,6 +106,11 @@ public class PortfolioContract {
     public static final String PATH_OTHERS_INCOME = "others_income";
     public static final String PATH_OTHERS_INCOME_WITH_SYMBOL = "others_income/*";
 
+    public static final String PATH_CDI = "cdi";
+    public static final String PATH_CDI_WITH_DATE = "cdi/*";
+
+    public static final String PATH_IPCA = "ipca";
+
     // Table with information of whole user portfolio
     public static final class Portfolio implements BaseColumns {
 
@@ -337,6 +342,8 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String LAST_UPDATE = "last_update";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
+        public static final String COLUMN_CLOSING_PRICE = "closing_price";
 
         public static final String[] STOCK_DATA_COLUMNS = {
                 _ID,
@@ -355,7 +362,9 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
-                LAST_UPDATE
+                LAST_UPDATE,
+                COLUMN_UPDATE_STATUS,
+                COLUMN_CLOSING_PRICE
         };
 
         public static Uri makeUriForStockData(String symbol) {
@@ -566,6 +575,8 @@ public class PortfolioContract {
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String LAST_UPDATE = "last_update";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
+        public static final String COLUMN_CLOSING_PRICE = "closing_price";
 
         public static final String[] FII_DATA_COLUMNS = {
                 _ID,
@@ -584,7 +595,9 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
-                LAST_UPDATE
+                LAST_UPDATE,
+                COLUMN_UPDATE_STATUS,
+                COLUMN_CLOSING_PRICE
         };
 
         public static Uri makeUriForFiiData(String symbol) {
@@ -974,6 +987,7 @@ public class PortfolioContract {
         public static final String COLUMN_CURRENT_TOTAL = "current_total";
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
         public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_DATA_COLUMNS = {
@@ -989,6 +1003,7 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
+                COLUMN_UPDATE_STATUS,
                 LAST_UPDATE
         };
 
@@ -1018,6 +1033,8 @@ public class PortfolioContract {
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_GAIN_RATE = "gain_rate";
+        public static final String COLUMN_GAIN_TYPE = "gain_type";
         public static final String LAST_UPDATE = "last_update";
 
         public static final String[] FIXED_TRANSACTION_COLUMNS = {
@@ -1028,6 +1045,8 @@ public class PortfolioContract {
                 COLUMN_TYPE,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
+                COLUMN_GAIN_RATE,
+                COLUMN_GAIN_TYPE,
                 LAST_UPDATE
         };
 
@@ -1114,6 +1133,7 @@ public class PortfolioContract {
         public static final String COLUMN_STATUS = "status";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
         public static final String LAST_UPDATE = "last_update";
 
         public static final String[] TREASURY_DATA_COLUMNS = {
@@ -1133,6 +1153,7 @@ public class PortfolioContract {
                 COLUMN_STATUS,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
+                COLUMN_UPDATE_STATUS,
                 LAST_UPDATE
         };
 
@@ -1441,6 +1462,70 @@ public class PortfolioContract {
         }
 
         public static String getOthersIncomeFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of cdi
+    public static final class Cdi implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_CDI).build();
+
+        public static final String TABLE_NAME = "cdi";
+
+        public static final String COLUMN_VALUE = "value";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_DATA = "data";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] CDI_COLUMNS = {
+                _ID,
+                COLUMN_VALUE,
+                COLUMN_TIMESTAMP,
+                COLUMN_DATA,
+                LAST_UPDATE
+        };
+
+        public static Uri makeUriForCdi(String timestamp) {
+            return URI.buildUpon().appendPath(timestamp).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getCdiFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of ipca
+    public static final class Ipca implements BaseColumns{
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_IPCA).build();
+
+        public static final String TABLE_NAME = "ipca";
+
+        public static final String COLUMN_ANO = "ano";
+        public static final String COLUMN_MES = "mes";
+        public static final String COLUMN_VALUE = "valor";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] IPCA_COLUMNS = {
+                _ID,
+                COLUMN_VALUE,
+                COLUMN_ANO,
+                COLUMN_MES,
+                LAST_UPDATE
+        };
+
+        public static Uri makeUriForIpca(String timestamp) {
+            return URI.buildUpon().appendPath(timestamp).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getIpcaFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

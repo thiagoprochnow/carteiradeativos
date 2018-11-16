@@ -107,6 +107,9 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 // We'll need to format them to currency number format.
                 String type = getDetailType(mCursor.getInt(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TYPE)));
 
+                // Get symbol to use on CurrencyData query
+                String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL));
+
                 Long timestamp = mCursor.getLong(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP));
                 String date = TimestampToDate(timestamp);
                 double quantity = mCursor.getDouble(mCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
@@ -118,7 +121,14 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     viewHolder.price.setText(priceText);
                     viewHolder.totalValue.setText(totalValue);
                 }
-                String quantityText = String.format("%.2f", quantity);
+
+                String quantityText;
+
+                if (symbol.equalsIgnoreCase("BTC") || symbol.equals("LTC")){
+                    quantityText = String.format("%.6f", quantity);
+                } else {
+                    quantityText = String.format("%.2f", quantity);
+                }
 
                 viewHolder.transactionType.setText(type);
                 viewHolder.transactionDate.setText(date);

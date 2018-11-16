@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
+import br.com.guiainvestimento.receiver.OthersReceiver;
+import br.com.guiainvestimento.receiver.PortfolioReceiver;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -166,7 +169,13 @@ public class OthersIncomeFormFragment extends BaseFormFragment {
                     othersBulkCV, null, null);
             if (updateQueryCursor == 1){
                 // Send broadcast so OthersReceiver can update the rest
-                mContext.sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+                OthersReceiver othersReceiver = new OthersReceiver(mContext);
+                othersReceiver.updateOthersPortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.OTHERS));
+
+                PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+                portfolioReceiver.updatePortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
                 return true;
             }
         }

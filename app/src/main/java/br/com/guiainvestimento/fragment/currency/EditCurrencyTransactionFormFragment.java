@@ -27,7 +27,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
     private Cursor mTransactionCursor;
     private String mSymbol;
     private int mType;
-    private int mQuantity;
+    private double mQuantity;
     private double mPrice;
     private long mDate;
     private EditText mInputQuantityView;
@@ -58,7 +58,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
         mType = getTransactionType(mTransactionCursor);
 
         if (mTransactionCursor.moveToFirst()) {
-            mQuantity = mTransactionCursor.getInt(mTransactionCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
+            mQuantity = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY));
             mPrice = mTransactionCursor.getDouble(mTransactionCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_PRICE));
             mDate = mTransactionCursor.getLong(mTransactionCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_TIMESTAMP));
             mSymbol = mTransactionCursor.getString(mTransactionCursor.getColumnIndex(PortfolioContract.CurrencyTransaction.COLUMN_SYMBOL));
@@ -74,7 +74,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
-                mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
+                mInputQuantityView.setText(String.format("%.6f",mQuantity).replace(",","."), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
@@ -85,7 +85,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
                 mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
                 mInputPriceView = (EditText) mView.findViewById(R.id.inputSellPrice);
                 mInputDateView = (EditText) mView.findViewById(R.id.inputSellDate);
-                mInputQuantityView.setText(String.valueOf(mQuantity), EditText.BufferType.EDITABLE);
+                mInputQuantityView.setText(String.format("%.6f",mQuantity).replace(",","."), EditText.BufferType.EDITABLE);
                 mInputPriceView.setText(String.valueOf(mPrice), EditText.BufferType.EDITABLE);
                 mInputDateView.setText(simpleDateFormat.format(mDate));
                 mInputDateView.setOnClickListener(setDatePicker(mInputDateView));
@@ -98,7 +98,7 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
 
     // Validate inputted values on the form
     private boolean updateCurrencyTransaction() {
-        int newQuantity;
+        double newQuantity;
         double newPrice;
         String newDate;
         ContentValues updateValues = new ContentValues();
@@ -108,11 +108,11 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
 
         switch (mType) {
             case Constants.Type.BUY:
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidPrice = isValidDouble(mInputPriceView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));
@@ -139,11 +139,11 @@ public class EditCurrencyTransactionFormFragment extends BaseFormFragment {
                 break;
             case Constants.Type.SELL:
 
-                isValidQuantity = isValidInt(mInputQuantityView);
+                isValidQuantity = isValidDouble(mInputQuantityView);
                 isValidPrice = isValidDouble(mInputPriceView);
                 isValidDate = isValidDate(mInputDateView);
                 if (isValidQuantity){
-                    newQuantity = Integer.parseInt(mInputQuantityView.getText().toString());
+                    newQuantity = Double.parseDouble(mInputQuantityView.getText().toString());
                     updateValues.put(PortfolioContract.CurrencyTransaction.COLUMN_QUANTITY, newQuantity);
                 } else {
                     mInputQuantityView.setError(this.getString(R.string.wrong_quantity));

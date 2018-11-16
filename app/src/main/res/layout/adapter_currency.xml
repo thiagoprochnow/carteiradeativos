@@ -123,7 +123,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -133,7 +132,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -143,7 +141,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
-                        android:textSize="@dimen/stock_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>
@@ -238,6 +235,12 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:src="@drawable/sell_icon_small"
+                    android:layout_marginRight="10dp"/>
+                <ImageView
+                    android:id="@+id/menuEdit"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/edit_icon_small"
                     android:layout_marginRight="10dp"/>
                 <ImageView
                     android:id="@+id/menuDelete"

@@ -1,8 +1,10 @@
 package br.com.guiainvestimento.adapter.stock;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,8 +59,13 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         // Get handled values of StockTransaction with current symbol
         double sellGain = mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_GAIN));
+        double brokerage = mCursor.getDouble(
+                mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_BROKERAGE));
         double sellGainPercent = sellGain/buyTotal*100;
         // Set text colors according to positive or negative values
+        String symbol = mCursor.getString(mCursor.getColumnIndex(PortfolioContract
+                .SoldStockData.
+                COLUMN_SYMBOL));
 
         if (sellGain >=0){
             holder.sellGain.setTextColor(ContextCompat.getColor(mContext,R.color.green));
@@ -68,14 +75,15 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
             holder.sellGainPercent.setTextColor(ContextCompat.getColor(mContext,R.color.red));
         }
 
-        holder.symbol.setText(mCursor.getString(mCursor.getColumnIndex(PortfolioContract
-                .SoldStockData.
-                COLUMN_SYMBOL)));
+        holder.brokerage.setTextColor(ContextCompat.getColor(mContext,R.color.red));
+
+        holder.symbol.setText(symbol);
         holder.stockQuantity.setText(Integer.toString(mCursor.getInt(mCursor.getColumnIndex
                 (PortfolioContract.SoldStockData.COLUMN_QUANTITY_TOTAL))));
         holder.boughtTotal.setText(String.format(formatter.format(buyTotal)));
         holder.sellTotal.setText(String.format(formatter.format(mCursor.getDouble(
                 mCursor.getColumnIndex(PortfolioContract.SoldStockData.COLUMN_SELL_TOTAL)))));
+        holder.brokerage.setText(String.format(formatter.format(brokerage)));
         holder.sellGain.setText(String.format(formatter.format(sellGain)));
         holder.sellGainPercent.setText("("+ String.format("%.2f",sellGainPercent) + "%)");
         if(position == mCursor.getCount()-1){
@@ -111,15 +119,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
                 mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.ADD);
             }
         });
-        /*
-        holder.menuEdit.setOnClickListener(new ImageView.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mCursor.moveToPosition(position);
-                int symbolColumn = mCursor.getColumnIndex(PortfolioContract.FixedData.COLUMN_SYMBOL);
-                mClickHandler.onClick(mCursor.getString(symbolColumn), Constants.AdapterClickable.EDIT);
-            }
-        });*/
 
         holder.menuSell.setOnClickListener(new ImageView.OnClickListener(){
             @Override
@@ -168,6 +167,9 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
         @BindView(R.id.boughtTotal)
         TextView boughtTotal;
 
+        @BindView(R.id.brokerage)
+        TextView brokerage;
+
         @BindView(R.id.sellTotal)
         TextView sellTotal;
 
@@ -182,9 +184,6 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
 
         @BindView(R.id.menuAdd)
         ImageView menuAdd;
-        /*
-        @BindView(R.id.menuEdit)
-        ImageView menuEdit;*/
 
         @BindView(R.id.menuSell)
         ImageView menuSell;
@@ -198,5 +197,13 @@ public class SoldStockDataAdapter extends RecyclerView.Adapter<SoldStockDataAdap
             ButterKnife.bind(this, itemView);
         }
 
+    }
+
+    private Cursor getStockDataCursor(String symbol){
+        String selection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        return mContext.getContentResolver().query(
+                PortfolioContract.StockData.URI,
+                null, selection, selectionArguments, null);
     }
 }

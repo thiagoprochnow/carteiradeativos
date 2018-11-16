@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.fragment.currency.BuyCurrencyFormFragment;
+import br.com.guiainvestimento.fragment.currency.EditCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.currency.SellCurrencyFormFragment;
 import br.com.guiainvestimento.fragment.fii.BuyFiiFormFragment;
 import br.com.guiainvestimento.fragment.currency.EditCurrencyTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fii.EditFiiFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiIncomeFormFragment;
 import br.com.guiainvestimento.fragment.fii.EditFiiTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fii.FiiGroupingFormFragment;
 import br.com.guiainvestimento.fragment.fii.FiiIncomeFormFragment;
+import br.com.guiainvestimento.fragment.fii.FiiSplitFormFragment;
 import br.com.guiainvestimento.fragment.fii.SellFiiFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.BuyFixedFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.EditFixedFormFragment;
@@ -28,6 +32,7 @@ import br.com.guiainvestimento.fragment.others.SellOthersFormFragment;
 import br.com.guiainvestimento.fragment.stock.BonificationFormFragment;
 import br.com.guiainvestimento.fragment.stock.BuyStockFormFragment;
 import br.com.guiainvestimento.fragment.stock.EditJCPDividendFormFragment;
+import br.com.guiainvestimento.fragment.stock.EditStockFormFragment;
 import br.com.guiainvestimento.fragment.stock.EditStockTransactionFormFragment;
 import br.com.guiainvestimento.fragment.stock.GroupingFormFragment;
 import br.com.guiainvestimento.fragment.stock.JCPDividendFormFragment;
@@ -113,8 +118,7 @@ public class FormActivity extends AppCompatActivity {
                 }
             } else if (productStatus == Constants.Type.EDIT){
                 switch (productType) {
-                    // Since Stock, FII and Currency get current value from service, it is redundt and confusing to edit current price manualy.
-                    /*case Constants.ProductType.STOCK:
+                    case Constants.ProductType.STOCK:
                         replaceFragment(new EditStockFormFragment());
                         break;
                     case Constants.ProductType.FII:
@@ -122,7 +126,7 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.CURRENCY:
                         replaceFragment(new EditCurrencyFormFragment());
-                        break;*/
+                        break;
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedFormFragment());
                         break;
@@ -169,6 +173,11 @@ public class FormActivity extends AppCompatActivity {
                     Constants.Type.INVALID);
             int incomeType = intent.getIntExtra(Constants.Extra.EXTRA_INCOME_TYPE,
                     Constants.IncomeType.INVALID);
+            int productType = Constants.ProductType.INVALID;
+            if(intent.hasExtra(Constants.Extra.EXTRA_PRODUCT_TYPE)) {
+                productType = intent.getIntExtra(Constants.Extra.EXTRA_PRODUCT_TYPE,
+                        Constants.ProductType.INVALID);
+            }
             if (productStatus == Constants.Type.EDIT_INCOME){
                 switch (incomeType) {
                     case Constants.IncomeType.DIVIDEND:
@@ -202,10 +211,18 @@ public class FormActivity extends AppCompatActivity {
                         replaceFragment(new BonificationFormFragment());
                         break;
                     case Constants.IncomeType.SPLIT:
-                        replaceFragment(new SplitFormFragment());
+                        if(productType == Constants.ProductType.FII){
+                            replaceFragment(new FiiSplitFormFragment());
+                        } else {
+                            replaceFragment(new SplitFormFragment());
+                        }
                         break;
                     case Constants.IncomeType.GROUPING:
-                        replaceFragment(new GroupingFormFragment());
+                        if(productType == Constants.ProductType.FII){
+                            replaceFragment(new FiiGroupingFormFragment());
+                        } else {
+                            replaceFragment(new GroupingFormFragment());
+                        }
                         break;
                     case Constants.IncomeType.FII:
                         replaceFragment(new FiiIncomeFormFragment());
@@ -215,6 +232,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.IncomeType.OTHERS:
                         replaceFragment(new OthersIncomeFormFragment());
+                        break;
+                    case Constants.IncomeType.FII_SPLIT:
+                        replaceFragment(new FiiSplitFormFragment());
                         break;
                     default:
                         finish();

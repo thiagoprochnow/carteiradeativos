@@ -39,6 +39,13 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp">
+                <ImageView
+                    android:id="@+id/updateError"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:paddingTop="1dp"
+                    android:src="@drawable/error_icon"
+                    android:layout_marginRight="3dp"/>
                 <TextView
                     android:fontFamily="sans-serif-light"
                     android:id="@+id/symbol"
@@ -100,7 +107,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:text="R$3345,62"
-                            android:textSize="@dimen/stock_price"
                             android:ellipsize="end"
                             android:maxLines="1"/>
                         <TextView
@@ -110,7 +116,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:text="R$3345,62"
-                            android:textSize="@dimen/stock_price"
                             android:ellipsize="end"
                             android:maxLines="1"/>
                         <TextView
@@ -120,7 +125,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:text="R$1.345,62"
-                            android:textSize="@dimen/stock_price"
                             android:ellipsize="end"
                             android:maxLines="1"/>
                         <TextView
@@ -130,7 +134,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="right"
                             android:text="R$1150,00"
-                            android:textSize="@dimen/stock_price"
                             android:ellipsize="end"
                             android:maxLines="1"/>
                     </LinearLayout>

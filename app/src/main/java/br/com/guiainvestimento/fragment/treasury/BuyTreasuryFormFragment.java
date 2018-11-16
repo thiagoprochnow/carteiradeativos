@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,7 +30,7 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
     private static final String LOG_TAG = BuyTreasuryFormFragment.class.getSimpleName();
     private View mView;
 
-    private EditText mInputSymbolView;
+    private AutoCompleteTextView mInputSymbolView;
     private EditText mInputQuantityView;
     private EditText mInputBuyPriceView;
     private EditText mInputDateView;
@@ -51,10 +53,15 @@ public class BuyTreasuryFormFragment extends BaseFormFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_buy_treasury_form, container, false);
         getActivity().setTitle(R.string.form_title_buy);
-        mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
+        mInputSymbolView = (AutoCompleteTextView) mView.findViewById(R.id.inputSymbol);
         mInputQuantityView = (EditText) mView.findViewById(R.id.inputQuantity);
         mInputBuyPriceView = (EditText) mView.findViewById(R.id.inputBuyPrice);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+
+        // Sets autocomplete for stock symbol
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,
+                R.layout.dropdown_custom, Constants.Symbols.TREASURY);
+        mInputSymbolView.setAdapter(adapter);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();

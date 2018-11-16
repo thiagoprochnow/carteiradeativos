@@ -142,7 +142,7 @@ public class TreasuryIncomesMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.TreasuryTransaction.COLUMN_TIMESTAMP + " DESC";
         CursorLoader Loader = new CursorLoader(mContext,
                 PortfolioContract.TreasuryIncome.URI,
                 PortfolioContract.TreasuryIncome.TREASURY_INCOME_COLUMNS,

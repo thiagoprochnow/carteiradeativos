@@ -31,6 +31,9 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO, Constants.Provider.PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_PORTFOLIO_GROWTH, Constants.Provider.PORTFOLIO_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_BUY_GROWTH, Constants.Provider.BUY_GROWTH);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI, Constants.Provider.CDI);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_CDI_WITH_DATE, Constants.Provider.CDI_WITH_DATE);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_IPCA, Constants.Provider.IPCA);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_INCOME_GROWTH, Constants.Provider.INCOME_GROWTH);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_PORTFOLIO, Constants.Provider.STOCK_PORTFOLIO);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_STOCK_DATA, Constants.Provider.STOCK_DATA);
@@ -611,6 +614,42 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.CDI:
+                returnCursor = db.query(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.CDI_WITH_DATE:
+                returnCursor = db.query(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        projection,
+                        PortfolioContract.Cdi.COLUMN_TIMESTAMP + " > ?",
+                        new String[]{PortfolioContract.Cdi.getCdiFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            case Constants.Provider.IPCA:
+                returnCursor = db.query(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1020,6 +1059,32 @@ public class PortfolioProvider extends ContentProvider {
                 returnUri = PortfolioContract.OthersIncome.URI;
                 break;
 
+            case Constants.Provider.CDI:
+                _id = db.insert(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.Cdi.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
+            case Constants.Provider.IPCA:
+                _id = db.insert(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.Ipca.buildDataUri(_id);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1357,6 +1422,22 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.CDI:
+                rowsDeleted = db.delete(
+                        PortfolioContract.Cdi.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.IPCA:
+                rowsDeleted = db.delete(
+                        PortfolioContract.Ipca.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown URI:" + uri);
         }
@@ -1645,6 +1726,18 @@ public class PortfolioProvider extends ContentProvider {
                         selectionArgs);
                 break;
 
+            case Constants.Provider.CDI:
+                rowsUpdated = db.update(PortfolioContract.Cdi.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
+            case Constants.Provider.IPCA:
+                rowsUpdated = db.update(PortfolioContract.Ipca.TABLE_NAME, values,
+                        selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -1778,6 +1871,44 @@ public class PortfolioProvider extends ContentProvider {
                 getContext().getContentResolver().notifyChange(uri, null);
                 return returnCount;
 
+            case Constants.Provider.CDI:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.Cdi.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.IPCA:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.Ipca.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
             default:
                 return super.bulkInsert(uri, values);
         }
@@ -1799,6 +1930,7 @@ public class PortfolioProvider extends ContentProvider {
         double currentTotal;
         double variation;
         double totalGain;
+        double buyBrokerage;
 
         db.beginTransaction();
         int returnCount = 0;
@@ -1823,9 +1955,11 @@ public class PortfolioProvider extends ContentProvider {
                             .StockData.COLUMN_BUY_VALUE_TOTAL));
                     incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
                             (PortfolioContract.StockData.COLUMN_NET_INCOME));
+                    buyBrokerage = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_BROKERAGE));
                     currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
-                    totalGain = currentTotal + incomeTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy - buyBrokerage;
 
                     ContentValues stockCV = new ContentValues();
                     stockCV.put(PortfolioContract.StockData.COLUMN_CURRENT_PRICE,
@@ -1867,6 +2001,7 @@ public class PortfolioProvider extends ContentProvider {
         double currentTotal;
         double variation;
         double totalGain;
+        double buyBrokerage;
 
         db.beginTransaction();
         int returnCount = 0;
@@ -1891,9 +2026,11 @@ public class PortfolioProvider extends ContentProvider {
                             .FiiData.COLUMN_BUY_VALUE_TOTAL));
                     incomeTotal = queryCursor.getDouble(queryCursor.getColumnIndex
                             (PortfolioContract.FiiData.COLUMN_INCOME));
+                    buyBrokerage = queryCursor.getDouble(queryCursor.getColumnIndex
+                            (PortfolioContract.StockData.COLUMN_BROKERAGE));
                     currentTotal = quantity * currentPrice;
                     variation = currentTotal - totalBuy;
-                    totalGain = currentTotal + incomeTotal - totalBuy;
+                    totalGain = currentTotal + incomeTotal - totalBuy - buyBrokerage;
 
                     ContentValues fiiCV = new ContentValues();
                     fiiCV.put(PortfolioContract.FiiData.COLUMN_CURRENT_PRICE,

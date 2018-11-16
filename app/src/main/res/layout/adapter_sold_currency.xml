@@ -121,7 +121,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$3345,62"
-                        android:textSize="@dimen/currency_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -131,7 +130,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1.345,62"
-                        android:textSize="@dimen/currency_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                     <TextView
@@ -141,7 +139,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="right"
                         android:text="R$1150,00"
-                        android:textSize="@dimen/currency_price"
                         android:ellipsize="end"
                         android:maxLines="1"/>
                 </LinearLayout>

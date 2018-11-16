@@ -141,12 +141,14 @@ public class StockIncomesFragment extends BaseFragment implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Receives symbol to make query of incomes for specific symbol
         String symbol = args.getString(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
-        String sortOrder = PortfolioContract.StockTransaction.COLUMN_TIMESTAMP + " ASC";
+        String sortOrder = PortfolioContract.StockIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
+        String selection = PortfolioContract.StockIncome.COLUMN_SYMBOL + " = ? AND ";
+        selection += PortfolioContract.StockIncome.COLUMN_AFFECTED_QUANTITY + " > ?";
+        String[] selectionArguments = {symbol,"0"};
         CursorLoader Loader = new CursorLoader(mContext,
-                PortfolioContract.StockIncome
-                        .makeUriForStockIncome(symbol),
+                PortfolioContract.StockIncome.URI,
                 PortfolioContract.StockIncome.STOCK_INCOME_COLUMNS,
-                null, null, sortOrder);
+                selection, selectionArguments, sortOrder);
         return Loader;
     }
 
