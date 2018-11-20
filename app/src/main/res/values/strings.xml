@@ -13,10 +13,12 @@
     <string name="stock_update_fail">Stock update failed</string>
     <string name="fii_update_success">Fii updated successfuly</string>
     <string name="fixed_update_success">Fixed income updated successfuly</string>
+    <string name="fund_update_success">Funds updated successfuly</string>
     <string name="others_update_success">Updated successfuly</string>
     <string name="treasury_update_success">Treasury updated successfuly</string>
     <string name="fii_update_fail">Fii update failed</string>
     <string name="fixed_update_fail">Fixed income update failed</string>
+    <string name="fund_update_fail">Funds update failed</string>
     <string name="others_update_fail">Update failed</string>
     <string name="treasury_update_fail">Treasury update failed</string>
     <string name="currency_update_success">Currency updated successfuly</string>
@@ -28,6 +30,7 @@
     <string name="form_title_jcp">Interest on Capital</string>
     <string name="form_title_fii_income">Income</string>
     <string name="form_title_fixed_income">Income</string>
+    <string name="form_title_fund_income">Income</string>
     <string name="form_title_others_income">Income</string>
     <string name="form_title_treasury_income">Income</string>
     <string name="form_title_bonification">Bonification</string>
@@ -45,6 +48,7 @@
     <string name="stock_current_price">Stock current price</string>
     <string name="fii_current_price">Fii Current Price</string>
     <string name="fixed_current_total">Fixed income current total</string>
+    <string name="fund_current_total">Funds current total</string>
     <string name="others_current_total">Current total</string>
     <string name="treasury_current_price">Treasury Current Price</string>
     <string name="currency_current_price">Currency current price</string>
@@ -69,6 +73,7 @@
     <string name="wrong_stock_code">Invalid stock code</string>
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
+    <string name="wrong_fund_code">Invalid Fund label. Please type only letters and numbers.</string>
     <string name="wrong_others_code">Invalid label. Please type only letters and numbers.</string>
     <string name="wrong_treasury_code">Invalid Treasury label. Please type only letters and numbers.</string>
     <string name="wrong_currency_code">Invalid Currency code</string>
@@ -76,6 +81,7 @@
     <string name="wrong_stock_sell_quantity">Quantity should be a number and need to have enough stock bought</string>
     <string name="wrong_fii_sell_quantity">Quantity should be a number and need to have enough fii bought</string>
     <string name="wrong_fixed_sell_quantity">Quantity should be a number and need to have enough fixed income bought</string>
+    <string name="wrong_fund_sell_quantity">Quantity should be a number and need to have enough of this fund bought</string>
     <string name="wrong_others_sell_quantity">Quantity should be a number and need to have enough of this investment</string>
     <string name="wrong_currency_sell_quantity">Quantity should be a number and need to have enough currency bought</string>
     <string name="wrong_treasury_sell_quantity">Quantity should be a number and need to have enough treasury bought</string>
@@ -92,6 +98,7 @@
     <string name="wrong_income_per_stock">Wrong value received per stock</string>
     <string name="wrong_income_per_fii">Wrong value received per fii</string>
     <string name="wrong_income_per_fixed">Wrong value received per fixed income</string>
+    <string name="wrong_income_per_fund">Wrong value received per fund</string>
     <string name="wrong_income_per_others">Wrong total value received</string>
     <string name="wrong_income_per_treasury">Wrong value received per treasury</string>
     <string name="menu_done">Done</string>
@@ -152,6 +159,14 @@
     <string name="delete_fixed_title">Delete fixed income from your portfolio?</string>
     <string name="delete_fixed_dialog">If you sold the fixed income, select "Sell" from the option menu. Deleting the fixed income will remove all its data, including all income received.</string>
 
+    <!-- Fund Main Fragment -->
+    <string name="buy_fund_success">Fund added successfully</string>
+    <string name="buy_fund_fail">Error adding fund</string>
+    <string name="sell_fund_success">Fund sold successfully</string>
+    <string name="sell_fund_fail">Error selling fund</string>
+    <string name="delete_fund_title">Delete fund from your portfolio?</string>
+    <string name="delete_fund_dialog">If you sold the fund, select "Sell" from the option menu. Deleting the fund will remove all its data, including all income received.</string>
+
     <!-- Treasury Main Fragment -->
     <string name="buy_treasury_success">Treasury added successfully</string>
     <string name="buy_treasury_fail">Error adding Treasury</string>
@@ -191,6 +206,12 @@
     <string name="fixed_history">History</string>
     <string name="fixed_incomes">Incomes</string>
 
+    <!-- Fund Tab Adapter -->
+    <string name="fund_overview">Overview</string>
+    <string name="fund_portfolio">Aplications</string>
+    <string name="fund_history">History</string>
+    <string name="fund_incomes">Incomes</string>
+
     <!-- Others Tab Adapter -->
     <string name="others_overview">Overview</string>
     <string name="others_portfolio">Aplications</string>
@@ -223,7 +244,6 @@
     <string name="dialog_treasury_update_failed_message">This treasury could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="fixed_update_failed_message">Enter on this Fixed Income and edit each "Buy" to include CDI % Rate so it can be updated automatically.</string>
 
-
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>
     <string name="sold_data_sold_label">Sold Value</string>
@@ -237,6 +257,9 @@
 
     <!-- Fixed Adapter -->
     <string name="fixed_quantity_label">Quantity: </string>
+
+    <!-- Fund Adapter -->
+    <string name="fund_quantity_label">Quantity: </string>
 
     <!-- Others Adapter -->
     <string name="others_quantity_label">Quantity: </string>
@@ -266,6 +289,9 @@
     <!-- Fixed Portolfio -->
     <string name="fixed_portfolio_label">Fixed Income Portfolio</string>
 
+    <!-- Fund Portolfio -->
+    <string name="fund_portfolio_label">Fund Portfolio</string>
+
     <!-- Others Portolfio -->
     <string name="others_portfolio_label">Others Portfolio</string>
 
@@ -286,6 +312,7 @@
     <string name="jcp_income_type">Interest on Capital</string>
     <string name="fii_income_type">Income</string>
     <string name="fixed_income_type">Income</string>
+    <string name="fund_income_type">Income</string>
     <string name="others_income_type">Income</string>
     <string name="treasury_income_type">Semiannual Coupon</string>
     <string name="portfolio_income_type">Income</string>
@@ -307,6 +334,8 @@
     <string name="details_medium_price">Medium Buy Price</string>
     <string name="details_sold_fixed">Sell</string>
     <string name="details_buy_fixed">Buy</string>
+    <string name="details_sold_fund">Sell</string>
+    <string name="details_buy_fund">Buy</string>
     <string name="details_sold_others">Sell</string>
     <string name="details_buy_others">Buy</string>
     <string name="details_gain">Gain</string>
@@ -326,6 +355,7 @@
     <string name="income_per_stock">Received per Stock</string>
     <string name="income_per_fii">Received per quote</string>
     <string name="income_per_fixed">Received per fixed income</string>
+    <string name="income_per_fund">Received per fund income</string>
     <string name="income_per_others">Total received on investment</string>
     <string name="income_per_treasury">Received per quote</string>
     <string name="gross_income">Gross Income</string>
@@ -343,6 +373,7 @@
     <string name="receive_value">Received Value per Stock</string>
     <string name="receive_value_fii">Received Value per Fii</string>
     <string name="receive_value_fixed">Received Value per Fixed Income</string>
+    <string name="receive_value_fund">Received Value per Fund</string>
     <string name="receive_value_others">Gross received value on investment</string>
     <string name="tax_value_others">Tax paid on income</string>
     <string name="receive_value_treasury">Total received value on coupon</string>
@@ -352,10 +383,12 @@
     <string name="add_jcp_fail">Error adding interest on capital</string>
     <string name="add_fii_income_success">Income added successfully</string>
     <string name="add_fixed_income_success">Income added successfully</string>
+    <string name="add_fund_income_success">Income added successfully</string>
     <string name="add_others_income_success">Income added successfully</string>
     <string name="add_treasury_income_success">Income added successfully</string>
     <string name="add_fii_income_fail">Error adding income</string>
     <string name="add_fixed_income_fail">Error adding income</string>
+    <string name="add_fund_income_fail">Error adding income</string>
     <string name="add_others_income_fail">Error adding income</string>
     <string name="add_treasury_income_fail">Error adding income</string>
 
@@ -410,6 +443,17 @@
     <string name="fixed_gain_rate_pre_hint">Ex: 10.54</string>
     <string name="fixed_sell_value">Sell total value</string>
 
+    <!-- Add fund income Form Fragment -->
+    <string name="add_fund_title">Buy Fund</string>
+    <string name="buy_fund_button">Buy</string>
+    <string name="cancel_fund_button">Cancel</string>
+    <string name="fund_type">Type of the fund</string>
+    <string name="fund_symbol">Type the label of the fund</string>
+    <string name="fund_symbol_hint">Ex: Fundo Banco 123</string>
+    <string name="fund_buy_value">Buy total value</string>
+    <string name="fund_type_label">Type</string>
+    <string name="fund_sell_value">Sell total value</string>
+
     <!-- Add others income Form Fragment -->
     <string name="add_others_title">Buy Others</string>
     <string name="buy_others_button">Buy</string>
@@ -443,6 +487,7 @@
     <string name="title_complete_portfolio">Complete Portfolio</string>
     <string name="title_treasury">Treasury</string>
     <string name="title_fixed">Fixed Income</string>
+    <string name="title_fund">Fund</string>
     <string name="title_fii">Real State Fund</string>
     <string name="title_stocks">Stocks</string>
     <string name="title_currency">Currencies</string>
@@ -463,12 +508,14 @@
     <string name="toast_stock_successfully_removed">Stock %s successfully removed</string>
     <string name="toast_fii_successfully_removed">Fii %s successfully removed</string>
     <string name="toast_fixed_successfully_removed">Fixed income %s successfully removed</string>
+    <string name="toast_fund_successfully_removed">Fund %s successfully removed</string>
     <string name="toast_others_successfully_removed">Investment %s successfully removed</string>
     <string name="toast_currency_successfully_removed">Currency %s successfully removed</string>
     <string name="toast_treasury_successfully_removed">Treasury %s successfully removed</string>
     <string name="toast_stock_not_removed">Unable to remove stock %s</string>
     <string name="toast_fii_not_removed">Unable to remove Fii %s</string>
     <string name="toast_fixed_not_removed">Unable to remove fixed income %s</string>
+    <string name="toast_fund_not_removed">Unable to remove fund %s</string>
     <string name="toast_others_not_removed">Unable to remove investment %s</string>
     <string name="toast_currency_not_removed">Unable to remove Currency %s</string>
     <string name="toast_treasury_not_removed">Unable to remove Treasury %s</string>
@@ -481,6 +528,7 @@
     <string name="success_updating_crypto_currency">Crypto currency successfully updated.</string>
     <string name="success_updating_treasury">Treasury successfully updated.</string>
     <string name="success_updating_fixed">Fixed income successfully updated.</string>
+    <string name="success_updating_fund">Fund successfully updated.</string>
     <string name="error_updating_stocks">Error updating stocks, please try again later.</string>
     <string name="error_updating_stocks_limit">Stock update limit of 5 stocks reached. Update manually or upgrade to PREMIUM version for unlimited update.</string>
     <string name="error_updating_fii">Error updating fii, please try again later.</string>
@@ -491,6 +539,7 @@
     <string name="error_updating_treasury_limit">Treasury update limit of 2 treasuries reached. Update manually or upgrade to PREMIUM version for unlimited update.</string>
     <string name="error_updating_fixed">Error updating fixed income, please try again later.</string>
     <string name="error_updating_fixed_rate">Error updating fixed income. One or more Buy of Fixed Income are without the CDI Rate, please edit and update Buy Values to update your Fixed Income automatically.</string>
+    <string name="error_updating_fund">Error updating fixed income, please try again later.</string>
     <string name="error_updating_income_premium">Stock Income automatic update only on PREMIUM version, sign now or update stock incomes manually.</string>
     <string name="success_updating_income">Stock Incomes successfully updated.</string>
     <string name="error_updating_income">Error updating stock incomes, please try again later.</string>

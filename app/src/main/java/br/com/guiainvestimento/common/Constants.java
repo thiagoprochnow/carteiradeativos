@@ -59,6 +59,7 @@ public final class Constants {
         public static final int TREASURY = 4;
         public static final int OTHERS = 5;
         public static final int PORTFOLIO = 6;
+        public static final int FUND = 7;
     }
 
     // This should contains all incomes types in the portfolio
@@ -74,6 +75,7 @@ public final class Constants {
         public static final int TREASURY = 7;
         public static final int OTHERS = 8;
         public static final int FII_SPLIT = 9;
+        public static final int FUND = 10;
     }
 
     // Status of the a specific investment
@@ -105,6 +107,7 @@ public final class Constants {
         public static final String PORTFOLIO = "UPDATE_PORTFOLIO";
         public static final String OTHERS = "UPDATE_OTHERS_PORTFOLIO";
         public static final String CONSULT_QUOTE = "CONSULT_QUOTE";
+        public static final String FUND = "UPDATE_FUND_PORTFOLIO";
     }
 
     // FixedIncome Types
@@ -152,6 +155,10 @@ public final class Constants {
         public static final int OTHERS_OVERVIEW = 24;
         public static final int OTHERS_DETAILS = 25;
         public static final int OTHERS_INCOME = 26;
+
+        public static final int FUND_DATA = 27;
+        public static final int FUND_OVERVIEW = 28;
+        public static final int FUND_DETAILS = 29;
     }
 
     // Constants for Providers IDs
@@ -252,6 +259,16 @@ public final class Constants {
 
         public static final int OTHERS_INCOME = 6500;
         public static final int OTHERS_INCOME_FOR_SYMBOL = 6501;
+
+        public static final int FUND_PORTFOLIO = 7100;
+
+        public static final int FUND_DATA = 7200;
+        public static final int FUND_DATA_WITH_SYMBOL = 7201;
+        public static final int FUND_DATA_BULK_UPDATE = 7202;
+        public static final int FUND_DATA_BULK_UPDATE_FOR_CURRENT = 7203;
+
+        public static final int FUND_TRANSACTION = 7400;
+        public static final int FUND_TRANSACTION_FOR_SYMBOL = 7401;
     }
 
     // List of Symbols to use as overall and autocomplete fields

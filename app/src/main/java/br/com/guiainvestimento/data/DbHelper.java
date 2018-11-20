@@ -13,7 +13,7 @@ import br.com.guiainvestimento.common.Constants;
 public class DbHelper extends SQLiteOpenHelper {
 
     static final String NAME = "Portfolio.db";
-    private static final int VERSION = 5;
+    private static final int VERSION = 6;
 
     // Log variable
     private static final String LOG_TAG = DbHelper.class.getSimpleName();
@@ -84,11 +84,56 @@ public class DbHelper extends SQLiteOpenHelper {
             PortfolioContract.Ipca.LAST_UPDATE + " TEXT, " +
             "UNIQUE (" + PortfolioContract.Ipca._ID + ") ON CONFLICT REPLACE);";
 
+    private static final String DATABASE_ALTER_PORTFOLIO_1 = "ALTER TABLE "
+            + PortfolioContract.Portfolio.TABLE_NAME + " ADD COLUMN " + PortfolioContract.Portfolio.COLUMN_FUND_PERCENT + " REAL;";
+
+    private static final String DATABASE_CREATE_FUND_PORTFOLIO = "CREATE TABLE " + PortfolioContract.FundPortfolio.TABLE_NAME + " (" +
+            PortfolioContract.FundPortfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.FundPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_CURRENT_TOTAL + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_TAX + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_BROKERAGE + " REAL, " +
+            PortfolioContract.FundPortfolio.LAST_UPDATE + " LONG, " +
+            "UNIQUE (" + PortfolioContract.FundPortfolio._ID + ") ON CONFLICT REPLACE);";
+
+    private static final String DATABASE_CREATE_FUND_DATA = "CREATE TABLE " + PortfolioContract.FundData.TABLE_NAME + " (" +
+            PortfolioContract.FundData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.FundData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+            PortfolioContract.FundData.COLUMN_CNPJ + " TEXT NOT NULL, " +
+            PortfolioContract.FundData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
+            PortfolioContract.FundData.COLUMN_SELL_VALUE_TOTAL + " REAL, " +
+            PortfolioContract.FundData.COLUMN_TAX + " REAL, " +
+            PortfolioContract.FundData.COLUMN_NET_GAIN + " REAL, " +
+            PortfolioContract.FundData.COLUMN_TOTAL_GAIN + " REAL, " +
+            PortfolioContract.FundData.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
+            PortfolioContract.FundData.COLUMN_CURRENT_PERCENT + " REAL, " +
+            PortfolioContract.FundData.COLUMN_CURRENT_TOTAL + " REAL, " +
+            PortfolioContract.FundData.COLUMN_STATUS + " INTEGER, " +
+            PortfolioContract.FundData.COLUMN_BROKERAGE + " REAL, " +
+            PortfolioContract.FundData.COLUMN_UPDATE_STATUS + " INTEGER, " +
+            PortfolioContract.FundData.LAST_UPDATE + " LONG, " +
+            "UNIQUE (" + PortfolioContract.FundData.COLUMN_SYMBOL + ") ON CONFLICT REPLACE);";
+
+    private static final String DATABASE_CREATE_FUND_TRANSACTION = "CREATE TABLE " + PortfolioContract.FundTransaction.TABLE_NAME + " (" +
+            PortfolioContract.FundTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.FundTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
+            PortfolioContract.FundTransaction.COLUMN_CNPJ + " TEXT NOT NULL, " +
+            PortfolioContract.FundTransaction.COLUMN_TOTAL + " REAL, " +
+            PortfolioContract.FundTransaction.COLUMN_TIMESTAMP + " LONG, " +
+            PortfolioContract.FundTransaction.COLUMN_TYPE + " INTEGER, " +
+            PortfolioContract.FundTransaction.COLUMN_TAX + " REAL, " +
+            PortfolioContract.FundTransaction.COLUMN_BROKERAGE + " REAL, " +
+            PortfolioContract.FundTransaction.LAST_UPDATE + " LONG, " +
+            " FOREIGN KEY (" + PortfolioContract.FundTransaction.COLUMN_SYMBOL + ") REFERENCES "
+            + PortfolioContract.FundData.TABLE_NAME + " (" + PortfolioContract.FundData._ID + "));";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-        // This is the Stock table skeleton.
-        // We'll need to add/remove columns here to reflect the actual data we'll store in db.
 
         String builder_portfolio = "CREATE TABLE " + PortfolioContract.Portfolio.TABLE_NAME + " (" +
                 PortfolioContract.Portfolio._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -104,6 +149,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_FII_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT + " REAL, " +
+                PortfolioContract.Portfolio.COLUMN_FUND_PERCENT + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_TAX + " REAL, " +
                 PortfolioContract.Portfolio.COLUMN_BROKERAGE + " REAL, " +
                 PortfolioContract.Portfolio.LAST_UPDATE + " LONG, " +
@@ -552,6 +598,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DATABASE_CREATE_BUY_GROWTH);
         db.execSQL(DATABASE_CREATE_CDI);
         db.execSQL(DATABASE_CREATE_IPCA);
+        db.execSQL(DATABASE_CREATE_FUND_PORTFOLIO);
+        db.execSQL(DATABASE_CREATE_FUND_DATA);
+        db.execSQL(DATABASE_CREATE_FUND_TRANSACTION);
     }
 
 
@@ -596,6 +645,17 @@ public class DbHelper extends SQLiteOpenHelper {
             if (oldVersion < 5){
                 db.execSQL(DATABASE_ALTER_FIXED_TRANSACTION_2);
                 db.execSQL(DATABASE_CREATE_IPCA);
+            }
+        } catch (SQLException e){
+            Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);
+        }
+
+        try {
+            if (oldVersion < 6){
+                db.execSQL(DATABASE_ALTER_PORTFOLIO_1);
+                db.execSQL(DATABASE_CREATE_FUND_PORTFOLIO);
+                db.execSQL(DATABASE_CREATE_FUND_DATA);
+                db.execSQL(DATABASE_CREATE_FUND_TRANSACTION);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);

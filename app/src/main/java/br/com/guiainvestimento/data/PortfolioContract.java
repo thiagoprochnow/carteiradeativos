@@ -106,6 +106,16 @@ public class PortfolioContract {
     public static final String PATH_OTHERS_INCOME = "others_income";
     public static final String PATH_OTHERS_INCOME_WITH_SYMBOL = "others_income/*";
 
+    public static final String PATH_FUND_PORTFOLIO = "fund_portfolio";
+
+    public static final String PATH_FUND_DATA = "fund_data";
+    public static final String PATH_FUND_DATA_BULK_UPDATE = "fund_data/update";
+    public static final String PATH_FUND_DATA_BULK_UPDATE_WITH_CURRENT = "fund_data/update/*";
+    public static final String PATH_FUND_DATA_WITH_SYMBOL = "fund_data/*";
+
+    public static final String PATH_FUND_TRANSACTION = "fund_transaction";
+    public static final String PATH_FUND_TRANSACTION_WITH_SYMBOL = "fund_transaction/*";
+
     public static final String PATH_CDI = "cdi";
     public static final String PATH_CDI_WITH_DATE = "cdi/*";
 
@@ -130,6 +140,7 @@ public class PortfolioContract {
         public static final String COLUMN_STOCK_PERCENT = "stock_percent";
         public static final String COLUMN_FII_PERCENT = "fii_percent";
         public static final String COLUMN_CURRENCY_PERCENT = "currency_percent";
+        public static final String COLUMN_FUND_PERCENT = "fund_percent";
         public static final String COLUMN_TAX = "tax";
         public static final String COLUMN_BROKERAGE = "brokerage";
         public static final String LAST_UPDATE = "last_update";
@@ -148,6 +159,7 @@ public class PortfolioContract {
                 COLUMN_STOCK_PERCENT,
                 COLUMN_FII_PERCENT,
                 COLUMN_CURRENCY_PERCENT,
+                COLUMN_FUND_PERCENT,
                 COLUMN_TAX,
                 COLUMN_BROKERAGE,
                 LAST_UPDATE
@@ -1059,6 +1071,148 @@ public class PortfolioContract {
         }
 
         public static String getFixedTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of whole fund income portfolio
+    public static final class FundPortfolio implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FUND_PORTFOLIO).build();
+
+        public static final String TABLE_NAME = "fund_portfolio";
+
+        public static final String COLUMN_BUY_TOTAL = "value_total";
+        public static final String COLUMN_SOLD_TOTAL = "sold_total";
+        public static final String COLUMN_VARIATION_TOTAL = "variation_total";
+        public static final String COLUMN_INCOME_TOTAL = "income_total";
+        public static final String COLUMN_TOTAL_GAIN = "value_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_PORTFOLIO_PERCENT = "portfolio_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] FUND_PORTFOLIO_COLUMNS = {
+                _ID,
+                COLUMN_BUY_TOTAL,
+                COLUMN_SOLD_TOTAL,
+                COLUMN_VARIATION_TOTAL,
+                COLUMN_INCOME_TOTAL,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_PORTFOLIO_PERCENT,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
+        };
+
+        public static Uri makeUriForFundPortfolio(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildFundPortfolioUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFundPortfolioFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fund income owned.
+    public static final class FundData implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FUND_DATA).build();
+        public static final Uri BULK_UPDATE_URI = URI.buildUpon().appendPath(BASE_BULK_UPDATE).build();
+
+        public static final String TABLE_NAME = "fund_data";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_CNPJ = "cnpj";
+        public static final String COLUMN_BUY_VALUE_TOTAL = "buy_value_total";
+        public static final String COLUMN_SELL_VALUE_TOTAL = "sell_value_total";
+        public static final String COLUMN_NET_GAIN = "net_gain";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_TOTAL_GAIN = "total_gain";
+        public static final String COLUMN_OBJECTIVE_PERCENT = "objective_percent";
+        public static final String COLUMN_CURRENT_PERCENT = "current_percent";
+        public static final String COLUMN_CURRENT_TOTAL = "current_total";
+        public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String COLUMN_UPDATE_STATUS = "update_status";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] FUND_DATA_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_CNPJ,
+                COLUMN_BUY_VALUE_TOTAL,
+                COLUMN_SELL_VALUE_TOTAL,
+                COLUMN_NET_GAIN,
+                COLUMN_TOTAL_GAIN,
+                COLUMN_OBJECTIVE_PERCENT,
+                COLUMN_CURRENT_PERCENT,
+                COLUMN_CURRENT_TOTAL,
+                COLUMN_STATUS,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE,
+                COLUMN_UPDATE_STATUS,
+                LAST_UPDATE
+        };
+
+        public static Uri makeUriForFundData(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static Uri buildDataUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static String getFundDataFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fund income buy and sell
+    public static final class FundTransaction implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FUND_TRANSACTION).build();
+
+        public static final String TABLE_NAME = "fund_transaction";
+
+        public static final String COLUMN_SYMBOL = "symbol";
+        public static final String COLUMN_CNPJ = "cnpj";
+        public static final String COLUMN_TOTAL = "bought_total";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_TYPE = "type";
+        public static final String COLUMN_TAX = "tax";
+        public static final String COLUMN_BROKERAGE = "brokerage";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] FUND_TRANSACTION_COLUMNS = {
+                _ID,
+                COLUMN_SYMBOL,
+                COLUMN_CNPJ,
+                COLUMN_TOTAL,
+                COLUMN_TIMESTAMP,
+                COLUMN_TYPE,
+                COLUMN_TAX,
+                COLUMN_BROKERAGE,
+                LAST_UPDATE
+        };
+
+        public static Uri buildTransactionUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForFundTransaction(String symbol) {
+            return URI.buildUpon().appendPath(symbol).build();
+        }
+
+        public static String getFundTransactionFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }
