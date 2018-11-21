@@ -93,7 +93,7 @@ public class FundDetailsFragment extends BaseFragment implements
         getActivity().setTitle(mSymbol);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setHasFundSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.setAdapter(mFundDetailAdapter);
         getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FUND_DETAILS, bundle, this);

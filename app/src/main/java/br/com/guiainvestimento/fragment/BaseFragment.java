@@ -39,6 +39,7 @@ import br.com.guiainvestimento.domain.Currency;
 import br.com.guiainvestimento.receiver.CurrencyReceiver;
 import br.com.guiainvestimento.receiver.FiiReceiver;
 import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.FundReceiver;
 import br.com.guiainvestimento.receiver.OthersReceiver;
 import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import br.com.guiainvestimento.receiver.StockReceiver;
@@ -290,6 +291,33 @@ public abstract class BaseFragment extends Fragment {
             return true;
         } else {
             Toast.makeText(mContext, getString(R.string.toast_fixed_not_removed, symbol), Toast
+                    .LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+    // Delete fund income and all its information from database
+    // This is different then selling a fund income, that will maintain some information
+    public boolean deleteFund(String symbol) {
+        int deletedTransaction = getActivity().getContentResolver().delete(PortfolioContract
+                .FundTransaction
+                .makeUriForFundTransaction(symbol), null, null);
+        int deletedData = getActivity().getContentResolver().delete(PortfolioContract.FundData
+                .makeUriForFundData(symbol), null, null);
+
+        if (deletedData > 0) {
+            FundReceiver fundReceiver = new FundReceiver(mContext);
+            fundReceiver.updateFundPortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FUND));
+
+            PortfolioReceiver portfolioReceiver = new PortfolioReceiver(mContext);
+            portfolioReceiver.updatePortfolio();
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
+            Toast.makeText(mContext, getString(R.string.toast_fund_successfully_removed, symbol)
+                    , Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            Toast.makeText(mContext, getString(R.string.toast_fund_not_removed, symbol), Toast
                     .LENGTH_SHORT).show();
             return false;
         }
@@ -656,6 +684,63 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
+    // Delete fund transaction from table by using its id
+    // symbol is used to update fund Data table
+    public boolean deleteFundTransaction(String id, String symbol){
+        long timestamp;
+        String[] affectedColumn = {PortfolioContract.FundTransaction.COLUMN_TIMESTAMP};
+        String selection = PortfolioContract.FundTransaction._ID + " = ? AND "
+                + PortfolioContract.FundTransaction.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {id, symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FundTransaction.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            timestamp = queryCursor.getLong(0);
+        } else {
+            return false;
+        }
+
+        int deletedResult = mContext.getContentResolver().delete(
+                PortfolioContract.FundTransaction.URI,
+                selection, selectionArguments);
+
+        if (deletedResult > 0){
+            // Update fund data for that symbol
+            updateFundData(symbol, Constants.Type.DELETE_TRANSACION);
+        }
+
+        // Check if there is any more transaction for this symbol
+        // If not, delete this symbol from FundData
+
+        String selectionTransaction = PortfolioContract.FundTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FundTransaction.COLUMN_TYPE + " = ?";
+        String[] selectionArgumentsTransaction = {symbol, String.valueOf(Constants.Type.BUY)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FundTransaction.URI, null,
+                selectionTransaction, selectionArgumentsTransaction, null);
+
+        // If there is no more buy transaction for this symbol, delete the fund income and finish activity
+        if (queryCursor.getCount() == 0){
+            deleteFund(symbol);
+            getActivity().finish();
+        }
+
+        String sellSelectionTransaction = PortfolioContract.FundTransaction.COLUMN_SYMBOL + " = ? AND "
+                + PortfolioContract.FundTransaction.COLUMN_TYPE + " = ?";
+        String[] sellArgumentsTransaction = {symbol, String.valueOf(Constants.Type.SELL)};
+
+        queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FundTransaction.URI, null,
+                sellSelectionTransaction, sellArgumentsTransaction, null);
+
+        return false;
+    }
+
     // Delete treasury transaction from table by using its id
     // symbol is used to update Treasury Data table
     public boolean deleteTreasuryTransaction(String id, String symbol){
@@ -889,6 +974,18 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    // Validate if an EditText was set with valid Fund Symbol
+    protected boolean isValidFundSymbol(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Fund income (Only letters and numbers)
+        Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // Validate if an EditText was set with valid Others Symbol
     protected boolean isValidOthersSymbol(EditText symbol) {
         Editable editable = symbol.getText();
@@ -1056,6 +1153,49 @@ public abstract class BaseFragment extends Fragment {
                 queryCursor.moveToFirst();
                 double currentTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
                         .FixedData.COLUMN_CURRENT_TOTAL));
+                if (currentTotal >= sellTotal) {
+                    // Bought quantity is bigger then quantity trying to sell
+                    isQuantityEnough = true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            // Field is empty
+            return false;
+        }
+
+        Editable editable = value.getText();
+        // Check if it is double input
+        Pattern pattern = Pattern.compile("^[0-9]+\\.?[0-9]*$");
+        if (!isEditTextEmpty(value) && pattern.matcher(editable.toString()).matches() && isQuantityEnough) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid double and that there is enough quantity of that investment to sell
+    protected boolean isValidSellFund(EditText value, EditText editSymbol) {
+        String symbol = editSymbol.getText().toString();
+        // Prepare query for currency data
+        String selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+
+        boolean isQuantityEnough = false;
+        if (!value.toString().isEmpty()) {
+            double sellTotal = Double.parseDouble(value.getText().toString());
+
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FundData.URI,
+                    null, selection, selectionArguments, null);
+            // Gets data quantity to see if bought quantity is enough
+            if (queryCursor.getCount() > 0) {
+                queryCursor.moveToFirst();
+                double currentTotal = queryCursor.getDouble(queryCursor.getColumnIndex(PortfolioContract
+                        .FundData.COLUMN_CURRENT_TOTAL));
                 if (currentTotal >= sellTotal) {
                     // Bought quantity is bigger then quantity trying to sell
                     isQuantityEnough = true;
@@ -2385,6 +2525,135 @@ public abstract class BaseFragment extends Fragment {
             int updatedRows = mContext.getContentResolver().update(
                     PortfolioContract.FixedData.URI,
                     fixedDataCV, updateSelection, updatedSelectionArguments);
+            // Log update success/fail result
+            if (updatedRows > 0){
+                return true;
+            } else {
+                return false;
+            }
+        } else{
+            return false;
+        }
+    }
+
+    // Reads the FundTransaction entries and calculates value for FundData table for this symbol
+    public boolean updateFundData(String symbol, int type){
+
+        String selection = PortfolioContract.FundTransaction.COLUMN_SYMBOL + " = ? ";
+        String[] selectionArguments = {symbol};
+        String sortOrder = PortfolioContract.FundTransaction.COLUMN_TIMESTAMP + " ASC";
+
+        Cursor STQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FundTransaction.URI,
+                null, selection, selectionArguments, sortOrder);
+
+        if(STQueryCursor.getCount() > 0){
+            STQueryCursor.moveToFirst();
+            // Final values to be inserted in FundData
+            // Buy quantity and total is to calculate correct medium buy price
+            // Medium price is only for buys
+            double buyTotal = 0;
+            double lastSell = 0;
+            int currentType;
+            // At the time of the sell, need to calculate the Medium price and total bought of that time
+            // by using mediumPrice afterwards, will result in calculation error
+            // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
+            // Ex: By that, medium price will be 25,00 and the sell by 21,00 will show as money loss, which is wrong
+            // By using 20,00 at that time, sell at 21,00 will result in profit, which is correct
+            double soldTotal = 0;
+
+            do {
+                currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TYPE));
+                // Does correct operation to values depending on Transaction type
+                switch (currentType){
+                    case Constants.Type.BUY:
+                        buyTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+                        break;
+                    case Constants.Type.SELL:
+                        // Add the value sold times the current medium buy price
+                        soldTotal += STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+                        lastSell = STQueryCursor.getDouble(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+                        break;
+                    default:
+                }
+            } while (STQueryCursor.moveToNext());
+            ContentValues fundDataCV = new ContentValues();
+
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_SYMBOL, symbol);
+
+            selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ? ";
+
+            // Searches for existing FundData to update value.
+            // If dosent exists, creates new one
+            Cursor queryDataCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FundData.URI,
+                    null, selection, selectionArguments, null);
+
+            double currentTotal = 0;
+            // Create new FundData for this symbol
+            if (queryDataCursor.getCount() == 0){
+                // Current total will be the same as buyTotal at first
+                currentTotal = buyTotal;
+                fundDataCV.put(PortfolioContract.FundData.COLUMN_CURRENT_TOTAL, buyTotal);
+                // Adds data to the database
+                Uri insertedFundDataUri = mContext.getContentResolver().insert(PortfolioContract.FundData.URI,
+                        fundDataCV);
+
+                // If error occurs to add, shows error message
+                if (insertedFundDataUri != null) {
+                    // Update Fund income Portfolio
+                } else {
+                    return false;
+                }
+            } else {
+                // Needs to update current total and total gain with latest current price
+                // If not, FundDetailsOverview will not update current total and total gain, unless refreshing the View
+                queryDataCursor.moveToFirst();
+                currentTotal = queryDataCursor.getDouble(queryDataCursor.getColumnIndex(PortfolioContract.FundData.COLUMN_CURRENT_TOTAL));
+            }
+
+            // Subtract sold value from currentTotal if is selling fund income
+            if (type == Constants.Type.SELL){
+                currentTotal -= lastSell;
+            }
+
+            double totalGain = currentTotal + soldTotal - buyTotal;
+
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_BUY_VALUE_TOTAL, buyTotal);
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_SELL_VALUE_TOTAL, soldTotal);
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_TOTAL_GAIN, totalGain);
+            if ((type == Constants.Type.SELL) && queryDataCursor.getCount() > 0){
+                fundDataCV.put(PortfolioContract.FundData.COLUMN_CURRENT_TOTAL, currentTotal);
+            }
+
+
+            // Set fund income as active
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_STATUS, Constants.Status.ACTIVE);
+
+            /*Intent mServiceIntent = new Intent(mContext, FundIntentService
+                    .class);
+            mServiceIntent.putExtra(FundIntentService.ADD_SYMBOL, symbol);
+            getActivity().startService(mServiceIntent);*/
+
+            // Searches for existing FundData to update value.
+            // If dosent exists, creates new one
+            Cursor queryCursor = mContext.getContentResolver().query(
+                    PortfolioContract.FundData.URI,
+                    null, selection, selectionArguments, null);
+
+            queryCursor.moveToFirst();
+
+            String _id = String.valueOf(queryCursor.getInt(queryCursor.getColumnIndex(PortfolioContract.FundData._ID)));
+
+            // Update
+            // Prepare query to update fund income data
+            String updateSelection = PortfolioContract.FundData._ID + " = ?";
+            String[] updatedSelectionArguments = {_id};
+
+            // Update value on fund income data
+            int updatedRows = mContext.getContentResolver().update(
+                    PortfolioContract.FundData.URI,
+                    fundDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
                 return true;

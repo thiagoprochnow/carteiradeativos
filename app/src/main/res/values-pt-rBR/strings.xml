@@ -243,6 +243,7 @@
     <string name="dialog_fii_update_failed_message">Esse fundo imobiliário não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
     <string name="dialog_treasury_update_failed_message">Esse Tesouro não pode ser atualizada automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
     <string name="fixed_update_failed_message">Entre nessa Renda Fixa e edite cada "Compra" e inclua a % do CDI para que seja atualizado automaticamente.</string>
+    <string name="fund_update_failed_message">Esse Fundo de Investimento não pode ser atualizado automaticamente, por favor coloque o preço atual manualmente clicando em Editar.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Comprado</string>

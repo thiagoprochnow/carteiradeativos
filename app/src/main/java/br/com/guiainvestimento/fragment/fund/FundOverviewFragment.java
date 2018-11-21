@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.adapter.fundincome.FundOverviewAdapter;
+import br.com.guiainvestimento.adapter.fund.FundOverviewAdapter;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFragment;
@@ -81,7 +81,7 @@ public class FundOverviewFragment extends BaseFragment implements
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setHasFundSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
         // Floating Action Button setup

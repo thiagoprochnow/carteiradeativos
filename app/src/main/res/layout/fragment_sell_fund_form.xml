@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/fragment_form_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fund_symbol"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputSymbol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fund_symbol_hint"
+            android:maxLength="20"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/fund_sell_value"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputSellTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fragment_form_margin_top_subhead"
+            android:text="@string/sell_date"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputSellDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="date"/>
+    </LinearLayout>
+</ScrollView>

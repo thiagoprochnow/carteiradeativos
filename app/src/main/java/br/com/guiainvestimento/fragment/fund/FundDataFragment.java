@@ -85,7 +85,7 @@ public class FundDataFragment extends BaseFragment implements
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setHasFundSize(true);
+        mRecyclerView.setHasFixedSize(true);
 
         // Floating Action Button setup
         getActivity().findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
@@ -154,7 +154,7 @@ public class FundDataFragment extends BaseFragment implements
         // FIXED_SOLD_LOADER for sold fund income tab
         return new CursorLoader(mContext,
                 PortfolioContract.FundData.URI,
-                PortfolioContract.FundData.FIXED_DATA_COLUMNS,
+                PortfolioContract.FundData.FUND_DATA_COLUMNS,
                 selection, selectionArgs, PortfolioContract.FundData.COLUMN_SYMBOL);
     }
 

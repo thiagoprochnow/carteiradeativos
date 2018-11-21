@@ -243,6 +243,7 @@
     <string name="dialog_fii_update_failed_message">This Fii could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="dialog_treasury_update_failed_message">This treasury could not be update automatically, please input current price manually by clicking on Edit button.</string>
     <string name="fixed_update_failed_message">Enter on this Fixed Income and edit each "Buy" to include CDI % Rate so it can be updated automatically.</string>
+    <string name="fund_update_failed_message">This fund could not be update automatically, please input current price manually by clicking on Edit button.</string>
 
     <!-- Sold Stock Adapter -->
     <string name="sold_data_bought_label">Bought Value</string>

@@ -93,6 +93,14 @@
             </intent-filter>
         </receiver>
         <receiver
+            android:name="br.com.guiainvestimento.receiver.FundReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="UPDATE_FUND_PORTFOLIO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
             android:name="br.com.guiainvestimento.receiver.CurrencyReceiver"
             android:exported="false">
             <intent-filter>

@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.fragment.fundincome.FundDataFragment;
-import br.com.guiainvestimento.fragment.fundincome.FundOverviewFragment;
+import br.com.guiainvestimento.fragment.fund.FundDataFragment;
+import br.com.guiainvestimento.fragment.fund.FundOverviewFragment;
 
 
 public class FundTabAdapter extends FragmentPagerAdapter {

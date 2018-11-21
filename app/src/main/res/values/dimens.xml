@@ -29,6 +29,12 @@
     <dimen name="fixed_price">14dp</dimen>
     <dimen name="fixed_percentage_image_margin">0dp</dimen>
     <dimen name="fixed_percentage_text_margin">10dp</dimen>
+    <dimen name="fund_quantity">14dp</dimen>
+    <dimen name="fund_symbol">14dp</dimen>
+    <dimen name="fund_text">16dp</dimen>
+    <dimen name="fund_price">14dp</dimen>
+    <dimen name="fund_percentage_image_margin">0dp</dimen>
+    <dimen name="fund_percentage_text_margin">10dp</dimen>
     <dimen name="treasury_quantity">12dp</dimen>
     <dimen name="treasury_symbol">12dp</dimen>
     <dimen name="treasury_text">16dp</dimen>
@@ -67,6 +73,12 @@
     <dimen name="fixed_values_width">100dp</dimen>
     <dimen name="fixed_percent_width">90dp</dimen>
     <dimen name="fixed_symbol_info_size">90dp</dimen>
+    <dimen name="fund_percentage_text_size">35dp</dimen>
+    <dimen name="fund_value_percentage_width">50dp</dimen>
+    <dimen name="fund_values_margin">10dp</dimen>
+    <dimen name="fund_values_width">100dp</dimen>
+    <dimen name="fund_percent_width">90dp</dimen>
+    <dimen name="fund_symbol_info_size">90dp</dimen>
     <dimen name="treasury_percentage_text_size">35dp</dimen>
     <dimen name="treasury_value_percentage_width">50dp</dimen>
     <dimen name="treasury_values_margin">10dp</dimen>
@@ -131,6 +143,21 @@
     <dimen name="fixed_detail">15dp</dimen>
     <dimen name="fixed_detail_width1">90dp</dimen>
     <dimen name="fixed_detail_width2">80dp</dimen>
+
+    <!-- Fund Income Incomes Adapter -->
+    <dimen name="fund_income_type">16dp</dimen>
+    <dimen name="fund_income_width">150dp</dimen>
+    <dimen name="fund_income_date">16dp</dimen>
+    <dimen name="fund_income_value">15dp</dimen>
+    <dimen name="fund_income_value_marginLeft">5dp</dimen>
+    <dimen name="fund_income_percent">15dp</dimen>
+
+    <!-- Fund Income Details Adapter -->
+    <dimen name="fund_transaction_type">16dp</dimen>
+    <dimen name="fund_detail_quantity_marginLeft">15dp</dimen>
+    <dimen name="fund_detail">15dp</dimen>
+    <dimen name="fund_detail_width1">90dp</dimen>
+    <dimen name="fund_detail_width2">80dp</dimen>
 
     <!-- Treasury Incomes Adapter -->
     <dimen name="treasury_income_type">16dp</dimen>

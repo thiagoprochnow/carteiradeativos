@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.guiainvestimento.R;
-import br.com.guiainvestimento.adapter.fundincome.FundTabAdapter;
+import br.com.guiainvestimento.adapter.fund.FundTabAdapter;
 import br.com.guiainvestimento.fragment.BaseFragment;
 
 public class FundTabFragment extends BaseFragment {

@@ -34,10 +34,6 @@ public class BuyFundFormFragment extends BaseFormFragment {
     private EditText mInputSymbolView;
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
-    private EditText mInputGainRateView;
-    private Spinner mInputGainTypeView;
-    private TextView mGainRateLabelView;
-    private int mType = Constants.FundType.CDI;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -60,40 +56,6 @@ public class BuyFundFormFragment extends BaseFormFragment {
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
-        mInputGainRateView = (EditText) mView.findViewById(R.id.inputGainRate);
-        mInputGainTypeView = (Spinner) mView.findViewById(R.id.inputType);
-        mGainRateLabelView = (TextView) mView.findViewById(R.id.gainRateLabel);
-
-        String[] tipos = new String[]{"CDI","IPCA","Pré Fixado"};
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_dropdown_item,tipos);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        mInputGainTypeView.setAdapter(adapter);
-
-        mInputGainTypeView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0){
-                    mType = Constants.FundType.CDI;
-                    mGainRateLabelView.setText(R.string.fund_gain_rate);
-                    mInputGainRateView.setHint(R.string.fund_gain_rate_hint);
-                } else if(position == 1){
-                    mType = Constants.FundType.IPCA;
-                    mGainRateLabelView.setText(R.string.fund_gain_rate_ipca);
-                    mInputGainRateView.setHint(R.string.fund_gain_rate_ipca_hint);
-                } else {
-                    mType = Constants.FundType.PRE;
-                    mGainRateLabelView.setText(R.string.fund_gain_rate_pre);
-                    mInputGainRateView.setHint(R.string.fund_gain_rate_pre_hint);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -110,7 +72,6 @@ public class BuyFundFormFragment extends BaseFormFragment {
 
         // Adding input filters
         mInputBuyTotalView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
-        mInputGainRateView.setFilters(new InputFilter[]{ new InputFilterDecimal()});
         return mView;
     }
 
@@ -120,15 +81,13 @@ public class BuyFundFormFragment extends BaseFormFragment {
         // Validate for each inputted value
         boolean isValidSymbol = isValidFundSymbol(mInputSymbolView);
         boolean isValidBuyTotal = isValidDouble(mInputBuyTotalView);
-        boolean isValidGainRate = isValidDouble(mInputGainRateView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fund income
-        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate && isValidGainRate) {
+        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
             double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
-            double gainRate = Double.parseDouble(mInputGainRateView.getText().toString())/100;
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
             Long timestamp = DateToTimestamp(inputDate);
@@ -139,9 +98,7 @@ public class BuyFundFormFragment extends BaseFormFragment {
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_SYMBOL, inputSymbol);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TOTAL, buyTotal);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TIMESTAMP, timestamp);
-            fundCV.put(PortfolioContract.FundTransaction.COLUMN_GAIN_RATE, gainRate);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TYPE, Constants.Type.BUY);
-            fundCV.put(PortfolioContract.FundTransaction.COLUMN_GAIN_TYPE, mType);
 
             // Adds to the database
             Uri insertedFundTransactionUri = mContext.getContentResolver().insert(PortfolioContract
@@ -151,8 +108,7 @@ public class BuyFundFormFragment extends BaseFormFragment {
             // If error occurs to add, shows error message
             if (insertedFundTransactionUri != null) {
                 // Updates each fund income table with new value: Income, Data, FundPortfolio, CompletePortfolio
-                boolean updateFundData = updateFundData(inputSymbol, Constants
-                        .Type.BUY);
+                boolean updateFundData = updateFundData(inputSymbol, Constants.Type.BUY);
                 if (updateFundData) {
                     Toast.makeText(mContext, R.string.buy_fund_success, Toast.LENGTH_LONG).show();
                     return true;
@@ -167,9 +123,6 @@ public class BuyFundFormFragment extends BaseFormFragment {
             }
             if(!isValidBuyTotal){
                 mInputBuyTotalView.setError(this.getString(R.string.wrong_total));
-            }
-            if(!isValidGainRate){
-                mInputGainRateView.setError(this.getString(R.string.wrong_gain_rate));
             }
             if(!isValidDate){
                 mInputDateView.setError(this.getString(R.string.wrong_date));
