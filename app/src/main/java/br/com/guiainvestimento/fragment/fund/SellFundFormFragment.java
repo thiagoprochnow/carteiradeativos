@@ -3,6 +3,7 @@ package br.com.guiainvestimento.fragment.fund;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -31,6 +32,8 @@ public class SellFundFormFragment extends BaseFormFragment {
     private EditText mInputSellTotalView;
     private EditText mInputDateView;
 
+    private String cnpj = "";
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -58,6 +61,7 @@ public class SellFundFormFragment extends BaseFormFragment {
         String intentSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         // Place selling fund symbol on field
         if(intentSymbol != null && !intentSymbol.isEmpty()){
+            cnpj = getCnpj(intentSymbol);
             mInputSymbolView.setText(intentSymbol);
         }
 
@@ -92,6 +96,7 @@ public class SellFundFormFragment extends BaseFormFragment {
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_SYMBOL, inputSymbol);
+            fundCV.put(PortfolioContract.FundTransaction.COLUMN_CNPJ, cnpj);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TOTAL, sellTotal);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TIMESTAMP, timestamp);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TYPE, Constants.Type.SELL);
@@ -130,5 +135,21 @@ public class SellFundFormFragment extends BaseFormFragment {
 
         }
         return false;
+    }
+
+    private String getCnpj(String symbol){
+        String selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ?";
+        String[] selectionArgs = {symbol};
+        String value = "";
+
+        Cursor data = mContext.getContentResolver().query(
+                PortfolioContract.FundData.URI,
+                null, selection, selectionArgs, null);
+
+        if(data.moveToFirst()){
+            String cnpj = data.getString(data.getColumnIndex(PortfolioContract.FundData.COLUMN_SYMBOL));
+            value = cnpj;
+        }
+        return value;
     }
 }

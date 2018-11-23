@@ -74,6 +74,7 @@
     <string name="wrong_fii_code">Invalid Fii code</string>
     <string name="wrong_fixed_code">Invalid Fixed Income label. Please type only letters and numbers.</string>
     <string name="wrong_fund_code">Invalid Fund label. Please type only letters and numbers.</string>
+    <string name="wrong_fund_cnpj">Invalid Fund CNPJ. Use Ex: 12.345.678/9031-23</string>
     <string name="wrong_others_code">Invalid label. Please type only letters and numbers.</string>
     <string name="wrong_treasury_code">Invalid Treasury label. Please type only letters and numbers.</string>
     <string name="wrong_currency_code">Invalid Currency code</string>
@@ -450,7 +451,9 @@
     <string name="cancel_fund_button">Cancel</string>
     <string name="fund_type">Type of the fund</string>
     <string name="fund_symbol">Type the label of the fund</string>
+    <string name="fund_cnpj">Type the CNPJ of the fund</string>
     <string name="fund_symbol_hint">Ex: Fundo Banco 123</string>
+    <string name="fund_cnpj_hint">Ex: 12.345.678/9031-23</string>
     <string name="fund_buy_value">Buy total value</string>
     <string name="fund_type_label">Type</string>
     <string name="fund_sell_value">Sell total value</string>

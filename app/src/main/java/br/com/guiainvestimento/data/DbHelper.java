@@ -92,6 +92,7 @@ public class DbHelper extends SQLiteOpenHelper {
             PortfolioContract.FundPortfolio.COLUMN_BUY_TOTAL + " REAL, " +
             PortfolioContract.FundPortfolio.COLUMN_SOLD_TOTAL + " REAL, " +
             PortfolioContract.FundPortfolio.COLUMN_VARIATION_TOTAL + " REAL, " +
+            PortfolioContract.FundPortfolio.COLUMN_INCOME_TOTAL + " REAL, " +
             PortfolioContract.FundPortfolio.COLUMN_TOTAL_GAIN + " REAL, " +
             PortfolioContract.FundPortfolio.COLUMN_OBJECTIVE_PERCENT + " REAL, " +
             PortfolioContract.FundPortfolio.COLUMN_PORTFOLIO_PERCENT + " REAL, " +
@@ -104,7 +105,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE_FUND_DATA = "CREATE TABLE " + PortfolioContract.FundData.TABLE_NAME + " (" +
             PortfolioContract.FundData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PortfolioContract.FundData.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-            PortfolioContract.FundData.COLUMN_CNPJ + " TEXT NOT NULL, " +
+            PortfolioContract.FundData.COLUMN_CNPJ + " TEXT, " +
             PortfolioContract.FundData.COLUMN_BUY_VALUE_TOTAL + " REAL, " +
             PortfolioContract.FundData.COLUMN_SELL_VALUE_TOTAL + " REAL, " +
             PortfolioContract.FundData.COLUMN_TAX + " REAL, " +
@@ -122,7 +123,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE_FUND_TRANSACTION = "CREATE TABLE " + PortfolioContract.FundTransaction.TABLE_NAME + " (" +
             PortfolioContract.FundTransaction._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             PortfolioContract.FundTransaction.COLUMN_SYMBOL + " TEXT NOT NULL, " +
-            PortfolioContract.FundTransaction.COLUMN_CNPJ + " TEXT NOT NULL, " +
+            PortfolioContract.FundTransaction.COLUMN_CNPJ + " TEXT, " +
             PortfolioContract.FundTransaction.COLUMN_TOTAL + " REAL, " +
             PortfolioContract.FundTransaction.COLUMN_TIMESTAMP + " LONG, " +
             PortfolioContract.FundTransaction.COLUMN_TYPE + " INTEGER, " +

@@ -3,6 +3,7 @@ package br.com.guiainvestimento.fragment.fund;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -25,6 +26,7 @@ import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
 import br.com.guiainvestimento.util.InputFilterDecimal;
+import br.com.guiainvestimento.util.MaskEditUtil;
 
 
 public class BuyFundFormFragment extends BaseFormFragment {
@@ -32,6 +34,7 @@ public class BuyFundFormFragment extends BaseFormFragment {
     private View mView;
 
     private EditText mInputSymbolView;
+    private EditText mInputCnpjView;
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
 
@@ -54,15 +57,20 @@ public class BuyFundFormFragment extends BaseFormFragment {
         mView = inflater.inflate(R.layout.fragment_buy_fund_form, container, false);
         getActivity().setTitle(R.string.form_title_buy);
         mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
+        mInputCnpjView = (EditText) mView.findViewById(R.id.inputCnpj);
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
+
+        mInputCnpjView.addTextChangedListener(MaskEditUtil.mask(mInputCnpjView, "##.###.###/####-##"));
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
         String intentSymbol = intent.getStringExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL);
         // Place selling fund symbol on field
         if(intentSymbol != null && !intentSymbol.isEmpty()){
+            String cnpj = getCnpj(intentSymbol);
             mInputSymbolView.setText(intentSymbol);
+            mInputCnpjView.setText(cnpj);
         }
 
         // Adding current date to Buy Date field and set Listener to the Spinner
@@ -80,13 +88,15 @@ public class BuyFundFormFragment extends BaseFormFragment {
 
         // Validate for each inputted value
         boolean isValidSymbol = isValidFundSymbol(mInputSymbolView);
+        boolean isValidCnpj = isValidFundCnpj(mInputCnpjView);
         boolean isValidBuyTotal = isValidDouble(mInputBuyTotalView);
         boolean isValidDate = isValidDate(mInputDateView);
         boolean isFutureDate = isFutureDate(mInputDateView);
 
         // If all validations pass, try to add the fund income
-        if (isValidSymbol && isValidBuyTotal && isValidDate && !isFutureDate) {
+        if (isValidSymbol && isValidBuyTotal && isValidDate && isValidCnpj && !isFutureDate) {
             String inputSymbol = mInputSymbolView.getText().toString();
+            String inputCnpj = mInputCnpjView.getText().toString();
             double buyTotal = Double.parseDouble(mInputBuyTotalView.getText().toString());
             // Get and handle inserted date value
             String inputDate = mInputDateView.getText().toString();
@@ -96,6 +106,7 @@ public class BuyFundFormFragment extends BaseFormFragment {
 
             // TODO: Check why inputSymbol(string) is working when COLUMN_SYMBOL is INTEGER
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_SYMBOL, inputSymbol);
+            fundCV.put(PortfolioContract.FundTransaction.COLUMN_CNPJ, inputCnpj);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TOTAL, buyTotal);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TIMESTAMP, timestamp);
             fundCV.put(PortfolioContract.FundTransaction.COLUMN_TYPE, Constants.Type.BUY);
@@ -121,6 +132,9 @@ public class BuyFundFormFragment extends BaseFormFragment {
             if(!isValidSymbol){
                 mInputSymbolView.setError(this.getString(R.string.wrong_fund_code));
             }
+            if(!isValidCnpj){
+                mInputCnpjView.setError(this.getString(R.string.wrong_fund_cnpj));
+            }
             if(!isValidBuyTotal){
                 mInputBuyTotalView.setError(this.getString(R.string.wrong_total));
             }
@@ -134,5 +148,21 @@ public class BuyFundFormFragment extends BaseFormFragment {
             }
         }
         return false;
+    }
+
+    private String getCnpj(String symbol){
+        String selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ?";
+        String[] selectionArgs = {symbol};
+        String value = "";
+
+        Cursor data = mContext.getContentResolver().query(
+                PortfolioContract.FundData.URI,
+                null, selection, selectionArgs, null);
+
+        if(data.moveToFirst()){
+            String cnpj = data.getString(data.getColumnIndex(PortfolioContract.FundData.COLUMN_SYMBOL));
+            value = cnpj;
+        }
+        return value;
     }
 }

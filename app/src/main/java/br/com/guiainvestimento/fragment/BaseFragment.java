@@ -978,7 +978,19 @@ public abstract class BaseFragment extends Fragment {
     protected boolean isValidFundSymbol(EditText symbol) {
         Editable editable = symbol.getText();
         // Regex Pattern for Fund income (Only letters and numbers)
-        Pattern pattern = Pattern.compile("[a-zA-Z\\s0-9]*");
+        Pattern pattern = Pattern.compile(".+");
+        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Validate if an EditText was set with valid Fund Symbol
+    protected boolean isValidFundCnpj(EditText symbol) {
+        Editable editable = symbol.getText();
+        // Regex Pattern for Fund income (Only letters and numbers)
+        Pattern pattern = Pattern.compile("[0-9\\.\\/\\-]*");
         if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
             return true;
         } else {
@@ -2555,6 +2567,7 @@ public abstract class BaseFragment extends Fragment {
             double buyTotal = 0;
             double lastSell = 0;
             int currentType;
+            String cnpj = "";
             // At the time of the sell, need to calculate the Medium price and total bought of that time
             // by using mediumPrice afterwards, will result in calculation error
             // Ex: In timestamp sequence, Buy 100 at 20,00, Sell 100 at 21,00, Buy 100 at 30,00
@@ -2564,6 +2577,7 @@ public abstract class BaseFragment extends Fragment {
 
             do {
                 currentType = STQueryCursor.getInt(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TYPE));
+                cnpj =  STQueryCursor.getString(STQueryCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_CNPJ));
                 // Does correct operation to values depending on Transaction type
                 switch (currentType){
                     case Constants.Type.BUY:
@@ -2580,6 +2594,7 @@ public abstract class BaseFragment extends Fragment {
             ContentValues fundDataCV = new ContentValues();
 
             fundDataCV.put(PortfolioContract.FundData.COLUMN_SYMBOL, symbol);
+            fundDataCV.put(PortfolioContract.FundData.COLUMN_CNPJ, cnpj);
 
             selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ? ";
 
@@ -2656,6 +2671,9 @@ public abstract class BaseFragment extends Fragment {
                     fundDataCV, updateSelection, updatedSelectionArguments);
             // Log update success/fail result
             if (updatedRows > 0){
+                FundReceiver fundReceiver = new FundReceiver(mContext);
+                fundReceiver.updateFundPortfolio();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FUND));
                 return true;
             } else {
                 return false;

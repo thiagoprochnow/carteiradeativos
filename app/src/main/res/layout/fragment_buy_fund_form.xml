@@ -22,7 +22,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/fund_symbol_hint"
-            android:maxLength="20"/>
+            android:maxLength="100"/>
+
+        <TextView
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/fund_cnpj"/>
+
+        <EditText
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/inputCnpj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fund_cnpj_hint"
+            android:inputType="number"
+            android:maxLength="30"/>
 
         <TextView
             android:fontFamily="sans-serif-light"

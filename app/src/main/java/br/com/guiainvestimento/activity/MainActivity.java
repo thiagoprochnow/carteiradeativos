@@ -46,6 +46,7 @@ import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
 import br.com.guiainvestimento.fragment.PortfolioMainFragment;
 import br.com.guiainvestimento.fragment.fixedincome.FixedTabFragment;
+import br.com.guiainvestimento.fragment.fund.FundTabFragment;
 import br.com.guiainvestimento.fragment.others.OthersTabFragment;
 import br.com.guiainvestimento.fragment.stock.StockTabFragment;
 import br.com.guiainvestimento.fragment.treasury.TreasuryTabFragment;
@@ -58,6 +59,7 @@ import br.com.guiainvestimento.purchaseutil.Purchase;
 import br.com.guiainvestimento.receiver.CurrencyReceiver;
 import br.com.guiainvestimento.receiver.FiiReceiver;
 import br.com.guiainvestimento.receiver.FixedReceiver;
+import br.com.guiainvestimento.receiver.FundReceiver;
 import br.com.guiainvestimento.receiver.OthersReceiver;
 import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import br.com.guiainvestimento.receiver.StockReceiver;
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     boolean mCurrencyReceiver = false;
     boolean mTreasuryReceiver = false;
     boolean mFixedReceiver = false;
+    boolean mFundReceiver = false;
     private boolean mIsPremium = true;
     private String mPremiumType = "";
 
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverStock = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mFiiReceiver && mTreasuryReceiver && mFixedReceiver) {
+                if (mCurrencyReceiver && mFiiReceiver && mTreasuryReceiver && mFixedReceiver && mFundReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    mFundReceiver = false;
                     updatePortfolios();
                 } else {
                     // Sets StockReceiver flag
@@ -147,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverFii = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver) {
+                if (mCurrencyReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver && mFundReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -156,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    mFundReceiver = false;
                     updatePortfolios();
                 } else {
                     // Sets StockReceiver flag
@@ -168,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverCurrency = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mFiiReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver) {
+                if (mFiiReceiver && mStockReceiver && mTreasuryReceiver && mFixedReceiver && mFundReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -177,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    mFundReceiver = false;
                     updatePortfolios();
                 } else {
                     // Sets StockReceiver flag
@@ -189,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         BroadcastReceiver receiverTreasury = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver && mFixedReceiver) {
+                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver && mFixedReceiver && mFundReceiver) {
                     // Ends progress bar on menu when portfolio is updated
                     mMenu.findItem(R.id.menu_refresh).setActionView(null);
                     // Reset receiver flags
@@ -198,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    mFundReceiver = false;
                     updatePortfolios();
                 } else {
                     // Sets StockReceiver flag
@@ -219,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                     mStockReceiver = false;
                     mTreasuryReceiver = false;
                     mFixedReceiver = false;
+                    mFundReceiver = false;
                     updatePortfolios();
                 } else {
                     // Sets StockReceiver flag
@@ -227,6 +235,28 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             }
         };
         LocalBroadcastManager.getInstance(this).registerReceiver(receiverFixed, new IntentFilter(Constants.Receiver.FIXED));
+
+        BroadcastReceiver receiverFund = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mCurrencyReceiver && mStockReceiver && mFiiReceiver && mTreasuryReceiver && mFixedReceiver) {
+                    // Ends progress bar on menu when portfolio is updated
+                    mMenu.findItem(R.id.menu_refresh).setActionView(null);
+                    // Reset receiver flags
+                    mCurrencyReceiver = false;
+                    mFiiReceiver = false;
+                    mStockReceiver = false;
+                    mTreasuryReceiver = false;
+                    mFixedReceiver = false;
+                    mFundReceiver = false;
+                    updatePortfolios();
+                } else {
+                    // Sets StockReceiver flag
+                    mFundReceiver = true;
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiverFund, new IntentFilter(Constants.Receiver.FUND));
     }
 
     protected void updatePortfolios(){
@@ -238,6 +268,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
 
         FixedReceiver fixedReceiver = new FixedReceiver(context);
         fixedReceiver.updateFixedPortfolio();
+
+        FundReceiver fundReceiver = new FundReceiver(context);
+        fundReceiver.updateFundPortfolio();
 
         OthersReceiver othersReceiver = new OthersReceiver(context);
         othersReceiver.updateOthersPortfolio();
@@ -342,6 +375,15 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_fixed_income:
                 setTitle(R.string.title_fixed);
                 replaceFragment(new FixedTabFragment());
+                break;
+            case R.id.nav_item_fund:
+                if(isPremium()) {
+                    setTitle(R.string.title_fund);
+                    replaceFragment(new FundTabFragment());
+                } else {
+                    setTitle(R.string.title_premium_edition);
+                    replaceFragment(new PremiumEditionFragment());
+                }
                 break;
             case R.id.nav_item_stocks:
                 setTitle(R.string.title_stocks);
@@ -463,6 +505,14 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 }
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FUND:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FUND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
+                if(symbol != null && !symbol.isEmpty()){
+                    intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                }
+                startActivity(intent);
+                break;
             case Constants.ProductType.TREASURY:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.BUY);
@@ -512,6 +562,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FUND:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FUND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
             case Constants.ProductType.TREASURY:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.SELL);
@@ -557,6 +613,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
                 startActivity(intent);
                 break;
+            case Constants.ProductType.FUND:
+                // Sends symbol of clicked stock to details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FUND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, itemId);
+                startActivity(intent);
+                break;
             case Constants.ProductType.TREASURY:
                 // Sends symbol of clicked stock to details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.TREASURY);
@@ -598,6 +660,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 break;
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FUND:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FUND);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_SYMBOL, symbol);
                 startActivity(intent);
@@ -721,6 +789,24 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FIXED));
         }
 
+        // Fund Refresh
+
+        String[] affectedColumn6 = {PortfolioContract.FixedData.COLUMN_SYMBOL};
+        String selection6 = PortfolioContract.FixedData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments6 = {String.valueOf(Constants.Status.ACTIVE)};
+
+        queryCursor = this.getContentResolver().query(
+                PortfolioContract.FundData.URI, affectedColumn6,
+                selection6, selectionArguments6, null);
+
+        // For each symbol found on StockData, add to service make webservice query and update
+        if (queryCursor.getCount() > 0) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FUND));
+        } else{
+            // Clear menu progressbar so it is not set indefinitely
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FUND));
+        }
+
         //Currency Refresh
 
         String[] affectedColumn3 = {PortfolioContract.CurrencyData.COLUMN_SYMBOL};
@@ -840,6 +926,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
                 startActivity(intent);
                 break;
+            case Constants.IncomeType.FUND:
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FUND);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
             case Constants.IncomeType.TREASURY:
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.TREASURY);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_INCOME);
@@ -880,6 +972,12 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case Constants.IncomeType.FIXED:
                 // Sends id of clicked income to income details acitivity
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.IncomeType.FUND:
+                // Sends id of clicked income to income details acitivity
+                intent.putExtra(Constants.Extra.EXTRA_INCOME_TYPE, Constants.IncomeType.FUND);
                 intent.putExtra(Constants.Extra.EXTRA_INCOME_ID, id);
                 startActivity(intent);
                 break;

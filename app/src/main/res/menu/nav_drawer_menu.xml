@@ -39,6 +39,12 @@
             android:checked="false"
             android:title="@string/title_currency"/>
 
+        <!-- Funds Item Menu -->
+        <item
+            android:id="@+id/nav_item_fund"
+            android:checked="false"
+            android:title="@string/title_fund"/>
+
         <!-- Others Item Menu -->
         <item
             android:id="@+id/nav_item_others"

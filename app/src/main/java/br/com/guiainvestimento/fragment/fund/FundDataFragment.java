@@ -72,8 +72,8 @@ public class FundDataFragment extends BaseFragment implements
         // when a new item was inserted, then we had last view and the one before with altered bottom margin
         mFundDataAdapter = new FundDataAdapter(mContext, this);
         mRecyclerView.setAdapter(mFundDataAdapter);
-        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.FIXED_DATA, null, this);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FIXED_DATA, null, this);
+        getActivity().getSupportLoaderManager().restartLoader(Constants.Loaders.FUND_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FUND_DATA, null, this);
     }
 
     @Override
@@ -92,13 +92,13 @@ public class FundDataFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.FIXED, "");
+                mFormProductListener.onBuyProduct(Constants.ProductType.FUND, "");
             }
         });
         mFundDataAdapter = new FundDataAdapter(mContext, this);
         mRecyclerView.setAdapter(mFundDataAdapter);
         registerForContextMenu(mRecyclerView);
-        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FIXED_DATA, null, this);
+        getActivity().getSupportLoaderManager().initLoader(Constants.Loaders.FUND_DATA, null, this);
         // Inflate the layout for this fragment
         return view;
     }
@@ -108,18 +108,18 @@ public class FundDataFragment extends BaseFragment implements
         switch (id){
             case Constants.AdapterClickable.MAIN:
                 // Launch details activity for clicked fund income
-                mFormProductListener.onProductDetails(Constants.ProductType.FIXED, symbol);
+                mFormProductListener.onProductDetails(Constants.ProductType.FUND, symbol);
                 break;
             case Constants.AdapterClickable.ADD:
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onBuyProduct(Constants.ProductType.FIXED, symbol);
+                mFormProductListener.onBuyProduct(Constants.ProductType.FUND, symbol);
                 break;
             case Constants.AdapterClickable.EDIT:
-                mFormProductListener.onEditProduct(Constants.ProductType.FIXED, symbol);
+                mFormProductListener.onEditProduct(Constants.ProductType.FUND, symbol);
                 break;
             case Constants.AdapterClickable.SELL:
                 // This will call the FormActivity with the correct form fragment
-                mFormProductListener.onSellProduct(Constants.ProductType.FIXED, symbol);
+                mFormProductListener.onSellProduct(Constants.ProductType.FUND, symbol);
                 break;
             case Constants.AdapterClickable.DELETE:
                 // Show Dialog for user confirmation to delete Fund incom from database
@@ -151,7 +151,7 @@ public class FundDataFragment extends BaseFragment implements
         // Will use the table of fund income symbols as cursor. FundTransaction values will be handled at FundDataAdapter.
         String selection = PortfolioContract.FundData.COLUMN_STATUS + " = ?";
         String[] selectionArgs = {String.valueOf(Constants.Status.ACTIVE)};
-        // FIXED_SOLD_LOADER for sold fund income tab
+        // FUND_SOLD_LOADER for sold fund income tab
         return new CursorLoader(mContext,
                 PortfolioContract.FundData.URI,
                 PortfolioContract.FundData.FUND_DATA_COLUMNS,

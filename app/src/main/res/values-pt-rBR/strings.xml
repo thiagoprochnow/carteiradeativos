@@ -73,6 +73,7 @@
     <string name="wrong_fii_code">Código do fundo imobiliario inválido</string>
     <string name="wrong_fixed_code">Nomenclatura de renda fixa errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_fund_code">Nomenclatura do fundo de investimento errada. Por favor digite apenas letras e números.</string>
+    <string name="wrong_fund_cnpj">CNPJ do fundo de investimento errada. Use Ex: 12.345.678/9031-23</string>
     <string name="wrong_others_code">Nomenclatura do investimento errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_treasury_code">Nomenclatura do papel errada. Por favor digite apenas letras e números.</string>
     <string name="wrong_currency_code">Código de moeda inválido</string>
@@ -450,7 +451,9 @@
     <string name="cancel_fund_button">Cancelar</string>
     <string name="fund_type">Tipo de Fundo de Investimento</string>
     <string name="fund_symbol">Nomenclatura para seu Fundo de Investimento</string>
+    <string name="fund_cnpj">CNPJ do seu Fundo de Investimento</string>
     <string name="fund_symbol_hint">Ex: Fundo Banco 123</string>
+    <string name="fund_cnpj_hint">Ex: 12.345.678/9031-23</string>
     <string name="fund_buy_value">Valor total comprado</string>
     <string name="fund_type_label">Indexador</string>
     <string name="fund_sell_value">Valor total vendido</string>

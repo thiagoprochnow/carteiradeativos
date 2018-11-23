@@ -1040,7 +1040,7 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 if(_id > 0) {
                     returnUri = PortfolioContract.FundTransaction.buildTransactionUri(_id);
-                    getContext().getContentResolver().notifyChange(PortfolioContract.FundData.URI, null);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.FundTransaction.URI, null);
                 }else{
                     throw new UnsupportedOperationException("Unknown URI:" + uri);
                 }

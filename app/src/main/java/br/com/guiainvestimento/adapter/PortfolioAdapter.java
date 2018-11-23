@@ -185,6 +185,8 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_TREASURY_PERCENT));
                 float fixedEntry = mCursor.getFloat(
                         mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_FIXED_PERCENT));
+                float fundEntry = mCursor.getFloat(
+                        mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_FUND_PERCENT));
                 float stockEntry = mCursor.getFloat(
                         mCursor.getColumnIndex(PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT));
                 float fiiEntry = mCursor.getFloat(
@@ -200,6 +202,9 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 if (fixedEntry > 0) {
                     entries.add(new PieEntry(fixedEntry, mContext.getResources().getString(R.string.title_fixed)));
+                }
+                if (fundEntry > 0) {
+                    entries.add(new PieEntry(fundEntry, mContext.getResources().getString(R.string.title_fund)));
                 }
 
                 if (stockEntry > 0) {
@@ -218,7 +223,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     entries.add(new PieEntry(othersEntry, mContext.getResources().getString(R.string.title_others)));
                 }
 
-                if(treasuryEntry == 0 && fixedEntry == 0 && stockEntry == 0 && fiiEntry == 0 && currencyEntry == 0 && othersEntry == 0){
+                if(treasuryEntry == 0 && fixedEntry == 0 && fundEntry == 0 && stockEntry == 0 && fiiEntry == 0 && currencyEntry == 0 && othersEntry == 0){
                     piechartHolder.pieChart.setVisibility(View.GONE);
                     piechartHolder.piechartCardview.setVisibility(View.GONE);
                     piechartHolder.piechartHeader.setVisibility(View.GONE);
@@ -599,6 +604,28 @@ public class PortfolioAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             do{
                 buyGain -= fixedSellsCursor.getDouble(fixedSellsCursor.getColumnIndex(PortfolioContract.FixedTransaction.COLUMN_TOTAL));
             } while (fixedSellsCursor.moveToNext());
+        }
+
+        // Fund
+        selection = PortfolioContract.FundTransaction.COLUMN_TIMESTAMP + " >= ? AND " + PortfolioContract.FundTransaction.COLUMN_TIMESTAMP + " < ? AND "
+                + PortfolioContract.FundTransaction.COLUMN_TYPE + " = ?";
+
+        Cursor fundBuysCursor =  mContext.getContentResolver().query(PortfolioContract.FundTransaction.URI,
+                null, selection, selectionArguments, null);
+
+        Cursor fundSellsCursor =  mContext.getContentResolver().query(PortfolioContract.FundTransaction.URI,
+                null, selection, selectionArguments2, null);
+
+        if(fundBuysCursor.moveToFirst()){
+            do{
+                buyGain += fundBuysCursor.getDouble(fundBuysCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+            } while (fundBuysCursor.moveToNext());
+        }
+
+        if(fundSellsCursor.moveToFirst()){
+            do{
+                buyGain -= fundSellsCursor.getDouble(fundSellsCursor.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+            } while (fundSellsCursor.moveToNext());
         }
 
         //Stock

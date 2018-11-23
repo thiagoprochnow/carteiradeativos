@@ -23,6 +23,7 @@ import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.fragment.currency.CurrencyDetailsFragment;
 import br.com.guiainvestimento.fragment.fii.FiiTabFragment;
 import br.com.guiainvestimento.fragment.fixedincome.FixedDetailsFragment;
+import br.com.guiainvestimento.fragment.fund.FundDetailsFragment;
 import br.com.guiainvestimento.fragment.others.OthersTabFragment;
 import br.com.guiainvestimento.fragment.stock.StockTabFragment;
 import br.com.guiainvestimento.fragment.treasury.TreasuryTabFragment;
@@ -69,6 +70,10 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                     break;
                 case Constants.ProductType.FIXED:
                     replaceFragment(new FixedDetailsFragment());
+                    fab.setVisibility(View.GONE);
+                    break;
+                case Constants.ProductType.FUND:
+                    replaceFragment(new FundDetailsFragment());
                     fab.setVisibility(View.GONE);
                     break;
                 case Constants.ProductType.CURRENCY:
@@ -338,6 +343,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements IncomeD
                 break;
             case Constants.ProductType.FIXED:
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FIXED);
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
+                intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
+                startActivity(intent);
+                break;
+            case Constants.ProductType.FUND:
+                intent.putExtra(Constants.Extra.EXTRA_PRODUCT_TYPE, Constants.ProductType.FUND);
                 intent.putExtra(Constants.Extra.EXTRA_PRODUCT_STATUS, Constants.Type.EDIT_TRANSACION);
                 intent.putExtra(Constants.Extra.EXTRA_TRANSACTION_ID, id);
                 startActivity(intent);

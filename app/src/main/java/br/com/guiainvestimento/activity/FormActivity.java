@@ -23,6 +23,10 @@ import br.com.guiainvestimento.fragment.fixedincome.BuyFixedFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.EditFixedFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.EditFixedTransactionFormFragment;
 import br.com.guiainvestimento.fragment.fixedincome.SellFixedFormFragment;
+import br.com.guiainvestimento.fragment.fund.BuyFundFormFragment;
+import br.com.guiainvestimento.fragment.fund.EditFundFormFragment;
+import br.com.guiainvestimento.fragment.fund.EditFundTransactionFormFragment;
+import br.com.guiainvestimento.fragment.fund.SellFundFormFragment;
 import br.com.guiainvestimento.fragment.others.BuyOthersFormFragment;
 import br.com.guiainvestimento.fragment.others.EditOthersFormFragment;
 import br.com.guiainvestimento.fragment.others.EditOthersIncomeFormFragment;
@@ -82,6 +86,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FIXED:
                         replaceFragment(new BuyFixedFormFragment());
                         break;
+                    case Constants.ProductType.FUND:
+                        replaceFragment(new BuyFundFormFragment());
+                        break;
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new BuyTreasuryFormFragment());
                         break;
@@ -105,6 +112,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.FIXED:
                         replaceFragment(new SellFixedFormFragment());
+                        break;
+                    case Constants.ProductType.FUND:
+                        replaceFragment(new SellFundFormFragment());
                         break;
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new SellTreasuryFormFragment());
@@ -130,6 +140,9 @@ public class FormActivity extends AppCompatActivity {
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedFormFragment());
                         break;
+                    case Constants.ProductType.FUND:
+                        replaceFragment(new EditFundFormFragment());
+                        break;
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new EditTreasuryFormFragment());
                         break;
@@ -153,6 +166,9 @@ public class FormActivity extends AppCompatActivity {
                         break;
                     case Constants.ProductType.FIXED:
                         replaceFragment(new EditFixedTransactionFormFragment());
+                        break;
+                    case Constants.ProductType.FUND:
+                        replaceFragment(new EditFundTransactionFormFragment());
                         break;
                     case Constants.ProductType.TREASURY:
                         replaceFragment(new EditTreasuryTransactionFormFragment());

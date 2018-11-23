@@ -77,6 +77,29 @@ public class PortfolioReceiver {
 
         fixedPortfolioCursor.close();
 
+        // Fund
+        Cursor fundPortfolioCursor = getFundPortfolio();
+
+        double fundBuy = 0;
+        double fundSold = 0;
+        double fundCurrent = 0;
+        double fundVariation = 0;
+        double fundIncome = 0;
+        double fundGain = 0;
+
+        if (fundPortfolioCursor.getCount() > 0) {
+            fundPortfolioCursor.moveToFirst();
+            fundBuy = fundPortfolioCursor.getDouble(0);
+            fundSold = fundPortfolioCursor.getDouble(1);
+            fundCurrent = fundPortfolioCursor.getDouble(2);
+            fundVariation = fundPortfolioCursor.getDouble(3);
+            fundIncome = fundPortfolioCursor.getDouble(4);
+            fundGain = fundPortfolioCursor.getDouble(5);
+        } else {
+        }
+
+        fundPortfolioCursor.close();
+
         // Others
         Cursor othersPortfolioCursor = getOthersPortfolio();
 
@@ -172,15 +195,16 @@ public class PortfolioReceiver {
         currencyPortfolioCursor.close();
 
         // Sums all portfolio to get main portfolio
-        double portfolioBuy = treasuryBuy + fixedBuy + stockBuy + fiiBuy + currencyBuy + othersBuy;
-        double portfolioSold = treasurySold + fixedSold + stockSold + fiiSold + currencySold + othersSold;
-        double portfolioCurrent = treasuryCurrent + fixedCurrent + stockCurrent + fiiCurrent + currencyCurrent + othersCurrent;
-        double portfolioVariation = treasuryVariation + fixedVariation + stockVariation + fiiVariation + currencyVariation + othersVariation;
-        double portfolioIncome = treasuryIncome + fixedIncome + stockIncome + fiiIncome + othersIncome;
+        double portfolioBuy = treasuryBuy + fixedBuy + fundBuy + stockBuy + fiiBuy + currencyBuy + othersBuy;
+        double portfolioSold = treasurySold + fixedSold + fundSold + stockSold + fiiSold + currencySold + othersSold;
+        double portfolioCurrent = treasuryCurrent + fixedCurrent + fundCurrent + stockCurrent + fiiCurrent + currencyCurrent + othersCurrent;
+        double portfolioVariation = treasuryVariation + fixedVariation + fundVariation + stockVariation + fiiVariation + currencyVariation + othersVariation;
+        double portfolioIncome = treasuryIncome + fixedIncome + fundIncome + stockIncome + fiiIncome + othersIncome;
         double portfolioBrokerage = stockBrokerage + fiiBrokerage;
-        double portfolioGain =  treasuryGain + fixedGain + stockGain + fiiGain + currencyGain + othersGain;
+        double portfolioGain =  treasuryGain + fixedGain + fundGain + stockGain + fiiGain + currencyGain + othersGain;
         double treasuryPercent = treasuryCurrent/portfolioCurrent*100;
         double fixedPercent = fixedCurrent/portfolioCurrent*100;
+        double fundPercent = fundCurrent/portfolioCurrent*100;
         double stockPercent = stockCurrent/portfolioCurrent*100;
         double fiiPercent = fiiCurrent/portfolioCurrent*100;
         double currencyPercent = currencyCurrent/portfolioCurrent*100;
@@ -197,6 +221,7 @@ public class PortfolioReceiver {
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TOTAL_GAIN, portfolioGain);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_TREASURY_PERCENT, treasuryPercent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FIXED_PERCENT, fixedPercent);
+        portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FUND_PERCENT, fundPercent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_STOCK_PERCENT, stockPercent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_FII_PERCENT, fiiPercent);
         portfolioCV.put(PortfolioContract.Portfolio.COLUMN_CURRENCY_PERCENT, currencyPercent);
@@ -225,8 +250,8 @@ public class PortfolioReceiver {
         }
 
         try {
-            updatePortfolioGrowth(portfolioCurrent, treasuryCurrent, fixedCurrent, stockCurrent, fiiCurrent, currencyCurrent, othersCurrent);
-            updateBuyGrowth(portfolioBuy, treasuryBuy, fixedBuy, stockBuy, fiiBuy, currencyBuy, othersBuy);
+            updatePortfolioGrowth(portfolioCurrent, treasuryCurrent, fixedCurrent, fundCurrent, stockCurrent, fiiCurrent, currencyCurrent, othersCurrent);
+            updateBuyGrowth(portfolioBuy, treasuryBuy, fixedBuy, fundBuy, stockBuy, fiiBuy, currencyBuy, othersBuy);
         } catch (SQLException e){
             Log.e(LOG_TAG, e.toString());
         }
@@ -234,7 +259,7 @@ public class PortfolioReceiver {
 
     // Function to update Portfolio, Stock, Fii... Growth values, this values will be used to make the Growth graph for each investment.
     // Only one value will be saved per month, so if the refresh was done in same month as already existing value, this new one will overwrite old value until a new month is done refresh.
-    public void updatePortfolioGrowth(double portfolioCurrent, double treasuryCurrent, double fixedCurrent, double stockCurrent, double fiiCurrent, double currencyCurrent, double othersCurrent){
+    public void updatePortfolioGrowth(double portfolioCurrent, double treasuryCurrent, double fixedCurrent, double fundCurrent , double stockCurrent, double fiiCurrent, double currencyCurrent, double othersCurrent){
         Calendar calendar = Calendar.getInstance();
         long timestamp = calendar.getTimeInMillis();
         int currentYear = calendar.get(Calendar.YEAR);
@@ -320,6 +345,32 @@ public class PortfolioReceiver {
             // Create and insert
             mContext.getContentResolver().insert(PortfolioContract.PortfolioGrowth.URI,
                     fixedCV);
+        }
+
+        // Fund Growth
+        ContentValues fundCV = new ContentValues();
+        fundCV.put(PortfolioContract.PortfolioGrowth.COLUMN_TOTAL, fixedCurrent);
+        fundCV.put(PortfolioContract.PortfolioGrowth.COLUMN_TYPE, Constants.ProductType.FUND);
+        fundCV.put(PortfolioContract.PortfolioGrowth.COLUMN_TIMESTAMP, timestamp);
+        fundCV.put(PortfolioContract.PortfolioGrowth.MONTH, currentMonth);
+        fundCV.put(PortfolioContract.PortfolioGrowth.YEAR, currentYear);
+
+        String[] fundArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.FUND)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor fundQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.PortfolioGrowth.URI, null,
+                selection, fundArguments, null);
+
+        if(fundQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.PortfolioGrowth.URI,
+                    fundCV, selection, fundArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.PortfolioGrowth.URI,
+                    fundCV);
         }
 
         // Stock Growth
@@ -429,7 +480,7 @@ public class PortfolioReceiver {
 
     // Function to update Portfolio, Stock, Fii... Buy Growth values, this values will be used to make the Buy Growth graph for each investment.
     // Only one value will be saved per month, so if the refresh was done in same month as already existing value, this new one will overwrite old value until a new month is done refresh.
-    public void updateBuyGrowth(double portfolioBuy, double treasuryBuy, double fixedBuy, double stockBuy, double fiiBuy, double currencyBuy, double othersBuy){
+    public void updateBuyGrowth(double portfolioBuy, double treasuryBuy, double fixedBuy, double fundBuy, double stockBuy, double fiiBuy, double currencyBuy, double othersBuy){
         Calendar calendar = Calendar.getInstance();
         long timestamp = calendar.getTimeInMillis();
         int currentYear = calendar.get(Calendar.YEAR);
@@ -515,6 +566,32 @@ public class PortfolioReceiver {
             // Create and insert
             mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
                     fixedCV);
+        }
+
+        // Fund Growth
+        ContentValues fundCV = new ContentValues();
+        fundCV.put(PortfolioContract.BuyGrowth.COLUMN_TOTAL, fundBuy);
+        fundCV.put(PortfolioContract.BuyGrowth.COLUMN_TYPE, Constants.ProductType.FUND);
+        fundCV.put(PortfolioContract.BuyGrowth.COLUMN_TIMESTAMP, timestamp);
+        fundCV.put(PortfolioContract.BuyGrowth.MONTH, currentMonth);
+        fundCV.put(PortfolioContract.BuyGrowth.YEAR, currentYear);
+
+        String[] fundArguments = {String.valueOf(currentMonth), String.valueOf(currentYear), String.valueOf(Constants.ProductType.FUND)};
+
+        // Query for the only portfolio groth for this month and year, if dosent exist, creates one
+        Cursor fundQueryCursor = mContext.getContentResolver().query(
+                PortfolioContract.BuyGrowth.URI, null,
+                selection, fundArguments, null);
+
+        if(fundQueryCursor.getCount() > 0){
+            // Update
+            mContext.getContentResolver().update(
+                    PortfolioContract.BuyGrowth.URI,
+                    fundCV, selection, fundArguments);
+        } else {
+            // Create and insert
+            mContext.getContentResolver().insert(PortfolioContract.BuyGrowth.URI,
+                    fundCV);
         }
 
         // Stock Growth
@@ -647,6 +724,20 @@ public class PortfolioReceiver {
 
         return mContext.getContentResolver().query(
                 PortfolioContract.FixedPortfolio.URI,
+                affectedColumn, null, null, null);
+    }
+
+    // Return useful value to update portfolio table
+    public Cursor getFundPortfolio(){
+        String[] affectedColumn = {"sum("+ PortfolioContract.FundPortfolio.COLUMN_BUY_TOTAL+")",
+                "sum("+ PortfolioContract.FundPortfolio.COLUMN_SOLD_TOTAL+")",
+                "sum("+ PortfolioContract.FundPortfolio.COLUMN_CURRENT_TOTAL+")",
+                "sum("+ PortfolioContract.FundPortfolio.COLUMN_TOTAL_GAIN+")",
+                "sum("+ PortfolioContract.FundPortfolio.COLUMN_INCOME_TOTAL+")",
+                "sum("+ PortfolioContract.FundPortfolio.COLUMN_TOTAL_GAIN+")"};
+
+        return mContext.getContentResolver().query(
+                PortfolioContract.FundPortfolio.URI,
                 affectedColumn, null, null, null);
     }
 
