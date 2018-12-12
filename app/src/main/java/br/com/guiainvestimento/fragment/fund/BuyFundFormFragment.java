@@ -6,22 +6,23 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.FundNameService;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.BaseFormFragment;
@@ -33,10 +34,14 @@ public class BuyFundFormFragment extends BaseFormFragment {
     private static final String LOG_TAG = BuyFundFormFragment.class.getSimpleName();
     private View mView;
 
-    private EditText mInputSymbolView;
-    private EditText mInputCnpjView;
+    private AutoCompleteTextView mInputSymbolView;
+    private AutoCompleteTextView mInputCnpjView;
     private EditText mInputBuyTotalView;
     private EditText mInputDateView;
+    private boolean buscou = false;
+    //gets remote data asynchronously and adds it to AutoCompleteTextView
+    FundNameService remoteData = new FundNameService(mContext);
+    TextWatcher mask;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,12 +61,18 @@ public class BuyFundFormFragment extends BaseFormFragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_buy_fund_form, container, false);
         getActivity().setTitle(R.string.form_title_buy);
-        mInputSymbolView = (EditText) mView.findViewById(R.id.inputSymbol);
-        mInputCnpjView = (EditText) mView.findViewById(R.id.inputCnpj);
+        mInputSymbolView = (AutoCompleteTextView) mView.findViewById(R.id.inputSymbol);
+        mInputCnpjView = (AutoCompleteTextView) mView.findViewById(R.id.inputCnpj);
         mInputBuyTotalView = (EditText) mView.findViewById(R.id.inputBuyTotal);
         mInputDateView = (EditText) mView.findViewById(R.id.inputBuyDate);
 
-        mInputCnpjView.addTextChangedListener(MaskEditUtil.mask(mInputCnpjView, "##.###.###/####-##"));
+        mask = MaskEditUtil.mask(mInputCnpjView, "##.###.###/####-##");
+
+        mInputCnpjView.addTextChangedListener(mask);
+
+        mInputSymbolView.addTextChangedListener(onTextChangedListener);
+
+        mInputSymbolView.setOnItemClickListener(onItemClickListener);
 
         // Gets symbol received from selected CardView on intent
         Intent intent = getActivity().getIntent();
@@ -165,4 +176,47 @@ public class BuyFundFormFragment extends BaseFormFragment {
         }
         return value;
     }
+
+    private AdapterView.OnItemClickListener onItemClickListener =
+            new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    String item = adapterView.getItemAtPosition(i).toString();
+                    String nome = item.substring(0, item.length() - 27);
+                    String cnpj = item.substring(item.length() - 19, item.length() - 1);
+
+                    mInputSymbolView.setText(nome);
+                    mInputCnpjView.removeTextChangedListener(mask);
+                    mInputCnpjView.setText(cnpj);
+                    mInputCnpjView.addTextChangedListener(mask);
+
+                    Toast.makeText(getContext(),cnpj,Toast.LENGTH_LONG).show();
+                }
+            };
+
+    private TextWatcher onTextChangedListener =
+            new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    String text = mInputSymbolView.getText().toString();
+                    if(text.length() >= 3 && !buscou) {
+                        buscou = true;
+                        remoteData = new FundNameService(mContext);
+                        remoteData.getFundData(text);
+                    } else if(text.length() < 3){
+                        buscou = false;
+                    }
+                }
+            };
 }

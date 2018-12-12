@@ -25,7 +25,8 @@ public abstract class MaskEditUtil {
             String old = "";
 
             @Override
-            public void afterTextChanged(final Editable s) {}
+            public void afterTextChanged(final Editable s) {
+            }
 
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {}

@@ -16,13 +16,13 @@
             android:layout_height="wrap_content"
             android:text="@string/fund_symbol"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/fund_symbol_hint"
-            android:maxLength="100"/>
+            android:maxLength="150"/>
 
         <TextView
             android:fontFamily="sans-serif-light"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="@string/fund_cnpj"/>
 
-        <EditText
+        <AutoCompleteTextView
             android:fontFamily="sans-serif-light"
             android:id="@+id/inputCnpj"
             android:layout_width="match_parent"

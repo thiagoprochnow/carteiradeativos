@@ -452,7 +452,7 @@
     <string name="fund_type">Type of the fund</string>
     <string name="fund_symbol">Type the label of the fund</string>
     <string name="fund_cnpj">Type the CNPJ of the fund</string>
-    <string name="fund_symbol_hint">Ex: Fundo Banco 123</string>
+    <string name="fund_symbol_hint">Type 4 characters for name search</string>
     <string name="fund_cnpj_hint">Ex: 12.345.678/9031-23</string>
     <string name="fund_buy_value">Buy total value</string>
     <string name="fund_type_label">Type</string>
