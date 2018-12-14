@@ -26,6 +26,7 @@ import java.util.List;
 import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
+import br.com.guiainvestimento.domain.Fund;
 import br.com.guiainvestimento.domain.FundQuote;
 import br.com.guiainvestimento.domain.Income;
 import br.com.guiainvestimento.receiver.FundReceiver;
@@ -178,13 +179,19 @@ public class FundQuoteIntentService extends IntentService {
                                     fundQuoteCV);
                         }
                     }
-                    double currentTotal = getFundDataTotal(cnpj);
+                    List<Double> updatedFund = getFundData(cnpj);
+                    double currentTotal = updatedFund.get(0);
+                    double boughtTotal = updatedFund.get(1);
+                    double gainTotal = updatedFund.get(2);
 
                     // Update Total
 
                     ContentValues updateCV = new ContentValues();
 
                     updateCV.put(PortfolioContract.FundData.COLUMN_CURRENT_TOTAL, currentTotal);
+                    updateCV.put(PortfolioContract.FundData.COLUMN_BUY_VALUE_TOTAL, boughtTotal);
+                    updateCV.put(PortfolioContract.FundData.COLUMN_NET_GAIN, gainTotal);
+                    updateCV.put(PortfolioContract.FundData.COLUMN_TOTAL_GAIN, gainTotal);
                     updateCV.put(PortfolioContract.FundData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.UPDATED);
 
                     int updateQueryCursor = this.getContentResolver().update(
@@ -224,7 +231,7 @@ public class FundQuoteIntentService extends IntentService {
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
             //long timestamp = Long.parseLong(cursor.getString(0));
-            return String.valueOf(cursor.getString(0));
+            return cursor.getString(0);
         }
         return "1262131200";
     }
@@ -244,7 +251,7 @@ public class FundQuoteIntentService extends IntentService {
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
             //long timestamp = Long.parseLong(cursor.getString(0));
-            return String.valueOf(cursor.getString(0));
+            return cursor.getString(0);
         }
         return "0.00";
     }
@@ -254,7 +261,7 @@ public class FundQuoteIntentService extends IntentService {
         // Fund
         String[] affectedColumn = {PortfolioContract.FundQuotes.COLUMN_QUOTES};
         String sortOrder = PortfolioContract.FundQuotes.COLUMN_TIMESTAMP + " ASC LIMIT 1";
-        String selection = PortfolioContract.FundQuotes.COLUMN_CNPJ + " = ? AND " + PortfolioContract.FundQuotes.COLUMN_TIMESTAMP + " > ? ";
+        String selection = PortfolioContract.FundQuotes.COLUMN_CNPJ + " = ? AND " + PortfolioContract.FundQuotes.COLUMN_TIMESTAMP + " >= ? ";
         String[] selectionArguments = {cnpj,String.valueOf(timestamp)};
 
         Cursor cursor = getApplicationContext().getContentResolver().query(
@@ -264,31 +271,35 @@ public class FundQuoteIntentService extends IntentService {
         if (cursor.getCount() > 0){
             cursor.moveToFirst();
             //long timestamp = Long.parseLong(cursor.getString(0));
-            return String.valueOf(cursor.getString(0));
+            return cursor.getString(0);
         }
         return "0.00";
     }
 
     // Update each Fund Transcation with current total by using the FundQuote tables to get gain rate from bought date to latest date
-    private double getFundDataTotal(String cnpj){
+    private List<Double> getFundData(String cnpj){
         String latestQuote = getLatestFundQuote(cnpj);
-        latestQuote = latestQuote.replace(".","");
         double currentTotal = 0.0;
+        double boughtTotal = 0.0;
+        double gainTotal = 0.0;
         Cursor fundTransaction = getFundTransactions(cnpj);
         // Go through every transaction to get total current value
         if(fundTransaction.getCount() > 0){
             fundTransaction.moveToFirst();
             do{
                 long boughtTimestamp = fundTransaction.getLong(fundTransaction.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TIMESTAMP));
-                double boughtTotal = fundTransaction.getDouble(fundTransaction.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
+                double bought = fundTransaction.getDouble(fundTransaction.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
                 String fundQuote = getFundQuote(cnpj,boughtTimestamp);
-                fundQuote = fundQuote.replace(".","");
-                double gainRate = (double) Long.valueOf(latestQuote)/Long.valueOf(fundQuote);
-                currentTotal += boughtTotal*gainRate;
+                double gainRate = (double) Double.valueOf(latestQuote)/Double.valueOf(fundQuote);
+                currentTotal += bought*gainRate;
+                boughtTotal += bought;
             } while (fundTransaction.moveToNext());
         }
 
-        return currentTotal;
+        gainTotal = currentTotal - boughtTotal;
+        List<Double> fund = Arrays.asList(currentTotal,boughtTotal,gainTotal);
+
+        return fund;
     }
 
     @Override
