@@ -118,6 +118,10 @@ public class PortfolioProvider extends ContentProvider {
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FUND_TRANSACTION, Constants.Provider.FUND_TRANSACTION);
         matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FUND_TRANSACTION_WITH_SYMBOL,
                 Constants.Provider.FUND_TRANSACTION_FOR_SYMBOL);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FUND_QUOTES,
+                Constants.Provider.FUND_QUOTES);
+        matcher.addURI(PortfolioContract.AUTHORITY, PortfolioContract.PATH_FUND_QUOTES_WITH_CNPJ,
+                Constants.Provider.FUND_QUOTES_FOR_CNPJ);
         return matcher;
     }
 
@@ -508,6 +512,31 @@ public class PortfolioProvider extends ContentProvider {
                         projection,
                         PortfolioContract.FundTransaction.COLUMN_SYMBOL + " = ?",
                         new String[]{PortfolioContract.FundTransaction.getFundTransactionFromUri(uri)},
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+
+            // Returns all fund information possessed by user
+            case Constants.Provider.FUND_QUOTES:
+                returnCursor = db.query(
+                        PortfolioContract.FundQuotes.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            // Returns all fund income information possessed by user for a specific stock symbol
+            case Constants.Provider.FUND_QUOTES_FOR_CNPJ:
+                returnCursor = db.query(
+                        PortfolioContract.FundQuotes.TABLE_NAME,
+                        projection,
+                        PortfolioContract.FundQuotes.COLUMN_CNPJ + " = ?",
+                        new String[]{PortfolioContract.FundQuotes.getFundQuotesFromUri(uri)},
                         null,
                         null,
                         sortOrder
@@ -1046,6 +1075,20 @@ public class PortfolioProvider extends ContentProvider {
                 }
                 break;
 
+            case Constants.Provider.FUND_QUOTES:
+                _id = db.insert(
+                        PortfolioContract.FundQuotes.TABLE_NAME,
+                        null,
+                        values
+                );
+                if(_id > 0) {
+                    returnUri = PortfolioContract.FundQuotes.buildQuotesUri(_id);
+                    getContext().getContentResolver().notifyChange(PortfolioContract.FundQuotes.URI, null);
+                }else{
+                    throw new UnsupportedOperationException("Unknown URI:" + uri);
+                }
+                break;
+
             case Constants.Provider.TREASURY_PORTFOLIO:
                 _id = db.insert(
                         PortfolioContract.TreasuryPortfolio.TABLE_NAME,
@@ -1396,6 +1439,24 @@ public class PortfolioProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         PortfolioContract.FundTransaction.TABLE_NAME,
                         '"' + symbol + '"' + " =" + PortfolioContract.FundTransaction.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
+            case Constants.Provider.FUND_QUOTES:
+                rowsDeleted = db.delete(
+                        PortfolioContract.FundQuotes.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+
+                break;
+
+            case Constants.Provider.FUND_QUOTES_FOR_CNPJ:
+                symbol = PortfolioContract.FundQuotes.getFundQuotesFromUri(uri);
+                rowsDeleted = db.delete(
+                        PortfolioContract.FundQuotes.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FundQuotes.COLUMN_CNPJ,
                         selectionArgs
                 );
                 break;
@@ -1981,6 +2042,25 @@ public class PortfolioProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         db.insert(
                                 PortfolioContract.FundTransaction.TABLE_NAME,
+                                null,
+                                value
+                        );
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+
+            case Constants.Provider.FUND_QUOTES:
+                db.beginTransaction();
+                returnCount = 0;
+                try {
+                    for (ContentValues value : values) {
+                        db.insert(
+                                PortfolioContract.FundQuotes.TABLE_NAME,
                                 null,
                                 value
                         );

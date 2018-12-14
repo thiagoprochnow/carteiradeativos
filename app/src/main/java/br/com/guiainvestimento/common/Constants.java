@@ -269,6 +269,10 @@ public final class Constants {
 
         public static final int FUND_TRANSACTION = 7400;
         public static final int FUND_TRANSACTION_FOR_SYMBOL = 7401;
+
+        public static final int FUND_QUOTES = 7500;
+        public static final int FUND_QUOTES_FOR_CNPJ = 7501;
+        public static final int FUND_QUOTES_BULK_UPDATE = 7502;
     }
 
     // List of Symbols to use as overall and autocomplete fields

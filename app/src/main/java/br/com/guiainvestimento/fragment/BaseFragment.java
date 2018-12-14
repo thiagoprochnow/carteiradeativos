@@ -27,10 +27,12 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.activity.MainActivity;
 import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIntentService;
+import br.com.guiainvestimento.api.service.FundQuoteIntentService;
 import br.com.guiainvestimento.api.service.StockIntentService;
 import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
@@ -305,7 +307,25 @@ public abstract class BaseFragment extends Fragment {
         int deletedData = getActivity().getContentResolver().delete(PortfolioContract.FundData
                 .makeUriForFundData(symbol), null, null);
 
-        if (deletedData > 0) {
+        // Get cnoj to delete quotes
+        String cnpj = "";
+        String[] affectedColumn = {PortfolioContract.FundData.COLUMN_CNPJ};
+        String selection = PortfolioContract.FundData.COLUMN_SYMBOL + " = ?";
+        String[] selectionArguments = {symbol};
+
+        Cursor queryCursor = mContext.getContentResolver().query(
+                PortfolioContract.FundData.URI, affectedColumn,
+                selection, selectionArguments, null);
+
+        if (queryCursor.getCount() > 0){
+            queryCursor.moveToFirst();
+            cnpj = queryCursor.getString(0);
+        }
+
+        int deletedQuotes = getActivity().getContentResolver().delete(PortfolioContract.FundQuotes
+                .makeUriForFundQuotes(cnpj), null, null);
+
+        if (deletedTransaction > 0 && deletedData > 0) {
             FundReceiver fundReceiver = new FundReceiver(mContext);
             fundReceiver.updateFundPortfolio();
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(Constants.Receiver.FUND));
@@ -977,9 +997,7 @@ public abstract class BaseFragment extends Fragment {
     // Validate if an EditText was set with valid Fund Symbol
     protected boolean isValidFundSymbol(EditText symbol) {
         Editable editable = symbol.getText();
-        // Regex Pattern for Fund income (Only letters and numbers)
-        Pattern pattern = Pattern.compile(".+");
-        if (!isEditTextEmpty(symbol) && pattern.matcher(editable.toString()).matches()) {
+        if (editable.toString().length() <= 150) {
             return true;
         } else {
             return false;
@@ -2645,10 +2663,11 @@ public abstract class BaseFragment extends Fragment {
             // Set fund income as active
             fundDataCV.put(PortfolioContract.FundData.COLUMN_STATUS, Constants.Status.ACTIVE);
 
-            /*Intent mServiceIntent = new Intent(mContext, FundIntentService
+            Intent mServiceIntent = new Intent(mContext, FundQuoteIntentService
                     .class);
-            mServiceIntent.putExtra(FundIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent);*/
+            mServiceIntent.putExtra(FundQuoteIntentService.ADD_CNPJ, cnpj);
+            mServiceIntent.putExtra(FundQuoteIntentService.PREMIUM, true);
+            getActivity().startService(mServiceIntent);
 
             // Searches for existing FundData to update value.
             // If dosent exists, creates new one

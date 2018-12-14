@@ -33,6 +33,7 @@ import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
 import br.com.guiainvestimento.api.service.FiiIncomeIntentService;
+import br.com.guiainvestimento.api.service.FundQuoteIntentService;
 import br.com.guiainvestimento.api.service.StockIncomeIntentService;
 import br.com.guiainvestimento.api.service.TreasuryIntentService;
 import br.com.guiainvestimento.common.Constants;
@@ -790,18 +791,31 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         // Fund Refresh
+        Intent mFundService = new Intent(this, FundQuoteIntentService.class);
 
-        String[] affectedColumn6 = {PortfolioContract.FixedData.COLUMN_SYMBOL};
-        String selection6 = PortfolioContract.FixedData.COLUMN_STATUS + " = ?";
-        String[] selectionArguments6 = {String.valueOf(Constants.Status.ACTIVE)};
+        String[] affectedColumn7 = {PortfolioContract.FundData.COLUMN_CNPJ};
+        String selection7 = PortfolioContract.FundData.COLUMN_STATUS + " = ?";
+        String[] selectionArguments7 = {String.valueOf(Constants.Status.ACTIVE)};
 
         queryCursor = this.getContentResolver().query(
-                PortfolioContract.FundData.URI, affectedColumn6,
-                selection6, selectionArguments6, null);
+                PortfolioContract.FundData.URI, affectedColumn7,
+                selection7, selectionArguments7, null);
 
         // For each symbol found on StockData, add to service make webservice query and update
         if (queryCursor.getCount() > 0) {
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FUND));
+            String symbol = "";
+            queryCursor.moveToFirst();
+            do {
+                if (!queryCursor.isLast()){
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FundData.COLUMN_CNPJ))+",";
+                } else{
+                    symbol += queryCursor.getString(queryCursor.getColumnIndex
+                            (PortfolioContract.FundData.COLUMN_CNPJ));
+                }
+            } while (queryCursor.moveToNext());
+            mFundService.putExtra(FundQuoteIntentService.ADD_CNPJ, symbol);
+            startService(mFundService);
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FUND));

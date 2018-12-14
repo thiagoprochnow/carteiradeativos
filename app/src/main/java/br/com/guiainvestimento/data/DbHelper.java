@@ -133,6 +133,14 @@ public class DbHelper extends SQLiteOpenHelper {
             " FOREIGN KEY (" + PortfolioContract.FundTransaction.COLUMN_SYMBOL + ") REFERENCES "
             + PortfolioContract.FundData.TABLE_NAME + " (" + PortfolioContract.FundData._ID + "));";
 
+    private static final String DATABASE_CREATE_FUND_QUOTES = "CREATE TABLE " + PortfolioContract.FundQuotes.TABLE_NAME + " (" +
+            PortfolioContract.FundQuotes._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            PortfolioContract.FundQuotes.COLUMN_CNPJ + " TEXT NOT NULL, " +
+            PortfolioContract.FundQuotes.COLUMN_TIMESTAMP + " LONG, " +
+            PortfolioContract.FundQuotes.COLUMN_QUOTES + " REAL, " +
+            PortfolioContract.FundQuotes.LAST_UPDATE + " LONG, " +
+            "UNIQUE (" + PortfolioContract.FundQuotes._ID + ") ON CONFLICT REPLACE);";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
@@ -602,6 +610,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DATABASE_CREATE_FUND_PORTFOLIO);
         db.execSQL(DATABASE_CREATE_FUND_DATA);
         db.execSQL(DATABASE_CREATE_FUND_TRANSACTION);
+        db.execSQL(DATABASE_CREATE_FUND_QUOTES);
     }
 
 
@@ -657,6 +666,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 db.execSQL(DATABASE_CREATE_FUND_PORTFOLIO);
                 db.execSQL(DATABASE_CREATE_FUND_DATA);
                 db.execSQL(DATABASE_CREATE_FUND_TRANSACTION);
+                db.execSQL(DATABASE_CREATE_FUND_QUOTES);
             }
         } catch (SQLException e){
             Log.e(LOG_TAG, "onUpgrade error " + e + " version: " + newVersion);

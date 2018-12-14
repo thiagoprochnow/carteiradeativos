@@ -26,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-public class FundNameService {
+public class FundCnpjService {
     private Context context;
 
     public static final String BASE_URL = "http://35.199.123.90/";
@@ -34,7 +34,7 @@ public class FundNameService {
     private final String password = "user1133";
     private static Retrofit retrofit = null;
 
-    public FundNameService(Context contextIn){
+    public FundCnpjService(Context contextIn){
         context = contextIn;
 
         CookieManager cookieManager = new CookieManager();
@@ -52,7 +52,7 @@ public class FundNameService {
     }
 
     public interface FundService {
-        @GET("getfundnome/{symbol}")
+        @GET("getfundcnpj/{symbol}")
         Call<List<Fund>> getFundData(@Path("symbol") String symbol);
     }
 
@@ -69,15 +69,17 @@ public class FundNameService {
                             List<Fund> funds = response.body();
                             if(funds != null && funds.size() > 0) {
                                 for (Fund s : funds) {
-                                    str.add(s.getNome() + "\r\nCNPJ:(" + s.getCnpj() + ")");
+                                    str.add(s.getCnpj() + "\r\n" + s.getNome());
                                 }
                             } else {
                                 str.add("");
                             }
+                        } else {
+                            str.add("");
                         }
 
                         AutoCompleteTextView fundNameView =
-                                (AutoCompleteTextView)((Activity)context).findViewById(R.id.inputSymbol);
+                                (AutoCompleteTextView)((Activity)context).findViewById(R.id.inputCnpj);
 
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
                                 R.layout.dropdown_custom, str.toArray(new String[0]));
@@ -86,7 +88,7 @@ public class FundNameService {
 
                     @Override
                     public void onFailure(Call<List<Fund>> call, Throwable t) {
-
+                        Log.d("aaa","bbb");
                     }
                 });
     }

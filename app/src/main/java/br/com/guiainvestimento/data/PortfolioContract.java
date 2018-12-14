@@ -115,6 +115,8 @@ public class PortfolioContract {
 
     public static final String PATH_FUND_TRANSACTION = "fund_transaction";
     public static final String PATH_FUND_TRANSACTION_WITH_SYMBOL = "fund_transaction/*";
+    public static final String PATH_FUND_QUOTES = "fund_quotes";
+    public static final String PATH_FUND_QUOTES_WITH_CNPJ = "fund_quotes/*";
 
     public static final String PATH_CDI = "cdi";
     public static final String PATH_CDI_WITH_DATE = "cdi/*";
@@ -1213,6 +1215,39 @@ public class PortfolioContract {
         }
 
         public static String getFundTransactionFromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
+    }
+
+    // Table with information of each fund income buy and sell
+    public static final class FundQuotes implements BaseColumns {
+
+        public static final Uri URI = BASE_URI.buildUpon().appendPath(PATH_FUND_QUOTES).build();
+
+        public static final String TABLE_NAME = "fund_quotes";
+
+        public static final String COLUMN_CNPJ = "cnpj";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+        public static final String COLUMN_QUOTES = "quote";
+        public static final String LAST_UPDATE = "last_update";
+
+        public static final String[] FUND_QUOTES_COLUMNS = {
+                _ID,
+                COLUMN_CNPJ,
+                COLUMN_TIMESTAMP,
+                COLUMN_QUOTES,
+                LAST_UPDATE
+        };
+
+        public static Uri buildQuotesUri(long id) {
+            return ContentUris.withAppendedId(URI, id);
+        }
+
+        public static Uri makeUriForFundQuotes(String cnpj) {
+            return URI.buildUpon().appendPath(cnpj).build();
+        }
+
+        public static String getFundQuotesFromUri(Uri uri) {
             return uri.getLastPathSegment();
         }
     }

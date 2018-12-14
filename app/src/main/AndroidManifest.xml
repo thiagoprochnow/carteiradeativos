@@ -44,6 +44,7 @@
         <service android:name="br.com.guiainvestimento.api.service.FixedIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.StockIncomeIntentService" />
         <service android:name="br.com.guiainvestimento.api.service.FiiIncomeIntentService" />
+        <service android:name="br.com.guiainvestimento.api.service.FundQuoteIntentService" />
 
         <activity
             android:name="br.com.guiainvestimento.activity.FormActivity"
