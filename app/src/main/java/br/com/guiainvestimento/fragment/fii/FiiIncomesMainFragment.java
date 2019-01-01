@@ -144,11 +144,13 @@ public class FiiIncomesMainFragment extends BaseFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String sortOrder = PortfolioContract.FiiTransaction.COLUMN_TIMESTAMP + " DESC";
+        String sortOrder = PortfolioContract.FiiIncome.COLUMN_EXDIVIDEND_TIMESTAMP + " DESC";
+        String selection = PortfolioContract.FiiIncome.COLUMN_AFFECTED_QUANTITY + " > ?";
+        String[] selectionArguments = {"0"};
         CursorLoader Loader = new CursorLoader(mContext,
                 PortfolioContract.FiiIncome.URI,
                 PortfolioContract.FiiIncome.FII_INCOME_COLUMNS,
-                null, null, sortOrder);
+                selection, selectionArguments, sortOrder);
         return Loader;
     }
 
