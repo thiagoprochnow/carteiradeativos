@@ -172,7 +172,7 @@ public class FundQuoteIntentService extends IntentService {
                             ContentValues fundQuoteCV = new ContentValues();
                             fundQuoteCV.put(PortfolioContract.FundQuotes.COLUMN_CNPJ,fundQuote.getCnpj());
                             fundQuoteCV.put(PortfolioContract.FundQuotes.COLUMN_TIMESTAMP,quoteTimestamp);
-                            fundQuoteCV.put(PortfolioContract.FundQuotes.COLUMN_QUOTES,fundQuote.getQuote());
+                            fundQuoteCV.put(PortfolioContract.FundQuotes.COLUMN_QUOTES,fundQuote.getQuote().replace(".",""));
                             // TODO: Calculate the percent based on total stocks value that received the income
                             // Adds to the database
                             Uri insertedUri = this.getContentResolver().insert(PortfolioContract.FundQuotes.URI,

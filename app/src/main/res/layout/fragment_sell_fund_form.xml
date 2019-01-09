@@ -21,8 +21,7 @@
             android:id="@+id/inputSymbol"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/fund_symbol_hint"
-            android:maxLength="20"/>
+            android:hint="@string/fund_symbol_hint" />
 
         <TextView
             android:fontFamily="sans-serif-light"
