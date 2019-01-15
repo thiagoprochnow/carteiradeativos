@@ -60,8 +60,14 @@ public class Util {
             return myArrayList.get(1);
         } else if (symbol.equals("BTC")){
             return myArrayList.get(2);
-        } else {
+        } else if (symbol.equals("LTC")){
             return myArrayList.get(3);
+        } else if (symbol.equals("ETH")){
+            return myArrayList.get(4);
+        } else if (symbol.equals("BCH")){
+            return myArrayList.get(5);
+        } else {
+            return myArrayList.get(6);
         }
     }
 

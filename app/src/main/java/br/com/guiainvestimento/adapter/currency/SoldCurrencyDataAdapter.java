@@ -73,7 +73,7 @@ public class SoldCurrencyDataAdapter extends RecyclerView.Adapter<SoldCurrencyDa
                 COLUMN_SYMBOL));
         String currencyLabel = Util.convertCurrencySymbol(mContext, symbol);
         holder.symbol.setText(currencyLabel);
-        if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")) {
+        if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC") || symbol.equalsIgnoreCase("ETH") || symbol.equalsIgnoreCase("BCH") || symbol.equalsIgnoreCase("XRP")) {
             holder.currencyQuantity.setText(String.format("%.6f", mCursor.getDouble(mCursor.getColumnIndex
                     (PortfolioContract.SoldCurrencyData.COLUMN_QUANTITY_TOTAL))));
         } else {

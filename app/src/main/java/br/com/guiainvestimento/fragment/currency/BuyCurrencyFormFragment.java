@@ -38,10 +38,16 @@ public class BuyCurrencyFormFragment extends BaseFormFragment {
         put("Euro","EUR");
         put("Bitcoin","BTC");
         put("Litecoin","LTC");
+        put("Etherium","ETH");
+        put("BCash","BCH");
+        put("Ripple","XRP");
         put("USD", "Dolar");
         put("EUR","Euro");
         put("BTC","Bitcoin");
         put("LTC","Litecoin");
+        put("ETH","Etherium");
+        put("BCH","BCash");
+        put("XRP","Ripple");
     }};
 
     private Spinner mInputSymbolView;

@@ -102,7 +102,7 @@ public class ConsultQuotesFragment extends BaseFragment{
                                 .class);
                         mCurrencyServiceIntent.putExtra(CurrencyIntentService.CONSULT_SYMBOL, symbol);
                         mContext.startService(mCurrencyServiceIntent);
-                    } else if (symbol.equalsIgnoreCase("Bitcoin") || symbol.equalsIgnoreCase("Litecoin")){
+                    } else if (symbol.equalsIgnoreCase("Bitcoin") || symbol.equalsIgnoreCase("Litecoin") || symbol.equalsIgnoreCase("Etherium") || symbol.equalsIgnoreCase("BCash") || symbol.equalsIgnoreCase("Ripple")){
                         Intent mCryptoServiceIntent = new Intent(mContext, CryptoIntentService
                                 .class);
                         mCryptoServiceIntent.putExtra(CryptoIntentService.CONSULT_SYMBOL, symbol);

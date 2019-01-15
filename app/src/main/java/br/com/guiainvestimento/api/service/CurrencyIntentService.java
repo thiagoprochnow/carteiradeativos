@@ -30,6 +30,8 @@ public class CurrencyIntentService extends IntentService {
     // Extras
     public static final String ADD_SYMBOL = "symbol";
     public static final String CONSULT_SYMBOL = "consult_symbol";
+    public static final String API_KEY = "FXVK1K9EYIJHIOEX";
+    public static final String FUNCTION = "CURRENCY_EXCHANGE_RATE";
     private String mResult = "";
     private String mType;
     Handler mHandler;
@@ -116,7 +118,7 @@ public class CurrencyIntentService extends IntentService {
             ResponseCurrencyBackup responseGetRate;
 
             for(String symbol : symbols) {
-                call = service.getCurrencyQuote(symbol, "json");
+                call = service.getCurrencyQuote(FUNCTION, symbol, "BRL", API_KEY);
                 response = call.execute();
                 responseGetRate = response.body();
 
@@ -170,7 +172,7 @@ public class CurrencyIntentService extends IntentService {
             Response<ResponseCurrencyBackup> response;
             ResponseCurrencyBackup responseGetRate;
 
-            call = service.getCurrencyQuote(symbol, "json");
+            call = service.getCurrencyQuote(FUNCTION, symbol, "BRL", API_KEY);
             response = call.execute();
             responseGetRate = response.body();
 

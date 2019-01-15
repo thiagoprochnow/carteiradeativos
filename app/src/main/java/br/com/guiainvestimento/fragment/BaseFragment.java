@@ -1894,7 +1894,7 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
-            if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+            if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC") || symbol.equalsIgnoreCase("ETH") || symbol.equalsIgnoreCase("BCH") || symbol.equalsIgnoreCase("XRP")){
                 Intent mServiceIntent = new Intent(mContext, CryptoIntentService
                         .class);
                 mServiceIntent.putExtra(CryptoIntentService.ADD_SYMBOL, symbol);

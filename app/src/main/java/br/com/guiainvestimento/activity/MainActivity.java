@@ -839,7 +839,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
                 // Prepare symbols of crypto and normal currency to send on Intent Services
                 symbol = queryCursor.getString(queryCursor.getColumnIndex
                         (PortfolioContract.CurrencyData.COLUMN_SYMBOL));
-                if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC")){
+                if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC") || symbol.equalsIgnoreCase("ETH") || symbol.equalsIgnoreCase("BCH") || symbol.equalsIgnoreCase("XRP")){
                     // Crypto currency
                     if (cryptoSymbol == "") {
                         cryptoSymbol += symbol;

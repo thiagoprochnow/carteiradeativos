@@ -171,6 +171,12 @@ public class CryptoIntentService extends IntentService {
                 symbol = "BTC";
             } else if(symbol.equalsIgnoreCase("litecoin")){
                 symbol = "LTC";
+            } else if(symbol.equalsIgnoreCase("etherium")){
+                symbol = "ETH";
+            } else if(symbol.equalsIgnoreCase("bcash")){
+                symbol = "BCH";
+            } else if(symbol.equalsIgnoreCase("ripple")){
+                symbol = "XRP";
             }
 
             do {

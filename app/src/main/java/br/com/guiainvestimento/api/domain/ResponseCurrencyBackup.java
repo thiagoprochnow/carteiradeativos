@@ -14,7 +14,7 @@ import br.com.guiainvestimento.domain.Currency;
 @SuppressWarnings("unused")
 public class ResponseCurrencyBackup {
 
-    @SerializedName("valores")
+    @SerializedName("Realtime Currency Exchange Rate")
     private Result mResult;
 
     private static final String LOG_TAG = ResponseCurrencyBackup.class.getSimpleName();
@@ -24,8 +24,8 @@ public class ResponseCurrencyBackup {
      * @return - List of Currencies
      */
     public String getQuote(String symbol) {
-        if (mResult != null && mResult.getQuote(symbol) != null && mResult.getQuote(symbol) != "") {
-            return mResult.getQuote(symbol);
+        if (mResult != null && mResult.getCurrencyQuote() != null && mResult.getCurrencyQuote() != "") {
+            return mResult.getCurrencyQuote();
         }
         return "";
     }
@@ -35,23 +35,11 @@ public class ResponseCurrencyBackup {
      */
     private class Result {
 
-        @SerializedName("USD")
-        private Quote mUSD;
+        @SerializedName("5. Exchange Rate")
+        private String mCurrencyQuote;
 
-        @SerializedName("EUR")
-        private Quote mEUR;
-
-        private String getQuote(String symbol) {
-            if (symbol.equalsIgnoreCase("USD")){
-                if (mUSD != null && mUSD.getCurrencyQuote() != null && mUSD.getCurrencyQuote() != ""){
-                    return mUSD.getCurrencyQuote();
-                }
-            } else if (symbol.equalsIgnoreCase("EUR")) {
-                if (mEUR != null && mEUR.getCurrencyQuote() != null && mEUR.getCurrencyQuote() != ""){
-                    return mEUR.getCurrencyQuote();
-                }
-            }
-            return "";
+        private String getCurrencyQuote() {
+            return mCurrencyQuote;
         }
     }
 
@@ -60,7 +48,7 @@ public class ResponseCurrencyBackup {
      */
     private class Quote {
 
-        @SerializedName("valor")
+        @SerializedName("5. Exchange Rate")
         private String mCurrencyQuote;
 
         private String getCurrencyQuote() {

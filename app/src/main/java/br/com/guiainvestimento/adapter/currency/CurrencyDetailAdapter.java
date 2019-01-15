@@ -124,7 +124,7 @@ public class CurrencyDetailAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 String quantityText;
 
-                if (symbol.equalsIgnoreCase("BTC") || symbol.equals("LTC")){
+                if (symbol.equalsIgnoreCase("BTC") || symbol.equalsIgnoreCase("LTC") || symbol.equalsIgnoreCase("ETH") || symbol.equalsIgnoreCase("BCH") || symbol.equalsIgnoreCase("XRP")){
                     quantityText = String.format("%.6f", quantity);
                 } else {
                     quantityText = String.format("%.2f", quantity);
