@@ -290,6 +290,9 @@ public class FundQuoteIntentService extends IntentService {
                 long boughtTimestamp = fundTransaction.getLong(fundTransaction.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TIMESTAMP));
                 double bought = fundTransaction.getDouble(fundTransaction.getColumnIndex(PortfolioContract.FundTransaction.COLUMN_TOTAL));
                 String fundQuote = getFundQuote(cnpj,boughtTimestamp);
+                if(fundQuote == "0.00"){
+                    fundQuote = latestQuote;
+                }
                 double gainRate = (double) Double.valueOf(latestQuote)/Double.valueOf(fundQuote);
                 currentTotal += bought*gainRate;
                 boughtTotal += bought;

@@ -543,7 +543,7 @@
     <string name="error_updating_treasury_limit">Treasury update limit of 2 treasuries reached. Update manually or upgrade to PREMIUM version for unlimited update.</string>
     <string name="error_updating_fixed">Error updating fixed income, please try again later.</string>
     <string name="error_updating_fixed_rate">Error updating fixed income. One or more Buy of Fixed Income are without the CDI Rate, please edit and update Buy Values to update your Fixed Income automatically.</string>
-    <string name="error_updating_fund">Error updating fixed income, please try again later.</string>
+    <string name="error_updating_fund">Error updating fund, please try again later.</string>
     <string name="error_updating_income_premium">Stock Income automatic update only on PREMIUM version, sign now or update stock incomes manually.</string>
     <string name="success_updating_income">Stock Incomes successfully updated.</string>
     <string name="error_updating_income">Error updating stock incomes, please try again later.</string>
