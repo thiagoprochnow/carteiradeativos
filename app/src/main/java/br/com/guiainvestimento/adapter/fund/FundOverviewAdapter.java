@@ -138,7 +138,13 @@ public class FundOverviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         // Do not show sold fund
                         if (currentPercent > 0) {
                             if (dataCursor.getPosition() < 8) {
-                                entries.add(new PieEntry(currentPercent, symbol.substring(0,16)));
+                                String substring = "";
+                                if(symbol.length() > 17){
+                                    substring = symbol.substring(0,16);
+                                } else {
+                                    substring = symbol;
+                                }
+                                entries.add(new PieEntry(currentPercent, substring));
                             } else {
                                 // Check if is last fund data
                                 otherPercent += currentPercent;
