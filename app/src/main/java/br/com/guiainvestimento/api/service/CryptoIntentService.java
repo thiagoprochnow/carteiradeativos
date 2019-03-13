@@ -33,7 +33,6 @@ public class CryptoIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
-    public static final String CONSULT_SYMBOL = "consult_symbol";
     private String mResult = "";
     private String mType;
     Handler mHandler;
@@ -73,17 +72,6 @@ public class CryptoIntentService extends IntentService {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_updating_crypto_currency), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
-                mType = CONSULT_SYMBOL;
-                mResult = this.consultCryptoTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
-                if (mResult == "") {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -147,57 +135,6 @@ public class CryptoIntentService extends IntentService {
         return resultStatus;
     }
 
-    private String consultCryptoTask(TaskParams params) {
-        String result = "";
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(CryptoService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        try {
-            // Make the request and parse the result
-            CryptoService service = retrofit.create(CryptoService.class);
-
-            String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
-
-            Call<ResponseCrypto> call;
-            Response<ResponseCrypto> response;
-            ResponseCrypto responseGetRate;
-            int count = 0;
-
-            if (symbol.equalsIgnoreCase("bitcoin")){
-                symbol = "BTC";
-            } else if(symbol.equalsIgnoreCase("litecoin")){
-                symbol = "LTC";
-            } else if(symbol.equalsIgnoreCase("etherium")){
-                symbol = "ETH";
-            } else if(symbol.equalsIgnoreCase("bcash")){
-                symbol = "BCH";
-            } else if(symbol.equalsIgnoreCase("ripple")){
-                symbol = "XRP";
-            }
-
-            do {
-                call = service.getCrypto(symbol);
-                response = call.execute();
-                responseGetRate = response.body();
-                count++;
-            } while (response.code() == 400 && count < 20);
-            if (response.isSuccessful() && responseGetRate.getCryptoQuote() != null) {
-                for (Crypto currency : responseGetRate.getCryptoQuote()) {
-
-                    result = currency.getQuote();
-                }
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in request " + e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -209,10 +146,6 @@ public class CryptoIntentService extends IntentService {
             PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
             portfolioReceiver.updatePortfolio();
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
-        } else if (mType == CONSULT_SYMBOL){
-            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
-            broadcastIntent.putExtra("quote", mResult);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         }
     }
 }

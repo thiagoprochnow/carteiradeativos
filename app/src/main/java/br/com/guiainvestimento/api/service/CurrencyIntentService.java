@@ -29,7 +29,6 @@ public class CurrencyIntentService extends IntentService {
 
     // Extras
     public static final String ADD_SYMBOL = "symbol";
-    public static final String CONSULT_SYMBOL = "consult_symbol";
     public static final String API_KEY = "FXVK1K9EYIJHIOEX";
     public static final String FUNCTION = "CURRENCY_EXCHANGE_RATE";
     private String mResult = "";
@@ -75,17 +74,6 @@ public class CurrencyIntentService extends IntentService {
                         }
                     });
                 }
-            } else if (intent.hasExtra(CONSULT_SYMBOL)) {
-                mType = CONSULT_SYMBOL;
-                mResult = this.consultCurrencyTask(new TaskParams(CONSULT_SYMBOL, intent.getExtras()));
-                if (mResult == "") {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.error_consult_quote), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
             } else{
                 throw new IOException("Missing one of the following Extras: ADD_SYMBOL, CONSULT_SYMBOL");
             }
@@ -117,19 +105,19 @@ public class CurrencyIntentService extends IntentService {
             Response<ResponseCurrencyBackup> response;
             ResponseCurrencyBackup responseGetRate;
 
-            for(String symbol : symbols) {
+            for (String symbol : symbols) {
                 call = service.getCurrencyQuote(FUNCTION, symbol, "BRL", API_KEY);
                 response = call.execute();
                 responseGetRate = response.body();
 
                 if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
-                        // Prepare the data of the current price to update the StockData table
-                    currencyDataCV.put(symbol,responseGetRate.getQuote(symbol));
+                    // Prepare the data of the current price to update the StockData table
+                    currencyDataCV.put(symbol, responseGetRate.getQuote(symbol));
                 } else {
                     // Error updating symbol
                 }
             }
-            if (currencyDataCV.size() > 0){
+            if (currencyDataCV.size() > 0) {
                 // Update value on stock data
                 int updatedRows = this.getContentResolver().update(
                         PortfolioContract.CurrencyData.BULK_UPDATE_URI,
@@ -146,47 +134,6 @@ public class CurrencyIntentService extends IntentService {
         return resultStatus;
     }
 
-    private String consultCurrencyTask(TaskParams params) {
-
-        String result = "";
-
-        // Build retrofit base request
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(CurrencyService.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        try {
-            // Make the request and parse the result
-            CurrencyService service = retrofit.create(CurrencyService.class);
-
-            String symbol = params.getExtras().getString(StockIntentService.CONSULT_SYMBOL);
-
-            if (symbol.equalsIgnoreCase("dolar")){
-                symbol = "USD";
-            } else if(symbol.equalsIgnoreCase("euro")){
-                symbol = "EUR";
-            }
-
-            Call<ResponseCurrencyBackup> call;
-            Response<ResponseCurrencyBackup> response;
-            ResponseCurrencyBackup responseGetRate;
-
-            call = service.getCurrencyQuote(FUNCTION, symbol, "BRL", API_KEY);
-            response = call.execute();
-            responseGetRate = response.body();
-
-            if (response.isSuccessful() && responseGetRate.getQuote(symbol) != null && responseGetRate.getQuote(symbol) != "") {
-                // Prepare the data of the current price to update the StockData table
-                result = responseGetRate.getQuote(symbol);
-            }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in request " + e.getMessage());
-            e.printStackTrace();
-        }
-        return result;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -198,10 +145,6 @@ public class CurrencyIntentService extends IntentService {
             PortfolioReceiver portfolioReceiver = new PortfolioReceiver(this);
             portfolioReceiver.updatePortfolio();
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.PORTFOLIO));
-        } else if (mType == CONSULT_SYMBOL){
-            Intent broadcastIntent = new Intent (Constants.Receiver.CONSULT_QUOTE); //put the same message as in the filter you used in the activity when registering the receiver
-            broadcastIntent.putExtra("quote", mResult);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         }
     }
 }

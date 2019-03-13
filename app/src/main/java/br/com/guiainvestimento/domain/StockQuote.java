@@ -59,4 +59,31 @@ public class StockQuote {
         return this.mError;
     }
 
+    public void setmSymbol(String mSymbol) {
+        this.mSymbol = mSymbol;
+    }
+
+    public void setmHigh(String mHigh) {
+        this.mHigh = mHigh;
+    }
+
+    public void setmLow(String mLow) {
+        this.mLow = mLow;
+    }
+
+    public void setmOpen(String mOpen) {
+        this.mOpen = mOpen;
+    }
+
+    public void setmPrevious(String mPrevious) {
+        this.mPrevious = mPrevious;
+    }
+
+    public void setmLast(String mLast) {
+        this.mLast = mLast;
+    }
+
+    public void setmError(String mError) {
+        this.mError = mError;
+    }
 }

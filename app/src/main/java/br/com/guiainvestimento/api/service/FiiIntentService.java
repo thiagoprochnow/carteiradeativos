@@ -11,12 +11,16 @@ import android.widget.Toast;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.TaskParams;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +29,7 @@ import br.com.guiainvestimento.R;
 import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.domain.FiiQuote;
+import br.com.guiainvestimento.domain.StockQuote;
 import br.com.guiainvestimento.receiver.FiiReceiver;
 import br.com.guiainvestimento.receiver.PortfolioReceiver;
 import okhttp3.JavaNetCookieJar;
@@ -46,11 +51,8 @@ public class FiiIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
-    private final String CedroL = "thiprochnow";
-    private final String CedroP = "4schGOS";
-
-    private boolean mSuccess = false;
-    private String mSymbol;
+    private final String apiKey = "FXVK1K9EYIJHIOEX";
+    private final String function = "TIME_SERIES_MONTHLY_ADJUSTED";
     Handler mHandler;
 
     // Extras
@@ -65,9 +67,9 @@ public class FiiIntentService extends IntentService {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
+    public int onStartCommand(Intent intent, int flags, int startId) {
         mHandler = new Handler();
-        return super.onStartCommand(intent,flags,startId);
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -81,15 +83,16 @@ public class FiiIntentService extends IntentService {
             do {
                 success = this.addFiiTask(params);
                 count++;
-            } while (success != GcmNetworkManager.RESULT_SUCCESS && success != GcmNetworkManager.RESULT_RESCHEDULE && count <= 3);
-            if (success == GcmNetworkManager.RESULT_SUCCESS){
+            }
+            while (success != GcmNetworkManager.RESULT_SUCCESS && success != GcmNetworkManager.RESULT_RESCHEDULE && count <= 3);
+            if (success == GcmNetworkManager.RESULT_SUCCESS) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), getApplicationContext().getResources().getString(R.string.success_updating_fii), Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else if (success == GcmNetworkManager.RESULT_RESCHEDULE){
+            } else if (success == GcmNetworkManager.RESULT_RESCHEDULE) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -106,6 +109,7 @@ public class FiiIntentService extends IntentService {
             }
         }
     }
+
     private int addFiiTask(TaskParams params) {
 
         int resultStatus = GcmNetworkManager.RESULT_FAILURE;
@@ -140,50 +144,71 @@ public class FiiIntentService extends IntentService {
 
             FiiService service = retrofit.create(FiiService.class);
 
-            Call<String> callPost = service.getConnection(CedroL, CedroP);
-            Response<String> responsePost = callPost.execute();
-            String responseString = responsePost.body();
-
             ContentValues fiiDataCV = new ContentValues();
 
             String[] symbols = params.getExtras().getString(FiiIntentService.ADD_SYMBOL).split(",");
 
-            String path = "";
-            if (responseString != null && responseString.equals("true")){
+            List<FiiQuote> fiis = new ArrayList<FiiQuote>();
 
-                for (String symbol: symbols){
-                    if (limit <= 3) {
-                        if(limit == 0){
-                            path = symbol;
-                            limit++;
-                            size++;
-                        } else {
-                            path += "/"+symbol;
-                            size++;
+            for (String symbol : symbols) {
+                if (limit <= 3) {
+                    boolean success = false;
+                    Call<String> callGet = service.getFii(function, symbol + ".SA", apiKey);
+                    Response<String> responseGet = callGet.execute();
+                    if (responseGet != null && responseGet.isSuccessful()) {
+                        FiiQuote fii = new FiiQuote();
+                        String responseStock = responseGet.body();
+                        try {
+                            JSONObject jsonObj = new JSONObject(responseStock);
+                            JSONObject resultObj = jsonObj.getJSONObject("Monthly Adjusted Time Series");
+                            Iterator<String> keys = resultObj.keys();
+                            // Latest quote
+                            String lastQuote = "";
+                            if (keys.hasNext()) {
+                                String key = keys.next();
+                                JSONObject resObj = resultObj.getJSONObject(key);
+                                fii.setmSymbol(symbol);
+                                lastQuote = resObj.getString("4. close");
+                                fii.setmLast(resObj.getString("4. close"));
+                                fii.setmOpen(resObj.getString("1. open"));
+                            }
+                            // Preivous day quote
+                            if (keys.hasNext()) {
+                                String key = keys.next();
+                                JSONObject resObj = resultObj.getJSONObject(key);
+                                fii.setmPrevious(resObj.getString("4. close"));
+                            } else {
+                                fii.setmPrevious(lastQuote);
+                            }
+                            fiis.add(fii);
+                        } catch (JSONException e) {
+                            Log.e(LOG_TAG, "Error in json " + e.getMessage());
+                            ContentValues updateStock = new ContentValues();
+                            updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                            updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
+
+                            String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
+                            String[] updatedSelectionArguments = {symbol};
+                            int updatedRows = this.getContentResolver().update(
+                                    PortfolioContract.StockData.URI,
+                                    updateStock, updateSelection, updatedSelectionArguments);
+                            e.printStackTrace();
                         }
                     } else {
-                        // Limit reach, change Not Updated status
-                        ContentValues updateFii = new ContentValues();
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
-                        updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
+                        ContentValues updateStock = new ContentValues();
+                        updateStock.put(PortfolioContract.StockData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
+                        updateStock.put(PortfolioContract.StockData.COLUMN_CLOSING_PRICE, 0);
 
-                        String updateSelection = PortfolioContract.FiiData.COLUMN_SYMBOL + " = ?";
+                        String updateSelection = PortfolioContract.StockData.COLUMN_SYMBOL + " = ?";
                         String[] updatedSelectionArguments = {symbol};
                         int updatedRows = this.getContentResolver().update(
-                                PortfolioContract.FiiData.URI,
-                                updateFii, updateSelection, updatedSelectionArguments);
+                                PortfolioContract.StockData.URI,
+                                updateStock, updateSelection, updatedSelectionArguments);
+                        resultStatus = GcmNetworkManager.RESULT_FAILURE;
                     }
-
-                    if (!isPremium) {
-                        limit++;
-                    }
-                }
-                // Remove the one that was added first in case it was first element
-                limit--;
-            } else {
-                for (String symbol: symbols) {
+                } else {
+                    // Limit reach, change Not Updated status
                     ContentValues updateFii = new ContentValues();
-                    // Mark symbol as failer and set NOT UPDATED on sql db
                     updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                     updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
 
@@ -193,48 +218,22 @@ public class FiiIntentService extends IntentService {
                             PortfolioContract.FiiData.URI,
                             updateFii, updateSelection, updatedSelectionArguments);
                 }
-                resultStatus = GcmNetworkManager.RESULT_FAILURE;
-            }
 
-
-            path = path.toLowerCase();
-            List<FiiQuote> fiis = null;
-
-            if(size <= 1) {
-                boolean success = false;
-
-                Call<FiiQuote> callGet = service.getFii(path);
-                Response<FiiQuote> responseGet = callGet.execute();
-                if (responseGet != null && responseGet.isSuccessful()) {
-                    success = true;
-                    FiiQuote fii = responseGet.body();
-                    fiis = new ArrayList<FiiQuote>();
-                    fiis.add(fii);
-                } else {
-                    fiis = null;
+                if (!isPremium) {
+                    limit++;
                 }
-            } else {
-                boolean success = false;
-                do {
-                    Call<List<FiiQuote>> callGet = service.getFiis(path);
-                    Response<List<FiiQuote>> responseGet = callGet.execute();
-                    if (responseGet != null && responseGet.isSuccessful()) {
-                        fiis = responseGet.body();
-                        success = true;
-                    } else {
-                        fiis = null;
-                    }
-                } while (!success);
             }
+            // Remove the one that was added first in case it was first element
+            limit--;
 
             if (fiis != null && fiis.size() > 0) {
-                for (String symbol: symbols) {
+                for (String symbol : symbols) {
                     boolean success = false;
                     ContentValues updateFii = new ContentValues();
                     for (FiiQuote fii : fiis) {
                         if (fii != null && fii.toString() != null && fii.toString().length() > 0 && symbol.equalsIgnoreCase(fii.getSymbol()) && fii.getLast() != null) {
                             String lastPrice = "0.0";
-                            if(Double.valueOf(fii.getLast()) > 0){
+                            if (Double.valueOf(fii.getLast()) > 0) {
                                 lastPrice = fii.getLast();
                             } else {
                                 lastPrice = fii.getPrevious();
@@ -248,7 +247,7 @@ public class FiiIntentService extends IntentService {
                         }
                     }
 
-                    if(!success){
+                    if (!success) {
                         // Mark symbol as failer and set NOT UPDATED on sql db
                         updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
                         updateFii.put(PortfolioContract.FiiData.COLUMN_CLOSING_PRICE, 0);
@@ -261,7 +260,7 @@ public class FiiIntentService extends IntentService {
                             updateFii, updateSelection, updatedSelectionArguments);
                 }
             } else {
-                for (String symbol: symbols) {
+                for (String symbol : symbols) {
                     ContentValues updateFii = new ContentValues();
                     // Mark symbol as failer and set NOT UPDATED on sql db
                     updateFii.put(PortfolioContract.FiiData.COLUMN_UPDATE_STATUS, Constants.UpdateStatus.NOT_UPDATED);
@@ -276,7 +275,7 @@ public class FiiIntentService extends IntentService {
                 resultStatus = GcmNetworkManager.RESULT_FAILURE;
             }
 
-            if (fiiDataCV.size() > 0){
+            if (fiiDataCV.size() > 0) {
                 // Update value on fii data
                 int updatedRows = this.getContentResolver().update(
                         PortfolioContract.FiiData.BULK_UPDATE_URI,
@@ -297,6 +296,7 @@ public class FiiIntentService extends IntentService {
         }
         return resultStatus;
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -318,7 +318,8 @@ public class FiiIntentService extends IntentService {
                 @Override
                 public Object convert(ResponseBody body) throws IOException {
                     if (body.contentLength() == 0) return null;
-                    return delegate.convert(body);                }
+                    return delegate.convert(body);
+                }
             };
         }
     }

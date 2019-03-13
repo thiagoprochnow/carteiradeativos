@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -40,7 +39,6 @@ import br.com.guiainvestimento.common.Constants;
 import br.com.guiainvestimento.data.PortfolioContract;
 import br.com.guiainvestimento.fragment.AboutFragment;
 import br.com.guiainvestimento.fragment.BackupRestoreFragment;
-import br.com.guiainvestimento.fragment.ConsultQuotesFragment;
 import br.com.guiainvestimento.fragment.FaqFragment;
 import br.com.guiainvestimento.fragment.PremiumEditionFragment;
 import br.com.guiainvestimento.fragment.currency.CurrencyTabFragment;
@@ -405,10 +403,6 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             case R.id.nav_item_premium_edition:
                 setTitle(R.string.title_premium_edition);
                 replaceFragment(new PremiumEditionFragment());
-                break;
-            case R.id.nav_item_consult_quotes:
-                setTitle(R.string.title_consult_quotes);
-                replaceFragment(new ConsultQuotesFragment());
                 break;
             case R.id.nav_item_about:
                 setTitle(R.string.title_about);

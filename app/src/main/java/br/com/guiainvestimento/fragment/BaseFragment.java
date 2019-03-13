@@ -1630,11 +1630,6 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
 
-            Intent mServiceIntent = new Intent(mContext, StockIntentService
-                    .class);
-            mServiceIntent.putExtra(StockIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent);
-
             // Query Income table to get total of this stock income
             String[] affectedColumn = {"sum("+ PortfolioContract.StockIncome.COLUMN_RECEIVE_LIQUID+")",
                     "sum("+ PortfolioContract.StockIncome.COLUMN_TAX+")"};
@@ -2166,11 +2161,6 @@ public abstract class BaseFragment extends Fragment {
                     variation = currentTotal - buyTotal;
                 }
             }
-
-            Intent mServiceIntent = new Intent(mContext, FiiIntentService
-                    .class);
-            mServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
-            getActivity().startService(mServiceIntent);
 
             // Query Income table to get total of this fii income
             String[] affectedColumn = {"sum("+ PortfolioContract.FiiIncome.COLUMN_RECEIVE_LIQUID+")",

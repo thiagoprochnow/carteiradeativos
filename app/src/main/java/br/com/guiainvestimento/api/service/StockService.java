@@ -1,28 +1,15 @@
 package br.com.guiainvestimento.api.service;
 
-import java.util.List;
-
-import br.com.guiainvestimento.domain.StockQuote;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
  * Interface responsible for detailing the GET's URL
  */
 public interface StockService {
-    String BASE_URL = "http://webfeeder.cedrofinances.com.br";
+    String BASE_URL = "http://www.alphavantage.co";
 
-    @POST("SignIn")
-    Call<String> getConnection(@Query("login") String login, @Query("password") String password);
-
-    @GET("services/quotes/quote/{symbol}")
-    Call<StockQuote> getStock(@Path("symbol") String symbol);
-
-    @GET("services/quotes/quote/{symbol}")
-    Call<List<StockQuote>> getStocks(@Path(value="symbol", encoded = true) String symbol);
-
+    @GET("/query")
+    Call<String> getStock(@Query("function") String function, @Query("symbol") String symbol, @Query("apikey") String apiKey);
 }

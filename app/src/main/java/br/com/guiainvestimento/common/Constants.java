@@ -106,7 +106,6 @@ public final class Constants {
         public static final String TREASURY = "UPDATE_TREASURY_PORTFOLIO";
         public static final String PORTFOLIO = "UPDATE_PORTFOLIO";
         public static final String OTHERS = "UPDATE_OTHERS_PORTFOLIO";
-        public static final String CONSULT_QUOTE = "CONSULT_QUOTE";
         public static final String FUND = "UPDATE_FUND_PORTFOLIO";
     }
 

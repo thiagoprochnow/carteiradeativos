@@ -14,14 +14,8 @@ import retrofit2.http.Query;
  * Interface responsible for detailing the GET's URL
  */
 public interface FiiService {
-    String BASE_URL = "http://webfeeder.cedrofinances.com.br";
+    String BASE_URL = "http://www.alphavantage.co";
 
-    @POST("SignIn")
-    Call<String> getConnection(@Query("login") String login, @Query("password") String password);
-
-    @GET("services/quotes/quote/{symbol}")
-    Call<FiiQuote> getFii(@Path("symbol") String symbol);
-
-    @GET("services/quotes/quote/{symbol}")
-    Call<List<FiiQuote>> getFiis(@Path(value="symbol", encoded = true) String symbol);
+    @GET("/query")
+    Call<String> getFii(@Query("function") String function, @Query("symbol") String symbol, @Query("apikey") String apiKey);
 }

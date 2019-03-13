@@ -61,12 +61,6 @@
             android:id="@+id/nav_item_premium_edition"
             android:checked="false"
             android:title="@string/title_premium_edition"/>
-
-        <!-- Coming Soon Item Menu -->
-        <item
-            android:id="@+id/nav_item_consult_quotes"
-            android:checked="false"
-            android:title="@string/title_consult_quotes"/>
     </group>
 
     <group

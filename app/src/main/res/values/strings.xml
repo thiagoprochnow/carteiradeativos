@@ -500,7 +500,6 @@
     <string name="title_faq">FAQ</string>
     <string name="title_coming_soon">Coming Soon</string>
     <string name="title_backup_restore">Backup and Restore</string>
-    <string name="title_consult_quotes">Consult Quotes</string>
     <string name="title_premium_edition">Premium Edition</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -580,12 +579,6 @@
     <string name="restore_download_folder_error">Database backup not found, place the GIBackup.db file in the %s path.</string>
     <string name="restore_confirm_title">Restore</string>
     <string name="restore_confirm">Are you sure you want to replace your database information with the one in the backup file? You will lose all current information in the application and it will be replace with the backup file.</string>
-
-    <!-- Consult Quotes -->
-    <string name="consult_quotes_description">Type the code of the stock, real state fund, currency or option that you wish to search.</string>
-    <string name="consult_quotes_button">Consult</string>
-    <string name="consult_quotes_error">Invalid Symbol</string>
-    <string name="error_consult_quote">Error consulting quote. Please try again later.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento is a application for controlling and organizing your investment portfolio in the Brazilian market. With it you can easily monitor:\n\n

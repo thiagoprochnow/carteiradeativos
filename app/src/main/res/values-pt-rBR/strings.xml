@@ -500,7 +500,6 @@
     <string name="title_faq">Perguntas Frequentes</string>
     <string name="title_coming_soon">Em Breve</string>
     <string name="title_backup_restore">Cópia e Restauração</string>
-    <string name="title_consult_quotes">Consulta de Cotações</string>
     <string name="title_premium_edition">Versão Premium</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -580,12 +579,6 @@
     <string name="restore_download_folder_error">Backup do banco de dados não encontrado, coloque o arquivo GIBackup.db no caminho %s .</string>
     <string name="restore_confirm_title">Restauração</string>
     <string name="restore_confirm">Tem certeza que deseja substituir seu banco de dados com as informações no arquivo de backup? Você perderá todas os informações da aplicação e ela será substituida pelas informações do arquivo de backup.</string>
-
-    <!-- Consult Quotes -->
-    <string name="consult_quotes_description">Digite o código da ação, fundo imobiliário, moeda ou opção que deseja pesquisar.</string>
-    <string name="consult_quotes_button">Consultar</string>
-    <string name="consult_quotes_error">Ativo Inválido</string>
-    <string name="error_consult_quote">Erro ao consultar cotação. Por favor tente novamente mais tarde.</string>
 
     <!-- About -->
     <string name="about_description">Guia Investimento é um aplicativo para controle e organização do seu portfolio de investimento no Brasil. Com ele você poderá facilmente monitorar:\n\n
