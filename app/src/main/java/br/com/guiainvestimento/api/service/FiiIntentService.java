@@ -51,8 +51,8 @@ public class FiiIntentService extends IntentService {
 
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
-    private final String apiKey = "FXVK1K9EYIJHIOEX";
-    private final String function = "TIME_SERIES_MONTHLY_ADJUSTED";
+    private final String apiKey = "XT5MYEQ27BZ6LXYC";
+    private final String function = "TIME_SERIES_DAILY";
     Handler mHandler;
 
     // Extras
@@ -160,7 +160,7 @@ public class FiiIntentService extends IntentService {
                         String responseStock = responseGet.body();
                         try {
                             JSONObject jsonObj = new JSONObject(responseStock);
-                            JSONObject resultObj = jsonObj.getJSONObject("Monthly Adjusted Time Series");
+                            JSONObject resultObj = jsonObj.getJSONObject("Time Series (Daily)");
                             Iterator<String> keys = resultObj.keys();
                             // Latest quote
                             String lastQuote = "";
