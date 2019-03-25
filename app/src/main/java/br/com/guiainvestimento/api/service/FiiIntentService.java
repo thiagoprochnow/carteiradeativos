@@ -52,7 +52,7 @@ public class FiiIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = FiiIntentService.class.getSimpleName();
     private final String apiKey = "XT5MYEQ27BZ6LXYC";
-    private final String function = "TIME_SERIES_DAILY";
+    private final String function = "GLOBAL_QUOTE";
     Handler mHandler;
 
     // Extras
@@ -160,26 +160,11 @@ public class FiiIntentService extends IntentService {
                         String responseStock = responseGet.body();
                         try {
                             JSONObject jsonObj = new JSONObject(responseStock);
-                            JSONObject resultObj = jsonObj.getJSONObject("Time Series (Daily)");
-                            Iterator<String> keys = resultObj.keys();
-                            // Latest quote
-                            String lastQuote = "";
-                            if (keys.hasNext()) {
-                                String key = keys.next();
-                                JSONObject resObj = resultObj.getJSONObject(key);
-                                fii.setmSymbol(symbol);
-                                lastQuote = resObj.getString("4. close");
-                                fii.setmLast(resObj.getString("4. close"));
-                                fii.setmOpen(resObj.getString("1. open"));
-                            }
-                            // Preivous day quote
-                            if (keys.hasNext()) {
-                                String key = keys.next();
-                                JSONObject resObj = resultObj.getJSONObject(key);
-                                fii.setmPrevious(resObj.getString("4. close"));
-                            } else {
-                                fii.setmPrevious(lastQuote);
-                            }
+                            JSONObject resultObj = jsonObj.getJSONObject("Global Quote");
+                            fii.setmSymbol(symbol);
+                            fii.setmLast(resultObj.getString("05. price"));
+                            fii.setmOpen(resultObj.getString("02. open"));
+                            fii.setmPrevious(resultObj.getString("08. previous close"));
                             fiis.add(fii);
                         } catch (JSONException e) {
                             Log.e(LOG_TAG, "Error in json " + e.getMessage());

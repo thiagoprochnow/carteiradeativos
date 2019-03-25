@@ -52,7 +52,7 @@ public class StockIntentService extends IntentService {
     // Log variable
     private static final String LOG_TAG = StockIntentService.class.getSimpleName();
     private final String apiKey = "XT5MYEQ27BZ6LXYC";
-    private final String function = "TIME_SERIES_DAILY";
+    private final String function = "GLOBAL_QUOTE";
     private String mType;
     Handler mHandler;
 
@@ -170,26 +170,11 @@ public class StockIntentService extends IntentService {
                         String responseStock = responseGet.body();
                         try {
                             JSONObject jsonObj = new JSONObject(responseStock);
-                            JSONObject resultObj = jsonObj.getJSONObject("Time Series (Daily)");
-                            Iterator<String> keys = resultObj.keys();
-                            // Latest quote
-                            String lastQuote = "";
-                            if (keys.hasNext()) {
-                                String key = keys.next();
-                                JSONObject resObj = resultObj.getJSONObject(key);
-                                stock.setmSymbol(symbol);
-                                lastQuote = resObj.getString("4. close");
-                                stock.setmLast(resObj.getString("4. close"));
-                                stock.setmOpen(resObj.getString("1. open"));
-                            }
-                            // Preivous day quote
-                            if (keys.hasNext()) {
-                                String key = keys.next();
-                                JSONObject resObj = resultObj.getJSONObject(key);
-                                stock.setmPrevious(resObj.getString("4. close"));
-                            } else {
-                                stock.setmPrevious(lastQuote);
-                            }
+                            JSONObject resultObj = jsonObj.getJSONObject("Global Quote");
+                            stock.setmSymbol(symbol);
+                            stock.setmLast(resultObj.getString("05. price"));
+                            stock.setmOpen(resultObj.getString("02. open"));
+                            stock.setmPrevious(resultObj.getString("08. previous close"));
                             stocks.add(stock);
                         } catch (JSONException e) {
                             Log.e(LOG_TAG, "Error in json " + e.getMessage());
