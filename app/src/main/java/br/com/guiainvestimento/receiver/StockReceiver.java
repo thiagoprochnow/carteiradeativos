@@ -49,8 +49,6 @@ public class StockReceiver {
             buyTotal = queryCursor.getDouble(0);
             sellTotal = queryCursor.getDouble(1);
             brokerage = queryCursor.getDouble(2);
-            // Variation cannot count brokerage discount
-            variationTotal = queryCursor.getDouble(3) + queryCursor.getDouble(2);
             totalGain = queryCursor.getDouble(3);
         }
 
@@ -68,10 +66,10 @@ public class StockReceiver {
                 affectedColumn, null, null, null);
         if(queryCursor.getCount() > 0) {
             queryCursor.moveToFirst();
-            variationTotal += queryCursor.getDouble(0);
             buyTotal += queryCursor.getDouble(1);
             double incomeTotal = queryCursor.getDouble(2);
             mCurrentTotal += queryCursor.getDouble(3);
+            variationTotal = mCurrentTotal + sellTotal - buyTotal;
             brokerage += queryCursor.getDouble(4);
             totalGain += queryCursor.getDouble(5);
             double variationPercent = variationTotal/buyTotal*100;

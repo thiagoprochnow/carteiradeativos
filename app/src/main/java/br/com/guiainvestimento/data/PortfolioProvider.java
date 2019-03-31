@@ -1425,10 +1425,20 @@ public class PortfolioProvider extends ContentProvider {
                 );
                 break;
 
+            case Constants.Provider.FUND_DATA:
+                symbol = "";
+                rowsDeleted = db.delete(
+                        PortfolioContract.FundData.TABLE_NAME,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FundData.COLUMN_SYMBOL,
+                        selectionArgs
+                );
+                break;
+
             case Constants.Provider.FUND_TRANSACTION:
+                symbol = "";
                 rowsDeleted = db.delete(
                         PortfolioContract.FundTransaction.TABLE_NAME,
-                        selection,
+                        '"' + symbol + '"' + " =" + PortfolioContract.FundTransaction.COLUMN_SYMBOL,
                         selectionArgs
                 );
 

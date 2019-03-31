@@ -997,7 +997,7 @@ public abstract class BaseFragment extends Fragment {
     // Validate if an EditText was set with valid Fund Symbol
     protected boolean isValidFundSymbol(EditText symbol) {
         Editable editable = symbol.getText();
-        if (editable.toString().length() <= 150) {
+        if (editable.toString().length() <= 150 && !isEditTextEmpty(symbol)) {
             return true;
         } else {
             return false;
