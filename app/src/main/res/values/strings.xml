@@ -598,7 +598,7 @@
         We are still making fixes, upgrades and developments for this application. Here are some of the features we are developing and are coming soon:\n\n
 
         \u2022 Help buttons explaining each information provided.\n
-        \u2022 Automatic incomes for stocks and real state funds.\n
+        \u2022 Automatic incomes for stocks.\n
         \u2022 Automatic treasury current values when clicking on refresh button.\n
         \u2022 Graph showing the income growth.\n
         \u2022 Constant bug fixes and improvements.\n\n
@@ -622,7 +622,7 @@
     <string name="premium_item3">\u2022 Funds</string>
     <string name="premium_itens">
         \u2022 Unlimited portfolio update.\n
-        \u2022 Automatic incomes update for stocks and Fiis.\n
+        \u2022 Automatic incomes update for stocks.\n
         \u2022 Access to Funds with automatic updates (Cooming soon profitability chart).\n
         \u2022 Access to new resources as soon as they are developed.\n
     </string>

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.guiainvestimento.R;
+import br.com.guiainvestimento.api.service.FiiIntentService;
 import br.com.guiainvestimento.api.service.FixedIntentService;
 import br.com.guiainvestimento.api.service.CryptoIntentService;
 import br.com.guiainvestimento.api.service.CurrencyIntentService;
@@ -871,7 +872,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         }
 
         //Fii Refresh
-        Intent mFiiIncomeService = new Intent(this, FiiIncomeIntentService.class);
+        Intent mFiiServiceIntent = new Intent(this, FiiIntentService.class);
 
         String[] affectedColumn2 = {PortfolioContract.FiiData.COLUMN_SYMBOL};
         String selection2 = PortfolioContract.FiiData.COLUMN_STATUS + " = ?";
@@ -897,9 +898,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
             // Fii quotes called inside StockIncomeIntentService
 
             //Fii Incomes
-            mFiiIncomeService.putExtra(FiiIncomeIntentService.ADD_SYMBOL, symbol);
-            mFiiIncomeService.putExtra(FiiIncomeIntentService.PREMIUM, isPremium());
-            startService(mFiiIncomeService);
+            mFiiServiceIntent.putExtra(FiiIntentService.ADD_SYMBOL, symbol);
+            mFiiServiceIntent.putExtra(FiiIntentService.PREMIUM, isPremium());
+            startService(mFiiServiceIntent);
         } else{
             // Clear menu progressbar so it is not set indefinitely
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(Constants.Receiver.FII));

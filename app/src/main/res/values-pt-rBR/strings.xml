@@ -598,7 +598,7 @@
         Nós ainda estamos corrigindo problemas, fazendo melhorias e desenvolvendo novos recursos. Aqui estão algumas das funcionalidades que estamos desenvolvendo:\n\n
 
         \u2022 Botão de ajuda explicando cada informação fornecida.\n
-        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Rendimentos automáticos para ações.\n
         \u2022 Valor dos títulos do tesouro automático quando clicando no botão de atualização.\n
         \u2022 Gráfico mostrando o crescimento dos rendimentos.\n
         \u2022 Constante correção de problemas e melhorias.\n\n
@@ -622,7 +622,7 @@
     <string name="premium_item3">\u2022 Fundos de Investimentos</string>
     <string name="premium_itens">
         \u2022 Acesso ilimitado a atualizações automatica do portfólio.\n
-        \u2022 Rendimentos automáticos para ações e fundos imobiliários.\n
+        \u2022 Rendimentos automáticos para ações.\n
         \u2022 Acesso a Fundos de Investimentos com atualizações automáticas. (Em breve grafíco de desempenho do fundo)\n
         \u2022 Acesso a novos recursos assim que forem desenvolvidos.\n
     </string>
